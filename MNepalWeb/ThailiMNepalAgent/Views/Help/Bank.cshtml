@@ -1,0 +1,72 @@
+﻿@{
+    ViewBag.Title = "PrivatePolicy";
+    Layout = "";
+
+    string _WebUrl = System.Web.Configuration.WebConfigurationManager.AppSettings["WebAddress"];
+    var loginLink = Path.Combine(_WebUrl + "Login/Index");
+    var backgroundLink = Path.Combine(_WebUrl + "Content/assets/img/home-bg.png");
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>NIBL | Thaili Agent Digital Paisa</title>
+    <!-- Tell the browser to be responsive to screen width -->
+    <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+
+
+    <!-- Custom style -->
+    <link href="~/Content/ThaliStyle.css" rel="stylesheet" />
+
+    @*<script type="text/javascript" src="~/Content/assets/js/jquery.js"></script>*@
+
+    <script type="text/javascript" src="~/Content/assets/vendor/bootstrap/js/popper.min.js"></script>
+
+    <script type="text/javascript" src="~/Content/assets/vendor/bootstrap/js/bootstrap.min.js"></script>
+
+    <!-- custom js -->
+    <script type="text/javascript" src="~/Content/assets/js/main.js"></script>
+
+    <link rel="icon" type="image/ico" href="~/favicon.ico">
+
+    <style>
+        .headerFont {
+            color: #002D6A;
+            font-size: 1.3rem;
+            font-weight: bold;
+        }
+    </style>
+
+</head>
+
+<body>
+    <div class="main-content">
+        <div class="hero-bg text-center" style="background-image: url(@backgroundLink); ">
+            <div class="container">
+                <a href="@loginLink" class="logo">
+                    <img src="~/Content/assets/img/thaili-logo.svg" alt="thaili-logo" />
+
+                </a>
+                <!-- /logo -->
+
+                <div class="container" style="text-align: justify; line-height:1.5rem;">
+
+                    <b class="headerFont" style="font-size:2rem; font-weight:bold">Our Partner</b>
+                    <br />
+                    <br />
+                    <a href="" class="">
+                        @*<img src="~/Content/image/nibl.png" alt="NIBL" />*@
+                        <img src="~/Content/assets/img/nibl-logo.png" />
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- /hero-bg -->
+    </div>
+    @Html.Partial("_Footer")
+    
+</body>
+</html>

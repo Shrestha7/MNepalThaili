@@ -1,0 +1,647 @@
+﻿
+@model CustApp.Models.CIPS.ConnectIPS
+
+@{
+    ViewBag.Title = "ConnectIPS";
+    string hasKYC = ViewBag.hasKYC;
+    string hasLinkBankAcc = ViewBag.HasBankKYC;
+    string successAccessToken = ViewBag.accessToken;
+
+}
+
+<!-- Main content -->
+<link href="~/Content/NewIcon/style.css" rel="stylesheet" />
+<style>
+    .image_icon {
+        width: 100px;
+    }
+
+    .field-icon {
+        float: right;
+        margin-left: -25px;
+        margin-top: -32px;
+        margin-right: 13px;
+        position: relative;
+        z-index: 2;
+    }
+</style>
+
+@using (Html.BeginForm("CIPSPayment", "CIPS", FormMethod.Post, new { @id = "CIPSPayment", @name = "CIPSPayment", @class = "form-horizontal", enctype = "multipart/form-data" }))
+{
+    @Html.AntiForgeryToken()
+    @Html.ValidationSummary(true)
+    <div id="ajaxResponse">
+    </div>
+    <div class="preload" style="display:none">
+        <img src="~/Content/image/loading.gif" class="img-responsive" />
+    </div>
+    <div class="main-content">
+        <div class="two-colbg">
+            <div class="container">
+                <div class="row">
+
+                    <div class="col-lg-6">
+                        <section class="internet-payment pad-50">
+                            <div class="top-section">
+                                <h2 class="title">ConnectIPS</h2>
+                                <p>Please fill the required field.</p>
+                            </div>
+                            <h1>Charges</h1>
+                        </section>
+                        <table cellpadding="1" cellspacing="10" class="table table-condensed table-bordered table-responsive-md">
+                            <tr>
+                                <th style="text-align:center">MaxAmount</th>
+                                <th style="text-align:center">MaxCharge</th>
+                                <th style="text-align:center">MinCharge</th>
+                            </tr>
+
+                            @*@foreach (var item in ViewBag.cipsCharges)
+                                {
+                                    <tr>
+                                        <td style="text-align:center">
+                                           @Convert.ToDouble(item.maxAmt)
+
+                                        </td>
+                                        <td style="margin-left:20px;text-align:center">
+                                            @item.minChargeAmt
+                                        </td>
+                                        <td style="margin-left:40px;text-align:center">
+                                            @item.maxChargeAmt
+                                        </td>
+                                    </tr>
+                                }*@
+                            <tr>
+                                <td style="text-align:center">Up to 500</td>
+                                <td style="text-align:center">2</td>
+                                <td style="text-align:center">2</td>
+                            </tr>
+
+                            <tr>
+                                <td style="text-align:center">Above 500 to 5,000</td>
+                                <td style="text-align:center">5</td>
+                                <td style="text-align:center">5</td>
+                            </tr>
+
+                            <tr>
+                                <td style="text-align:center">Above 5,000 to 50,000</td>
+                                <td style="text-align:center">10</td>
+                                <td style="text-align:center">10</td>
+                            </tr>
+
+                            <tr>
+                                <td style="text-align:center">Above 50,000</td>
+                                <td style="text-align:center">15</td>
+                                <td style="text-align:center">15</td>
+                            </tr>
+
+
+                        </table>
+
+
+                    </div>
+
+                    <div class="col-lg-6 right-form">
+                        <section class="content-inner pad-50">
+                            @if (this.ViewData["NepalWater_messsage"] != null)
+                            {
+                                if (this.ViewData["message_class"].ToString() == "success_info")
+                                {
+                                    <div class="alert alert-success">
+                                        <button type="button" class="close" data-dismiss="alert">&times;</button>
+                                        <h4>Success</h4> @this.ViewData["NepalWater_messsage"]
+                                    </div>
+                                }
+                                else
+                                {
+                                    <div class="alert alert-danger">
+                                        <button type="button" class="close" data-dismiss="alert">&times;</button>
+                                        <h4>Error</h4> @this.ViewData["NepalWater_messsage"]
+                                    </div>
+                                }
+                            }
+
+                            <div class="transfer-order clearfix">
+                                <h3 class="title">Pay from</h3>
+
+                                <select class="form-control selectpicker transaction-select col-md-9" id="TransactionMedium" name="TransactionMedium" onmousedown="this.value='';">
+                                    @*<option data-icon="thaili-icon-load-wallet" value="31">Wallet</option>*@
+                                    @if (hasLinkBankAcc.Equals("T"))
+                                    {
+                                        <option data-icon="thaili-icon-bank" value="34">Bank</option>
+                                    }
+                                </select>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div class="form-group">
+                                        <h5>SENDER DETAILS : </h5>
+                                    </div>
+                                </div>
+
+                            </div>
+
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div class="form-group">
+                                        <label class="col-sm-12">Sender Name :<b style="color:red;">*</b></label>
+                                        <input type="text" value="@ViewBag.BankRegisterName" disabled="disabled" class="form-control select2" id="senderAccountName" name="txtSenderAccountName" placeholder="Account Name" maxlength="50" />
+                                    </div>
+                                    <div class="form-group" id="accountNameErr" style="color:red; margin-top:-11px;"></div>
+                                </div>
+
+                            </div>
+
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div class="form-group">
+                                        <label class="col-sm-12">Sender Account Number :<b style="color:red;">*</b></label>
+                                        <input type="text" value="@ViewBag.BankAccountNumber" @*disabled="disabled"*@ class="form-control select2" id="senderAccountNumber" name="txtSenderAccountNumber" placeholder="Account Number" maxlength="20" />
+                                    </div>
+                                    <div class="form-group" id="accountNumberErr" style="color:red; margin-top:-11px;"></div>
+                                </div>
+
+                            </div>
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div class="form-group">
+                                        <label class="col-sm-12">Amount : <b style="color:red;">*</b></label>
+                                        <input type="text" class="form-control select2" id="amount" name="txtAmount" onkeypress="return (event.charCode !=8 && event.charCode ==0 || ( event.charCode == 46 || (event.charCode >= 48 && event.charCode <= 57)))" placeholder="NPR" maxlength="9" oninput="checkAmount()" onpaste="return false" />
+                                    </div>
+                                    <div class="form-group" id="amountErr" style="color:red; margin-top:-11px;"></div>
+                                </div>
+
+                            </div>
+                            <br>
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div class="form-group">
+                                        <h5>BENEFICIARY DETAILS : </h5>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div class="form-group">
+                                        <label class="col-sm-12">Account Number : <b style="color:red;">*</b></label>
+                                        <input type="text" class="form-control select2" id="accountNumber" onkeypress="return event.charCode >= 48 && event.charCode <= 57" name="txtBeneficiaryAccountNumber" placeholder="Account Number" maxlength="20" oninput="checkBeneficiaryAccountNumber()" @*onpaste="return false"*@ />
+                                    </div>
+                                    <div class="form-group" id="beneficiaryAccountNumberErr" style="color:red; margin-top:-11px;"></div>
+                                </div>
+
+                            </div>
+
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div class="form-group">
+                                        <label class="col-sm-12">Account Name : <b style="color:red;">*</b></label>
+                                        <input type="text" class="form-control select2" id="beneficiaryAccountName" onkeypress="return (event.charCode >= 65 && event.charCode <= 90) || (event.charCode >= 97 && event.charCode <= 122) || event.charCode ==32" name="txtBeneficiaryAccountName" placeholder="Account Name" maxlength="20" oninput="checkBeneficiaryAccountName()" @*onpaste="return false"*@ />
+                                    </div>
+                                    <div class="form-group" id="beneficiaryAccountNameErr" style="color:red; margin-top:-11px;"></div>
+                                </div>
+
+                            </div>
+
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div class="form-group">
+                                        <label class="col-sm-12">Bank Name : <b style="color:red;">*</b></label>
+                                        <select id="bankDrpdwn" onload="getBankId()" name="txtBankName" class="show-tick" style="width:465px; height:43px" oninput="checkBank()">
+                                            @foreach (var bank in ViewBag.getBankList)
+                                            {
+                                                <option bankId="@bank.Value" name="bankList">@bank.Text</option>
+                                            }
+
+                                        </select>
+
+
+                                    </div>
+                                    <div class="form-group" id="bankDrpdwnErr" style="color:red; margin-top:-11px;"></div>
+                                </div>
+
+                            </div>
+
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div class="form-group">
+                                        <label class="col-sm-12">Branch Name : <b style="color:red;">*</b></label>
+                                        <select id="branchDrpdwn" name="branchName" class="show-tick" style="width:465px; height:43px">
+                                        </select>
+                                    </div>
+                                    <div class="form-group" id="branchNameErr" style="color:red; margin-top:-11px;"></div>
+                                </div>
+
+                            </div>
+
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div class="form-group">
+                                        <label class="col-sm-12">Pin : <b style="color:red;">*</b></label>
+                                        <input type="password" id="pin" name="txtPin" class="form-control pwd1" placeholder="PIN" maxlength="4" onkeypress="return event.charCode >= 48 && event.charCode <= 57" oninput="checkPin()" @*onpaste="return false"*@ />
+                                        <span toggle="#password-field" class="fa fa-fw fa-eye field-icon toggle-password, btnShow1"></span>
+                                    </div>
+                                    <div class="form-group" id="pinErr" style="color:red; margin-top:-11px;"></div>
+                                </div>
+
+                            </div>
+
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div class="form-group">
+                                        <label class="col-sm-12">Transaction Detail : <b style="color:red;">*</b></label>
+                                        <textarea style="resize: none;" cols="50" rows="2" @*class="form-control select2"*@ id="transactionDetail" name="txtTransactionDetail" placeholder="Remarks" maxlength="50" oninput="checkRemarks()" @*onpaste="return false"*@></textarea>
+                                    </div>
+                                    <div class="form-group" id="transactionDetailErr" style="color:red; margin-top:-11px;"></div>
+                                </div>
+
+                            </div>
+
+                            <br />
+                            <br />
+
+                            <div class="box-footer">
+                                <input type="submit" class="btn btn-blue btn-big col-md-5" name="btnCommand" value="Confirm" id="btnSubmit" />
+                                <input type="button" value="Clear" class="btn btn-default btn-big col-md-5" id="clearButton" />
+                            </div>
+
+                        </section>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Failure modal -->
+    <div class="modal fade common-modal" id="failureModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-body text-center">
+                    <div class="success-icon">
+                        <img src="~/Content/assets/img/denied-cross.svg" alt="denied-cross">
+                    </div>
+                    <p style="color: #E31837; font-size: 1.111rem; font-weight: 700;">@*Error!*@</p>
+                    <span style="color: #E31837; font-size: 1.111rem; font-weight: 700;" id="message"></span>
+                    <br /> <br />
+                    <button type="button" class="btn btn-blue" data-dismiss="modal" style="width:80%">OK</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Failure modal session expired -->
+    <div class="modal fade common-modal" id="failureModalSessionExpired" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-body text-center">
+                    <div class="success-icon">
+                        <img src="~/Content/assets/img/denied-cross.svg" alt="denied-cross">
+                    </div>
+                    <p style="color: #E31837; font-size: 1.111rem; font-weight: 700;">@*Error!*@</p>
+                    <span style="color: #E31837; font-size: 1.111rem; font-weight: 700;">Session expired. Please login again</span>
+                    <br /> <br />
+                    <button type="button" class="btn btn-blue" data-dismiss="modal" style="width:80%">OK</button>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+@section scripts{
+
+    <script type="text/javascript">
+
+        $(".btnShow1").mousedown(function () {
+            $(".pwd1").attr("type", "text");
+        });
+        $(".btnShow1").on("mouseleave", function () {
+            $(".pwd1").attr("type", "password");
+        });
+
+        document.getElementById("failureModal").onclick = function () {
+         var url = '@Url.Action("Index", "UserDashboard")';
+         window.location.href = url;
+        };
+
+        document.getElementById("failureModalSessionExpired").onclick = function () {
+         var url = '@Url.Action("Index", "LogOut")';
+         window.location.href = url;
+        };
+
+        function isNumber(evt) {
+            evt = (evt) ? evt : window.event;
+            var charCode = (evt.which) ? evt.which : evt.keyCode;
+            if (charCode > 31 && (charCode < 48 || charCode > 57)) {
+                return false;
+            }
+            return true;
+        }
+
+        function noCharacter(evt) {
+            evt = (evt) ? evt : window.event;
+            var charCode = (evt.which) ? evt.which : evt.keyCode;
+            if ((charCode > 32 && charCode < 48) || (charCode > 57 && charCode < 65) || (charCode > 90 && charCode < 97) || (charCode > 122 && charCode < 127)) {
+                return false;
+            }
+            return true;
+        }
+        ///for amount input number and dot only
+        function NumberDot(evt) {
+            var charCode = (evt.which) ? evt.which : event.keyCode
+            if (charCode != 46 && charCode > 31 && (charCode < 48 || charCode > 57))
+                return false;
+
+            return true;
+        }
+
+        $(".show-tick").prepend("<option value='0' disabled selected>---Select Option---</option>");
+
+        $(document).ready(function () {
+            debugger;
+            $.ajax({
+                cache: false,
+                type: "GET",
+                url: '@Url.Action("GetLnkBankAcc", "LoadWallet")',
+                success: function (data, textStatus) {
+                    if (data != "T") {
+                        $("#message").html("");
+                        $("#message").append("Please link your bank account to get rid of restriction");
+                        $('#failureModal').modal("show");
+                    }
+                },
+                error: function () {
+                    alert("Data Not Found");
+                }
+            });
+
+            $("#ajaxResponse").hide();
+        });
+
+        function checkAmount() {
+            var amount = $("[name='txtAmount']").val();
+            if ((amount.trim() == "")) {
+                $("#amountErr").html("");
+                $("#amountErr").append("<small>" + "Amount is required and cannot be empty" + "</small>");
+                $("#amountErr").show();
+            }
+            else {
+                $("#amountErr").hide();
+            }
+        }
+
+        function checkBeneficiaryAccountName() {
+            var beneficiaryAccountName = $("[name='txtBeneficiaryAccountName']").val();
+            if ((beneficiaryAccountName.trim() == "")) {
+                $("#beneficiaryAccountNameErr").html("");
+                $("#beneficiaryAccountNameErr").append("<small>" + "Account Name is required and cannot be empty" + "</small>");
+                $("#beneficiaryAccountNameErr").show();
+            }
+            else {
+                $("#beneficiaryAccountNameErr").hide();
+            }
+        }
+
+        function checkBeneficiaryAccountNumber() {
+            var beneficiaryAccountNumber = $("[name='txtBeneficiaryAccountNumber']").val();
+            if ((beneficiaryAccountNumber.trim() == "")) {
+                $("#beneficiaryAccountNumberErr").html("");
+                $("#beneficiaryAccountNumberErr").append("<small>" + "Account Number is required and cannot be empty" + "</small>");
+                $("#beneficiaryAccountNumberErr").show();
+            }
+            else {
+                $("#beneficiaryAccountNumberErr").hide();
+            }
+        }
+
+        function checkPin() {
+            var pin = $("[name='txtPin']").val();
+            if ((pin.trim() == "")) {
+                $("#pinErr").html("");
+                $("#pinErr").append("<small>" + "T-PIN is required and cannot be empty" + "</small>");
+                $("#pinErr").show();
+            }
+            else {
+                $("#pinErr").hide();
+            }
+        }
+
+        function checkRemarks() {
+            var transactionDetail = $("[name='txtTransactionDetail']").val();
+            if ((transactionDetail.trim() == "")) {
+                $("#transactionDetailErr").html("");
+                $("#transactionDetailErr").append("<small>" + "Transaction Detail is required and cannot be empty" + "</small>");
+                $("#transactionDetailErr").show();
+            }
+            else {
+                $("#transactionDetailErr").hide();
+            }
+        }
+
+        function checkBank() {
+            var bankName = $("select[name='txtBankName'] option:selected").val();
+            if (bankName == '0') {
+                $("#bankDrpdwnErr").html("");
+                $("#bankDrpdwnErr").append("<small>" + "Bank Name is required and cannot be empty" + "</small>");
+                $("#bankDrpdwnErr").show();
+            }
+            else {
+                $("#bankDrpdwnErr").hide();
+            }
+        }
+
+        function checkBranch() {
+            debugger;
+            var branchName = $("select[name='branchName'] option:selected").val();
+            if (branchName == '0') {
+                $("#branchNameErr").html("");
+                $("#branchNameErr").append("<small>" + "Branch Name is required and cannot be empty" + "</small>");
+                $("#branchNameErr").show();
+            }
+            else {
+                $("#branchNameErr").hide();
+            }
+        }
+
+
+        function checkValidation() {
+            checkBeneficiaryAccountName();
+            checkBeneficiaryAccountNumber();
+            checkAmount();
+            checkPin();
+            checkRemarks();
+            checkBank();
+            checkBranch();
+        }
+
+
+
+        $("#clearButton").click(function () {
+            $("[name='txtAmount']").val("");
+            $("[name='txtBeneficiaryAccountNumber']").val("");
+            $("[name='txtBeneficiaryAccountName']").val("");
+            document.getElementById("bankDrpdwn").selectedIndex = 0;
+            document.getElementById("branchDrpdwn").selectedIndex = 0;
+            $("[name='txtTransactionDetail']").val("");
+            $("[name='txtPin']").val("");
+        });
+
+
+        //get banklist
+        $('#bankDrpdwn').change(function (e){
+            e.preventDefault();
+            debugger;
+            var dropdown = document.getElementById('bankDrpdwn');
+            var selectedOption = dropdown.options[dropdown.selectedIndex];
+            var selectedBankId = selectedOption.getAttribute('bankId');
+            var selectedBankName = dropdown.options[dropdown.selectedIndex].text;
+
+            window.getBankId = selectedBankId;
+            window.getBankName = selectedBankName;
+
+            var dataToPost = {
+                bankId: selectedBankId,
+                bankName: selectedBankName
+            }
+
+            //get bankBranchList according to bank list
+            e.preventDefault();
+            $.ajax({
+                url: '@Url.Action("GetBranchList","CIPS")',
+                type: "POST",
+                data: dataToPost,
+                async: true,
+                success: function (data) {
+                    debugger;
+                    var select = $("#branchDrpdwn");
+                    select.empty();
+                    select.append($('<option/>', {
+                        value: 0,
+                        text: "---Select Option---"
+                    }));
+
+                    //append each branchList through json data
+                    $.each(data, function (index, itemData) {
+                        select.append($('<option/>', {
+                            value: itemData.Value,
+                            text: itemData.Text
+                        }));
+                    });
+
+                    //get bankBranch id
+                    $(document).on('change', 'select', function (e) {
+                        debugger;
+                        var branchId = $('option:selected', this).attr('value');
+                        var branchName = $('option:selected', this).text();
+                        window.branchId = branchId;
+                        window.branchName = branchName;
+                        if (branchId != '0') {
+                            $("#branchNameErr").hide();
+                        }
+                    });
+
+                    function errorFunc() {
+                        alert('error');
+                    }
+                }
+
+            });
+        });
+
+
+
+
+
+        $('#btnSubmit').click(function (e) {
+            debugger;
+            e.preventDefault();
+            debugger;
+            var senderAccountName = $("[name='txtSenderAccountName']").val();
+            var senderAccountNumber = $("[name='txtSenderAccountNumber']").val();
+            var amount = $("[name='txtAmount']").val();
+            var beneficiaryAccountNumber = $("[name='txtBeneficiaryAccountNumber']").val();
+            var beneficiaryAccountName = $("[name='txtBeneficiaryAccountName']").val();
+            var bankName = window.getBankName;
+            var bankId = window.getBankId;
+            var bankBranchId = window.branchId;
+            var branchName = window.branchName;
+            var transactionDetail = $("[name='txtTransactionDetail']").val();
+            var pin = $("[name='txtPin']").val();
+
+            if ((senderAccountNumber != "") && (amount != "") && (beneficiaryAccountNumber != "") && (beneficiaryAccountName != "") && (bankName != undefined)
+                && (branchName != undefined) && (transactionDetail != "") && (pin != "")) {
+
+                var dataToPost = {
+                    senderAccountName: senderAccountName,
+                    senderAccountNumber: senderAccountNumber,
+                    amount: amount,
+                    beneficiaryAccountNumber: beneficiaryAccountNumber,
+                    beneficiaryAccountName: beneficiaryAccountName,
+                    bankId: bankId,
+                    bankBranchId: bankBranchId,
+                    bankName: bankName,
+                    branchName: branchName,
+                    transactionDetail: transactionDetail,
+                    pin: pin
+                };
+
+                e.preventDefault(); //prevent the default action
+                $.ajax({
+                    url: '@Url.Action("CIPSPayment", "CIPS")',
+                    type: "POST",
+                    data: dataToPost,
+                    async: true,
+                    success: function (data) {
+                        $(".preload").show();
+                        if (data.responseCode == "200") {
+                            var url = '@Url.Action("CIPSDetails", "CIPS")';
+                            window.location.href = url;
+                        }
+                        //display error message
+                        else {
+                            $("#ajaxResponse").html("");
+                            $("#message").html("");
+                            $("#message").append(data.responseText);
+                            if (data.responseText == "Session expired. Please login again") {
+                                $('#failureModalSessionExpired').modal("show");
+                            }
+                            else {
+                                $('#failureModal').modal("show");
+                            }
+
+                        }
+                    },
+                    error: function (jqXHR, textStatus, errorThrown) {
+                        alert('Failed to retrieve.');
+                        $("#message").html("");
+                        $("#message").append(jqXHR.responseText);
+                        $('#failureModal').modal("show");
+
+                    },
+                    //capture the request before it was sent to server
+                    beforeSend: function (jqXHR, settings) {
+                        $(".preload").show();
+                        //adding some Dummy data to the request
+                        settings.data += "&dummyData=whatever";
+                        //disable the button until we get the response
+                        $('#btnSubmit').attr("disabled", true);
+                    },
+                    complete: function (jqXHR, textStatus) {
+                        //enable the button
+                        $('.preload').hide();
+                        $('#btnSubmit').attr("disabled", false);
+                    }
+                });
+
+            }
+            else {
+                checkValidation();
+                $("#message").html("");
+                $("#message").append("Please Enter the required fields.");
+                $('#failureModal').modal("show");
+
+            }
+        });
+    </script>
+
+}

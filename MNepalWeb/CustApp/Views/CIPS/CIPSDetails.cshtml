@@ -1,0 +1,527 @@
+﻿@model CustApp.Models.CIPS.ConnectIPS
+
+@{
+    ViewBag.Title = "ConnectIPS";
+    string hasBankKYC = ViewBag.HasBankKYC;
+    //float TotalAmountDue = parseFloat(@ViewBag.TotalAmountDue);
+
+}
+
+<!-- Main content -->
+<link href="~/Content/NewIcon/style.css" rel="stylesheet" />
+<style>
+    .image_icon {
+        width: 100px;
+    }
+
+    .field-icon {
+        float: right;
+        margin-left: -25px;
+        margin-top: -32px;
+        margin-right: 13px;
+        position: relative;
+        z-index: 2;
+    }
+
+    .show-tick {
+        margin-top: 10px;
+        height: 45px;
+        width: 610px;
+    }
+</style>
+
+@using (Html.BeginForm("CIPSExecutePayment", "CIPS", FormMethod.Post, new { @id = "CIPSExecutePayment", @name = "CIPSExecutePayment", @class = "form-horizontal", enctype = "multipart/form-data" }))
+{
+
+    @Html.AntiForgeryToken()
+    @Html.ValidationSummary(true)
+
+    <div class="main-content">
+        <div class="two-colbg">
+            <div class="container">
+                <div class="row">
+
+                    <div class="col-lg-6">
+                        <section class="internet-payment pad-50">
+                            <div class="top-section">
+                                <h2 class="title">Connect IPS</h2>
+                                <p>Please fill the required field.</p>
+                            </div>
+                            <div class="instant-transactions">
+                                <h3 class="title">Other Merchant Payment</h3>
+                                <div class="transactions-grid clearfix">
+                                    <div class="item load-wallet">
+                                        <div class="item-inner">
+                                            <a href="@Url.Action("MerchantRestaurant", "MerchantPayment")">
+                                                <div class="content-inner">
+                                                    <i class="thaili-icon-restaurant"></i>
+                                                    <span>Restaurant</span>
+                                                </div>
+                                            </a>
+                                        </div>
+                                    </div>
+                                    <!-- /item -->
+
+                                    <div class="item transfer-fund">
+                                        <div class="item-inner">
+                                            <a href="@Url.Action("MerchantCollege", "MerchantPayment")">
+                                                <div class="content-inner">
+                                                    <i class="thaili-icon-college"></i>
+                                                    <span>College</span>
+                                                </div>
+                                            </a>
+                                        </div>
+                                    </div>
+                                    <!-- /item -->
+
+                                    <div class="item top-up">
+                                        <div class="item-inner">
+                                            <a href="@Url.Action("MerchantSchool", "MerchantPayment")">
+                                                <div class="content-inner">
+                                                    <i class="thaili-icon-school"></i>
+                                                    <span>School</span>
+                                                </div>
+                                            </a>
+                                        </div>
+                                    </div>
+                                    <!-- /item -->
+
+                                    <div class="item top-up">
+                                        <div class="item-inner">
+                                            <a href="@Url.Action("MerchantInsurance", "MerchantPayment")">
+                                                <div class="content-inner">
+                                                    <i class="thaili-icon-school"></i>
+                                                    <span>Insurance</span>
+                                                </div>
+                                            </a>
+                                        </div>
+                                    </div>
+                                    <!-- /item -->
+                                    <div class="item top-up">
+                                        <div class="item-inner">
+                                            <a href="@Url.Action("Index", "NEA" )">
+                                                <div class="content-inner">
+                                                    <i class="thaili-icon-electricity"></i>
+                                                    <span>NEA</span>
+                                                </div>
+                                            </a>
+                                        </div>
+                                    </div>
+                                    <!-- /item -->
+                                    <div class="item top-up">
+                                        <div class="item-inner">
+                                            <a href="@Url.Action("Index", "Khanepani" )">
+                                                <div class="content-inner">
+                                                    <i class="thaili-icon-khanepani"></i>
+                                                    <span>Khanepani</span>
+                                                </div>
+                                            </a>
+                                        </div>
+                                    </div>
+                                    <!-- /item -->
+                                    <div class="item top-up">
+                                        <div class="item-inner">
+                                            <a href="@Url.Action("Index", "NepalWater" )">
+                                                <div class="content-inner">
+                                                    <i class="thaili-icon-khanepani"></i>
+                                                    <span>Nepal Water</span>
+                                                </div>
+                                            </a>
+                                        </div>
+                                    </div>
+                                    <!-- /item -->
+                                </div>
+                            </div>
+                        </section>
+
+                    </div>
+
+                    <div class="col-lg-6 right-form">
+                        <section class="content-inner pad-50">
+                            @if (this.ViewData["NepalWater_messsage"] != null)
+                            {
+                                if (this.ViewData["message_class"].ToString() == "success_info")
+                                {
+                                    <div class="alert alert-success">
+                                        <button type="button" class="close" data-dismiss="alert">&times;</button>
+                                        <h4>Success</h4> @this.ViewData["NepalWater_messsage"]
+                                    </div>
+                                }
+                                else
+                                {
+                                    <div class="alert alert-danger">
+                                        <button type="button" class="close" data-dismiss="alert">&times;</button>
+                                        <h4>Error</h4> @this.ViewData["NepalWater_messsage"]
+                                    </div>
+                                }
+                            }
+
+                            <div class="box-header with-border">
+                                <h2 class="title">Confirm Payment</h2>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <label>Sender Name<span style="margin-left:100px">:</span></label>
+                                </div>
+                                <div class="col-md-6">
+                                    <label id="accountName">@ViewBag.AccountName</label>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <label>Sender Acc No<span style="margin-left:90px">:</span></label>
+                                </div>
+                                <div class="col-md-6">
+                                    <label id="accountNumber">@ViewBag.AccountNumber</label>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <label>Amount(NPR)<span style="margin-left:97px">:</span></label>
+                                </div>
+                                <div class="col-md-6">
+                                    <label id="transactionAmount">@ViewBag.TransactionAmount</label>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <label>Destination Acc No<span style="margin-left:57px">:</span></label>
+                                </div>
+                                <div class="col-md-6">
+                                    <label id="beneficiaryAccountNumber">@ViewBag.BeneficiaryAccountNumber</label>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <label>Destination Name<span style="margin-left:65px">:</span></label>
+                                </div>
+                                <div class="col-md-6">
+                                    <label id="beneficiaryAccountName">@ViewBag.BeneficiaryAccountName</label>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <label>Destination Bank<span style="margin-left:72px">:</span></label>
+                                </div>
+                                <div class="col-md-6">
+                                    <label id="beneficiaryBankName">@ViewBag.BankName</label>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <label>Destination Branch<span style="margin-left:55px">:</span></label>
+                                </div>
+                                <div class="col-md-6">
+                                    <label id="branchName">@ViewBag.BranchName</label>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <label>Remarks<span style="margin-left:134px">:</span></label>
+                                </div>
+                                <div class="col-md-6">
+                                    <label id="remarks">@ViewBag.Remarks</label>
+                                </div>
+                            </div>
+
+
+
+                            <hr />
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <label>Applicable Charge<span style="margin-left:55px">:</span></label>
+                                </div>
+                                <div class="col-md-6">
+                                    <label id="charges">@ViewBag.Charge</label>
+                                </div>
+                            </div>
+                            <br />
+                            <br />                           
+                            <br />
+
+
+
+                            <div class="box-footer">
+                                <input type="submit" class="btn btn-blue btn-big col-md-5" name="btnCommand" value="Pay" id="btnSubmit" />
+                                <input type="button" value="Cancel" class="btn btn-default btn-big col-md-5" id="cancelButton" />
+                            </div>
+
+                        </section>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <!-- Success modal -->
+    <div class="modal fade common-modal" id="successModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-body text-center">
+                    <div class="success-icon">
+                        <img src="~/Content/assets/img/success-tick.svg" alt="success-tick">
+                    </div>
+                    <p class="msg"></p>
+                    <span class="msg">Your payment has been confirmed.</span>
+                    <br /> <br />
+                    <button type="button" class="btn btn-blue" data-dismiss="modal" style="width:80%">OK</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Failure modal -->
+    <div class="modal fade common-modal" id="failureModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-body text-center">
+                    <div class="success-icon">
+                        <img src="~/Content/assets/img/denied-cross.svg" alt="denied-cross">
+                    </div>
+                    <p style="color: #E31837; font-size: 1.111rem; font-weight: 700;"></p>
+                    <span style="color: #E31837; font-size: 1.111rem; font-weight: 700;" id="message"></span>
+                    <br /> <br />
+                    <button type="button" class="btn btn-blue" data-dismiss="modal" style="width:80%">OK</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Failure modal session expired -->
+    <div class="modal fade common-modal" id="failureModalSessionExpired" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-body text-center">
+                    <div class="success-icon">
+                        <img src="~/Content/assets/img/denied-cross.svg" alt="denied-cross">
+                    </div>
+                    <p style="color: #E31837; font-size: 1.111rem; font-weight: 700;"></p>
+                    <span style="color: #E31837; font-size: 1.111rem; font-weight: 700;">Session expired. Please login again</span>
+                    <br /> <br />
+                    <button type="button" class="btn btn-blue" data-dismiss="modal" style="width:80%">OK</button>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+@section scripts{
+
+    <script type="text/javascript">
+
+        $(".btnShow1").mousedown(function () {
+            $(".pwd1").attr("type", "text");
+        });
+        $(".btnShow1").on("mouseleave", function () {
+            $(".pwd1").attr("type", "password");
+        });
+
+
+        document.getElementById("successModal").onclick = function () {
+         var url = '@Url.Action("Index", "UserDashboard")';
+         window.location.href = url;
+        };
+
+        document.getElementById("failureModal").onclick = function () {
+         var url = '@Url.Action("Index", "UserDashboard")';
+         window.location.href = url;
+        };
+
+        document.getElementById("failureModalSessionExpired").onclick = function () {
+            var url = '@Url.Action("Index", "LogOut")';
+            window.location.href = url;
+        };
+
+        document.getElementById("cancelButton").onclick = function () {
+            var url = '@Url.Action("Index", "CIPS")';
+            window.location.href = url;
+        };
+
+        function isNumber(evt) {
+            evt = (evt) ? evt : window.event;
+            var charCode = (evt.which) ? evt.which : evt.keyCode;
+            if (charCode > 31 && (charCode < 48 || charCode > 57)) {
+                return false;
+            }
+            return true;
+        }
+
+        function noCharacter(evt) {
+            evt = (evt) ? evt : window.event;
+            var charCode = (evt.which) ? evt.which : evt.keyCode;
+            if ((charCode > 32 && charCode < 48) || (charCode > 57 && charCode < 65) || (charCode > 90 && charCode < 97) || (charCode > 122 && charCode < 127)) {
+                return false;
+            }
+            return true;
+        }
+        ///for amount input number and dot only
+        function NumberDot(evt) {
+            var charCode = (evt.which) ? evt.which : event.keyCode
+            if (charCode != 46 && charCode > 31 && (charCode < 48 || charCode > 57))
+                return false;
+
+            return true;
+        }
+
+
+        $(".show-tick").prepend("<option value='0' disabled selected>---Select Option---</option>");
+
+        function checkValidation() {
+            var remarks = $("[name='Remarks']").val();
+            var amount = $("[name='amount']").val();
+            var amount1 = parseFloat($("[name='amount']").val());
+            var pin = $("[name='TPin']").val();
+            var TotaldueAmount = parseFloat(@ViewBag.TotalAmountDue);
+            //var Months = $('select[name=Months] option:selected').val();
+            //Restrict input field to two decimals with jQuery
+            $("[name='amount']").on('input', function () {
+                this.value = this.value.match(/^\d+\.?\d{0,2}/);
+            });
+            if ((amount.trim() == "") || (amount.trim() == "0.00") || (amount.trim() == "0") || (amount1 < TotaldueAmount)) {
+                $("#AmtErr").html("");
+                $("#AmtErr").append("<small>" + "Please Enter valid Amount" + "</small>");
+                $("#AmtErr").show();
+            }
+            else {
+                $("#AmtErr").hide();
+            }
+
+            if (pin.trim() == "") {
+                $("#PinErr").html("");
+                $("#PinErr").append("<small>" + "Please Enter the T-Pin" + "</small>");
+                $("#PinErr").show();
+            }
+            else if (pin.length != 4) {
+                $("#PinErr").html("");
+                $("#PinErr").append("<small>" + "T-Pin must be 4 character long." + "</small>");
+                $("#PinErr").show();
+            }
+            else {
+                $("#PinErr").hide();
+            }
+
+            if (remarks.trim() == "") {
+                $("#RemarkErr").html("");
+                $("#RemarkErr").append("<small>" + "Please Enter Remarks" + "</small>");
+                $("#RemarkErr").show();
+            }
+            else {
+                $("#RemarkErr").hide();
+            }
+        }
+
+
+
+        $("#clearButton").click(function () {
+            //$("[name='txtCustomerID']").val("");
+            //$("[name='amount']").val("");
+            $("[name='Remarks']").val("");
+            $("[name='TPin']").val("");
+            $("[name='Months']").val('0');
+        });
+
+
+
+
+        $('#btnSubmit').click(function (e) {
+            e.preventDefault();
+            debugger;
+            var accountNumber = document.getElementById("accountNumber").innerText;
+            var transactionAmount = document.getElementById("transactionAmount").innerText;
+            var beneficiaryAccountNumber= document.getElementById("beneficiaryAccountNumber").innerText;
+            var beneficiaryAccountName = document.getElementById("beneficiaryAccountName").innerText;
+            var beneficiaryBankName = document.getElementById("beneficiaryBankName").innerText;
+            var branchName = document.getElementById("branchName").innerText;
+            var remarks = document.getElementById("remarks").innerText;
+
+            if ((accountNumber != "") && (transactionAmount != "") && (beneficiaryAccountNumber != "") && (beneficiaryAccountName != "") &&
+                (beneficiaryBankName != "") && (branchName != "") && (remarks != "")) {
+
+                var dataToPost = {
+                    accountNumber: accountNumber,
+                    amount: transactionAmount,
+                    beneficiaryAccountNumber: beneficiaryAccountNumber,
+                    beneficiaryAccountName: beneficiaryAccountName,
+                    beneficiaryBankName: beneficiaryBankName,
+                    branchName: branchName,
+                    remarks: remarks
+                };
+
+                e.preventDefault(); //prevent the default action
+                $.ajax({
+                    url: '@Url.Action("CIPSExecutePayment", "CIPS")',
+                    type: "POST",
+                    data: dataToPost,
+                    async: false,
+                    success: function (data) {
+                        debugger;
+                        $(".preload").hide();
+                        if (data.responseCode == "200" || data.responseCode=="0") {
+                            $("#ajaxResponse").html("");
+                            //var resp = JSON.parse(data.responseText);
+                            var resp = data.responseText;
+                            $('#successModal').modal("show");
+
+                            $("#TPin").val("");
+                            $("#Remarks").val("");
+                            $("#amount").val("");
+
+                        }
+                        //display error message
+                        else {
+                            $("#ajaxResponse").html("");
+                            $("#message").html("");
+                            $("#message").append(data.responseText);
+                            if (data.responseText == "Session expired. Please login again") {
+                                $('#failureModalSessionExpired').modal("show");
+                            }
+                            else {
+                                $('#failureModal').modal("show");
+                            }
+
+                        }
+                    },
+                    error: function (jqXHR, textStatus, errorThrown) {
+                        alert('Failed to retrieve.');
+                        $("#message").html("");
+                        $("#message").append(jqXHR.responseText);
+                        $('#failureModal').modal("show");
+
+                    },
+                    //capture the request before it was sent to server
+                    beforeSend: function (jqXHR, settings) {
+                        //adding some Dummy data to the request
+                        $(".preload").show();
+                        settings.data += "&dummyData=whatever";
+                        //disable the button until we get the response
+                        $('#btnSubmit').attr("disabled", true);
+                    },
+                    complete: function (jqXHR, textStatus) {
+                        //enable the button
+                        $('.preload').hide();
+                        $('#btnSubmit').attr("disabled", false);
+                    }
+                });
+
+            }
+            else {
+                checkValidation();
+                $("#message").html("");
+                $("#message").append("Please Enter the required fields.");
+                $('#failureModal').modal("show");
+
+            }
+        });
+    </script>
+
+}

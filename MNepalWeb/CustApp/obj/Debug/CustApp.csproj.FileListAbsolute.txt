@@ -1,0 +1,264 @@
+H:\SourceTFS\MNepalWeb\MNepalWeb\CustApp\bin\CustApp.dll.config
+H:\SourceTFS\MNepalWeb\MNepalWeb\CustApp\bin\CustApp.dll
+H:\SourceTFS\MNepalWeb\MNepalWeb\CustApp\bin\CustApp.pdb
+H:\SourceTFS\MNepalWeb\MNepalWeb\CustApp\bin\roslyn\csc.exe
+H:\SourceTFS\MNepalWeb\MNepalWeb\CustApp\bin\roslyn\csc.exe.config
+H:\SourceTFS\MNepalWeb\MNepalWeb\CustApp\bin\roslyn\csc.rsp
+H:\SourceTFS\MNepalWeb\MNepalWeb\CustApp\bin\roslyn\csi.exe
+H:\SourceTFS\MNepalWeb\MNepalWeb\CustApp\bin\roslyn\csi.exe.config
+H:\SourceTFS\MNepalWeb\MNepalWeb\CustApp\bin\roslyn\csi.rsp
+H:\SourceTFS\MNepalWeb\MNepalWeb\CustApp\bin\roslyn\Microsoft.Build.Tasks.CodeAnalysis.dll
+H:\SourceTFS\MNepalWeb\MNepalWeb\CustApp\bin\roslyn\Microsoft.CodeAnalysis.CSharp.dll
+H:\SourceTFS\MNepalWeb\MNepalWeb\CustApp\bin\roslyn\Microsoft.CodeAnalysis.CSharp.Scripting.dll
+H:\SourceTFS\MNepalWeb\MNepalWeb\CustApp\bin\roslyn\Microsoft.CodeAnalysis.dll
+H:\SourceTFS\MNepalWeb\MNepalWeb\CustApp\bin\roslyn\Microsoft.CodeAnalysis.Scripting.dll
+H:\SourceTFS\MNepalWeb\MNepalWeb\CustApp\bin\roslyn\Microsoft.CodeAnalysis.VisualBasic.dll
+H:\SourceTFS\MNepalWeb\MNepalWeb\CustApp\bin\roslyn\Microsoft.CSharp.Core.targets
+H:\SourceTFS\MNepalWeb\MNepalWeb\CustApp\bin\roslyn\Microsoft.DiaSymReader.Native.amd64.dll
+H:\SourceTFS\MNepalWeb\MNepalWeb\CustApp\bin\roslyn\Microsoft.DiaSymReader.Native.x86.dll
+H:\SourceTFS\MNepalWeb\MNepalWeb\CustApp\bin\roslyn\Microsoft.Managed.Core.targets
+H:\SourceTFS\MNepalWeb\MNepalWeb\CustApp\bin\roslyn\Microsoft.VisualBasic.Core.targets
+H:\SourceTFS\MNepalWeb\MNepalWeb\CustApp\bin\roslyn\Microsoft.Win32.Primitives.dll
+H:\SourceTFS\MNepalWeb\MNepalWeb\CustApp\bin\roslyn\System.AppContext.dll
+H:\SourceTFS\MNepalWeb\MNepalWeb\CustApp\bin\roslyn\System.Collections.Immutable.dll
+H:\SourceTFS\MNepalWeb\MNepalWeb\CustApp\bin\roslyn\System.Console.dll
+H:\SourceTFS\MNepalWeb\MNepalWeb\CustApp\bin\roslyn\System.Diagnostics.DiagnosticSource.dll
+H:\SourceTFS\MNepalWeb\MNepalWeb\CustApp\bin\roslyn\System.Diagnostics.FileVersionInfo.dll
+H:\SourceTFS\MNepalWeb\MNepalWeb\CustApp\bin\roslyn\System.Diagnostics.StackTrace.dll
+H:\SourceTFS\MNepalWeb\MNepalWeb\CustApp\bin\roslyn\System.Globalization.Calendars.dll
+H:\SourceTFS\MNepalWeb\MNepalWeb\CustApp\bin\roslyn\System.IO.Compression.dll
+H:\SourceTFS\MNepalWeb\MNepalWeb\CustApp\bin\roslyn\System.IO.Compression.ZipFile.dll
+H:\SourceTFS\MNepalWeb\MNepalWeb\CustApp\bin\roslyn\System.IO.FileSystem.dll
+H:\SourceTFS\MNepalWeb\MNepalWeb\CustApp\bin\roslyn\System.IO.FileSystem.Primitives.dll
+H:\SourceTFS\MNepalWeb\MNepalWeb\CustApp\bin\roslyn\System.Net.Http.dll
+H:\SourceTFS\MNepalWeb\MNepalWeb\CustApp\bin\roslyn\System.Net.Sockets.dll
+H:\SourceTFS\MNepalWeb\MNepalWeb\CustApp\bin\roslyn\System.Reflection.Metadata.dll
+H:\SourceTFS\MNepalWeb\MNepalWeb\CustApp\bin\roslyn\System.Runtime.InteropServices.RuntimeInformation.dll
+H:\SourceTFS\MNepalWeb\MNepalWeb\CustApp\bin\roslyn\System.Security.Cryptography.Algorithms.dll
+H:\SourceTFS\MNepalWeb\MNepalWeb\CustApp\bin\roslyn\System.Security.Cryptography.Encoding.dll
+H:\SourceTFS\MNepalWeb\MNepalWeb\CustApp\bin\roslyn\System.Security.Cryptography.Primitives.dll
+H:\SourceTFS\MNepalWeb\MNepalWeb\CustApp\bin\roslyn\System.Security.Cryptography.X509Certificates.dll
+H:\SourceTFS\MNepalWeb\MNepalWeb\CustApp\bin\roslyn\System.Text.Encoding.CodePages.dll
+H:\SourceTFS\MNepalWeb\MNepalWeb\CustApp\bin\roslyn\System.Threading.Tasks.Extensions.dll
+H:\SourceTFS\MNepalWeb\MNepalWeb\CustApp\bin\roslyn\System.ValueTuple.dll
+H:\SourceTFS\MNepalWeb\MNepalWeb\CustApp\bin\roslyn\System.Xml.ReaderWriter.dll
+H:\SourceTFS\MNepalWeb\MNepalWeb\CustApp\bin\roslyn\System.Xml.XmlDocument.dll
+H:\SourceTFS\MNepalWeb\MNepalWeb\CustApp\bin\roslyn\System.Xml.XPath.dll
+H:\SourceTFS\MNepalWeb\MNepalWeb\CustApp\bin\roslyn\System.Xml.XPath.XDocument.dll
+H:\SourceTFS\MNepalWeb\MNepalWeb\CustApp\bin\roslyn\vbc.exe
+H:\SourceTFS\MNepalWeb\MNepalWeb\CustApp\bin\roslyn\vbc.exe.config
+H:\SourceTFS\MNepalWeb\MNepalWeb\CustApp\bin\roslyn\vbc.rsp
+H:\SourceTFS\MNepalWeb\MNepalWeb\CustApp\bin\roslyn\VBCSCompiler.exe
+H:\SourceTFS\MNepalWeb\MNepalWeb\CustApp\bin\roslyn\VBCSCompiler.exe.config
+H:\SourceTFS\MNepalWeb\MNepalWeb\CustApp\bin\Antlr3.Runtime.dll
+H:\SourceTFS\MNepalWeb\MNepalWeb\CustApp\bin\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.dll
+H:\SourceTFS\MNepalWeb\MNepalWeb\CustApp\bin\Microsoft.Practices.EnterpriseLibrary.Common.dll
+H:\SourceTFS\MNepalWeb\MNepalWeb\CustApp\bin\Microsoft.Practices.EnterpriseLibrary.Data.dll
+H:\SourceTFS\MNepalWeb\MNepalWeb\CustApp\bin\Microsoft.Practices.ObjectBuilder.dll
+H:\SourceTFS\MNepalWeb\MNepalWeb\CustApp\bin\Microsoft.Web.Infrastructure.dll
+H:\SourceTFS\MNepalWeb\MNepalWeb\CustApp\bin\Newtonsoft.Json.dll
+H:\SourceTFS\MNepalWeb\MNepalWeb\CustApp\bin\System.Net.Http.Formatting.dll
+H:\SourceTFS\MNepalWeb\MNepalWeb\CustApp\bin\System.Web.Helpers.dll
+H:\SourceTFS\MNepalWeb\MNepalWeb\CustApp\bin\System.Web.Http.dll
+H:\SourceTFS\MNepalWeb\MNepalWeb\CustApp\bin\System.Web.Http.WebHost.dll
+H:\SourceTFS\MNepalWeb\MNepalWeb\CustApp\bin\System.Web.Mvc.dll
+H:\SourceTFS\MNepalWeb\MNepalWeb\CustApp\bin\System.Web.Optimization.dll
+H:\SourceTFS\MNepalWeb\MNepalWeb\CustApp\bin\System.Web.Razor.dll
+H:\SourceTFS\MNepalWeb\MNepalWeb\CustApp\bin\System.Web.WebPages.Deployment.dll
+H:\SourceTFS\MNepalWeb\MNepalWeb\CustApp\bin\System.Web.WebPages.dll
+H:\SourceTFS\MNepalWeb\MNepalWeb\CustApp\bin\System.Web.WebPages.Razor.dll
+H:\SourceTFS\MNepalWeb\MNepalWeb\CustApp\bin\WebGrease.dll
+H:\SourceTFS\MNepalWeb\MNepalWeb\CustApp\bin\System.Web.Helpers.xml
+H:\SourceTFS\MNepalWeb\MNepalWeb\CustApp\bin\System.Web.Mvc.xml
+H:\SourceTFS\MNepalWeb\MNepalWeb\CustApp\bin\System.Web.Optimization.xml
+H:\SourceTFS\MNepalWeb\MNepalWeb\CustApp\bin\System.Web.Razor.xml
+H:\SourceTFS\MNepalWeb\MNepalWeb\CustApp\bin\System.Web.WebPages.xml
+H:\SourceTFS\MNepalWeb\MNepalWeb\CustApp\bin\System.Web.WebPages.Deployment.xml
+H:\SourceTFS\MNepalWeb\MNepalWeb\CustApp\bin\System.Web.WebPages.Razor.xml
+H:\SourceTFS\MNepalWeb\MNepalWeb\CustApp\bin\Newtonsoft.Json.xml
+H:\SourceTFS\MNepalWeb\MNepalWeb\CustApp\bin\Antlr3.Runtime.pdb
+H:\SourceTFS\MNepalWeb\MNepalWeb\CustApp\bin\System.Net.Http.Formatting.xml
+H:\SourceTFS\MNepalWeb\MNepalWeb\CustApp\bin\System.Web.Http.xml
+H:\SourceTFS\MNepalWeb\MNepalWeb\CustApp\bin\System.Web.Http.WebHost.xml
+H:\SourceTFS\MNepalWeb\MNepalWeb\CustApp\bin\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.xml
+H:\SourceTFS\MNepalWeb\MNepalWeb\CustApp\obj\Debug\CustApp.csproj.CoreCompileInputs.cache
+H:\SourceTFS\MNepalWeb\MNepalWeb\CustApp\obj\Debug\CustApp.csproj.CopyComplete
+H:\SourceTFS\MNepalWeb\MNepalWeb\CustApp\obj\Debug\CustApp.dll
+H:\SourceTFS\MNepalWeb\MNepalWeb\CustApp\obj\Debug\CustApp.pdb
+H:\SourceTFS\MNepalWeb\MNepalWeb\CustApp\obj\Debug\CustApp.csprojAssemblyReference.cache
+D:\Handover Files by MOS team\Dec2_2020\Web SourceCode For SA_BA_Agent_Mer_Cust\MNepalWeb\MNepalWeb\CustApp\bin\CustApp.dll.config
+D:\Handover Files by MOS team\Dec2_2020\Web SourceCode For SA_BA_Agent_Mer_Cust\MNepalWeb\MNepalWeb\CustApp\bin\CustApp.dll
+D:\Handover Files by MOS team\Dec2_2020\Web SourceCode For SA_BA_Agent_Mer_Cust\MNepalWeb\MNepalWeb\CustApp\bin\CustApp.pdb
+D:\Handover Files by MOS team\Dec2_2020\Web SourceCode For SA_BA_Agent_Mer_Cust\MNepalWeb\MNepalWeb\CustApp\bin\roslyn\csc.exe
+D:\Handover Files by MOS team\Dec2_2020\Web SourceCode For SA_BA_Agent_Mer_Cust\MNepalWeb\MNepalWeb\CustApp\bin\roslyn\csc.exe.config
+D:\Handover Files by MOS team\Dec2_2020\Web SourceCode For SA_BA_Agent_Mer_Cust\MNepalWeb\MNepalWeb\CustApp\bin\roslyn\csc.rsp
+D:\Handover Files by MOS team\Dec2_2020\Web SourceCode For SA_BA_Agent_Mer_Cust\MNepalWeb\MNepalWeb\CustApp\bin\roslyn\csi.exe
+D:\Handover Files by MOS team\Dec2_2020\Web SourceCode For SA_BA_Agent_Mer_Cust\MNepalWeb\MNepalWeb\CustApp\bin\roslyn\csi.exe.config
+D:\Handover Files by MOS team\Dec2_2020\Web SourceCode For SA_BA_Agent_Mer_Cust\MNepalWeb\MNepalWeb\CustApp\bin\roslyn\csi.rsp
+D:\Handover Files by MOS team\Dec2_2020\Web SourceCode For SA_BA_Agent_Mer_Cust\MNepalWeb\MNepalWeb\CustApp\bin\roslyn\Microsoft.Build.Tasks.CodeAnalysis.dll
+D:\Handover Files by MOS team\Dec2_2020\Web SourceCode For SA_BA_Agent_Mer_Cust\MNepalWeb\MNepalWeb\CustApp\bin\roslyn\Microsoft.CodeAnalysis.CSharp.dll
+D:\Handover Files by MOS team\Dec2_2020\Web SourceCode For SA_BA_Agent_Mer_Cust\MNepalWeb\MNepalWeb\CustApp\bin\roslyn\Microsoft.CodeAnalysis.CSharp.Scripting.dll
+D:\Handover Files by MOS team\Dec2_2020\Web SourceCode For SA_BA_Agent_Mer_Cust\MNepalWeb\MNepalWeb\CustApp\bin\roslyn\Microsoft.CodeAnalysis.dll
+D:\Handover Files by MOS team\Dec2_2020\Web SourceCode For SA_BA_Agent_Mer_Cust\MNepalWeb\MNepalWeb\CustApp\bin\roslyn\Microsoft.CodeAnalysis.Scripting.dll
+D:\Handover Files by MOS team\Dec2_2020\Web SourceCode For SA_BA_Agent_Mer_Cust\MNepalWeb\MNepalWeb\CustApp\bin\roslyn\Microsoft.CodeAnalysis.VisualBasic.dll
+D:\Handover Files by MOS team\Dec2_2020\Web SourceCode For SA_BA_Agent_Mer_Cust\MNepalWeb\MNepalWeb\CustApp\bin\roslyn\Microsoft.CSharp.Core.targets
+D:\Handover Files by MOS team\Dec2_2020\Web SourceCode For SA_BA_Agent_Mer_Cust\MNepalWeb\MNepalWeb\CustApp\bin\roslyn\Microsoft.DiaSymReader.Native.amd64.dll
+D:\Handover Files by MOS team\Dec2_2020\Web SourceCode For SA_BA_Agent_Mer_Cust\MNepalWeb\MNepalWeb\CustApp\bin\roslyn\Microsoft.DiaSymReader.Native.x86.dll
+D:\Handover Files by MOS team\Dec2_2020\Web SourceCode For SA_BA_Agent_Mer_Cust\MNepalWeb\MNepalWeb\CustApp\bin\roslyn\Microsoft.Managed.Core.targets
+D:\Handover Files by MOS team\Dec2_2020\Web SourceCode For SA_BA_Agent_Mer_Cust\MNepalWeb\MNepalWeb\CustApp\bin\roslyn\Microsoft.VisualBasic.Core.targets
+D:\Handover Files by MOS team\Dec2_2020\Web SourceCode For SA_BA_Agent_Mer_Cust\MNepalWeb\MNepalWeb\CustApp\bin\roslyn\Microsoft.Win32.Primitives.dll
+D:\Handover Files by MOS team\Dec2_2020\Web SourceCode For SA_BA_Agent_Mer_Cust\MNepalWeb\MNepalWeb\CustApp\bin\roslyn\System.AppContext.dll
+D:\Handover Files by MOS team\Dec2_2020\Web SourceCode For SA_BA_Agent_Mer_Cust\MNepalWeb\MNepalWeb\CustApp\bin\roslyn\System.Collections.Immutable.dll
+D:\Handover Files by MOS team\Dec2_2020\Web SourceCode For SA_BA_Agent_Mer_Cust\MNepalWeb\MNepalWeb\CustApp\bin\roslyn\System.Console.dll
+D:\Handover Files by MOS team\Dec2_2020\Web SourceCode For SA_BA_Agent_Mer_Cust\MNepalWeb\MNepalWeb\CustApp\bin\roslyn\System.Diagnostics.DiagnosticSource.dll
+D:\Handover Files by MOS team\Dec2_2020\Web SourceCode For SA_BA_Agent_Mer_Cust\MNepalWeb\MNepalWeb\CustApp\bin\roslyn\System.Diagnostics.FileVersionInfo.dll
+D:\Handover Files by MOS team\Dec2_2020\Web SourceCode For SA_BA_Agent_Mer_Cust\MNepalWeb\MNepalWeb\CustApp\bin\roslyn\System.Diagnostics.StackTrace.dll
+D:\Handover Files by MOS team\Dec2_2020\Web SourceCode For SA_BA_Agent_Mer_Cust\MNepalWeb\MNepalWeb\CustApp\bin\roslyn\System.Globalization.Calendars.dll
+D:\Handover Files by MOS team\Dec2_2020\Web SourceCode For SA_BA_Agent_Mer_Cust\MNepalWeb\MNepalWeb\CustApp\bin\roslyn\System.IO.Compression.dll
+D:\Handover Files by MOS team\Dec2_2020\Web SourceCode For SA_BA_Agent_Mer_Cust\MNepalWeb\MNepalWeb\CustApp\bin\roslyn\System.IO.Compression.ZipFile.dll
+D:\Handover Files by MOS team\Dec2_2020\Web SourceCode For SA_BA_Agent_Mer_Cust\MNepalWeb\MNepalWeb\CustApp\bin\roslyn\System.IO.FileSystem.dll
+D:\Handover Files by MOS team\Dec2_2020\Web SourceCode For SA_BA_Agent_Mer_Cust\MNepalWeb\MNepalWeb\CustApp\bin\roslyn\System.IO.FileSystem.Primitives.dll
+D:\Handover Files by MOS team\Dec2_2020\Web SourceCode For SA_BA_Agent_Mer_Cust\MNepalWeb\MNepalWeb\CustApp\bin\roslyn\System.Net.Http.dll
+D:\Handover Files by MOS team\Dec2_2020\Web SourceCode For SA_BA_Agent_Mer_Cust\MNepalWeb\MNepalWeb\CustApp\bin\roslyn\System.Net.Sockets.dll
+D:\Handover Files by MOS team\Dec2_2020\Web SourceCode For SA_BA_Agent_Mer_Cust\MNepalWeb\MNepalWeb\CustApp\bin\roslyn\System.Reflection.Metadata.dll
+D:\Handover Files by MOS team\Dec2_2020\Web SourceCode For SA_BA_Agent_Mer_Cust\MNepalWeb\MNepalWeb\CustApp\bin\roslyn\System.Runtime.InteropServices.RuntimeInformation.dll
+D:\Handover Files by MOS team\Dec2_2020\Web SourceCode For SA_BA_Agent_Mer_Cust\MNepalWeb\MNepalWeb\CustApp\bin\roslyn\System.Security.Cryptography.Algorithms.dll
+D:\Handover Files by MOS team\Dec2_2020\Web SourceCode For SA_BA_Agent_Mer_Cust\MNepalWeb\MNepalWeb\CustApp\bin\roslyn\System.Security.Cryptography.Encoding.dll
+D:\Handover Files by MOS team\Dec2_2020\Web SourceCode For SA_BA_Agent_Mer_Cust\MNepalWeb\MNepalWeb\CustApp\bin\roslyn\System.Security.Cryptography.Primitives.dll
+D:\Handover Files by MOS team\Dec2_2020\Web SourceCode For SA_BA_Agent_Mer_Cust\MNepalWeb\MNepalWeb\CustApp\bin\roslyn\System.Security.Cryptography.X509Certificates.dll
+D:\Handover Files by MOS team\Dec2_2020\Web SourceCode For SA_BA_Agent_Mer_Cust\MNepalWeb\MNepalWeb\CustApp\bin\roslyn\System.Text.Encoding.CodePages.dll
+D:\Handover Files by MOS team\Dec2_2020\Web SourceCode For SA_BA_Agent_Mer_Cust\MNepalWeb\MNepalWeb\CustApp\bin\roslyn\System.Threading.Tasks.Extensions.dll
+D:\Handover Files by MOS team\Dec2_2020\Web SourceCode For SA_BA_Agent_Mer_Cust\MNepalWeb\MNepalWeb\CustApp\bin\roslyn\System.ValueTuple.dll
+D:\Handover Files by MOS team\Dec2_2020\Web SourceCode For SA_BA_Agent_Mer_Cust\MNepalWeb\MNepalWeb\CustApp\bin\roslyn\System.Xml.ReaderWriter.dll
+D:\Handover Files by MOS team\Dec2_2020\Web SourceCode For SA_BA_Agent_Mer_Cust\MNepalWeb\MNepalWeb\CustApp\bin\roslyn\System.Xml.XmlDocument.dll
+D:\Handover Files by MOS team\Dec2_2020\Web SourceCode For SA_BA_Agent_Mer_Cust\MNepalWeb\MNepalWeb\CustApp\bin\roslyn\System.Xml.XPath.dll
+D:\Handover Files by MOS team\Dec2_2020\Web SourceCode For SA_BA_Agent_Mer_Cust\MNepalWeb\MNepalWeb\CustApp\bin\roslyn\System.Xml.XPath.XDocument.dll
+D:\Handover Files by MOS team\Dec2_2020\Web SourceCode For SA_BA_Agent_Mer_Cust\MNepalWeb\MNepalWeb\CustApp\bin\roslyn\vbc.exe
+D:\Handover Files by MOS team\Dec2_2020\Web SourceCode For SA_BA_Agent_Mer_Cust\MNepalWeb\MNepalWeb\CustApp\bin\roslyn\vbc.exe.config
+D:\Handover Files by MOS team\Dec2_2020\Web SourceCode For SA_BA_Agent_Mer_Cust\MNepalWeb\MNepalWeb\CustApp\bin\roslyn\vbc.rsp
+D:\Handover Files by MOS team\Dec2_2020\Web SourceCode For SA_BA_Agent_Mer_Cust\MNepalWeb\MNepalWeb\CustApp\bin\roslyn\VBCSCompiler.exe
+D:\Handover Files by MOS team\Dec2_2020\Web SourceCode For SA_BA_Agent_Mer_Cust\MNepalWeb\MNepalWeb\CustApp\bin\roslyn\VBCSCompiler.exe.config
+D:\Handover Files by MOS team\Dec2_2020\Web SourceCode For SA_BA_Agent_Mer_Cust\MNepalWeb\MNepalWeb\CustApp\bin\Antlr3.Runtime.dll
+D:\Handover Files by MOS team\Dec2_2020\Web SourceCode For SA_BA_Agent_Mer_Cust\MNepalWeb\MNepalWeb\CustApp\bin\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.dll
+D:\Handover Files by MOS team\Dec2_2020\Web SourceCode For SA_BA_Agent_Mer_Cust\MNepalWeb\MNepalWeb\CustApp\bin\Microsoft.Practices.EnterpriseLibrary.Common.dll
+D:\Handover Files by MOS team\Dec2_2020\Web SourceCode For SA_BA_Agent_Mer_Cust\MNepalWeb\MNepalWeb\CustApp\bin\Microsoft.Practices.EnterpriseLibrary.Data.dll
+D:\Handover Files by MOS team\Dec2_2020\Web SourceCode For SA_BA_Agent_Mer_Cust\MNepalWeb\MNepalWeb\CustApp\bin\Microsoft.Practices.ObjectBuilder.dll
+D:\Handover Files by MOS team\Dec2_2020\Web SourceCode For SA_BA_Agent_Mer_Cust\MNepalWeb\MNepalWeb\CustApp\bin\Microsoft.Web.Infrastructure.dll
+D:\Handover Files by MOS team\Dec2_2020\Web SourceCode For SA_BA_Agent_Mer_Cust\MNepalWeb\MNepalWeb\CustApp\bin\Newtonsoft.Json.dll
+D:\Handover Files by MOS team\Dec2_2020\Web SourceCode For SA_BA_Agent_Mer_Cust\MNepalWeb\MNepalWeb\CustApp\bin\System.Net.Http.Formatting.dll
+D:\Handover Files by MOS team\Dec2_2020\Web SourceCode For SA_BA_Agent_Mer_Cust\MNepalWeb\MNepalWeb\CustApp\bin\System.Web.Helpers.dll
+D:\Handover Files by MOS team\Dec2_2020\Web SourceCode For SA_BA_Agent_Mer_Cust\MNepalWeb\MNepalWeb\CustApp\bin\System.Web.Http.dll
+D:\Handover Files by MOS team\Dec2_2020\Web SourceCode For SA_BA_Agent_Mer_Cust\MNepalWeb\MNepalWeb\CustApp\bin\System.Web.Http.WebHost.dll
+D:\Handover Files by MOS team\Dec2_2020\Web SourceCode For SA_BA_Agent_Mer_Cust\MNepalWeb\MNepalWeb\CustApp\bin\System.Web.Mvc.dll
+D:\Handover Files by MOS team\Dec2_2020\Web SourceCode For SA_BA_Agent_Mer_Cust\MNepalWeb\MNepalWeb\CustApp\bin\System.Web.Optimization.dll
+D:\Handover Files by MOS team\Dec2_2020\Web SourceCode For SA_BA_Agent_Mer_Cust\MNepalWeb\MNepalWeb\CustApp\bin\System.Web.Razor.dll
+D:\Handover Files by MOS team\Dec2_2020\Web SourceCode For SA_BA_Agent_Mer_Cust\MNepalWeb\MNepalWeb\CustApp\bin\System.Web.WebPages.Deployment.dll
+D:\Handover Files by MOS team\Dec2_2020\Web SourceCode For SA_BA_Agent_Mer_Cust\MNepalWeb\MNepalWeb\CustApp\bin\System.Web.WebPages.dll
+D:\Handover Files by MOS team\Dec2_2020\Web SourceCode For SA_BA_Agent_Mer_Cust\MNepalWeb\MNepalWeb\CustApp\bin\System.Web.WebPages.Razor.dll
+D:\Handover Files by MOS team\Dec2_2020\Web SourceCode For SA_BA_Agent_Mer_Cust\MNepalWeb\MNepalWeb\CustApp\bin\WebGrease.dll
+D:\Handover Files by MOS team\Dec2_2020\Web SourceCode For SA_BA_Agent_Mer_Cust\MNepalWeb\MNepalWeb\CustApp\bin\System.Web.Helpers.xml
+D:\Handover Files by MOS team\Dec2_2020\Web SourceCode For SA_BA_Agent_Mer_Cust\MNepalWeb\MNepalWeb\CustApp\bin\System.Web.Mvc.xml
+D:\Handover Files by MOS team\Dec2_2020\Web SourceCode For SA_BA_Agent_Mer_Cust\MNepalWeb\MNepalWeb\CustApp\bin\System.Web.Optimization.xml
+D:\Handover Files by MOS team\Dec2_2020\Web SourceCode For SA_BA_Agent_Mer_Cust\MNepalWeb\MNepalWeb\CustApp\bin\System.Web.Razor.xml
+D:\Handover Files by MOS team\Dec2_2020\Web SourceCode For SA_BA_Agent_Mer_Cust\MNepalWeb\MNepalWeb\CustApp\bin\System.Web.WebPages.xml
+D:\Handover Files by MOS team\Dec2_2020\Web SourceCode For SA_BA_Agent_Mer_Cust\MNepalWeb\MNepalWeb\CustApp\bin\System.Web.WebPages.Deployment.xml
+D:\Handover Files by MOS team\Dec2_2020\Web SourceCode For SA_BA_Agent_Mer_Cust\MNepalWeb\MNepalWeb\CustApp\bin\System.Web.WebPages.Razor.xml
+D:\Handover Files by MOS team\Dec2_2020\Web SourceCode For SA_BA_Agent_Mer_Cust\MNepalWeb\MNepalWeb\CustApp\bin\Newtonsoft.Json.xml
+D:\Handover Files by MOS team\Dec2_2020\Web SourceCode For SA_BA_Agent_Mer_Cust\MNepalWeb\MNepalWeb\CustApp\bin\Antlr3.Runtime.pdb
+D:\Handover Files by MOS team\Dec2_2020\Web SourceCode For SA_BA_Agent_Mer_Cust\MNepalWeb\MNepalWeb\CustApp\bin\System.Net.Http.Formatting.xml
+D:\Handover Files by MOS team\Dec2_2020\Web SourceCode For SA_BA_Agent_Mer_Cust\MNepalWeb\MNepalWeb\CustApp\bin\System.Web.Http.xml
+D:\Handover Files by MOS team\Dec2_2020\Web SourceCode For SA_BA_Agent_Mer_Cust\MNepalWeb\MNepalWeb\CustApp\bin\System.Web.Http.WebHost.xml
+D:\Handover Files by MOS team\Dec2_2020\Web SourceCode For SA_BA_Agent_Mer_Cust\MNepalWeb\MNepalWeb\CustApp\bin\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.xml
+D:\Handover Files by MOS team\Dec2_2020\Web SourceCode For SA_BA_Agent_Mer_Cust\MNepalWeb\MNepalWeb\CustApp\obj\Debug\CustApp.csprojAssemblyReference.cache
+D:\Handover Files by MOS team\Dec2_2020\Web SourceCode For SA_BA_Agent_Mer_Cust\MNepalWeb\MNepalWeb\CustApp\obj\Debug\CustApp.csproj.CoreCompileInputs.cache
+D:\Handover Files by MOS team\Dec2_2020\Web SourceCode For SA_BA_Agent_Mer_Cust\MNepalWeb\MNepalWeb\CustApp\obj\Debug\CustApp.csproj.CopyComplete
+D:\Handover Files by MOS team\Dec2_2020\Web SourceCode For SA_BA_Agent_Mer_Cust\MNepalWeb\MNepalWeb\CustApp\obj\Debug\CustApp.dll
+D:\Handover Files by MOS team\Dec2_2020\Web SourceCode For SA_BA_Agent_Mer_Cust\MNepalWeb\MNepalWeb\CustApp\obj\Debug\CustApp.pdb
+D:\Dec2_2020\Dec2_2020\Web SourceCode For SA_BA_Agent_Mer_Cust\MNepalWeb\MNepalWeb\CustApp\bin\CustApp.dll.config
+D:\Dec2_2020\Dec2_2020\Web SourceCode For SA_BA_Agent_Mer_Cust\MNepalWeb\MNepalWeb\CustApp\bin\CustApp.dll
+D:\Dec2_2020\Dec2_2020\Web SourceCode For SA_BA_Agent_Mer_Cust\MNepalWeb\MNepalWeb\CustApp\bin\CustApp.pdb
+D:\Dec2_2020\Dec2_2020\Web SourceCode For SA_BA_Agent_Mer_Cust\MNepalWeb\MNepalWeb\CustApp\bin\roslyn\csc.exe
+D:\Dec2_2020\Dec2_2020\Web SourceCode For SA_BA_Agent_Mer_Cust\MNepalWeb\MNepalWeb\CustApp\bin\roslyn\csc.exe.config
+D:\Dec2_2020\Dec2_2020\Web SourceCode For SA_BA_Agent_Mer_Cust\MNepalWeb\MNepalWeb\CustApp\bin\roslyn\csc.rsp
+D:\Dec2_2020\Dec2_2020\Web SourceCode For SA_BA_Agent_Mer_Cust\MNepalWeb\MNepalWeb\CustApp\bin\roslyn\csi.exe
+D:\Dec2_2020\Dec2_2020\Web SourceCode For SA_BA_Agent_Mer_Cust\MNepalWeb\MNepalWeb\CustApp\bin\roslyn\csi.exe.config
+D:\Dec2_2020\Dec2_2020\Web SourceCode For SA_BA_Agent_Mer_Cust\MNepalWeb\MNepalWeb\CustApp\bin\roslyn\csi.rsp
+D:\Dec2_2020\Dec2_2020\Web SourceCode For SA_BA_Agent_Mer_Cust\MNepalWeb\MNepalWeb\CustApp\bin\roslyn\Microsoft.Build.Tasks.CodeAnalysis.dll
+D:\Dec2_2020\Dec2_2020\Web SourceCode For SA_BA_Agent_Mer_Cust\MNepalWeb\MNepalWeb\CustApp\bin\roslyn\Microsoft.CodeAnalysis.CSharp.dll
+D:\Dec2_2020\Dec2_2020\Web SourceCode For SA_BA_Agent_Mer_Cust\MNepalWeb\MNepalWeb\CustApp\bin\roslyn\Microsoft.CodeAnalysis.CSharp.Scripting.dll
+D:\Dec2_2020\Dec2_2020\Web SourceCode For SA_BA_Agent_Mer_Cust\MNepalWeb\MNepalWeb\CustApp\bin\roslyn\Microsoft.CodeAnalysis.dll
+D:\Dec2_2020\Dec2_2020\Web SourceCode For SA_BA_Agent_Mer_Cust\MNepalWeb\MNepalWeb\CustApp\bin\roslyn\Microsoft.CodeAnalysis.Scripting.dll
+D:\Dec2_2020\Dec2_2020\Web SourceCode For SA_BA_Agent_Mer_Cust\MNepalWeb\MNepalWeb\CustApp\bin\roslyn\Microsoft.CodeAnalysis.VisualBasic.dll
+D:\Dec2_2020\Dec2_2020\Web SourceCode For SA_BA_Agent_Mer_Cust\MNepalWeb\MNepalWeb\CustApp\bin\roslyn\Microsoft.CSharp.Core.targets
+D:\Dec2_2020\Dec2_2020\Web SourceCode For SA_BA_Agent_Mer_Cust\MNepalWeb\MNepalWeb\CustApp\bin\roslyn\Microsoft.DiaSymReader.Native.amd64.dll
+D:\Dec2_2020\Dec2_2020\Web SourceCode For SA_BA_Agent_Mer_Cust\MNepalWeb\MNepalWeb\CustApp\bin\roslyn\Microsoft.DiaSymReader.Native.x86.dll
+D:\Dec2_2020\Dec2_2020\Web SourceCode For SA_BA_Agent_Mer_Cust\MNepalWeb\MNepalWeb\CustApp\bin\roslyn\Microsoft.Managed.Core.targets
+D:\Dec2_2020\Dec2_2020\Web SourceCode For SA_BA_Agent_Mer_Cust\MNepalWeb\MNepalWeb\CustApp\bin\roslyn\Microsoft.VisualBasic.Core.targets
+D:\Dec2_2020\Dec2_2020\Web SourceCode For SA_BA_Agent_Mer_Cust\MNepalWeb\MNepalWeb\CustApp\bin\roslyn\Microsoft.Win32.Primitives.dll
+D:\Dec2_2020\Dec2_2020\Web SourceCode For SA_BA_Agent_Mer_Cust\MNepalWeb\MNepalWeb\CustApp\bin\roslyn\System.AppContext.dll
+D:\Dec2_2020\Dec2_2020\Web SourceCode For SA_BA_Agent_Mer_Cust\MNepalWeb\MNepalWeb\CustApp\bin\roslyn\System.Collections.Immutable.dll
+D:\Dec2_2020\Dec2_2020\Web SourceCode For SA_BA_Agent_Mer_Cust\MNepalWeb\MNepalWeb\CustApp\bin\roslyn\System.Console.dll
+D:\Dec2_2020\Dec2_2020\Web SourceCode For SA_BA_Agent_Mer_Cust\MNepalWeb\MNepalWeb\CustApp\bin\roslyn\System.Diagnostics.DiagnosticSource.dll
+D:\Dec2_2020\Dec2_2020\Web SourceCode For SA_BA_Agent_Mer_Cust\MNepalWeb\MNepalWeb\CustApp\bin\roslyn\System.Diagnostics.FileVersionInfo.dll
+D:\Dec2_2020\Dec2_2020\Web SourceCode For SA_BA_Agent_Mer_Cust\MNepalWeb\MNepalWeb\CustApp\bin\roslyn\System.Diagnostics.StackTrace.dll
+D:\Dec2_2020\Dec2_2020\Web SourceCode For SA_BA_Agent_Mer_Cust\MNepalWeb\MNepalWeb\CustApp\bin\roslyn\System.Globalization.Calendars.dll
+D:\Dec2_2020\Dec2_2020\Web SourceCode For SA_BA_Agent_Mer_Cust\MNepalWeb\MNepalWeb\CustApp\bin\roslyn\System.IO.Compression.dll
+D:\Dec2_2020\Dec2_2020\Web SourceCode For SA_BA_Agent_Mer_Cust\MNepalWeb\MNepalWeb\CustApp\bin\roslyn\System.IO.Compression.ZipFile.dll
+D:\Dec2_2020\Dec2_2020\Web SourceCode For SA_BA_Agent_Mer_Cust\MNepalWeb\MNepalWeb\CustApp\bin\roslyn\System.IO.FileSystem.dll
+D:\Dec2_2020\Dec2_2020\Web SourceCode For SA_BA_Agent_Mer_Cust\MNepalWeb\MNepalWeb\CustApp\bin\roslyn\System.IO.FileSystem.Primitives.dll
+D:\Dec2_2020\Dec2_2020\Web SourceCode For SA_BA_Agent_Mer_Cust\MNepalWeb\MNepalWeb\CustApp\bin\roslyn\System.Net.Http.dll
+D:\Dec2_2020\Dec2_2020\Web SourceCode For SA_BA_Agent_Mer_Cust\MNepalWeb\MNepalWeb\CustApp\bin\roslyn\System.Net.Sockets.dll
+D:\Dec2_2020\Dec2_2020\Web SourceCode For SA_BA_Agent_Mer_Cust\MNepalWeb\MNepalWeb\CustApp\bin\roslyn\System.Reflection.Metadata.dll
+D:\Dec2_2020\Dec2_2020\Web SourceCode For SA_BA_Agent_Mer_Cust\MNepalWeb\MNepalWeb\CustApp\bin\roslyn\System.Runtime.InteropServices.RuntimeInformation.dll
+D:\Dec2_2020\Dec2_2020\Web SourceCode For SA_BA_Agent_Mer_Cust\MNepalWeb\MNepalWeb\CustApp\bin\roslyn\System.Security.Cryptography.Algorithms.dll
+D:\Dec2_2020\Dec2_2020\Web SourceCode For SA_BA_Agent_Mer_Cust\MNepalWeb\MNepalWeb\CustApp\bin\roslyn\System.Security.Cryptography.Encoding.dll
+D:\Dec2_2020\Dec2_2020\Web SourceCode For SA_BA_Agent_Mer_Cust\MNepalWeb\MNepalWeb\CustApp\bin\roslyn\System.Security.Cryptography.Primitives.dll
+D:\Dec2_2020\Dec2_2020\Web SourceCode For SA_BA_Agent_Mer_Cust\MNepalWeb\MNepalWeb\CustApp\bin\roslyn\System.Security.Cryptography.X509Certificates.dll
+D:\Dec2_2020\Dec2_2020\Web SourceCode For SA_BA_Agent_Mer_Cust\MNepalWeb\MNepalWeb\CustApp\bin\roslyn\System.Text.Encoding.CodePages.dll
+D:\Dec2_2020\Dec2_2020\Web SourceCode For SA_BA_Agent_Mer_Cust\MNepalWeb\MNepalWeb\CustApp\bin\roslyn\System.Threading.Tasks.Extensions.dll
+D:\Dec2_2020\Dec2_2020\Web SourceCode For SA_BA_Agent_Mer_Cust\MNepalWeb\MNepalWeb\CustApp\bin\roslyn\System.ValueTuple.dll
+D:\Dec2_2020\Dec2_2020\Web SourceCode For SA_BA_Agent_Mer_Cust\MNepalWeb\MNepalWeb\CustApp\bin\roslyn\System.Xml.ReaderWriter.dll
+D:\Dec2_2020\Dec2_2020\Web SourceCode For SA_BA_Agent_Mer_Cust\MNepalWeb\MNepalWeb\CustApp\bin\roslyn\System.Xml.XmlDocument.dll
+D:\Dec2_2020\Dec2_2020\Web SourceCode For SA_BA_Agent_Mer_Cust\MNepalWeb\MNepalWeb\CustApp\bin\roslyn\System.Xml.XPath.dll
+D:\Dec2_2020\Dec2_2020\Web SourceCode For SA_BA_Agent_Mer_Cust\MNepalWeb\MNepalWeb\CustApp\bin\roslyn\System.Xml.XPath.XDocument.dll
+D:\Dec2_2020\Dec2_2020\Web SourceCode For SA_BA_Agent_Mer_Cust\MNepalWeb\MNepalWeb\CustApp\bin\roslyn\vbc.exe
+D:\Dec2_2020\Dec2_2020\Web SourceCode For SA_BA_Agent_Mer_Cust\MNepalWeb\MNepalWeb\CustApp\bin\roslyn\vbc.exe.config
+D:\Dec2_2020\Dec2_2020\Web SourceCode For SA_BA_Agent_Mer_Cust\MNepalWeb\MNepalWeb\CustApp\bin\roslyn\vbc.rsp
+D:\Dec2_2020\Dec2_2020\Web SourceCode For SA_BA_Agent_Mer_Cust\MNepalWeb\MNepalWeb\CustApp\bin\roslyn\VBCSCompiler.exe
+D:\Dec2_2020\Dec2_2020\Web SourceCode For SA_BA_Agent_Mer_Cust\MNepalWeb\MNepalWeb\CustApp\bin\roslyn\VBCSCompiler.exe.config
+D:\Dec2_2020\Dec2_2020\Web SourceCode For SA_BA_Agent_Mer_Cust\MNepalWeb\MNepalWeb\CustApp\bin\Antlr3.Runtime.dll
+D:\Dec2_2020\Dec2_2020\Web SourceCode For SA_BA_Agent_Mer_Cust\MNepalWeb\MNepalWeb\CustApp\bin\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.dll
+D:\Dec2_2020\Dec2_2020\Web SourceCode For SA_BA_Agent_Mer_Cust\MNepalWeb\MNepalWeb\CustApp\bin\Microsoft.Practices.EnterpriseLibrary.Common.dll
+D:\Dec2_2020\Dec2_2020\Web SourceCode For SA_BA_Agent_Mer_Cust\MNepalWeb\MNepalWeb\CustApp\bin\Microsoft.Practices.EnterpriseLibrary.Data.dll
+D:\Dec2_2020\Dec2_2020\Web SourceCode For SA_BA_Agent_Mer_Cust\MNepalWeb\MNepalWeb\CustApp\bin\Microsoft.Practices.ObjectBuilder.dll
+D:\Dec2_2020\Dec2_2020\Web SourceCode For SA_BA_Agent_Mer_Cust\MNepalWeb\MNepalWeb\CustApp\bin\Microsoft.Web.Infrastructure.dll
+D:\Dec2_2020\Dec2_2020\Web SourceCode For SA_BA_Agent_Mer_Cust\MNepalWeb\MNepalWeb\CustApp\bin\Newtonsoft.Json.dll
+D:\Dec2_2020\Dec2_2020\Web SourceCode For SA_BA_Agent_Mer_Cust\MNepalWeb\MNepalWeb\CustApp\bin\System.Net.Http.Formatting.dll
+D:\Dec2_2020\Dec2_2020\Web SourceCode For SA_BA_Agent_Mer_Cust\MNepalWeb\MNepalWeb\CustApp\bin\System.Web.Helpers.dll
+D:\Dec2_2020\Dec2_2020\Web SourceCode For SA_BA_Agent_Mer_Cust\MNepalWeb\MNepalWeb\CustApp\bin\System.Web.Http.dll
+D:\Dec2_2020\Dec2_2020\Web SourceCode For SA_BA_Agent_Mer_Cust\MNepalWeb\MNepalWeb\CustApp\bin\System.Web.Http.WebHost.dll
+D:\Dec2_2020\Dec2_2020\Web SourceCode For SA_BA_Agent_Mer_Cust\MNepalWeb\MNepalWeb\CustApp\bin\System.Web.Mvc.dll
+D:\Dec2_2020\Dec2_2020\Web SourceCode For SA_BA_Agent_Mer_Cust\MNepalWeb\MNepalWeb\CustApp\bin\System.Web.Optimization.dll
+D:\Dec2_2020\Dec2_2020\Web SourceCode For SA_BA_Agent_Mer_Cust\MNepalWeb\MNepalWeb\CustApp\bin\System.Web.Razor.dll
+D:\Dec2_2020\Dec2_2020\Web SourceCode For SA_BA_Agent_Mer_Cust\MNepalWeb\MNepalWeb\CustApp\bin\System.Web.WebPages.Deployment.dll
+D:\Dec2_2020\Dec2_2020\Web SourceCode For SA_BA_Agent_Mer_Cust\MNepalWeb\MNepalWeb\CustApp\bin\System.Web.WebPages.dll
+D:\Dec2_2020\Dec2_2020\Web SourceCode For SA_BA_Agent_Mer_Cust\MNepalWeb\MNepalWeb\CustApp\bin\System.Web.WebPages.Razor.dll
+D:\Dec2_2020\Dec2_2020\Web SourceCode For SA_BA_Agent_Mer_Cust\MNepalWeb\MNepalWeb\CustApp\bin\WebGrease.dll
+D:\Dec2_2020\Dec2_2020\Web SourceCode For SA_BA_Agent_Mer_Cust\MNepalWeb\MNepalWeb\CustApp\bin\System.Web.Helpers.xml
+D:\Dec2_2020\Dec2_2020\Web SourceCode For SA_BA_Agent_Mer_Cust\MNepalWeb\MNepalWeb\CustApp\bin\System.Web.Mvc.xml
+D:\Dec2_2020\Dec2_2020\Web SourceCode For SA_BA_Agent_Mer_Cust\MNepalWeb\MNepalWeb\CustApp\bin\System.Web.Optimization.xml
+D:\Dec2_2020\Dec2_2020\Web SourceCode For SA_BA_Agent_Mer_Cust\MNepalWeb\MNepalWeb\CustApp\bin\System.Web.Razor.xml
+D:\Dec2_2020\Dec2_2020\Web SourceCode For SA_BA_Agent_Mer_Cust\MNepalWeb\MNepalWeb\CustApp\bin\System.Web.WebPages.xml
+D:\Dec2_2020\Dec2_2020\Web SourceCode For SA_BA_Agent_Mer_Cust\MNepalWeb\MNepalWeb\CustApp\bin\System.Web.WebPages.Deployment.xml
+D:\Dec2_2020\Dec2_2020\Web SourceCode For SA_BA_Agent_Mer_Cust\MNepalWeb\MNepalWeb\CustApp\bin\System.Web.WebPages.Razor.xml
+D:\Dec2_2020\Dec2_2020\Web SourceCode For SA_BA_Agent_Mer_Cust\MNepalWeb\MNepalWeb\CustApp\bin\Newtonsoft.Json.xml
+D:\Dec2_2020\Dec2_2020\Web SourceCode For SA_BA_Agent_Mer_Cust\MNepalWeb\MNepalWeb\CustApp\bin\Antlr3.Runtime.pdb
+D:\Dec2_2020\Dec2_2020\Web SourceCode For SA_BA_Agent_Mer_Cust\MNepalWeb\MNepalWeb\CustApp\bin\System.Net.Http.Formatting.xml
+D:\Dec2_2020\Dec2_2020\Web SourceCode For SA_BA_Agent_Mer_Cust\MNepalWeb\MNepalWeb\CustApp\bin\System.Web.Http.xml
+D:\Dec2_2020\Dec2_2020\Web SourceCode For SA_BA_Agent_Mer_Cust\MNepalWeb\MNepalWeb\CustApp\bin\System.Web.Http.WebHost.xml
+D:\Dec2_2020\Dec2_2020\Web SourceCode For SA_BA_Agent_Mer_Cust\MNepalWeb\MNepalWeb\CustApp\bin\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.xml
+D:\Dec2_2020\Dec2_2020\Web SourceCode For SA_BA_Agent_Mer_Cust\MNepalWeb\MNepalWeb\CustApp\obj\Debug\CustApp.csprojAssemblyReference.cache
+D:\Dec2_2020\Dec2_2020\Web SourceCode For SA_BA_Agent_Mer_Cust\MNepalWeb\MNepalWeb\CustApp\obj\Debug\CustApp.csproj.CoreCompileInputs.cache
+D:\Dec2_2020\Dec2_2020\Web SourceCode For SA_BA_Agent_Mer_Cust\MNepalWeb\MNepalWeb\CustApp\obj\Debug\CustApp.csproj.CopyComplete
+D:\Dec2_2020\Dec2_2020\Web SourceCode For SA_BA_Agent_Mer_Cust\MNepalWeb\MNepalWeb\CustApp\obj\Debug\CustApp.dll
+D:\Dec2_2020\Dec2_2020\Web SourceCode For SA_BA_Agent_Mer_Cust\MNepalWeb\MNepalWeb\CustApp\obj\Debug\CustApp.pdb

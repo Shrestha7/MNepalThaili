@@ -1,0 +1,182 @@
+﻿
+@{
+    ViewBag.Title = "Approve Bank Link Status Reset";
+}
+
+<section class="content-header">
+    <h1>
+        Customer
+        @*<small>Registration Approval</small>*@
+    </h1>
+    <ol class="breadcrumb">
+        <li><a href="#"><i class="fa fa-user"></i> @ViewContext.RouteData.Values["Controller"].ToString()</a></li>
+        <li class="active">@*@ViewContext.RouteData.Values["Action"].ToString()*@Approve Bank Link Status Reset </li>
+    </ol>
+</section>
+
+<!-- Main content -->
+<section class="content">
+    <!-- Main row -->
+    <div class="row">
+        <div class="col-md-12">
+            <!-- Start Form -->
+            <!-- Start Data Show in Table -->
+            <div id="CustomerApprove" class="box box-primary">
+                <div class="box-header with-border">
+                    <h3 class="box-title">Approve Bank Link Status Reset</h3>
+                </div>
+                <!-- /.box-header -->
+
+
+
+
+                @if (this.ViewData["custapprove_messsage"] != null)
+                {
+                    if (this.ViewData["message_class"].ToString() == "success_info")
+                    {
+                        <div class="alert alert-success">
+                            <button type="button" class="close" data-dismiss="alert">&times;</button>
+                            <h4>Success</h4> @this.ViewData["custapprove_messsage"]
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="alert alert-danger">
+                            <button type="button" class="close" data-dismiss="alert">&times;</button>
+                            <h4>Error</h4> @this.ViewData["custmodify_messsage"]
+                        </div>
+                    }
+                }
+
+                <div class="box-body">
+                    <div class="box box-primary">
+
+                        @using (Html.BeginForm("BankLinkResetList", "Customer", FormMethod.Get, new { @id = "VerifiedKYCList" }))
+                        {
+                            <div class="box-body">
+                                <div class="row">
+                                    <!-- radio -->
+                                    <div class="form-group">
+                                        <div class="col-md-4">
+                                            <input type="radio" name="Key" id="optionsRadios1" value="Mobile" checked />
+                                            <label>Mobile Number</label>
+                                            <div class="input-group">
+                                                <div class="input-group-addon">
+                                                    <i class="glyphicon glyphicon-phone" style="color:royalblue"></i>
+                                                </div>
+                                                <input type="text" class="form-control" id="txtMobileNoID" name="Value" placeholder="Mobile Number" maxlength="10" onkeypress="return isNumber(event);" value="@ViewBag.Value" required>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- /.box-body -->
+                            <div class="box-footer">
+                                <input type="submit" class="btn btn-primary" id="btnSearch" name="txtSearch" value="Search" />
+                            </div>
+                        }
+
+
+                    </div>
+
+                    <div>
+
+
+                        <!-- Tab panes -->
+                        <div class="tab-content">
+
+                            <div role="tabpanel" class="tab-pane active" id="Self">
+                                <table class="table table-condensed" id="usersself">
+                                    <thead style="text-align:left">
+                                        <tr>
+                                            <th>Mobile Number</th>
+                                            <th>Customer Name</th>
+                                            <th>Account Number</th>
+                                            <th>Date Of Birth</th>
+                                            <th>Reset By</th>
+                                            <th>Reset Date</th>
+                                            <th style="text-align:center">Details</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody style="text-align:left">
+
+                                        @if ((ViewData["dtableCustForApprovalSelf"] as System.Data.DataTable).Rows.Count > 0)
+                                        {
+                                            foreach (System.Data.DataRow dr in (ViewData["dtableCustForApprovalSelf"] as System.Data.DataTable).Rows)
+                                            {
+                                                <tr>
+                                                    <td> @dr["MobileNumber"] </td>
+                                                    <td> @dr["Name"] </td>
+                                                    <td> @dr["BankAccountNumber"] </td>
+                                                    <td> @DateTime.Parse(dr["DateOfBirth"].ToString()).ToString("dd/MM/yyyy")</td>
+                                                    <td> @dr["ResetBy"] </td>
+                                                    <td> @DateTime.Parse(dr["ResetDate"].ToString()).ToString("dd/MM/yyyy")</td>
+
+                                                    <td style="text-align:center">
+                                                        <a href="@Url.Action("ViewResetCustDetail", "Customer", new { id = dr["ClientCode"], UserName = @dr["MobileNumber"]  })"><i class="fa fa-eye" title="View"></i></a>
+                                                    </td>
+                                                </tr>
+                                            } <!-- for each end-->
+                                        }
+
+                                    </tbody>
+                                </table>
+                            </div>
+
+
+                        </div>
+
+                    </div>
+
+                </div>
+                <!-- /.box-body -->
+                <div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+    <!-- /.row -->
+</section>
+<!-- /.content -->
+
+@section scripts {
+
+    <script>
+
+       
+        $(document).ready(function () {
+        });
+
+        /**Validation Check */
+        $('#ApproveList').bootstrapValidator({
+            feedbackIcons: {
+                valid: 'glyphicon glyphicon-ok',
+                invalid: 'glyphicon glyphicon-remove',
+                validating: 'glyphicon glyphicon-refresh'
+            },
+            fields: {
+                Value: {
+                    validators: {
+                        stringlength: {
+                           min: 10,
+                            max: 10,
+                            message: 'Please enter valid Mobile No'
+
+                        },
+                        regexp: {
+                            regexp: '^$|[9][8][0-9]{8}$',
+                            message: 'Mobile no must start with 98 and should be 10 digits'
+
+                        }
+                    }
+                }
+
+
+            }
+
+        });
+       
+    </script>
+}
+<!-- =============================================== -->
