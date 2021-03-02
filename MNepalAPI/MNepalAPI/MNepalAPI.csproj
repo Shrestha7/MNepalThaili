@@ -218,6 +218,7 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Helper\AddAuthorizationHeaderParameter.cs" />
     <Compile Include="Helper\HashAlgo.cs" />
     <Compile Include="Helper\RandomCodeGenerator.cs" />
     <Compile Include="Helper\TokenGenerationNCHL.cs" />

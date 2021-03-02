@@ -8276,7 +8276,6 @@
     <Content Include="Scripts\esm\popper-utils.min.js.map" />
     <Content Include="Scripts\esm\popper.js.map" />
     <Content Include="Scripts\esm\popper.min.js.map" />
-    <None Include="Properties\PublishProfiles\FolderProfile.pubxml" />
     <None Include="Scripts\jquery-3.4.1.intellisense.js" />
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />
     <Content Include="Scripts\jquery-1.10.2.js" />
@@ -8508,6 +8507,7 @@
     <Content Include="Views\Shared\_Footer.cshtml" />
     <Content Include="Views\CIPS\CIPSDetails.cshtml" />
     <Content Include="Views\CIPS\Index.cshtml" />
+    <Content Include="Views\Error\Error500.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="api\" />
@@ -8746,6 +8746,7 @@
     <Folder Include="Content\eng_date_comp\node_modules\xmlbuilder\" />
     <Folder Include="Content\eng_date_comp\node_modules\y18n\" />
     <Folder Include="Content\eng_date_comp\node_modules\yargs\" />
+    <Folder Include="Properties\PublishProfiles\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="fonts\glyphicons-halflings-regular.woff2" />

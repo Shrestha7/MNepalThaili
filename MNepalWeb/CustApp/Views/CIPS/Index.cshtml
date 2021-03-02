@@ -123,7 +123,7 @@
                             <div class="transfer-order clearfix">
                                 <h3 class="title">Pay from</h3>
 
-                                <select class="form-control selectpicker transaction-select col-md-9" id="TransactionMedium" name="TransactionMedium" onmousedown="this.value='';">
+                                <select class="form-control selectpicker transaction-select from col-md-9" id="TransactionMedium" name="TransactionMedium" onmousedown="this.value='';">
                                     @*<option data-icon="thaili-icon-load-wallet" value="31">Wallet</option>*@
                                     @if (hasLinkBankAcc.Equals("T"))
                                     {
@@ -319,10 +319,10 @@
             $(".pwd1").attr("type", "password");
         });
 
-        document.getElementById("failureModal").onclick = function () {
-         var url = '@Url.Action("Index", "UserDashboard")';
+        @*document.getElementById("failureModal").onclick = function () {
+         var url = '@Url.Action("Index", "CIPS")';
          window.location.href = url;
-        };
+        };*@
 
         document.getElementById("failureModalSessionExpired").onclick = function () {
          var url = '@Url.Action("Index", "LogOut")';
@@ -568,6 +568,8 @@
             var transactionDetail = $("[name='txtTransactionDetail']").val();
             var pin = $("[name='txtPin']").val();
 
+            var token = $('input[name="__RequestVerificationToken"]').val();
+
             if ((senderAccountNumber != "") && (amount != "") && (beneficiaryAccountNumber != "") && (beneficiaryAccountName != "") && (bankName != undefined)
                 && (branchName != undefined) && (transactionDetail != "") && (pin != "")) {
 
@@ -582,14 +584,19 @@
                     bankName: bankName,
                     branchName: branchName,
                     transactionDetail: transactionDetail,
-                    pin: pin
+                    pin: pin,
+                    TokenUnique: token
                 };
 
                 e.preventDefault(); //prevent the default action
                 $.ajax({
                     url: '@Url.Action("CIPSPayment", "CIPS")',
                     type: "POST",
-                    data: dataToPost,
+                    data:
+                    {
+                        __RequestVerificationToken: token,
+                        cips: dataToPost,
+                    },
                     async: true,
                     success: function (data) {
                         $(".preload").show();

@@ -44,15 +44,10 @@ namespace CustApp.Controllers
                 this.ViewData["userType"] = this.TempData["userType"];
                 ViewBag.UserType = this.TempData["userType"];
                 ViewBag.Name = name;
-
-                //ViewBag.BLServiceCode = PaypointUtils.GetBroadLinkServiceCode();
                 ViewBag.SenderMobileNo = userName;
 
-
-                //var json = await GetAuthToken();
-
                 ConnectIPSTokenResponse connectIPSTokenResponse = await GetAuthToken();
-                if (connectIPSTokenResponse.status != 500)
+                if (connectIPSTokenResponse.status == 200 || connectIPSTokenResponse.status == 0)
                 {
                     var access_token = connectIPSTokenResponse.access_token;
                     Session["access_token"] = access_token;
@@ -71,19 +66,16 @@ namespace CustApp.Controllers
 
 
                 int id = TraceIdGenerator.GetID() + 1;
-                string stringid = (id).ToString();//this.GetID() + 1
+                string stringid = (id).ToString();
                 string traceID = stringid.PadLeft(11, '0') + 'W';
                 ViewBag.TraceID = traceID;
 
                 UserInfo userInfo = new UserInfo();
-
-
                 MNBalance availBaln = new MNBalance();
                 DataTable dtableUser1 = AvailBalnUtils.GetAvailBaln(clientCode);
                 if (dtableUser1 != null && dtableUser1.Rows.Count > 0)
                 {
                     availBaln.amount = dtableUser1.Rows[0]["AvailBaln"].ToString();
-
                     ViewBag.AvailBalnAmount = availBaln.amount;
                 }
 
@@ -95,7 +87,6 @@ namespace CustApp.Controllers
                     userInfo.IsRejected = dtableUserCheckKYC.Rows[0]["IsRejected"].ToString();
 
                     ViewBag.IsRejected = userInfo.IsRejected;
-
                     ViewBag.hasKYC = userInfo.hasKYC;
                 }
 
@@ -104,7 +95,6 @@ namespace CustApp.Controllers
                 if (dtableUserCheckLinkBankAcc != null && dtableUserCheckLinkBankAcc.Rows.Count > 0)
                 {
                     userInfo.BankAccountNumber = dtableUserCheckLinkBankAcc.Rows[0]["HasBankKYC"].ToString();
-
                     ViewBag.HasBankKYC = userInfo.BankAccountNumber;
                 }
 
@@ -142,7 +132,6 @@ namespace CustApp.Controllers
 
                 }
 
-
                 //For Profile Picture
                 DataSet DSet = ProfileUtils.GetCusDetailProfileInfoDS(clientCode);
                 DataTable dKYC = DSet.Tables["dtKycDetail"];
@@ -167,8 +156,6 @@ namespace CustApp.Controllers
         }
         #endregion
 
-
-
         #region "POST: CIPS Payment"
         [HttpPost]
 
@@ -180,164 +167,163 @@ namespace CustApp.Controllers
             string userType = (string)Session["LOGGED_USERTYPE"];
 
             TempData["userType"] = userType;
-
-
-
             this.ViewData["userType"] = this.TempData["userType"];
             ViewBag.UserType = this.TempData["userType"];
             ViewBag.Name = name;
 
-
-            MNBalance availBaln = new MNBalance();
-            DataTable dtableUser1 = AvailBalnUtils.GetAvailBaln(clientCode);
-            if (dtableUser1 != null && dtableUser1.Rows.Count > 0)
+            string retoken = cips.TokenUnique;
+            string reqToken = "";
+            DataTable dtableVToken = ReqTokenUtils.GetReqToken(retoken);
+            if (dtableVToken != null && dtableVToken.Rows.Count > 0)
             {
-                availBaln.amount = dtableUser1.Rows[0]["AvailBaln"].ToString();
-
-                ViewBag.AvailBalnAmount = availBaln.amount;
+                reqToken = dtableVToken.Rows[0]["ReqVerifyToken"].ToString();
             }
-
-            //For Profile Picture
-            UserInfo userInfo = new UserInfo();
-            DataSet DSet = ProfileUtils.GetCusDetailProfileInfoDS(clientCode);
-            DataTable dKYC = DSet.Tables["dtKycDetail"];
-            DataTable dDoc = DSet.Tables["dtKycDoc"];
-            if (dKYC != null && dKYC.Rows.Count > 0)
+            else if (dtableVToken.Rows.Count == 0)
             {
-                userInfo.CustStatus = dKYC.Rows[0]["CustStatus"].ToString();
-                ViewBag.CustStatus = userInfo.CustStatus;
+                reqToken = "0";
             }
-            if (dDoc != null && dDoc.Rows.Count > 0)
+            if (reqToken == "0")
             {
-                userInfo.PassportImage = dDoc.Rows[0]["PassportImage"].ToString();
-                ViewBag.PassportImage = userInfo.PassportImage;
-            }
+                ReqTokenUtils.InsertReqToken(retoken);
 
-            RandomCodeGenerator randomCodeGenerator = new RandomCodeGenerator();
-
-
-            Session["batchId"] = randomCodeGenerator.CreateRandomCode(20);
-            Session["batchAmount"] = cips.amount;
-            Session["batchCount"] = 1;
-            Session["batchCrncy"] = "NPR";
-            Session["categoryPurpose"] = "ECPG";
-            Session["debtorAgent"] = "0501";
-            Session["debtorBranch"] = Session["BankBranchId"].ToString();
-            Session["debtorName"] = cips.senderAccountName;
-            //Session["debtorName"] = Session["BankRegisterName"].ToString();
-            Session["debtorAccount"] = cips.senderAccountNumber;
-            Session["debtorIdType"] = randomCodeGenerator.CreateRandomCode(4);
-            Session["debtorIdValue"] = randomCodeGenerator.CreateRandomCode(20);
-            Session["debtorAddress"] = "Bhaktapur";
-            Session["debtorPhone"] = "12345";
-            Session["debtorMobile"] = "12345";
-            Session["debtorEmail"] = "debtor@debtor.com";
-            Session["bankName"] = cips.bankName;
-            Session["branchName"] = cips.branchName;
-            Session["transactionDetail"] = cips.transactionDetail;
-
-            Session["instructionId"] = randomCodeGenerator.CreateRandomCode(30);
-            Session["endToEndId"] = "Payment Description";
-            Session["amount"] = cips.amount;
-            Session["creditorAgent"] = cips.bankId;
-            Session["creditorBranch"] = cips.bankBranchId;
-            Session["creditorName"] = cips.beneficiaryAccountName;
-            Session["creditorAccount"] = cips.beneficiaryAccountNumber;
-            Session["creditorIdType"] = randomCodeGenerator.CreateRandomCode(4);
-            Session["creditorIdValue"] = randomCodeGenerator.CreateRandomCode(20);
-            Session["creditorAddress"] = "Kathmandu";
-            Session["creditorPhone"] = "+977";
-            Session["creditorMobile"] = "+977";
-            Session["creditorEmail"] = "creditor@creditor.com";
-            Session["addenda1"] = 0405;
-            Session["addenda2"] = DateTime.Now.ToString("yyyy-MM-dd");
-            Session["addenda3"] = "Addenda info3";
-            Session["addenda4"] = "Addenda info4";
-
-            HttpResponseMessage _res = new HttpResponseMessage();
-
-            var cipsObject = new CheckPin
-            {
-                userName = userName,
-                pin = cips.pin
-            };
-
-            // Serialize our concrete class into a JSON String
-            var stringPayload = await Task.Run(() => JsonConvert.SerializeObject(cipsObject));
-
-            // Wrap our JSON inside a StringContent which then can be used by the HttpClient class
-            var httpContent = new StringContent(stringPayload, Encoding.UTF8, "application/json");
-            using (HttpClient httpClient = new HttpClient())
-            {
-                var UserName = ConfigurationManager.AppSettings["BasicAuthUserName"];
-                var UserPassword = ConfigurationManager.AppSettings["BasicAuthPassword"];
-                var ConnectIPSBaseURL = ConfigurationManager.AppSettings["ConnectIPSBaseURL"];
-
-                var byteArray = Encoding.ASCII.GetBytes(UserName + ":" + UserPassword);
-
-                httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Basic", Convert.ToBase64String(byteArray));
-
-                _res = await httpClient.PostAsync(ConnectIPSBaseURL + "api/ConnectIPS/CheckPin", httpContent);
-
-                string responseBody = _res.StatusCode.ToString() + " ," + await _res.Content.ReadAsStringAsync();
-                _res.ReasonPhrase = responseBody;
-                string errorMessage = string.Empty;
-                int responseCode = 0;
-                string message = string.Empty;
-                string responsetext = string.Empty;
-                string responseMessage = string.Empty;
-                bool result = false;
-                string ava = string.Empty;
-                string avatra = string.Empty;
-                string avamsg = string.Empty;
-                try
+                MNBalance availBaln = new MNBalance();
+                DataTable dtableUser1 = AvailBalnUtils.GetAvailBaln(clientCode);
+                if (dtableUser1 != null && dtableUser1.Rows.Count > 0)
                 {
-                    if (_res.IsSuccessStatusCode)
+                    availBaln.amount = dtableUser1.Rows[0]["AvailBaln"].ToString();
+                    ViewBag.AvailBalnAmount = availBaln.amount;
+                }
+
+                //For Profile Picture
+                UserInfo userInfo = new UserInfo();
+                DataSet DSet = ProfileUtils.GetCusDetailProfileInfoDS(clientCode);
+                DataTable dKYC = DSet.Tables["dtKycDetail"];
+                DataTable dDoc = DSet.Tables["dtKycDoc"];
+                if (dKYC != null && dKYC.Rows.Count > 0)
+                {
+                    userInfo.CustStatus = dKYC.Rows[0]["CustStatus"].ToString();
+                    ViewBag.CustStatus = userInfo.CustStatus;
+                }
+                if (dDoc != null && dDoc.Rows.Count > 0)
+                {
+                    userInfo.PassportImage = dDoc.Rows[0]["PassportImage"].ToString();
+                    ViewBag.PassportImage = userInfo.PassportImage;
+                }
+
+                RandomCodeGenerator randomCodeGenerator = new RandomCodeGenerator();
+
+                Session["batchId"] = randomCodeGenerator.CreateRandomCode(20);
+                Session["batchAmount"] = cips.amount;
+                Session["batchCount"] = 1;
+                Session["batchCrncy"] = "NPR";
+                Session["categoryPurpose"] = "ECPG";
+                Session["debtorAgent"] = "0501";
+                Session["debtorBranch"] = Session["BankBranchId"].ToString();
+                Session["debtorName"] = cips.senderAccountName;
+                //Session["debtorName"] = Session["BankRegisterName"].ToString();
+                Session["debtorAccount"] = cips.senderAccountNumber;
+                Session["debtorIdType"] = randomCodeGenerator.CreateRandomCode(4);
+                Session["debtorIdValue"] = randomCodeGenerator.CreateRandomCode(20);
+                Session["debtorAddress"] = "Bhaktapur";
+                Session["debtorPhone"] = "12345";
+                Session["debtorMobile"] = "12345";
+                Session["debtorEmail"] = "debtor@debtor.com";
+                Session["bankName"] = cips.bankName;
+                Session["branchName"] = cips.branchName;
+                Session["transactionDetail"] = cips.transactionDetail;
+                Session["instructionId"] = randomCodeGenerator.CreateRandomCode(30);
+                Session["endToEndId"] = "Payment Description";
+                Session["amount"] = cips.amount;
+                Session["creditorAgent"] = cips.bankId;
+                Session["creditorBranch"] = cips.bankBranchId;
+                Session["creditorName"] = cips.beneficiaryAccountName;
+                Session["creditorAccount"] = cips.beneficiaryAccountNumber;
+                Session["creditorIdType"] = randomCodeGenerator.CreateRandomCode(4);
+                Session["creditorIdValue"] = randomCodeGenerator.CreateRandomCode(20);
+                Session["creditorAddress"] = "Kathmandu";
+                Session["creditorPhone"] = "+977";
+                Session["creditorMobile"] = "+977";
+                Session["creditorEmail"] = "creditor@creditor.com";
+                Session["addenda1"] = 0405;
+                Session["addenda2"] = DateTime.Now.ToString("yyyy-MM-dd");
+                Session["addenda3"] = "Addenda info3";
+                Session["addenda4"] = "Addenda info4";
+
+                HttpResponseMessage _res = new HttpResponseMessage();
+                var cipsObject = new CheckPin
+                {
+                    userName = userName,
+                    pin = cips.pin
+                };
+
+                // Serialize our concrete class into a JSON String
+                var stringPayload = await Task.Run(() => JsonConvert.SerializeObject(cipsObject));
+                // Wrap our JSON inside a StringContent which then can be used by the HttpClient class
+                var httpContent = new StringContent(stringPayload, Encoding.UTF8, "application/json");
+                using (HttpClient httpClient = new HttpClient())
+                {
+                    var UserName = ConfigurationManager.AppSettings["BasicAuthUserName"];
+                    var UserPassword = ConfigurationManager.AppSettings["BasicAuthPassword"];
+                    var APIBaseURL = ConfigurationManager.AppSettings["APIBaseURL"];
+
+                    var byteArray = Encoding.ASCII.GetBytes(UserName + ":" + UserPassword);
+                    httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Basic", Convert.ToBase64String(byteArray));
+
+                    _res = await httpClient.PostAsync(APIBaseURL + "ConnectIPS/CheckPin", httpContent);
+                    string responseBody = _res.StatusCode.ToString() + " ," + await _res.Content.ReadAsStringAsync();
+                    _res.ReasonPhrase = responseBody;
+                    string errorMessage = string.Empty;
+                    int responseCode = 0;
+                    string message = string.Empty;
+                    string responsetext = string.Empty;
+                    string responseMessage = string.Empty;
+                    bool result = false;
+                    string ava = string.Empty;
+                    string avatra = string.Empty;
+                    string avamsg = string.Empty;
+                    try
                     {
-                        result = true;
-                        responseCode = (int)_res.StatusCode;
-                        responsetext = await _res.Content.ReadAsStringAsync();
-                        message = _res.Content.ReadAsStringAsync().Result;
-                        string respmsg = "";
-                        string couponNo = "";
-                        if (!string.IsNullOrEmpty(message))
+                        if (_res.IsSuccessStatusCode)
                         {
-                            JavaScriptSerializer ser = new JavaScriptSerializer();
-                            var json = ser.Deserialize<ConnectIPSResponse>(responsetext);
-
-
-                            int code = Convert.ToInt32(json.cipsBatchResponse.responseCode);
-
-                            respmsg = json.cipsBatchResponse.responseMessage;
-                            //if (code == 000)
-                            //{
-                            //    var details = JObject.Parse(respmsg);
-                            //}
-                            //if (code != responseCode)
-                            //{
-                            //    responseCode = code;
-                            //}
+                            result = true;
+                            responseCode = (int)_res.StatusCode;
+                            responsetext = await _res.Content.ReadAsStringAsync();
+                            message = _res.Content.ReadAsStringAsync().Result;
+                            string respmsg = "";
+                            string couponNo = "";
+                            if (!string.IsNullOrEmpty(message))
+                            {
+                                JavaScriptSerializer ser = new JavaScriptSerializer();
+                                var json = ser.Deserialize<ConnectIPSResponse>(responsetext);
+                                int code = Convert.ToInt32(json.cipsBatchResponse.responseCode);
+                                respmsg = json.cipsBatchResponse.responseMessage;
+                            }
+                            return Json(new { responseCode = responseCode, responseText = respmsg, rechargePin = couponNo },
+                            JsonRequestBehavior.AllowGet);
                         }
-                        return Json(new { responseCode = responseCode, responseText = respmsg, rechargePin = couponNo },
-                        JsonRequestBehavior.AllowGet);
-                    }
-                    else
-                    {
-                        result = false;
-                        responseCode = (int)_res.StatusCode;
-                        responsetext = await _res.Content.ReadAsStringAsync();
-                        JavaScriptSerializer ser = new JavaScriptSerializer();
-                        var json = ser.Deserialize<CheckPin>(responsetext);
+                        else
+                        {
+                            result = false;
+                            responseCode = (int)_res.StatusCode;
+                            responsetext = await _res.Content.ReadAsStringAsync();
+                            JavaScriptSerializer ser = new JavaScriptSerializer();
+                            var json = ser.Deserialize<CheckPin>(responsetext);
 
-                        return Json(new { responseCode = responseCode, responseText = json.message },
-                        JsonRequestBehavior.AllowGet);
+                            return Json(new { responseCode = responseCode, responseText = json.message },
+                            JsonRequestBehavior.AllowGet);
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        return Json(new { responseCode = "400", responseText = ex.Message },
+                            JsonRequestBehavior.AllowGet);
                     }
                 }
-                catch (Exception ex)
-                {
-                    return Json(new { responseCode = "400", responseText = ex.Message },
-                        JsonRequestBehavior.AllowGet);
-                }
+            }
+            else
+            {
+                return Json(new { responseCode = "400", responseText = "Please refresh the page again." },
+                            JsonRequestBehavior.AllowGet);
             }
         }
         #endregion
@@ -351,7 +337,6 @@ namespace CustApp.Controllers
             string userType = (string)Session["LOGGED_USERTYPE"];
 
             TempData["userType"] = userType;
-
             if (TempData["userType"] != null)
             {
                 this.ViewData["userType"] = this.TempData["userType"];
@@ -359,7 +344,6 @@ namespace CustApp.Controllers
                 ViewBag.Name = name;
 
                 ViewBag.SenderMobileNo = userName;
-
                 ViewBag.AccountName = Session["debtorName"];
                 ViewBag.AccountNumber = Session["debtorAccount"];
                 ViewBag.TransactionAmount = Session["batchAmount"];
@@ -369,27 +353,24 @@ namespace CustApp.Controllers
                 ViewBag.BranchName = Session["branchName"];
                 ViewBag.Remarks = Session["transactionDetail"];
 
-                if(ViewBag.TransactionAmount <= 500)
+                //applicable charge
+                if (ViewBag.TransactionAmount <= 500)
                 {
                     ViewBag.Charge = 2;
                 }
-                if(ViewBag.TransactionAmount > 500 && ViewBag.TransactionAmount <= 5000)
+                if (ViewBag.TransactionAmount > 500 && ViewBag.TransactionAmount <= 5000)
                 {
                     ViewBag.Charge = 5;
                 }
-                if(ViewBag.TransactionAmount > 5000 && ViewBag.TransactionAmount <= 50000)
+                if (ViewBag.TransactionAmount > 5000 && ViewBag.TransactionAmount <= 50000)
                 {
                     ViewBag.Charge = 10;
                 }
-                if(ViewBag.TransactionAmount > 50000)
+                if (ViewBag.TransactionAmount > 50000)
                 {
                     ViewBag.Charge = 15;
                 }
-
-
-
-
-
+                //applicable charge ends
 
                 int id = TraceIdGenerator.GetID() + 1;
                 string stringid = (id).ToString();//this.GetID() + 1
@@ -402,10 +383,8 @@ namespace CustApp.Controllers
                 if (dtableUser1 != null && dtableUser1.Rows.Count > 0)
                 {
                     availBaln.amount = dtableUser1.Rows[0]["AvailBaln"].ToString();
-
                     ViewBag.AvailBalnAmount = availBaln.amount;
                 }
-
 
                 //Check KYC
                 DataTable dtableUserCheckKYC = ProfileUtils.CheckKYC(userName);
@@ -413,9 +392,7 @@ namespace CustApp.Controllers
                 {
                     userInfo.hasKYC = dtableUserCheckKYC.Rows[0]["hasKYC"].ToString();
                     userInfo.IsRejected = dtableUserCheckKYC.Rows[0]["IsRejected"].ToString();
-
                     ViewBag.IsRejected = userInfo.IsRejected;
-
                     ViewBag.hasKYC = userInfo.hasKYC;
                 }
 
@@ -424,7 +401,6 @@ namespace CustApp.Controllers
                 if (dtableUserCheckLinkBankAcc != null && dtableUserCheckLinkBankAcc.Rows.Count > 0)
                 {
                     userInfo.BankAccountNumber = dtableUserCheckLinkBankAcc.Rows[0]["HasBankKYC"].ToString();
-
                     ViewBag.HasBankKYC = userInfo.BankAccountNumber;
                 }
 
@@ -462,230 +438,203 @@ namespace CustApp.Controllers
             string userType = (string)Session["LOGGED_USERTYPE"];
 
             TempData["userType"] = userType;
-
-
-
             this.ViewData["userType"] = this.TempData["userType"];
             ViewBag.UserType = this.TempData["userType"];
             ViewBag.Name = name;
 
-
-            MNBalance availBaln = new MNBalance();
-            DataTable dtableUser1 = AvailBalnUtils.GetAvailBaln(clientCode);
-            if (dtableUser1 != null && dtableUser1.Rows.Count > 0)
+            string retoken = connectIPS.TokenUnique;
+            string reqToken = "";
+            DataTable dtableVToken = ReqTokenUtils.GetReqToken(retoken);
+            if (dtableVToken != null && dtableVToken.Rows.Count > 0)
             {
-                availBaln.amount = dtableUser1.Rows[0]["AvailBaln"].ToString();
-
-                ViewBag.AvailBalnAmount = availBaln.amount;
+                reqToken = dtableVToken.Rows[0]["ReqVerifyToken"].ToString();
             }
-
-            //For Profile Picture
-            UserInfo userInfo = new UserInfo();
-            DataSet DSet = ProfileUtils.GetCusDetailProfileInfoDS(clientCode);
-            DataTable dKYC = DSet.Tables["dtKycDetail"];
-            DataTable dDoc = DSet.Tables["dtKycDoc"];
-            if (dKYC != null && dKYC.Rows.Count > 0)
+            else if (dtableVToken.Rows.Count == 0)
             {
-                userInfo.CustStatus = dKYC.Rows[0]["CustStatus"].ToString();
-                ViewBag.CustStatus = userInfo.CustStatus;
+                reqToken = "0";
             }
-            if (dDoc != null && dDoc.Rows.Count > 0)
+            string BlockMessage = LoginUtils.GetMessage("01");
+            if (reqToken == "0")
             {
-                userInfo.PassportImage = dDoc.Rows[0]["PassportImage"].ToString();
-                ViewBag.PassportImage = userInfo.PassportImage;
-            }
+                ReqTokenUtils.InsertReqToken(retoken);
 
-
-            Cipsbatchdetail cipsBatchDetail = new Cipsbatchdetail();
-            cipsBatchDetail.batchId = Session["batchId"].ToString();
-
-            decimal decimalRounded = Decimal.Parse(connectIPS.amount.ToString("0.00"));
-
-
-
-            cipsBatchDetail.batchAmount = decimalRounded;
-
-            cipsBatchDetail.batchCount = Convert.ToInt32(Session["batchCount"]);
-            cipsBatchDetail.batchCrncy = Session["batchCrncy"].ToString();
-            cipsBatchDetail.categoryPurpose = Session["categoryPurpose"].ToString();
-            cipsBatchDetail.debtorAgent = Session["debtorAgent"].ToString();
-            cipsBatchDetail.debtorBranch = Session["debtorBranch"].ToString();
-            cipsBatchDetail.debtorName = Session["debtorName"].ToString();
-            cipsBatchDetail.debtorAccount = Session["debtorAccount"].ToString();
-            cipsBatchDetail.debtorIdType = Session["debtorIdType"].ToString();
-            cipsBatchDetail.debtorIdValue = Session["debtorIdValue"].ToString();
-            cipsBatchDetail.debtorAddress = Session["debtorAddress"].ToString();
-            cipsBatchDetail.debtorPhone = Session["debtorPhone"].ToString();
-            cipsBatchDetail.debtorMobile = Session["debtorMobile"].ToString();
-            cipsBatchDetail.debtorEmail = Session["debtorEmail"].ToString();
-
-
-
-
-            Cipstransactiondetaillist transactionDetailList = new Cipstransactiondetaillist();
-
-            transactionDetailList.instructionId = Session["instructionId"].ToString();
-            transactionDetailList.endToEndId = Session["endToEndId"].ToString();
-
-            transactionDetailList.amount = decimalRounded;
-
-            transactionDetailList.creditorAgent = Session["creditorAgent"].ToString();
-            transactionDetailList.creditorBranch = Session["creditorBranch"].ToString();
-            transactionDetailList.creditorName = Session["creditorName"].ToString();
-            transactionDetailList.creditorAccount = Session["creditorAccount"].ToString();
-            transactionDetailList.creditorIdType = Session["creditorIdType"].ToString();
-            transactionDetailList.creditorIdValue = Session["creditorIdValue"].ToString();
-            transactionDetailList.creditorAddress = Session["creditorAddress"].ToString();
-            transactionDetailList.creditorPhone = Session["creditorPhone"].ToString();
-            transactionDetailList.creditorMobile = Session["creditorMobile"].ToString();
-            transactionDetailList.creditorEmail = Session["creditorEmail"].ToString();
-            transactionDetailList.addenda1 = Convert.ToInt32(Session["addenda1"]);
-            transactionDetailList.addenda2 = Session["addenda2"].ToString();
-            transactionDetailList.addenda3 = Session["addenda3"].ToString();
-            transactionDetailList.addenda4 = Session["transactionDetail"].ToString();
-
-
-            List<Cipstransactiondetaillist> cipsTransactionDetailList = new List<Cipstransactiondetaillist>();
-            cipsTransactionDetailList.Add(transactionDetailList);
-
-
-
-
-            var cipsObject = new ConnectIPS
-            {
-                cipsBatchDetail = cipsBatchDetail,
-                cipsTransactionDetailList = cipsTransactionDetailList,
-                username = userName
-            };
-
-
-            HttpResponseMessage _res = new HttpResponseMessage();
-            string mobile = userName; //mobile is username
-            TraceIdGenerator _tig = new TraceIdGenerator();
-            var tid = _tig.GenerateTraceID();
-
-            // Serialize our concrete class into a JSON String
-            var stringPayload = await Task.Run(() => JsonConvert.SerializeObject(cipsObject));
-
-            // Wrap our JSON inside a StringContent which then can be used by the HttpClient class
-            var httpContent = new StringContent(stringPayload, Encoding.UTF8, "application/json");
-            using (HttpClient httpClient = new HttpClient())
-            {
-                var UserName = ConfigurationManager.AppSettings["BasicAuthUserName"];
-                var UserPassword = ConfigurationManager.AppSettings["BasicAuthPassword"];
-                var ConnectIPSBaseURL = ConfigurationManager.AppSettings["ConnectIPSBaseURL"];
-
-                var byteArray = Encoding.ASCII.GetBytes(UserName + ":" + UserPassword);
-
-                httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Basic", Convert.ToBase64String(byteArray));
-                httpClient.DefaultRequestHeaders.Add("token", Session["access_token"].ToString());
-
-                _res = await httpClient.PostAsync(ConnectIPSBaseURL + "api/ConnectIPS/BankToBank", httpContent);
-
-                string responseBody = _res.StatusCode.ToString() + " ," + await _res.Content.ReadAsStringAsync();
-                _res.ReasonPhrase = responseBody;
-                string errorMessage = string.Empty;
-                int responseCode = 0;
-                string message = string.Empty;
-                string responsetext = string.Empty;
-                string responseMessage = string.Empty;
-                bool result = false;
-                string ava = string.Empty;
-                string avatra = string.Empty;
-                string avamsg = string.Empty;
-                try
+                MNBalance availBaln = new MNBalance();
+                DataTable dtableUser1 = AvailBalnUtils.GetAvailBaln(clientCode);
+                if (dtableUser1 != null && dtableUser1.Rows.Count > 0)
                 {
-                    if (_res.IsSuccessStatusCode)
+                    availBaln.amount = dtableUser1.Rows[0]["AvailBaln"].ToString();
+                    ViewBag.AvailBalnAmount = availBaln.amount;
+                }
+
+                //For Profile Picture
+                UserInfo userInfo = new UserInfo();
+                DataSet DSet = ProfileUtils.GetCusDetailProfileInfoDS(clientCode);
+                DataTable dKYC = DSet.Tables["dtKycDetail"];
+                DataTable dDoc = DSet.Tables["dtKycDoc"];
+                if (dKYC != null && dKYC.Rows.Count > 0)
+                {
+                    userInfo.CustStatus = dKYC.Rows[0]["CustStatus"].ToString();
+                    ViewBag.CustStatus = userInfo.CustStatus;
+                }
+                if (dDoc != null && dDoc.Rows.Count > 0)
+                {
+                    userInfo.PassportImage = dDoc.Rows[0]["PassportImage"].ToString();
+                    ViewBag.PassportImage = userInfo.PassportImage;
+                }
+
+
+                Cipsbatchdetail cipsBatchDetail = new Cipsbatchdetail();
+                cipsBatchDetail.batchId = Session["batchId"].ToString();
+
+                decimal decimalRounded = Decimal.Parse(connectIPS.amount.ToString("0.00"));
+
+                cipsBatchDetail.batchAmount = decimalRounded;
+                cipsBatchDetail.batchCount = Convert.ToInt32(Session["batchCount"]);
+                cipsBatchDetail.batchCrncy = Session["batchCrncy"].ToString();
+                cipsBatchDetail.categoryPurpose = Session["categoryPurpose"].ToString();
+                cipsBatchDetail.debtorAgent = Session["debtorAgent"].ToString();
+                cipsBatchDetail.debtorBranch = Session["debtorBranch"].ToString();
+                cipsBatchDetail.debtorName = Session["debtorName"].ToString();
+                cipsBatchDetail.debtorAccount = Session["debtorAccount"].ToString();
+                cipsBatchDetail.debtorIdType = Session["debtorIdType"].ToString();
+                cipsBatchDetail.debtorIdValue = Session["debtorIdValue"].ToString();
+                cipsBatchDetail.debtorAddress = Session["debtorAddress"].ToString();
+                cipsBatchDetail.debtorPhone = Session["debtorPhone"].ToString();
+                cipsBatchDetail.debtorMobile = Session["debtorMobile"].ToString();
+                cipsBatchDetail.debtorEmail = Session["debtorEmail"].ToString();
+
+                Cipstransactiondetaillist transactionDetailList = new Cipstransactiondetaillist();
+                transactionDetailList.instructionId = Session["instructionId"].ToString();
+                transactionDetailList.endToEndId = Session["endToEndId"].ToString();
+                transactionDetailList.amount = decimalRounded;
+                transactionDetailList.creditorAgent = Session["creditorAgent"].ToString();
+                transactionDetailList.creditorBranch = Session["creditorBranch"].ToString();
+                transactionDetailList.creditorName = Session["creditorName"].ToString();
+                transactionDetailList.creditorAccount = Session["creditorAccount"].ToString();
+                transactionDetailList.creditorIdType = Session["creditorIdType"].ToString();
+                transactionDetailList.creditorIdValue = Session["creditorIdValue"].ToString();
+                transactionDetailList.creditorAddress = Session["creditorAddress"].ToString();
+                transactionDetailList.creditorPhone = Session["creditorPhone"].ToString();
+                transactionDetailList.creditorMobile = Session["creditorMobile"].ToString();
+                transactionDetailList.creditorEmail = Session["creditorEmail"].ToString();
+                transactionDetailList.addenda1 = Convert.ToInt32(Session["addenda1"]);
+                transactionDetailList.addenda2 = Session["addenda2"].ToString();
+                transactionDetailList.addenda3 = Session["addenda3"].ToString();
+                transactionDetailList.addenda4 = Session["transactionDetail"].ToString();
+
+                List<Cipstransactiondetaillist> cipsTransactionDetailList = new List<Cipstransactiondetaillist>();
+                cipsTransactionDetailList.Add(transactionDetailList);
+                var cipsObject = new ConnectIPS
+                {
+                    cipsBatchDetail = cipsBatchDetail,
+                    cipsTransactionDetailList = cipsTransactionDetailList,
+                    username = userName
+                };
+
+                HttpResponseMessage _res = new HttpResponseMessage();
+                string mobile = userName; //mobile is username
+                TraceIdGenerator _tig = new TraceIdGenerator();
+                var tid = _tig.GenerateTraceID();
+
+                // Serialize our concrete class into a JSON String
+                var stringPayload = await Task.Run(() => JsonConvert.SerializeObject(cipsObject));
+
+                // Wrap our JSON inside a StringContent which then can be used by the HttpClient class
+                var httpContent = new StringContent(stringPayload, Encoding.UTF8, "application/json");
+                using (HttpClient httpClient = new HttpClient())
+                {
+                    var UserName = ConfigurationManager.AppSettings["BasicAuthUserName"];
+                    var UserPassword = ConfigurationManager.AppSettings["BasicAuthPassword"];
+                    var APIBaseURL = ConfigurationManager.AppSettings["APIBaseURL"];
+
+                    var byteArray = Encoding.ASCII.GetBytes(UserName + ":" + UserPassword);
+                    httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Basic", Convert.ToBase64String(byteArray));
+                    httpClient.DefaultRequestHeaders.Add("token", Session["access_token"].ToString());
+
+                    _res = await httpClient.PostAsync(APIBaseURL + "ConnectIPS/BankToBank", httpContent);
+                    string responseBody = _res.StatusCode.ToString() + " ," + await _res.Content.ReadAsStringAsync();
+                    _res.ReasonPhrase = responseBody;
+                    string errorMessage = string.Empty;
+                    int responseCode = 0;
+                    string message = string.Empty;
+                    string responsetext = string.Empty;
+                    string responseMessage = string.Empty;
+                    bool result = false;
+                    string ava = string.Empty;
+                    string avatra = string.Empty;
+                    string avamsg = string.Empty;
+                    try
                     {
-                        //Session value remove
-                        Session.Remove("CustomerID");
-                        Session.Remove("BLServiceCode");
-
-                        result = true;
-                        responseCode = (int)_res.StatusCode;
-                        responsetext = await _res.Content.ReadAsStringAsync();
-                        message = _res.Content.ReadAsStringAsync().Result;
-                        string respmsg = "";
-                        string txnRespmsg = "";
-                        
-                        
-                        if (!string.IsNullOrEmpty(message))
+                        if (_res.IsSuccessStatusCode)
                         {
-                            JavaScriptSerializer ser = new JavaScriptSerializer();
-                            var json = ser.Deserialize<ConnectIPSResponse>(responsetext);
+                            result = true;
+                            responseCode = (int)_res.StatusCode;
+                            responsetext = await _res.Content.ReadAsStringAsync();
+                            message = _res.Content.ReadAsStringAsync().Result;
+                            string respmsg = "";
+                            string txnRespmsg = "";
 
-
-                            int code = Convert.ToInt32(json.cipsBatchResponse.responseCode);
-                            int txncode = Convert.ToInt32(json.cipsTxnResponseList.FirstOrDefault().responseCode);
-
-
-                            respmsg = json.cipsBatchResponse.responseMessage;
-
-                            txnRespmsg = json.cipsTxnResponseList.FirstOrDefault().responseMessage;
-
-                            if (code == 0 && txncode == 0)
+                            if (!string.IsNullOrEmpty(message))
                             {
-                                responseCode = code;
-                                responseMessage = responsetext;
+                                JavaScriptSerializer ser = new JavaScriptSerializer();
+                                var json = ser.Deserialize<ConnectIPSResponse>(responsetext);
+                                int code = Convert.ToInt32(json.cipsBatchResponse.responseCode);
+                                int txncode = Convert.ToInt32(json.cipsTxnResponseList.FirstOrDefault().responseCode);
+
+                                respmsg = json.cipsBatchResponse.responseMessage;
+                                txnRespmsg = json.cipsTxnResponseList.FirstOrDefault().responseMessage;
+                                if (code == 0 && txncode == 0)
+                                {
+                                    responseCode = code;
+                                    responseMessage = responsetext;
+                                }
+                                if (code != responseCode)
+                                {
+                                    responseCode = code;
+                                    responseMessage = respmsg;
+                                }
+                                if (txncode != responseCode)
+                                {
+                                    responseCode = txncode;
+                                    responseMessage = txnRespmsg;
+                                }
                             }
-                            if (code != responseCode)
-                            {
-                                responseCode = code;
-                                responseMessage = respmsg;
-                            }
-                            if (txncode != responseCode)
-                            {
-                                responseCode = txncode;
-                                responseMessage = txnRespmsg;
-                            }
-                        }
-                        return Json(new { responseCode = responseCode, responseText = responseMessage },
-                        JsonRequestBehavior.AllowGet);
-                    }
-                    else
-                    {
-                        result = false;
-                        responseCode = (int)_res.StatusCode;
-                        responsetext = await _res.Content.ReadAsStringAsync();
-                        dynamic json = JValue.Parse(responsetext);
-                        message = json.d;
-                        if (message == null)
-                        {
-                            return Json(new { responseCode = responseCode, responseText = responsetext },
-                        JsonRequestBehavior.AllowGet);
+                            return Json(new { responseCode = responseCode, responseText = responseMessage },
+                            JsonRequestBehavior.AllowGet);
                         }
                         else
                         {
-                            dynamic item = JValue.Parse(message);
-
-                            return Json(new { responseCode = responseCode, responseText = (string)item["StatusMessage"] },
+                            result = false;
+                            responseCode = (int)_res.StatusCode;
+                            responsetext = await _res.Content.ReadAsStringAsync();
+                            dynamic json = JValue.Parse(responsetext);
+                            message = json.d;
+                            if (message == null)
+                            {
+                                return Json(new { responseCode = responseCode, responseText = responsetext },
                             JsonRequestBehavior.AllowGet);
+                            }
+                            else
+                            {
+                                dynamic item = JValue.Parse(message);
+                                return Json(new { responseCode = responseCode, responseText = (string)item["StatusMessage"] },
+                                JsonRequestBehavior.AllowGet);
+                            }
                         }
                     }
-                }
-                catch (Exception ex)
-                {
-                    return Json(new { responseCode = "400", responseText = ex.Message },
-                        JsonRequestBehavior.AllowGet);
-                }
+                    catch (Exception ex)
+                    {
+                        return Json(new { responseCode = "400", responseText = ex.Message },
+                            JsonRequestBehavior.AllowGet);
+                    }
 
+                }
             }
-
-        }
-        #endregion
-
-        #region Get BroadLink refStan From Response Table
-        public string getrefStan(ISP iSP)
-        {
-            string Query_refStan = "select refStan from MNPaypointResponse where account='" + iSP.CustomerID + "' AND ClientCode='" + iSP.ClientCode + "' AND UserName='" + iSP.UserName + "'";
-            DataTable dt = new DataTable();
-            dt = objdal.MyMethod(Query_refStan);
-            string refStan = string.Empty;
-            foreach (DataRow row in dt.Rows)
             {
-                refStan = row["refStan"].ToString();
+                return Json(new { responseCode = "400", responseText = "Please refresh the page again.", blockMessage = BlockMessage },
+                            JsonRequestBehavior.AllowGet);
             }
-            return refStan;
+
         }
         #endregion
 
@@ -696,10 +645,8 @@ namespace CustApp.Controllers
             {
                 string userName = (string)Session["LOGGED_USERNAME"];
 
-                //List<ConnectIPSTokenResponse> connectIPSTokens = new List<ConnectIPSTokenResponse>();
                 var cipsUsername = ConfigurationManager.AppSettings["CIPSUserName"];
                 var cipsPassword = ConfigurationManager.AppSettings["CIPSPassword"];
-
                 var content = new FormUrlEncodedContent(
                                        new KeyValuePair<string, string>[] {
                                 new KeyValuePair<string, string>("grant_type", "password"),
@@ -711,15 +658,13 @@ namespace CustApp.Controllers
                 {
                     var UserName = ConfigurationManager.AppSettings["BasicAuthUserName"];
                     var UserPassword = ConfigurationManager.AppSettings["BasicAuthPassword"];
-                    var ConnectIPSBaseURL = ConfigurationManager.AppSettings["ConnectIPSBaseURL"];
+                    var APIBaseURL = ConfigurationManager.AppSettings["APIBaseURL"];
 
                     var byteArray = Encoding.ASCII.GetBytes(UserName + ":" + UserPassword);
-
                     httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Basic", Convert.ToBase64String(byteArray));
-                    var httpResponse = await httpClient.PostAsync(ConnectIPSBaseURL + "api/ConnectIPS/CIPSToken", content);
+                    var httpResponse = await httpClient.PostAsync(APIBaseURL + "ConnectIPS/CIPSToken", content);
 
                     ConnectIPSTokenResponse connectIPSToken = new ConnectIPSTokenResponse();
-
                     if (httpResponse.StatusCode == HttpStatusCode.InternalServerError)
                     {
                         var responseContent = await httpResponse.Content.ReadAsStringAsync();
@@ -727,7 +672,6 @@ namespace CustApp.Controllers
 
                         connectIPSToken.status = json.status;
                         connectIPSToken.error = json.error;
-
                         return connectIPSToken;
                     }
 
@@ -736,15 +680,11 @@ namespace CustApp.Controllers
                         //response
                         var responseContent = await httpResponse.Content.ReadAsStringAsync();
                         var result = JsonConvert.DeserializeObject<ConnectIPSTokenResponse>(responseContent);
-
-                        //ConnectIPSTokenResponse connectIPSToken = new ConnectIPSTokenResponse();
                         connectIPSToken.access_token = result.access_token;
                         connectIPSToken.expires_in = result.expires_in;
                         connectIPSToken.refresh_token = result.refresh_token;
                         connectIPSToken.scope = result.scope;
                         connectIPSToken.token_type = result.token_type;
-
-                        //connectIPSTokens.Add(connectIPSToken);
 
                         return connectIPSToken;
 
@@ -768,14 +708,13 @@ namespace CustApp.Controllers
             {
                 var UserName = ConfigurationManager.AppSettings["BasicAuthUserName"];
                 var UserPassword = ConfigurationManager.AppSettings["BasicAuthPassword"];
-                var ConnectIPSBaseURL = ConfigurationManager.AppSettings["ConnectIPSBaseURL"];
+                var APIBaseURL = ConfigurationManager.AppSettings["APIBaseURL"];
 
                 var byteArray = Encoding.ASCII.GetBytes(UserName + ":" + UserPassword);
-
                 httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Basic", Convert.ToBase64String(byteArray));
                 httpClient.DefaultRequestHeaders.Add("token", Session["access_token"].ToString());
 
-                var httpResponse = await httpClient.GetAsync(ConnectIPSBaseURL + "api/ConnectIPS/GetCIPSChargeList");
+                var httpResponse = await httpClient.GetAsync(APIBaseURL + "ConnectIPS/GetCIPSChargeList");
                 var responseContent = await httpResponse.Content.ReadAsStringAsync();
 
                 List<GetCharge> cipsChargeList = new List<GetCharge>();
@@ -791,7 +730,6 @@ namespace CustApp.Controllers
 
                         cipsChargeList.Add(cIPSChargeList);
                     }
-
 
                     return cipsChargeList;
 
@@ -811,32 +749,24 @@ namespace CustApp.Controllers
             {
                 var UserName = ConfigurationManager.AppSettings["BasicAuthUserName"];
                 var UserPassword = ConfigurationManager.AppSettings["BasicAuthPassword"];
-                var ConnectIPSBaseURL = ConfigurationManager.AppSettings["ConnectIPSBaseURL"];
+                var APIBaseURL = ConfigurationManager.AppSettings["APIBaseURL"];
 
                 var byteArray = Encoding.ASCII.GetBytes(UserName + ":" + UserPassword);
-
                 httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Basic", Convert.ToBase64String(byteArray));
                 httpClient.DefaultRequestHeaders.Add("token", Session["access_token"].ToString());
 
-                var httpResponse = await httpClient.GetAsync(ConnectIPSBaseURL + "api/ConnectIPS/GetCIPSBankList");
+                var httpResponse = await httpClient.GetAsync(APIBaseURL + "ConnectIPS/GetCIPSBankList");
                 var responseContent = await httpResponse.Content.ReadAsStringAsync();
 
                 if (httpResponse.Content != null)
                 {
                     BankList[] result = JsonConvert.DeserializeObject<BankList[]>(responseContent);
-
                     foreach (var item in result)
                     {
-
                         var listItem = new SelectListItem { Value = item.bankId, Text = item.bankName };
                         teamList.Add(listItem);
-
-
-
-
                     }
                     return teamList;
-
                 }
             }
             return teamList;
@@ -856,23 +786,21 @@ namespace CustApp.Controllers
             {
                 var UserName = ConfigurationManager.AppSettings["BasicAuthUserName"];
                 var UserPassword = ConfigurationManager.AppSettings["BasicAuthPassword"];
-                var ConnectIPSBaseURL = ConfigurationManager.AppSettings["ConnectIPSBaseURL"];
+                var APIBaseURL = ConfigurationManager.AppSettings["APIBaseURL"];
 
                 var byteArray = Encoding.ASCII.GetBytes(UserName + ":" + UserPassword);
 
                 httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Basic", Convert.ToBase64String(byteArray));
                 httpClient.DefaultRequestHeaders.Add("token", Session["access_token"].ToString());
 
-                var httpResponse = await httpClient.GetAsync(ConnectIPSBaseURL + "api/ConnectIPS/GetCIPSBranchList?bankId=" + bankId);
+                var httpResponse = await httpClient.GetAsync(APIBaseURL + "ConnectIPS/GetCIPSBranchList?bankId=" + bankId);
                 var responseContent = await httpResponse.Content.ReadAsStringAsync();
 
                 if (httpResponse.Content != null)
                 {
                     BranchList[] result = JsonConvert.DeserializeObject<BranchList[]>(responseContent);
-
                     foreach (var item in result)
                     {
-
                         var listItem = new SelectListItem { Value = item.branchId, Text = item.branchName };
                         teamList.Add(listItem);
                     }

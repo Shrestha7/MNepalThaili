@@ -2,6 +2,7 @@ using System.Web.Http;
 using WebActivatorEx;
 using MNepalAPI;
 using Swashbuckle.Application;
+using MNepalAPI.Helper;
 
 [assembly: PreApplicationStartMethod(typeof(SwaggerConfig), "Register")]
 
@@ -176,6 +177,8 @@ namespace MNepalAPI
                         // alternative implementation for ISwaggerProvider with the CustomProvider option.
                         //
                         //c.CustomProvider((defaultProvider) => new CachingSwaggerProvider(defaultProvider));
+
+                        c.OperationFilter<AddAuthorizationHeaderParameter>();
                     })
                 .EnableSwaggerUi(c =>
                     {

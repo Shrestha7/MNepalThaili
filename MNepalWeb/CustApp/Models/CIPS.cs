@@ -77,6 +77,7 @@ namespace CustApp.Models
             public string bankName { get; set; }
             public string branchName { get; set; }
             public string pin { get; set; }
+            public string TokenUnique { get; set; }
         }
 
         public class Cipsbatchdetail

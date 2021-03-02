@@ -45,10 +45,6 @@ namespace MNepalAPI.Controllers
 
                 });
 
-
-
-
-
                 if (connectIPSUserAuthenticaiton.refresh_token == null)
                 {
                     content = new FormUrlEncodedContent(
@@ -368,12 +364,8 @@ namespace MNepalAPI.Controllers
 
                     DateTime dateTime = DateTime.Now;
 
-
-
                     //var getCertificate = HttpContext.Current.Server.MapPath("~/Certificate/NPI.pfx");
                     var transactionToken = tokenGenerationNCHL.getSignature(generateToken, getCertificate);
-
-
 
                     var cipsObject = new ConnectIPS
                     {
@@ -501,57 +493,55 @@ namespace MNepalAPI.Controllers
 
                             int resultsMNRequest = CIPSUtilities.cipsMNRequest(cipsMNRequest);
 
-                            
-
-                                //save to MNResponse
-                                MNRequestResponse cipsMNResponse = new MNRequestResponse();
-                            cipsMNResponse.originId = connectIPS.username;
-                            cipsMNResponse.originType = "6011";
-                            cipsMNResponse.serviceCode = "34";
-                            cipsMNResponse.sourceBankCode = cipsbatchdetail.debtorAgent;
-                            cipsMNResponse.sourceBranchCode = cipsbatchdetail.debtorBranch;
-                            cipsMNResponse.sourceAccountNumber = cipsbatchdetail.debtorAccount;
-                            cipsMNResponse.destBankCode = cipsTransactionDetailList.FirstOrDefault().creditorAgent;
-                            cipsMNResponse.destBranchCode = cipsTransactionDetailList.FirstOrDefault().creditorBranch;
-                            cipsMNResponse.destAccountNumber = cipsTransactionDetailList.FirstOrDefault().creditorAccount;
-                            cipsMNResponse.amount = cipsbatchdetail.batchAmount;
-                            cipsMNResponse.feeId = "";
-
-                            //fee amount 
-                            if (cipsbatchdetail.batchAmount <= 500)
-                            {
-                                cipsMNResponse.feeAmount = 2;
-                            }
-                            else if(cipsbatchdetail.batchAmount > 500 && cipsbatchdetail.batchAmount <= 5000)
-                            {
-                                cipsMNResponse.feeAmount = 5;
-                            }
-                            else if(cipsbatchdetail.batchAmount > 5000 && cipsbatchdetail.batchAmount <= 50000)
-                            {
-                                cipsMNResponse.feeAmount = 10;
-                            }
-                            else if (cipsbatchdetail.batchAmount > 50000)
-                            {
-                                cipsMNResponse.feeAmount = 15;
-                            }
-                            cipsMNResponse.traceNo = cipsMNRequest.traceNo;
-                            cipsMNResponse.tranDate = cipsMNRequest.tranDate;
-                            cipsMNResponse.tranTime = "";
-                            cipsMNResponse.retrievalReference = cipsMNRequest.retrievalReference;
-                            cipsMNResponse.responseCode = "000";
-                            cipsMNResponse.responseDescription = "Payment to CIPS from " + cipsMNRequest.sourceAccountNumber + " to " + cipsMNRequest.destAccountNumber;
-                            cipsMNResponse.balance = "";
-                            cipsMNResponse.accountHolderName = connectIPS.username;
-                            cipsMNResponse.miniStmtRecord = connectIPS.username;
-                            cipsMNResponse.reversalStatus = "";
-                            cipsMNResponse.tranId = randomCodeGenerator.CreateRandomCodeWithString(9);
-                            cipsMNResponse.destUsername = cipsTransactionDetailList.FirstOrDefault().creditorName;
-
-                            int resultsMNResponse = CIPSUtilities.cipsMNResponse(cipsMNResponse);
-
 
                             if (jsonResponseContent.cipsBatchResponse.responseCode == "000" && jsonResponseContent.cipsTxnResponseList.FirstOrDefault().responseCode == "000")
                             {
+                                //save to MNResponse
+                                MNRequestResponse cipsMNResponse = new MNRequestResponse();
+                                cipsMNResponse.originId = connectIPS.username;
+                                cipsMNResponse.originType = "6011";
+                                cipsMNResponse.serviceCode = "34";
+                                cipsMNResponse.sourceBankCode = cipsbatchdetail.debtorAgent;
+                                cipsMNResponse.sourceBranchCode = cipsbatchdetail.debtorBranch;
+                                cipsMNResponse.sourceAccountNumber = cipsbatchdetail.debtorAccount;
+                                cipsMNResponse.destBankCode = cipsTransactionDetailList.FirstOrDefault().creditorAgent;
+                                cipsMNResponse.destBranchCode = cipsTransactionDetailList.FirstOrDefault().creditorBranch;
+                                cipsMNResponse.destAccountNumber = cipsTransactionDetailList.FirstOrDefault().creditorAccount;
+                                cipsMNResponse.amount = cipsbatchdetail.batchAmount;
+                                cipsMNResponse.feeId = "";
+
+                                //fee amount 
+                                if (cipsbatchdetail.batchAmount <= 500)
+                                {
+                                    cipsMNResponse.feeAmount = 2;
+                                }
+                                else if (cipsbatchdetail.batchAmount > 500 && cipsbatchdetail.batchAmount <= 5000)
+                                {
+                                    cipsMNResponse.feeAmount = 5;
+                                }
+                                else if (cipsbatchdetail.batchAmount > 5000 && cipsbatchdetail.batchAmount <= 50000)
+                                {
+                                    cipsMNResponse.feeAmount = 10;
+                                }
+                                else if (cipsbatchdetail.batchAmount > 50000)
+                                {
+                                    cipsMNResponse.feeAmount = 15;
+                                }
+                                cipsMNResponse.traceNo = cipsMNRequest.traceNo;
+                                cipsMNResponse.tranDate = cipsMNRequest.tranDate;
+                                cipsMNResponse.tranTime = "";
+                                cipsMNResponse.retrievalReference = cipsMNRequest.retrievalReference;
+                                cipsMNResponse.responseCode = "000";
+                                cipsMNResponse.responseDescription = "Payment to CIPS from " + cipsMNRequest.sourceAccountNumber + " to " + cipsMNRequest.destAccountNumber;
+                                cipsMNResponse.balance = "";
+                                cipsMNResponse.accountHolderName = connectIPS.username;
+                                cipsMNResponse.miniStmtRecord = connectIPS.username;
+                                cipsMNResponse.reversalStatus = "";
+                                cipsMNResponse.tranId = randomCodeGenerator.CreateRandomCodeWithString(9);
+                                cipsMNResponse.destUsername = cipsTransactionDetailList.FirstOrDefault().creditorName;
+
+                                int resultsMNResponse = CIPSUtilities.cipsMNResponse(cipsMNResponse);
+
                                 //SMS
                                 string messagereply = "";
                                 try
@@ -852,7 +842,7 @@ namespace MNepalAPI.Controllers
         //        //var client = new WebClient();
         //        messagereply = "Dear " + "test message"+ "," + "\n";
 
-               
+
 
         //        //SENDER
         //        if ((thailiUserName.Substring(0, 3) == "980") || (thailiUserName.Substring(0, 3) == "981")) //FOR NCELL
