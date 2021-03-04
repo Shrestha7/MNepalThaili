@@ -464,7 +464,7 @@ namespace MNepalAPI.Controllers
                             MNRequestResponse cipsMNRequest = new MNRequestResponse();
                             cipsMNRequest.originId = connectIPS.username;
                             cipsMNRequest.originType = "6011";
-                            cipsMNRequest.serviceCode = "34";
+                            cipsMNRequest.serviceCode = "11";
                             cipsMNRequest.sourceBankCode = cipsbatchdetail.debtorAgent;
                             cipsMNRequest.sourceBranchCode = cipsbatchdetail.debtorBranch;
                             cipsMNRequest.sourceAccountNumber = cipsbatchdetail.debtorAccount;
@@ -500,7 +500,7 @@ namespace MNepalAPI.Controllers
                                 MNRequestResponse cipsMNResponse = new MNRequestResponse();
                                 cipsMNResponse.originId = connectIPS.username;
                                 cipsMNResponse.originType = "6011";
-                                cipsMNResponse.serviceCode = "34";
+                                cipsMNResponse.serviceCode = "11";
                                 cipsMNResponse.sourceBankCode = cipsbatchdetail.debtorAgent;
                                 cipsMNResponse.sourceBranchCode = cipsbatchdetail.debtorBranch;
                                 cipsMNResponse.sourceAccountNumber = cipsbatchdetail.debtorAccount;

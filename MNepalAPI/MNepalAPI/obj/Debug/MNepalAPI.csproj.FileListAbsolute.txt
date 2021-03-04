@@ -594,6 +594,7 @@ D:\MNepal\MNepalAPI\MNepalAPI\obj\Debug\MNepalAPI.csproj.CopyComplete
 D:\MNepal\MNepalAPI\MNepalAPI\obj\Debug\MNepalAPI.dll
 D:\MNepal\MNepalAPI\MNepalAPI\obj\Debug\MNepalAPI.pdb
 D:\Thaili\MNepalAPI\MNepalAPI\bin\MNepalAPI.dll.config
+D:\Thaili\MNepalAPI\MNepalAPI\bin\MNepalAPI.xml
 D:\Thaili\MNepalAPI\MNepalAPI\bin\MNepalAPI.dll
 D:\Thaili\MNepalAPI\MNepalAPI\bin\MNepalAPI.pdb
 D:\Thaili\MNepalAPI\MNepalAPI\bin\roslyn\csc.exe
@@ -711,4 +712,3 @@ D:\Thaili\MNepalAPI\MNepalAPI\obj\Debug\MNepalAPI.csproj.CoreCompileInputs.cache
 D:\Thaili\MNepalAPI\MNepalAPI\obj\Debug\MNepalAPI.csproj.CopyComplete
 D:\Thaili\MNepalAPI\MNepalAPI\obj\Debug\MNepalAPI.dll
 D:\Thaili\MNepalAPI\MNepalAPI\obj\Debug\MNepalAPI.pdb
-D:\Thaili\MNepalAPI\MNepalAPI\bin\MNepalAPI.xml

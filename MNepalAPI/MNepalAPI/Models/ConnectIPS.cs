@@ -164,7 +164,9 @@ namespace MNepalAPI.Models
         public string addenda2 { get; set; }
         public string addenda3 { get; set; }
         public string addenda4 { get; set; }
+        public string remark { get; set; }
         public string thailiUserName { get; set; }
+
     }
 
     public class BasicAuth

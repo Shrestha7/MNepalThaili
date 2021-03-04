@@ -485,6 +485,7 @@ namespace CustApp.Controllers
 
                 Cipsbatchdetail cipsBatchDetail = new Cipsbatchdetail();
                 cipsBatchDetail.batchId = Session["batchId"].ToString();
+                
 
                 decimal decimalRounded = Decimal.Parse(connectIPS.amount.ToString("0.00"));
 

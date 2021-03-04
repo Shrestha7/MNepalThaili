@@ -143,6 +143,7 @@ namespace MNepalAPI.Utilities
                 addenda2 = cIPSResponse.cipsTransactionDetailList.SingleOrDefault().addenda2,
                 addenda3 = cIPSResponse.cipsTransactionDetailList.SingleOrDefault().addenda3,
                 addenda4 = cIPSResponse.cipsTransactionDetailList.SingleOrDefault().addenda4,
+                remark = cIPSResponse.cipsTransactionDetailList.SingleOrDefault().addenda4,
                 thailiUserName = thailiUserName
                 
             };

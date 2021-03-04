@@ -308,6 +308,7 @@ namespace MNepalAPI.UserModel
                         sqlCmd.Parameters.AddWithValue("@addenda2", objresConnectIPSInfo.addenda2);
                         sqlCmd.Parameters.AddWithValue("@addenda3", objresConnectIPSInfo.addenda3);
                         sqlCmd.Parameters.AddWithValue("@addenda4", objresConnectIPSInfo.addenda4);
+                        sqlCmd.Parameters.AddWithValue("@remark", objresConnectIPSInfo.addenda4);
                         sqlCmd.Parameters.AddWithValue("@thailiUserName", objresConnectIPSInfo.thailiUserName);
                        
                         ret = sqlCmd.ExecuteNonQuery();

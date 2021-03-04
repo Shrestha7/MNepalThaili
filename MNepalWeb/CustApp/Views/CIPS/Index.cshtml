@@ -156,7 +156,7 @@
                                 <div class="col-md-12">
                                     <div class="form-group">
                                         <label class="col-sm-12">Sender Account Number :<b style="color:red;">*</b></label>
-                                        <input type="text" value="@ViewBag.BankAccountNumber" @*disabled="disabled"*@ class="form-control select2" id="senderAccountNumber" name="txtSenderAccountNumber" placeholder="Account Number" maxlength="20" />
+                                        <input type="text" value="@ViewBag.BankAccountNumber" disabled="disabled" class="form-control select2" id="senderAccountNumber" name="txtSenderAccountNumber" placeholder="Account Number" maxlength="20" />
                                     </div>
                                     <div class="form-group" id="accountNumberErr" style="color:red; margin-top:-11px;"></div>
                                 </div>
@@ -250,7 +250,7 @@
                                 <div class="col-md-12">
                                     <div class="form-group">
                                         <label class="col-sm-12">Transaction Detail : <b style="color:red;">*</b></label>
-                                        <textarea style="resize: none;" cols="50" rows="2" @*class="form-control select2"*@ id="transactionDetail" name="txtTransactionDetail" placeholder="Remarks" maxlength="50" oninput="checkRemarks()" @*onpaste="return false"*@></textarea>
+                                        <textarea style="resize: none;" cols="50" rows="2" @*class="form-control select2"*@ id="transactionDetail" name="txtTransactionDetail" placeholder="Remarks" maxlength="15" oninput="checkRemarks()" @*onpaste="return false"*@></textarea>
                                     </div>
                                     <div class="form-group" id="transactionDetailErr" style="color:red; margin-top:-11px;"></div>
                                 </div>
@@ -433,6 +433,13 @@
                 $("#transactionDetailErr").append("<small>" + "Transaction Detail is required and cannot be empty" + "</small>");
                 $("#transactionDetailErr").show();
             }
+            else {
+                $("#transactionDetailErr").hide();
+            }
+
+            if (transactionDetail.length > 15) {
+                $("#transactionDetailErr").show();
+            } 
             else {
                 $("#transactionDetailErr").hide();
             }

@@ -444,6 +444,8 @@
             var branchName = document.getElementById("branchName").innerText;
             var remarks = document.getElementById("remarks").innerText;
 
+            var token = $('input[name="__RequestVerificationToken"]').val();
+
             if ((accountNumber != "") && (transactionAmount != "") && (beneficiaryAccountNumber != "") && (beneficiaryAccountName != "") &&
                 (beneficiaryBankName != "") && (branchName != "") && (remarks != "")) {
 
@@ -454,14 +456,19 @@
                     beneficiaryAccountName: beneficiaryAccountName,
                     beneficiaryBankName: beneficiaryBankName,
                     branchName: branchName,
-                    remarks: remarks
+                    remarks: remarks,
+                    TokenUnique: token
                 };
 
                 e.preventDefault(); //prevent the default action
                 $.ajax({
                     url: '@Url.Action("CIPSExecutePayment", "CIPS")',
                     type: "POST",
-                    data: dataToPost,
+                    data:
+                    {
+                        __RequestVerificationToken: token,
+                        connectIPS: dataToPost,
+                    },
                     async: false,
                     success: function (data) {
                         debugger;
