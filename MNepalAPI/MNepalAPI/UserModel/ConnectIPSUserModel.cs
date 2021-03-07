@@ -182,7 +182,8 @@ namespace MNepalAPI.UserModel
                         sqlCmd.Parameters.AddWithValue("@DestAccountNo", objresConnectIPSInfo.destAccountNumber);
                         sqlCmd.Parameters.AddWithValue("@Amount", objresConnectIPSInfo.amount);
                         sqlCmd.Parameters.AddWithValue("@FeeId", objresConnectIPSInfo.feeId);
-                        sqlCmd.Parameters.AddWithValue("@FeeAmount", objresConnectIPSInfo.feeAmount);
+                        //sqlCmd.Parameters.AddWithValue("@FeeAmount", objresConnectIPSInfo.feeAmount);
+                        sqlCmd.Parameters.AddWithValue("@FeeAmount", 0);
                         sqlCmd.Parameters.AddWithValue("@TraceNo", objresConnectIPSInfo.traceNo);
                         sqlCmd.Parameters.AddWithValue("@TranDate", objresConnectIPSInfo.tranDate);
                         sqlCmd.Parameters.AddWithValue("@TranTime", objresConnectIPSInfo.tranTime);

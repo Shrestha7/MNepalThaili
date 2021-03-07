@@ -169,6 +169,7 @@
                                         <input type="text" class="form-control select2" id="amount" name="txtAmount" onkeypress="return (event.charCode !=8 && event.charCode ==0 || ( event.charCode == 46 || (event.charCode >= 48 && event.charCode <= 57)))" placeholder="NPR" maxlength="9" oninput="checkAmount()" onpaste="return false" />
                                     </div>
                                     <div class="form-group" id="amountErr" style="color:red; margin-top:-11px;"></div>
+                                    <div class="form-group" id="amountErr1" style="color:red; margin-top:-11px;"></div>
                                 </div>
 
                             </div>
@@ -387,6 +388,15 @@
             }
             else {
                 $("#amountErr").hide();
+            }
+
+            if (amount < 10 || amount > 50000) {
+                $("#amountErr1").html("");
+                $("#amountErr1").append("<small>" + "Enter amount between 10 and 2000000" + "</small>");
+                $("#amountErr1").show();
+            }
+            else {
+                $("#amountErr1").hide();
             }
         }
 

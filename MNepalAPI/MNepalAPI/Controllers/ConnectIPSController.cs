@@ -454,7 +454,7 @@ namespace MNepalAPI.Controllers
                             cipsResponse.instructionId = jsonResponseContent.cipsTxnResponseList.FirstOrDefault().instructionId;
                             cipsResponse.creditStatus = jsonResponseContent.cipsTxnResponseList.FirstOrDefault().creditStatus;
                             cipsResponse.amount = cipsbatchdetail.batchAmount.ToString();
-                            cipsResponse.dateTime = DateTime.Now;
+                            cipsResponse.dateTime = dateTime;
                             cipsResponse.username = cipsUserName;
                             cipsResponse.thailiUserName = connectIPS.username;
 
@@ -474,7 +474,7 @@ namespace MNepalAPI.Controllers
                             cipsMNRequest.amount = cipsbatchdetail.batchAmount;
                             cipsMNRequest.feeId = "";
                             cipsMNRequest.traceNo = randomCodeGenerator.CreateRandomCode(6);
-                            cipsMNRequest.tranDate = cipsResponse.dateTime;
+                            cipsMNRequest.tranDate = dateTime;
                             cipsMNRequest.retrievalReference = cipsbatchdetail.batchId;
                             cipsMNRequest.desc1 = "Payment to CIPS from " + cipsMNRequest.sourceAccountNumber + " to " + cipsMNRequest.destAccountNumber;
                             cipsMNRequest.desc2 = connectIPS.username;
@@ -507,7 +507,6 @@ namespace MNepalAPI.Controllers
                                 cipsMNResponse.destBankCode = cipsTransactionDetailList.FirstOrDefault().creditorAgent;
                                 cipsMNResponse.destBranchCode = cipsTransactionDetailList.FirstOrDefault().creditorBranch;
                                 cipsMNResponse.destAccountNumber = cipsTransactionDetailList.FirstOrDefault().creditorAccount;
-                                cipsMNResponse.amount = cipsbatchdetail.batchAmount;
                                 cipsMNResponse.feeId = "";
 
                                 //fee amount 
@@ -527,8 +526,9 @@ namespace MNepalAPI.Controllers
                                 {
                                     cipsMNResponse.feeAmount = 15;
                                 }
+                                cipsMNResponse.amount = cipsbatchdetail.batchAmount  + cipsMNResponse.feeAmount;
                                 cipsMNResponse.traceNo = cipsMNRequest.traceNo;
-                                cipsMNResponse.tranDate = cipsMNRequest.tranDate;
+                                cipsMNResponse.tranDate = dateTime;
                                 cipsMNResponse.tranTime = "";
                                 cipsMNResponse.retrievalReference = cipsMNRequest.retrievalReference;
                                 cipsMNResponse.responseCode = "000";
@@ -551,9 +551,9 @@ namespace MNepalAPI.Controllers
                                     var client = new HttpClient();
                                     messagereply = "Dear " + connectIPS.username + "," + "\n";
 
-                                    messagereply += "You have successfully transfer " + cipsResponse.amount
-                                                        + " to " + cipsTransactionDetailList.FirstOrDefault().creditorAccount
-                                                         + " on date " +
+                                    messagereply += "You have successfully transfer of Rs " + cipsResponse.amount
+                                                        + " to A/C " + cipsTransactionDetailList.FirstOrDefault().creditorAccount + 
+                                                        "via Connect IPS" + " on date " +
                                                         cipsResponse.dateTime.ToString("dd/MM/yyyy")
                                                     + "." + "\n";
                                     messagereply += "Thank you. NIBL";
