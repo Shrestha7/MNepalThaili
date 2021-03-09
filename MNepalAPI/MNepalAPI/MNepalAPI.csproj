@@ -219,23 +219,30 @@
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Helper\AddAuthorizationHeaderParameter.cs" />
+    <Compile Include="Helper\CustomerSMS.cs" />
     <Compile Include="Helper\HashAlgo.cs" />
     <Compile Include="Helper\RandomCodeGenerator.cs" />
+    <Compile Include="Helper\SMSEnable.cs" />
     <Compile Include="Helper\TokenGenerationNCHL.cs" />
     <Compile Include="Models\Category.cs" />
     <Compile Include="Models\ConnectIPS.cs" />
     <Compile Include="Models\ConnectIPSToken.cs" />
     <Compile Include="Models\Notifications.cs" />
+    <Compile Include="Models\SMSMsg.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="UserModel\BulkSMSUserModel.cs" />
     <Compile Include="UserModel\ConnectIPSUserModel.cs" />
+    <Compile Include="UserModel\CustCheckerUserModel.cs" />
     <Compile Include="UserModel\LoginUserModels.cs" />
     <Compile Include="UserModel\NotificationUserModel.cs" />
+    <Compile Include="UserModel\SMSUserModels.cs" />
     <Compile Include="Utilities\BulkSMSUtilities.cs" />
     <Compile Include="Utilities\CIPSUtilities.cs" />
     <Compile Include="Utilities\ConnectIPSUtilities.cs" />
+    <Compile Include="Utilities\CustCheckUtils.cs" />
     <Compile Include="Utilities\LoginUtils.cs" />
     <Compile Include="Utilities\NotificationUtilities.cs" />
+    <Compile Include="Utilities\SMSUtils.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Areas\HelpPage\HelpPage.css" />

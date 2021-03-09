@@ -144,7 +144,7 @@
                             <div class="row">
                                 <div class="col-md-12">
                                     <div class="form-group">
-                                        <label class="col-sm-12">Sender Name :<b style="color:red;">*</b></label>
+                                        <label class="col-sm-12">Sender Name (<span style="color:red">*</span>)</label>
                                         <input type="text" value="@ViewBag.BankRegisterName" disabled="disabled" class="form-control select2" id="senderAccountName" name="txtSenderAccountName" placeholder="Account Name" maxlength="50" />
                                     </div>
                                     <div class="form-group" id="accountNameErr" style="color:red; margin-top:-11px;"></div>
@@ -155,24 +155,23 @@
                             <div class="row">
                                 <div class="col-md-12">
                                     <div class="form-group">
-                                        <label class="col-sm-12">Sender Account Number :<b style="color:red;">*</b></label>
+                                        <label class="col-sm-12">Sender Account Number (<span style="color:red">*</span>)</label>
                                         <input type="text" value="@ViewBag.BankAccountNumber" disabled="disabled" class="form-control select2" id="senderAccountNumber" name="txtSenderAccountNumber" placeholder="Account Number" maxlength="20" />
                                     </div>
                                     <div class="form-group" id="accountNumberErr" style="color:red; margin-top:-11px;"></div>
                                 </div>
 
                             </div>
-                            <div class="row">
-                                <div class="col-md-12">
-                                    <div class="form-group">
-                                        <label class="col-sm-12">Amount : <b style="color:red;">*</b></label>
-                                        <input type="text" class="form-control select2" id="amount" name="txtAmount" onkeypress="return (event.charCode !=8 && event.charCode ==0 || ( event.charCode == 46 || (event.charCode >= 48 && event.charCode <= 57)))" placeholder="NPR" maxlength="9" oninput="checkAmount()" onpaste="return false" />
-                                    </div>
-                                    <div class="form-group" id="amountErr" style="color:red; margin-top:-11px;"></div>
-                                    <div class="form-group" id="amountErr1" style="color:red; margin-top:-11px;"></div>
-                                </div>
 
+                            <label>Amount (<span style="color:red">*</span>)</label>
+
+                            <div class="form-group input-group">
+                                <div class="form-control col-2">NPR.</div>
+                                <input type="text" class="form-control select2" id="amount" name="txtAmount" onkeypress="return (event.charCode !=8 && event.charCode ==0 || ( event.charCode == 46 || (event.charCode >= 48 && event.charCode <= 57)))" placeholder="Amount" maxlength="9" oninput="checkAmount()" onpaste="return false" />
                             </div>
+                            <div class="form-group" id="amountErr" style="color:red; margin-top:-11px;"></div>
+                            <div class="form-group" id="amountErr1" style="color:red; margin-top:-11px;"></div>
+
                             <br>
                             <div class="row">
                                 <div class="col-md-12">
@@ -185,7 +184,7 @@
                             <div class="row">
                                 <div class="col-md-12">
                                     <div class="form-group">
-                                        <label class="col-sm-12">Account Number : <b style="color:red;">*</b></label>
+                                        <label class="col-sm-12">Account Number (<span style="color:red">*</span>)</label>
                                         <input type="text" class="form-control select2" id="accountNumber" onkeypress="return event.charCode >= 48 && event.charCode <= 57" name="txtBeneficiaryAccountNumber" placeholder="Account Number" maxlength="20" oninput="checkBeneficiaryAccountNumber()" @*onpaste="return false"*@ />
                                     </div>
                                     <div class="form-group" id="beneficiaryAccountNumberErr" style="color:red; margin-top:-11px;"></div>
@@ -196,7 +195,7 @@
                             <div class="row">
                                 <div class="col-md-12">
                                     <div class="form-group">
-                                        <label class="col-sm-12">Account Name : <b style="color:red;">*</b></label>
+                                        <label class="col-sm-12">Account Name (<span style="color:red">*</span>)</label>
                                         <input type="text" class="form-control select2" id="beneficiaryAccountName" onkeypress="return (event.charCode >= 65 && event.charCode <= 90) || (event.charCode >= 97 && event.charCode <= 122) || event.charCode ==32" name="txtBeneficiaryAccountName" placeholder="Account Name" maxlength="20" oninput="checkBeneficiaryAccountName()" @*onpaste="return false"*@ />
                                     </div>
                                     <div class="form-group" id="beneficiaryAccountNameErr" style="color:red; margin-top:-11px;"></div>
@@ -207,7 +206,7 @@
                             <div class="row">
                                 <div class="col-md-12">
                                     <div class="form-group">
-                                        <label class="col-sm-12">Bank Name : <b style="color:red;">*</b></label>
+                                        <label class="col-sm-12">Bank Name (<span style="color:red">*</span>)</label>
                                         <select id="bankDrpdwn" onload="getBankId()" name="txtBankName" class="show-tick" style="width:465px; height:43px" oninput="checkBank()">
                                             @foreach (var bank in ViewBag.getBankList)
                                             {
@@ -226,9 +225,8 @@
                             <div class="row">
                                 <div class="col-md-12">
                                     <div class="form-group">
-                                        <label class="col-sm-12">Branch Name : <b style="color:red;">*</b></label>
-                                        <select id="branchDrpdwn" name="branchName" class="show-tick" style="width:465px; height:43px">
-                                        </select>
+                                        <label class="col-sm-12">Branch Name (<span style="color:red">*</span>)</label>
+                                        <select id="branchDrpdwn" name="branchName" class="show-tick" style="width:465px; height:43px"></select>
                                     </div>
                                     <div class="form-group" id="branchNameErr" style="color:red; margin-top:-11px;"></div>
                                 </div>
@@ -238,7 +236,7 @@
                             <div class="row">
                                 <div class="col-md-12">
                                     <div class="form-group">
-                                        <label class="col-sm-12">Pin : <b style="color:red;">*</b></label>
+                                        <label>T-PIN (<span style="color:red">*</span>)</label>
                                         <input type="password" id="pin" name="txtPin" class="form-control pwd1" placeholder="PIN" maxlength="4" onkeypress="return event.charCode >= 48 && event.charCode <= 57" oninput="checkPin()" @*onpaste="return false"*@ />
                                         <span toggle="#password-field" class="fa fa-fw fa-eye field-icon toggle-password, btnShow1"></span>
                                     </div>
@@ -250,7 +248,7 @@
                             <div class="row">
                                 <div class="col-md-12">
                                     <div class="form-group">
-                                        <label class="col-sm-12">Transaction Detail : <b style="color:red;">*</b></label>
+                                        <label>Remarks (<span style="color:red">*</span>)</label>
                                         <textarea style="resize: none;" cols="50" rows="2" @*class="form-control select2"*@ id="transactionDetail" name="txtTransactionDetail" placeholder="Remarks" maxlength="15" oninput="checkRemarks()" @*onpaste="return false"*@></textarea>
                                     </div>
                                     <div class="form-group" id="transactionDetailErr" style="color:red; margin-top:-11px;"></div>
@@ -389,8 +387,7 @@
             else {
                 $("#amountErr").hide();
             }
-
-            if (amount < 10 || amount > 50000) {
+	    if (amount < 10 || amount > 50000) {
                 $("#amountErr1").html("");
                 $("#amountErr1").append("<small>" + "Enter amount between 10 and 2000000" + "</small>");
                 $("#amountErr1").show();

@@ -346,7 +346,8 @@ namespace CustApp.Controllers
                     client.Port = 25;
                     client.DeliveryMethod = SmtpDeliveryMethod.Network;
                     client.UseDefaultCredentials = false;
-                    client.Host = "172.31.220.1";//smtp.mos.com.np
+                    //client.Host = "172.31.220.1";//smtp.mos.com.np 
+                    client.Host = "10.1.2.5";//smtp.nibl.com.np
                     mail.Subject = Subject;
                     mail.Body = Message;
                     mail.IsBodyHtml = true;

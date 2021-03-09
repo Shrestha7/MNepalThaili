@@ -707,8 +707,8 @@ D:\Thaili\MNepalAPI\MNepalAPI\bin\System.Web.WebPages.Deployment.xml
 D:\Thaili\MNepalAPI\MNepalAPI\bin\System.Web.WebPages.Razor.xml
 D:\Thaili\MNepalAPI\MNepalAPI\bin\Antlr3.Runtime.pdb
 D:\Thaili\MNepalAPI\MNepalAPI\bin\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.xml
-D:\Thaili\MNepalAPI\MNepalAPI\obj\Debug\MNepalAPI.csprojAssemblyReference.cache
 D:\Thaili\MNepalAPI\MNepalAPI\obj\Debug\MNepalAPI.csproj.CoreCompileInputs.cache
 D:\Thaili\MNepalAPI\MNepalAPI\obj\Debug\MNepalAPI.csproj.CopyComplete
 D:\Thaili\MNepalAPI\MNepalAPI\obj\Debug\MNepalAPI.dll
 D:\Thaili\MNepalAPI\MNepalAPI\obj\Debug\MNepalAPI.pdb
+D:\Thaili\MNepalAPI\MNepalAPI\obj\Debug\MNepalAPI.csprojAssemblyReference.cache

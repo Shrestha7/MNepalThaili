@@ -317,12 +317,8 @@ namespace MNepalAPI.Controllers
                     string generateRandomNumber = randomCodeGenerator.CreateRandomCode(12);
 
                     var json = JsonConvert.SerializeObject(connectIPS.cipsTransactionDetailList);
-
-
                     JavaScriptSerializer js = new JavaScriptSerializer();
                     Cipstransactiondetaillist[] cipsTransactionDetailList = js.Deserialize<Cipstransactiondetaillist[]>(json);
-
-
 
                     Cipsbatchdetail cipsbatchdetail = new Cipsbatchdetail();
                     //cipsbatchdetail.batchId = connectIPS.cipsBatchDetail.batchId;
@@ -333,7 +329,6 @@ namespace MNepalAPI.Controllers
 
                     decimal decimalRounded = Decimal.Parse(connectIPS.cipsBatchDetail.batchAmount.ToString("0.00"));
                     cipsbatchdetail.batchAmount = decimalRounded;
-
                     cipsbatchdetail.batchCount = connectIPS.cipsBatchDetail.batchCount;
                     cipsbatchdetail.batchCrncy = connectIPS.cipsBatchDetail.batchCrncy;
                     cipsbatchdetail.categoryPurpose = connectIPS.cipsBatchDetail.categoryPurpose;
@@ -356,17 +351,12 @@ namespace MNepalAPI.Controllers
                         cipsbatchdetail.batchAmount;
 
                     string generateToken = batchString + transactionString + "," + cipsUserName;
-
                     TokenGenerationNCHL tokenGenerationNCHL = new TokenGenerationNCHL();
-
-
                     string getCertificate = AppDomain.CurrentDomain.BaseDirectory + "Certificate/NPI.pfx";
-
                     DateTime dateTime = DateTime.Now;
 
                     //var getCertificate = HttpContext.Current.Server.MapPath("~/Certificate/NPI.pfx");
                     var transactionToken = tokenGenerationNCHL.getSignature(generateToken, getCertificate);
-
                     var cipsObject = new ConnectIPS
                     {
                         cipsBatchDetail = cipsbatchdetail,
@@ -405,13 +395,11 @@ namespace MNepalAPI.Controllers
 
                         if (httpResponse.StatusCode == HttpStatusCode.Unauthorized || httpResponse.StatusCode == HttpStatusCode.BadRequest)
                         {
-
                             // Check if the unauthorized is because of invalid token
                             if (responseContent.Contains("invalid_token"))
                             {
                                 // Get refresh token from database matching the accesstoken from the header
                                 var accessToken1 = CIPSUtilities.GetAccessToken(authorizationToken);
-
                                 if (accessToken == "")
                                     return Request.CreateErrorResponse(HttpStatusCode.Unauthorized, "Invalid Token");
 
@@ -432,7 +420,6 @@ namespace MNepalAPI.Controllers
                                 }
                             }
                             return Request.CreateErrorResponse(HttpStatusCode.Unauthorized, responseContent);
-
                         }
 
                         CIPSResponse cipsResponse = new CIPSResponse();
@@ -440,9 +427,7 @@ namespace MNepalAPI.Controllers
                         {
 
                             var jsonResponseContent = JsonConvert.DeserializeObject<ConnectIPSResponse>(responseContent);
-
                             //save to db
-
                             cipsResponse.batchResponseCode = jsonResponseContent.cipsBatchResponse.responseCode;
                             cipsResponse.batchResponseMessage = jsonResponseContent.cipsBatchResponse.responseMessage;
                             cipsResponse.batchId = jsonResponseContent.cipsBatchResponse.batchId;
@@ -542,38 +527,37 @@ namespace MNepalAPI.Controllers
 
                                 int resultsMNResponse = CIPSUtilities.cipsMNResponse(cipsMNResponse);
 
-                                //SMS
+                                ///SMS
                                 string messagereply = "";
                                 try
                                 {
-                                    string SMSNTC = ConfigurationManager.AppSettings["MNepalNTCSMSServerUrl"];
-                                    string SMSNCELL = System.Web.Configuration.WebConfigurationManager.AppSettings["MNepalSMSServerUrl"];
-                                    var client = new HttpClient();
-                                    messagereply = "Dear " + connectIPS.username + "," + "\n";
-
-                                    messagereply += "You have successfully transfer of Rs " + cipsResponse.amount
-                                                        + " to A/C " + cipsTransactionDetailList.FirstOrDefault().creditorAccount + 
-                                                        "via Connect IPS" + " on date " +
-                                                        cipsResponse.dateTime.ToString("dd/MM/yyyy")
-                                                    + "." + "\n";
-                                    messagereply += "Thank you. NIBL";
-
-                                    //SENDER
-                                    if ((cipsResponse.thailiUserName.Substring(0, 3) == "980") || (cipsResponse.thailiUserName.Substring(0, 3) == "981")) //FOR NCELL
+                                    //FOR CUSTOMER
+                                    try
                                     {
-                                        //FOR NCELL
-                                        var content = client.GetAsync(
-                                         SMSNCELL + "977" + cipsResponse.thailiUserName + "&message=" + messagereply + "");
+                                        //Alert Dynamic
+                                        string AlertType = "CIPS";
+                                       
+                                        //FOR CUSTOMER SMS                                     
+                                        #region FOR CUSTOMER SMS
+
+                                        CustomerSMS customerSMS = new CustomerSMS();
+                                        string cSMS = customerSMS.CustSMSEnable(AlertType, connectIPS.username.Trim(), "", cipsMNResponse.amount.ToString(), "", cipsMNResponse.destAccountNumber, dateTime.ToString("dd/MM/yyyy"));
+                                        if (cSMS == "false")
+                                        {
+
+                                        }
+                                        else
+                                        {
+
+                                        }
+
+                                        #endregion
+
                                     }
-                                    else if ((cipsResponse.thailiUserName.Substring(0, 3) == "985") || (cipsResponse.thailiUserName.Substring(0, 3) == "984")
-                                                || (cipsResponse.thailiUserName.Substring(0, 3) == "986"))
+                                    catch (Exception ex)
                                     {
-                                        //FOR NTC
-                                        var content = client.GetAsync(
-                                            SMSNTC + "977" + cipsResponse.thailiUserName + "&message=" + messagereply + "");
+                                        throw ex;
                                     }
-
-
 
                                 }
                                 catch (Exception ex)
