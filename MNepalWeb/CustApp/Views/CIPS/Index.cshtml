@@ -233,7 +233,22 @@
 
                             </div>
 
-                            <div class="row">
+                            <div class="row" id="AccountValidate">
+                                <div class="col-md-12">
+                                    <h6 style="color:green">Account Validation Success</h6>
+
+                                </div>
+
+                            </div>
+
+                            <div class="row" id="AccountValidateErr">
+                                <div class="col-md-12">
+                                    <h6 style="color:red">Account Validation Failed</h6>
+                                </div>
+
+                            </div>
+
+                            <div class="row" id="T-PIN">
                                 <div class="col-md-12">
                                     <div class="form-group">
                                         <label>T-PIN (<span style="color:red">*</span>)</label>
@@ -245,7 +260,7 @@
 
                             </div>
 
-                            <div class="row">
+                            <div class="row" id="Remark">
                                 <div class="col-md-12">
                                     <div class="form-group">
                                         <label>Remarks (<span style="color:red">*</span>)</label>
@@ -256,11 +271,14 @@
 
                             </div>
 
+
+
                             <br />
                             <br />
 
                             <div class="box-footer">
-                                <input type="submit" class="btn btn-blue btn-big col-md-5" name="btnCommand" value="Confirm" id="btnSubmit" />
+                                <input type="submit" class="btn btn-blue btn-big col-md-5" name="btnCommand" value="Validate" id="btnValidate" />
+                                <input type="submit" class="btn btn-blue btn-big col-md-5" name="btnCommand" value="Submit" id="btnSubmit" />
                                 <input type="button" value="Clear" class="btn btn-default btn-big col-md-5" id="clearButton" />
                             </div>
 
@@ -357,6 +375,11 @@
         $(".show-tick").prepend("<option value='0' disabled selected>---Select Option---</option>");
 
         $(document).ready(function () {
+            $("#T-PIN").hide();
+            $("#Remark").hide();
+            $("#AccountValidate").hide();
+            $("#AccountValidateErr").hide();
+            $("#btnSubmit").hide();
             debugger;
             $.ajax({
                 cache: false,
@@ -446,7 +469,7 @@
 
             if (transactionDetail.length > 15) {
                 $("#transactionDetailErr").show();
-            } 
+            }
             else {
                 $("#transactionDetailErr").hide();
             }
@@ -477,7 +500,6 @@
             }
         }
 
-
         function checkValidation() {
             checkBeneficiaryAccountName();
             checkBeneficiaryAccountNumber();
@@ -487,8 +509,6 @@
             checkBank();
             checkBranch();
         }
-
-
 
         $("#clearButton").click(function () {
             $("[name='txtAmount']").val("");
@@ -562,8 +582,110 @@
             });
         });
 
+        $('#btnValidate').click(function (e) {
+            debugger;
+            e.preventDefault();
+            debugger;
+            var senderAccountName = $("[name='txtSenderAccountName']").val();
+            var senderAccountNumber = $("[name='txtSenderAccountNumber']").val();
+            var amount = $("[name='txtAmount']").val();
+            var beneficiaryAccountNumber = $("[name='txtBeneficiaryAccountNumber']").val();
+            var beneficiaryAccountName = $("[name='txtBeneficiaryAccountName']").val();
+            var bankName = window.getBankName;
+            var bankId = window.getBankId;
+            var bankBranchId = window.branchId;
+            var branchName = window.branchName;
+            var transactionDetail = $("[name='txtTransactionDetail']").val();
+            var pin = $("[name='txtPin']").val();
 
+            var token = $('input[name="__RequestVerificationToken"]').val();
 
+            if ((senderAccountNumber != "") && (amount != "") && (beneficiaryAccountNumber != "") && (beneficiaryAccountName != "") && (bankName != undefined)
+                && (branchName != undefined)) {
+
+                var dataToPost = {
+                    senderAccountName: senderAccountName,
+                    senderAccountNumber: senderAccountNumber,
+                    amount: amount,
+                    accountId: beneficiaryAccountNumber,
+                    accountName: beneficiaryAccountName,
+                    bankId: bankId,
+                    bankBranchId: bankBranchId,
+                    bankName: bankName,
+                    branchName: branchName,
+                    transactionDetail: transactionDetail,
+                    pin: pin,
+                    TokenUnique: token
+                };
+
+                e.preventDefault(); //prevent the default action
+                $.ajax({
+                    url: '@Url.Action("CIPSValidate", "CIPS")',
+                    type: "POST",
+                    data:
+                    {
+                        __RequestVerificationToken: token,
+                        validateCreditorBankAccount: dataToPost
+                    },
+                    async: true,
+                    success: function (data) {
+                        $(".preload").show();
+                        debugger;
+                        if (data.responseCode == "000") {
+                            $("#AccountValidate").show();
+                            $("#btnValidate").hide();
+                            $("#T-PIN").show();
+                            $("#Remark").show();
+                            $("#btnSubmit").show();
+                        }
+                        else if (data.responseCode != "000") {
+                            $("#AccountValidateErr").show();
+                        }
+                        //display error message
+                        else {
+                            $("#ajaxResponse").html("");
+                            $("#message").html("");
+                            $("#message").append(data.responseText);
+                            if (data.responseText == "Session expired. Please login again") {
+                                $('#failureModalSessionExpired').modal("show");
+                            }
+                            else {
+                                $('#failureModal').modal("show");
+                            }
+
+                        }
+                    },
+                    error: function (jqXHR, textStatus, errorThrown) {
+                        alert('Failed to retrieve.');
+                        $("#message").html("");
+                        $("#message").append(jqXHR.responseText);
+                        $('#failureModal').modal("show");
+
+                    },
+                    //capture the request before it was sent to server
+                    beforeSend: function (jqXHR, settings) {
+                        $(".preload").show();
+                        //adding some Dummy data to the request
+                        settings.data += "&dummyData=whatever";
+                        //disable the button until we get the response
+                        $('#btnSubmit').attr("disabled", true);
+                    },
+                    complete: function (jqXHR, textStatus) {
+                        //enable the button
+                        $('.preload').hide();
+                        $('#btnSubmit').attr("disabled", false);
+                    }
+                });
+
+            }
+            else {
+                checkValidation();
+                $("#message").html("");
+                $("#message").append("Please Enter the required fields.");
+                $('#failureModal').modal("show");
+
+            }
+        });
 
 
         $('#btnSubmit').click(function (e) {
@@ -609,7 +731,7 @@
                     data:
                     {
                         __RequestVerificationToken: token,
-                        cips: dataToPost,
+                        cips: dataToPost
                     },
                     async: true,
                     success: function (data) {

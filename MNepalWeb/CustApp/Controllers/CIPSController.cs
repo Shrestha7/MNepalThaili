@@ -156,6 +156,148 @@ namespace CustApp.Controllers
         }
         #endregion
 
+        #region "POST: CIPS Validation"
+        [HttpPost]
+
+        public async Task<ActionResult> CIPSValidate(ValidateCreditorBankAccount validateCreditorBankAccount)
+        {
+            string userName = (string)Session["LOGGED_USERNAME"];
+            string clientCode = (string)Session["LOGGEDUSER_ID"];
+            string name = (string)Session["LOGGEDUSER_NAME"];
+            string userType = (string)Session["LOGGED_USERTYPE"];
+
+            TempData["userType"] = userType;
+            this.ViewData["userType"] = this.TempData["userType"];
+            ViewBag.UserType = this.TempData["userType"];
+            ViewBag.Name = name;
+
+            string retoken = validateCreditorBankAccount.TokenUnique;
+            string reqToken = "";
+            DataTable dtableVToken = ReqTokenUtils.GetReqToken(retoken);
+            if (dtableVToken != null && dtableVToken.Rows.Count > 0)
+            {
+                reqToken = dtableVToken.Rows[0]["ReqVerifyToken"].ToString();
+            }
+            else if (dtableVToken.Rows.Count == 0)
+            {
+                reqToken = "0";
+            }
+            if (reqToken == "0")
+            {
+                ReqTokenUtils.InsertReqToken(retoken);
+
+                MNBalance availBaln = new MNBalance();
+                DataTable dtableUser1 = AvailBalnUtils.GetAvailBaln(clientCode);
+                if (dtableUser1 != null && dtableUser1.Rows.Count > 0)
+                {
+                    availBaln.amount = dtableUser1.Rows[0]["AvailBaln"].ToString();
+                    ViewBag.AvailBalnAmount = availBaln.amount;
+                }
+
+                //For Profile Picture
+                UserInfo userInfo = new UserInfo();
+                DataSet DSet = ProfileUtils.GetCusDetailProfileInfoDS(clientCode);
+                DataTable dKYC = DSet.Tables["dtKycDetail"];
+                DataTable dDoc = DSet.Tables["dtKycDoc"];
+                if (dKYC != null && dKYC.Rows.Count > 0)
+                {
+                    userInfo.CustStatus = dKYC.Rows[0]["CustStatus"].ToString();
+                    ViewBag.CustStatus = userInfo.CustStatus;
+                }
+                if (dDoc != null && dDoc.Rows.Count > 0)
+                {
+                    userInfo.PassportImage = dDoc.Rows[0]["PassportImage"].ToString();
+                    ViewBag.PassportImage = userInfo.PassportImage;
+                }
+
+
+                
+
+                HttpResponseMessage _res = new HttpResponseMessage();
+                var cipsObject = new ValidateCreditorBankAccount
+                {
+                    bankId = validateCreditorBankAccount.bankId,
+                    accountId = validateCreditorBankAccount.accountId,
+                    accountName = validateCreditorBankAccount.accountName
+                };
+
+                //specify to use TLS 1.2 as default connection
+                ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12 | SecurityProtocolType.Tls11 | SecurityProtocolType.Tls;
+
+                // Serialize our concrete class into a JSON String
+                var stringPayload = await Task.Run(() => JsonConvert.SerializeObject(cipsObject));
+                // Wrap our JSON inside a StringContent which then can be used by the HttpClient class
+                var httpContent = new StringContent(stringPayload, Encoding.UTF8, "application/json");
+                using (HttpClient httpClient = new HttpClient())
+                {
+                    var UserName = ConfigurationManager.AppSettings["BasicAuthUserName"];
+                    var UserPassword = ConfigurationManager.AppSettings["BasicAuthPassword"];
+                    var APIBaseURL = ConfigurationManager.AppSettings["APIBaseURL"];
+
+                    var byteArray = Encoding.ASCII.GetBytes(UserName + ":" + UserPassword);
+                    httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Basic", Convert.ToBase64String(byteArray));
+                    httpClient.DefaultRequestHeaders.Add("token", Session["access_token"].ToString());
+
+                    _res = await httpClient.PostAsync(APIBaseURL + "ConnectIPS/ValidateBankAccount", httpContent);
+                    string responseBody = _res.StatusCode.ToString() + " ," + await _res.Content.ReadAsStringAsync();
+                    _res.ReasonPhrase = responseBody;
+                    string errorMessage = string.Empty;
+                    int responseCode = 0;
+                    string message = string.Empty;
+                    string responsetext = string.Empty;
+                    string responseMessage = string.Empty;
+                    bool result = false;
+                    string ava = string.Empty;
+                    string avatra = string.Empty;
+                    string avamsg = string.Empty;
+                    int code = 0;
+                    try
+                    {
+                        if (_res.IsSuccessStatusCode)
+                        {
+                            result = true;
+                            responseCode = (int)_res.StatusCode;
+                            responsetext = await _res.Content.ReadAsStringAsync();
+                            message = _res.Content.ReadAsStringAsync().Result;
+                            string respmsg = "";
+                            string couponNo = "";
+                            if (!string.IsNullOrEmpty(message))
+                            {
+                                JavaScriptSerializer ser = new JavaScriptSerializer();
+                                var json = ser.Deserialize<ValidateCreditorBankAccount>(responsetext);
+                                code = Convert.ToInt32(json.responseCode);
+                                respmsg = json.responseMessage;
+                            }
+                            return Json(new { responseCode = code, responseText = respmsg},
+                            JsonRequestBehavior.AllowGet);
+                        }
+                        else
+                        {
+                            result = false;
+                            responseCode = (int)_res.StatusCode;
+                            responsetext = await _res.Content.ReadAsStringAsync();
+                            JavaScriptSerializer ser = new JavaScriptSerializer();
+                            var json = ser.Deserialize<CheckPin>(responsetext);
+
+                            return Json(new { responseCode = responseCode, responseText = json.message },
+                            JsonRequestBehavior.AllowGet);
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        return Json(new { responseCode = "400", responseText = ex.Message },
+                            JsonRequestBehavior.AllowGet);
+                    }
+                }
+            }
+            else
+            {
+                return Json(new { responseCode = "400", responseText = "Please refresh the page again." },
+                            JsonRequestBehavior.AllowGet);
+            }
+        }
+        #endregion
+
         #region "POST: CIPS Payment"
         [HttpPost]
 
@@ -182,7 +324,7 @@ namespace CustApp.Controllers
             {
                 reqToken = "0";
             }
-            if (reqToken == "0")
+            if (reqToken != "0")
             {
                 ReqTokenUtils.InsertReqToken(retoken);
 
@@ -255,6 +397,9 @@ namespace CustApp.Controllers
                     userName = userName,
                     pin = cips.pin
                 };
+
+                //specify to use TLS 1.2 as default connection
+                ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12 | SecurityProtocolType.Tls11 | SecurityProtocolType.Tls;
 
                 // Serialize our concrete class into a JSON String
                 var stringPayload = await Task.Run(() => JsonConvert.SerializeObject(cipsObject));
@@ -537,6 +682,9 @@ namespace CustApp.Controllers
                 TraceIdGenerator _tig = new TraceIdGenerator();
                 var tid = _tig.GenerateTraceID();
 
+                //specify to use TLS 1.2 as default connection
+                ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12 | SecurityProtocolType.Tls11 | SecurityProtocolType.Tls;
+
                 // Serialize our concrete class into a JSON String
                 var stringPayload = await Task.Run(() => JsonConvert.SerializeObject(cipsObject));
 
@@ -655,6 +803,9 @@ namespace CustApp.Controllers
                                 new KeyValuePair<string, string>("password", cipsPassword)
                                        });
 
+                //specify to use TLS 1.2 as default connection
+                ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12 | SecurityProtocolType.Tls11 | SecurityProtocolType.Tls;
+
                 using (var httpClient = new HttpClient())
                 {
                     var UserName = ConfigurationManager.AppSettings["BasicAuthUserName"];
@@ -705,6 +856,9 @@ namespace CustApp.Controllers
         #region CIPSChargeList
         public async Task<List<GetCharge>> GetCharge()
         {
+            //specify to use TLS 1.2 as default connection
+            ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12 | SecurityProtocolType.Tls11 | SecurityProtocolType.Tls;
+
             using (var httpClient = new HttpClient())
             {
                 var UserName = ConfigurationManager.AppSettings["BasicAuthUserName"];
@@ -746,6 +900,9 @@ namespace CustApp.Controllers
         {
             var teamList = new List<SelectListItem>();
 
+            //specify to use TLS 1.2 as default connection
+            ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12 | SecurityProtocolType.Tls11 | SecurityProtocolType.Tls;
+
             using (var httpClient = new HttpClient())
             {
                 var UserName = ConfigurationManager.AppSettings["BasicAuthUserName"];
@@ -782,6 +939,9 @@ namespace CustApp.Controllers
             var teamList = new List<SelectListItem>();
 
             Session["BankID"] = bankId;
+
+            //specify to use TLS 1.2 as default connection
+            ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12 | SecurityProtocolType.Tls11 | SecurityProtocolType.Tls;
 
             using (var httpClient = new HttpClient())
             {

@@ -445,18 +445,54 @@ namespace MNepalAPI.Controllers
 
                             int resultsPayments = CIPSUtilities.ConnectIPS(cipsResponse);
 
+                            decimal feeAmount = 0;
+                            //fee amount 
+                            if (cipsbatchdetail.batchAmount <= 500)
+                            {
+                                feeAmount = 2;
+                            }
+                            else if (cipsbatchdetail.batchAmount > 500 && cipsbatchdetail.batchAmount <= 5000)
+                            {
+                                feeAmount = 5;
+                            }
+                            else if (cipsbatchdetail.batchAmount > 5000 && cipsbatchdetail.batchAmount <= 50000)
+                            {
+                                feeAmount = 10;
+                            }
+                            else if (cipsbatchdetail.batchAmount > 50000)
+                            {
+                                feeAmount = 15;
+                            }
+                            //fee amount ends
+
                             //save to MNRequest 
                             MNRequestResponse cipsMNRequest = new MNRequestResponse();
                             cipsMNRequest.originId = connectIPS.username;
                             cipsMNRequest.originType = "6011";
                             cipsMNRequest.serviceCode = "11";
                             cipsMNRequest.sourceBankCode = cipsbatchdetail.debtorAgent;
-                            cipsMNRequest.sourceBranchCode = cipsbatchdetail.debtorBranch;
+                            if(cipsbatchdetail.debtorBranch=="1")
+                            {
+                                cipsMNRequest.sourceBranchCode = "001";
+
+                            }
+                            else
+                            {
+                                cipsMNRequest.sourceBranchCode = cipsbatchdetail.debtorBranch;
+                            }
                             cipsMNRequest.sourceAccountNumber = cipsbatchdetail.debtorAccount;
-                            cipsMNRequest.destBranchCode = cipsTransactionDetailList.FirstOrDefault().creditorBranch;
+                            if(cipsTransactionDetailList.FirstOrDefault().creditorBranch == "1")
+                            {
+                                cipsMNRequest.destBranchCode = "001";
+
+                            }
+                            else
+                            {
+                                cipsMNRequest.destBranchCode = cipsTransactionDetailList.FirstOrDefault().creditorBranch;
+                            }
                             cipsMNRequest.destBankCode = cipsTransactionDetailList.FirstOrDefault().creditorAgent;
                             cipsMNRequest.destAccountNumber = cipsTransactionDetailList.FirstOrDefault().creditorAccount;
-                            cipsMNRequest.amount = cipsbatchdetail.batchAmount;
+                            cipsMNRequest.amount = cipsbatchdetail.batchAmount + feeAmount;
                             cipsMNRequest.feeId = "";
                             cipsMNRequest.traceNo = randomCodeGenerator.CreateRandomCode(6);
                             cipsMNRequest.tranDate = dateTime;
@@ -472,7 +508,7 @@ namespace MNepalAPI.Controllers
                             cipsMNRequest.fromSMS = "";
                             cipsMNRequest.remark = "Payment to CIPS from " + cipsMNRequest.sourceAccountNumber + " to " + cipsMNRequest.destAccountNumber;
                             cipsMNRequest.smsAlertType = null;
-                            cipsMNRequest.enteredAt = cipsMNRequest.tranDate;
+                            cipsMNRequest.enteredAt = dateTime;
                             cipsMNRequest.merchantId = 0;
                             cipsMNRequest.uId = Guid.NewGuid().ToString();
 
@@ -487,31 +523,28 @@ namespace MNepalAPI.Controllers
                                 cipsMNResponse.originType = "6011";
                                 cipsMNResponse.serviceCode = "11";
                                 cipsMNResponse.sourceBankCode = cipsbatchdetail.debtorAgent;
-                                cipsMNResponse.sourceBranchCode = cipsbatchdetail.debtorBranch;
+                                if(cipsbatchdetail.debtorBranch == "1")
+                                {
+                                    cipsMNResponse.sourceBranchCode = "001";
+
+                                }
+                                else
+                                {
+                                    cipsMNResponse.sourceBranchCode = cipsbatchdetail.debtorBranch;
+                                }
                                 cipsMNResponse.sourceAccountNumber = cipsbatchdetail.debtorAccount;
                                 cipsMNResponse.destBankCode = cipsTransactionDetailList.FirstOrDefault().creditorAgent;
-                                cipsMNResponse.destBranchCode = cipsTransactionDetailList.FirstOrDefault().creditorBranch;
+                                if(cipsTransactionDetailList.FirstOrDefault().creditorBranch == "1")
+                                {
+                                    cipsMNResponse.destBranchCode = "001";
+                                }
+                                else
+                                {
+                                    cipsMNResponse.destBranchCode = cipsTransactionDetailList.FirstOrDefault().creditorBranch;
+                                }
                                 cipsMNResponse.destAccountNumber = cipsTransactionDetailList.FirstOrDefault().creditorAccount;
-                                cipsMNResponse.feeId = "";
-
-                                //fee amount 
-                                if (cipsbatchdetail.batchAmount <= 500)
-                                {
-                                    cipsMNResponse.feeAmount = 2;
-                                }
-                                else if (cipsbatchdetail.batchAmount > 500 && cipsbatchdetail.batchAmount <= 5000)
-                                {
-                                    cipsMNResponse.feeAmount = 5;
-                                }
-                                else if (cipsbatchdetail.batchAmount > 5000 && cipsbatchdetail.batchAmount <= 50000)
-                                {
-                                    cipsMNResponse.feeAmount = 10;
-                                }
-                                else if (cipsbatchdetail.batchAmount > 50000)
-                                {
-                                    cipsMNResponse.feeAmount = 15;
-                                }
-                                cipsMNResponse.amount = cipsbatchdetail.batchAmount  + cipsMNResponse.feeAmount;
+                                cipsMNResponse.feeId = "";                               
+                                cipsMNResponse.amount = cipsbatchdetail.batchAmount + feeAmount;
                                 cipsMNResponse.traceNo = cipsMNRequest.traceNo;
                                 cipsMNResponse.tranDate = dateTime;
                                 cipsMNResponse.tranTime = "";
@@ -536,7 +569,7 @@ namespace MNepalAPI.Controllers
                                     {
                                         //Alert Dynamic
                                         string AlertType = "CIPS";
-                                       
+
                                         //FOR CUSTOMER SMS                                     
                                         #region FOR CUSTOMER SMS
 
@@ -712,6 +745,109 @@ namespace MNepalAPI.Controllers
 
                 throw;
             }
+        }
+        #endregion
+
+        #region ValidateBankAccount
+        [Route("api/ConnectIPS/ValidateBankAccount")]
+        [HttpPost]
+        public async Task<HttpResponseMessage> ValidateBankAccount(ValidateCreditorBankAccount validateCreditorBankAccount)
+        {
+            try
+            {
+                var re = Request;
+                var headers = re.Headers;
+                if (headers.Contains("token"))
+                {
+                    //from header
+                    string authorizationToken = headers.GetValues("token").First();
+                    if (authorizationToken == null || authorizationToken == "")
+                        return Request.CreateErrorResponse(HttpStatusCode.Unauthorized, "Invalid Token");
+
+                    string bankId = validateCreditorBankAccount.bankId;
+                    string accountId = validateCreditorBankAccount.accountId;
+                    string accountName = validateCreditorBankAccount.accountName;
+
+                    if (bankId == "" || bankId == null)
+                    {
+                        return Request.CreateErrorResponse(HttpStatusCode.BadRequest, "Bank Id is Required");
+                    }
+                    else if (accountId == "" || accountId == null)
+                    {
+                        return Request.CreateErrorResponse(HttpStatusCode.BadRequest, "Account Number is Required");
+                    }
+                    else if (accountName == "" || accountName == null)
+                    {
+                        return Request.CreateErrorResponse(HttpStatusCode.BadRequest, "Account Name is Required");
+                    }
+                    
+
+
+                    // Get refresh token from database matching the accesstoken from the header
+                    var accessToken = CIPSUtilities.GetAccessToken(authorizationToken);
+
+                    if (accessToken == "")
+                        return Request.CreateErrorResponse(HttpStatusCode.Unauthorized, "Invalid Token");
+                    var accessTOken = await GetAccessToken(accessToken);
+
+                    var cipsValidateAccount = new ValidateCreditorBankAccount
+                    {
+                        bankId = bankId,
+                        accountId = accountId,
+                        accountName = accountName
+                    };
+
+
+                    // Serialize our concrete class into a JSON String
+                    var stringPayload = await Task.Run(() => JsonConvert.SerializeObject(cipsValidateAccount));
+
+                    // Wrap our JSON inside a StringContent which then can be used by the HttpClient class
+                    var httpContent = new StringContent(stringPayload, Encoding.UTF8, "application/json");
+                    using (var httpClient = new HttpClient())
+                    {
+                        var ConnectIPSBaseURL = ConfigurationManager.AppSettings["ConnectIPSBaseURL"];
+                        httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("bearer", accessTOken);
+
+                        var httpResponse = await httpClient.PostAsync(ConnectIPSBaseURL + "api/validatebankaccount", httpContent);
+                        //response
+                        var responseContent = await httpResponse.Content.ReadAsStringAsync();
+
+                        var jsonResponse = JsonConvert.DeserializeObject<ValidateCreditorBankAccount>(responseContent);
+
+
+                        if (jsonResponse.responseCode == "000")
+                        {
+                            ValidateCreditorBankAccount validateCreditorBank = new ValidateCreditorBankAccount();
+
+                            validateCreditorBank.bankId = jsonResponse.bankId;
+                            validateCreditorBank.branchId = jsonResponse.branchId;
+                            validateCreditorBank.accountId = jsonResponse.accountId;
+                            validateCreditorBank.accountName = jsonResponse.accountName;
+                            validateCreditorBank.currency = jsonResponse.currency;
+                            validateCreditorBank.responseCode = jsonResponse.responseCode;
+                            validateCreditorBank.responseMessage = jsonResponse.responseMessage;
+                            validateCreditorBank.matchPercentate = jsonResponse.matchPercentate;
+                            validateCreditorBank.baseUrl = jsonResponse.baseUrl;
+                            validateCreditorBank.username = jsonResponse.username;
+                            validateCreditorBank.password = jsonResponse.password;
+
+                            return Request.CreateResponse(HttpStatusCode.OK, validateCreditorBank);
+                        }
+
+                        return Request.CreateResponse(HttpStatusCode.OK, JsonConvert.DeserializeObject(responseContent));
+                    }
+                }
+                else
+                {
+                    return Request.CreateErrorResponse(HttpStatusCode.Unauthorized, "Invalid Token");
+                }
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+
         }
         #endregion
 
