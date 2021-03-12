@@ -237,6 +237,17 @@
 
                             </div>
 
+                            <div class="row" id="Remark">
+                                <div class="col-md-12">
+                                    <div class="form-group">
+                                        <label>Remarks (<span style="color:red">*</span>)</label>
+                                        <textarea style="resize: none;" cols="50" rows="2" @*class="form-control select2"*@ id="transactionDetail" name="txtTransactionDetail" placeholder="Remarks" maxlength="15" oninput="checkRemarks()" @*onpaste="return false"*@></textarea>
+                                    </div>
+                                    <div class="form-group" id="transactionDetailErr" style="color:red; margin-top:-11px;"></div>
+                                </div>
+
+                            </div>
+
                             <div class="row" id="AccountValidate">
                                 <div class="col-md-12">
                                     <h6 style="color:green">Account Validation Success</h6>
@@ -252,6 +263,7 @@
 
                             </div>
 
+
                             <div class="row" id="T-PIN">
                                 <div class="col-md-12">
                                     <div class="form-group">
@@ -264,16 +276,6 @@
 
                             </div>
 
-                            <div class="row" id="Remark">
-                                <div class="col-md-12">
-                                    <div class="form-group">
-                                        <label>Remarks (<span style="color:red">*</span>)</label>
-                                        <textarea style="resize: none;" cols="50" rows="2" @*class="form-control select2"*@ id="transactionDetail" name="txtTransactionDetail" placeholder="Remarks" maxlength="15" oninput="checkRemarks()" @*onpaste="return false"*@></textarea>
-                                    </div>
-                                    <div class="form-group" id="transactionDetailErr" style="color:red; margin-top:-11px;"></div>
-                                </div>
-
-                            </div>
 
 
 
@@ -380,7 +382,6 @@
 
         $(document).ready(function () {
             $("#T-PIN").hide();
-            $("#Remark").hide();
             $("#AccountValidate").hide();
             $("#AccountValidateErr").hide();
             $("#btnSubmit").hide();
@@ -606,7 +607,7 @@
             var token = $('input[name="__AjaxAntiForgeryForm"]').val();
 
             if ((senderAccountNumber != "") && (amount != "") && (beneficiaryAccountNumber != "") && (beneficiaryAccountName != "") && (bankName != undefined)
-                && (branchName != undefined)) {
+                && (branchName != undefined) && (transactionDetail != "") ) {
 
                 var dataToPost = {
                     senderAccountName: senderAccountName,
@@ -618,7 +619,9 @@
                     bankBranchId: bankBranchId,
                     bankName: bankName,
                     branchName: branchName,
-                    TokenUnique: token
+                    TokenUnique: token,
+                    transactionDetail: transactionDetail
+
                 };
 
                 e.preventDefault(); //prevent the default action
@@ -635,6 +638,12 @@
                         $(".preload").show();
                         debugger;
                         if (data.responseCode == "000") {
+                            $("#amount").attr("disabled", "disabled");
+                            $("#accountNumber").attr("disabled", "disabled");
+                            $("#beneficiaryAccountName").attr("disabled", "disabled");
+                            $("#bankDrpdwn").attr("disabled", "disabled");
+                            $("#branchDrpdwn").attr("disabled", "disabled");
+                            $("#transactionDetail").attr("disabled", "disabled");
                             $("#AccountValidate").show();
                             $("#btnValidate").hide();
                             $("#T-PIN").show();
