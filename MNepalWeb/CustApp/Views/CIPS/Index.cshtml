@@ -32,6 +32,10 @@
     @Html.ValidationSummary(true)
     <div id="ajaxResponse">
     </div>
+    <form id="__AjaxAntiForgeryForm" action="#" method="post">
+        @Html.AntiForgeryToken()
+    </form>
+
     <div class="preload" style="display:none">
         <img src="~/Content/image/loading.gif" class="img-responsive" />
     </div>
@@ -277,7 +281,7 @@
                             <br />
 
                             <div class="box-footer">
-                                <input type="submit" class="btn btn-blue btn-big col-md-5" name="btnCommand" value="Validate" id="btnValidate" />
+                                <input type="button" class="btn btn-blue btn-big col-md-5" name="btnCommand" value="Validate" id="btnValidate" />
                                 <input type="submit" class="btn btn-blue btn-big col-md-5" name="btnCommand" value="Submit" id="btnSubmit" />
                                 <input type="button" value="Clear" class="btn btn-default btn-big col-md-5" id="clearButton" />
                             </div>
@@ -598,7 +602,8 @@
             var transactionDetail = $("[name='txtTransactionDetail']").val();
             var pin = $("[name='txtPin']").val();
 
-            var token = $('input[name="__RequestVerificationToken"]').val();
+            //var token = $('input[name="__RequestVerificationToken"]').val();
+            var token = $('input[name="__AjaxAntiForgeryForm"]').val();
 
             if ((senderAccountNumber != "") && (amount != "") && (beneficiaryAccountNumber != "") && (beneficiaryAccountName != "") && (bankName != undefined)
                 && (branchName != undefined)) {
@@ -613,8 +618,6 @@
                     bankBranchId: bankBranchId,
                     bankName: bankName,
                     branchName: branchName,
-                    transactionDetail: transactionDetail,
-                    pin: pin,
                     TokenUnique: token
                 };
 
@@ -638,12 +641,13 @@
                             $("#Remark").show();
                             $("#btnSubmit").show();
                         }
-                        else if (data.responseCode != "000") {
-                            $("#AccountValidateErr").show();
-                        }
+                        //else if (data.responseCode != "000") {
+                        //    $("#AccountValidateErr").show();
+                        //}
                         //display error message
                         else {
-                            $("#ajaxResponse").html("");
+                            //$("#ajaxResponse").html("");
+                            $("#__AjaxAntiForgeryForm").html("");
                             $("#message").html("");
                             $("#message").append(data.responseText);
                             if (data.responseText == "Session expired. Please login again") {

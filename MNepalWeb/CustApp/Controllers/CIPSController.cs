@@ -324,7 +324,7 @@ namespace CustApp.Controllers
             {
                 reqToken = "0";
             }
-            if (reqToken != "0")
+            if (reqToken == "0")
             {
                 ReqTokenUtils.InsertReqToken(retoken);
 

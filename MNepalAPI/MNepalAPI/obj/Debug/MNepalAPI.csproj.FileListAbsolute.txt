@@ -711,4 +711,3 @@ D:\Thaili\MNepalAPI\MNepalAPI\obj\Debug\MNepalAPI.csproj.CoreCompileInputs.cache
 D:\Thaili\MNepalAPI\MNepalAPI\obj\Debug\MNepalAPI.csproj.CopyComplete
 D:\Thaili\MNepalAPI\MNepalAPI\obj\Debug\MNepalAPI.dll
 D:\Thaili\MNepalAPI\MNepalAPI\obj\Debug\MNepalAPI.pdb
-D:\Thaili\MNepalAPI\MNepalAPI\obj\Debug\MNepalAPI.csprojAssemblyReference.cache

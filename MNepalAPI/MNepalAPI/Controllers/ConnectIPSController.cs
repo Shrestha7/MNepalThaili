@@ -37,8 +37,8 @@ namespace MNepalAPI.Controllers
         {
             try
             {
-                var cipsUsername = connectIPSUserAuthenticaiton.username;
-                var cipsPassword = connectIPSUserAuthenticaiton.password;
+                var cipsUsername = ConfigurationManager.AppSettings["CIPSUserName"];
+                var cipsPassword = ConfigurationManager.AppSettings["CIPSPassword"];
 
                 FormUrlEncodedContent content = new FormUrlEncodedContent(new Dictionary<string, string>()
                 {
@@ -943,7 +943,7 @@ namespace MNepalAPI.Controllers
 
                 throw;
             }
-            return Request.CreateResponse(HttpStatusCode.Unauthorized, check);
+            return Request.CreateResponse(HttpStatusCode.BadRequest, check);
         }
         #endregion
 
