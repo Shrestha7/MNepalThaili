@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Linq;
 using System.Security.Cryptography;
 using System.Security.Cryptography.X509Certificates;
@@ -22,10 +23,11 @@ namespace MNepalAPI.Helper
 
         public byte[] signContent(byte[] hashValue, string publicKeyLocation)
         {
+            string passwordNPI = ConfigurationManager.AppSettings["NPIPassword"];
             try
             {
                 RSACng key = new System.Security.Cryptography.RSACng();
-                X509Certificate2 publicCert = new X509Certificate2(publicKeyLocation, "123", X509KeyStorageFlags.MachineKeySet | X509KeyStorageFlags.PersistKeySet);
+                X509Certificate2 publicCert = new X509Certificate2(publicKeyLocation, passwordNPI, X509KeyStorageFlags.MachineKeySet | X509KeyStorageFlags.PersistKeySet);
                 X509Certificate2 privateCert = null;
                 X509Store store = new X509Store(StoreName.My, StoreLocation.LocalMachine);
                 store.Open(OpenFlags.ReadOnly);

@@ -16,6 +16,7 @@ using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
+using System.Net.Security;
 using System.Security.Cryptography;
 using System.Security.Cryptography.X509Certificates;
 using System.Text;
@@ -71,6 +72,8 @@ namespace MNepalAPI.Controllers
                     var ConnectIPSBaseURL = ConfigurationManager.AppSettings["ConnectIPSBaseURL"];
 
                     var byteArray = Encoding.ASCII.GetBytes(UserName + ":" + UserPassword);
+
+                    ServicePointManager.ServerCertificateValidationCallback = delegate (object sender, X509Certificate certificate, X509Chain chain, SslPolicyErrors sslPolicyErrors) { return true; }; //to remove ssl error
 
                     httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Basic", Convert.ToBase64String(byteArray));
                     var httpResponse = await httpClient.PostAsync(ConnectIPSBaseURL + "oauth/token", content);
@@ -149,6 +152,7 @@ namespace MNepalAPI.Controllers
                         var ConnectIPSBaseURL = ConfigurationManager.AppSettings["ConnectIPSBaseURL"];
 
                         httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("bearer", authorizationToken);
+                        ServicePointManager.ServerCertificateValidationCallback = delegate (object sender, X509Certificate certificate, X509Chain chain, SslPolicyErrors sslPolicyErrors) { return true; }; //to remove ssl error
                         var httpResponse = await httpClient.PostAsync(ConnectIPSBaseURL + "api/getcipsbanklist", null);
                         //response
                         var responseContent = await httpResponse.Content.ReadAsStringAsync();
@@ -234,6 +238,7 @@ namespace MNepalAPI.Controllers
                         var ConnectIPSBaseURL = ConfigurationManager.AppSettings["ConnectIPSBaseURL"];
 
                         httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("bearer", authorizationToken);
+                        ServicePointManager.ServerCertificateValidationCallback = delegate (object sender, X509Certificate certificate, X509Chain chain, SslPolicyErrors sslPolicyErrors) { return true; }; //to remove ssl error
                         var httpResponse = await httpClient.GetAsync(ConnectIPSBaseURL + "api/getbranchlist/" + bankId);
                         //response
                         var responseContent = await httpResponse.Content.ReadAsStringAsync();
@@ -388,6 +393,7 @@ namespace MNepalAPI.Controllers
                     {
                         var ConnectIPSBaseURL = ConfigurationManager.AppSettings["ConnectIPSBaseURL"];
                         httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("bearer", accessTOken);
+                        ServicePointManager.ServerCertificateValidationCallback = delegate (object sender, X509Certificate certificate, X509Chain chain, SslPolicyErrors sslPolicyErrors) { return true; }; //to remove ssl error
 
                         var httpResponse = await httpClient.PostAsync(ConnectIPSBaseURL + "api/postcipsbatch", httpContent);
                         //response
@@ -658,6 +664,7 @@ namespace MNepalAPI.Controllers
                         var ConnectIPSBaseURL = ConfigurationManager.AppSettings["ConnectIPSBaseURL"];
 
                         httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("bearer", authorizationToken);
+                        ServicePointManager.ServerCertificateValidationCallback = delegate (object sender, X509Certificate certificate, X509Chain chain, SslPolicyErrors sslPolicyErrors) { return true; }; //to remove ssl error
 
                         var httpResponse = await httpClient.GetAsync(ConnectIPSBaseURL + "api/getcipschargelist/MER-1-APP-3");
                         var responseContent = await httpResponse.Content.ReadAsStringAsync();
@@ -807,6 +814,7 @@ namespace MNepalAPI.Controllers
                     {
                         var ConnectIPSBaseURL = ConfigurationManager.AppSettings["ConnectIPSBaseURL"];
                         httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("bearer", accessTOken);
+                        ServicePointManager.ServerCertificateValidationCallback = delegate (object sender, X509Certificate certificate, X509Chain chain, SslPolicyErrors sslPolicyErrors) { return true; }; //to remove ssl error
 
                         var httpResponse = await httpClient.PostAsync(ConnectIPSBaseURL + "api/validatebankaccount", httpContent);
                         //response
@@ -870,6 +878,7 @@ namespace MNepalAPI.Controllers
 
                 var byteArray = Encoding.ASCII.GetBytes(UserName + ":" + UserPassword);
                 httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Basic", Convert.ToBase64String(byteArray));
+                ServicePointManager.ServerCertificateValidationCallback = delegate (object sender, X509Certificate certificate, X509Chain chain, SslPolicyErrors sslPolicyErrors) { return true; }; //to remove ssl error
                 var httpResponse = await httpClient.PostAsync(ConnectIPSBaseURL + "oauth/token", content);
 
                 if (httpResponse.Content != null && httpResponse.StatusCode == HttpStatusCode.OK)

@@ -374,7 +374,7 @@ namespace CustApp.Controllers
                 Session["branchName"] = cips.branchName;
                 Session["transactionDetail"] = cips.transactionDetail;
                 Session["instructionId"] = randomCodeGenerator.CreateRandomCode(30);
-                Session["endToEndId"] = "Payment Description";
+                Session["endToEndId"] = cips.transactionDetail;
                 Session["amount"] = cips.amount;
                 Session["creditorAgent"] = cips.bankId;
                 Session["creditorBranch"] = cips.bankBranchId;
