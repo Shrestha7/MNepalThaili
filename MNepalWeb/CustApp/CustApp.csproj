@@ -7189,6 +7189,7 @@
     <Content Include="Content\eng_date_comp\node_modules\babel-core\polyfill.js" />
     <Content Include="Content\eng_date_comp\node_modules\babel-core\register-without-polyfill.js" />
     <Content Include="Content\eng_date_comp\node_modules\babel-core\register.js" />
+    <Content Include="Content\image\loading.gif" />
     <Content Include="Content\image\nibl.png" />
     <Content Include="Content\NewIcon\demo-files\demo.css" />
     <Content Include="Content\NewIcon\demo-files\demo.js" />

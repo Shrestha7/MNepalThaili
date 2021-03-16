@@ -32,19 +32,16 @@ namespace CustApp.Controllers
         #region GET: CIPS
         public async Task<ActionResult> Index()
         {
-            string userName = (string)Session["LOGGED_USERNAME"];
-            string clientCode = (string)Session["LOGGEDUSER_ID"];
-            string name = (string)Session["LOGGEDUSER_NAME"];
-            string userType = (string)Session["LOGGED_USERTYPE"];
+            var sessionUserDetails = SessionUserDetails();
 
-            TempData["userType"] = userType;
+            TempData["userType"] = sessionUserDetails.userType;
 
             if (TempData["userType"] != null)
             {
                 this.ViewData["userType"] = this.TempData["userType"];
                 ViewBag.UserType = this.TempData["userType"];
-                ViewBag.Name = name;
-                ViewBag.SenderMobileNo = userName;
+                ViewBag.Name = sessionUserDetails.name;
+                ViewBag.SenderMobileNo = sessionUserDetails.userName;
 
                 ConnectIPSTokenResponse connectIPSTokenResponse = await GetAuthToken();
                 if (connectIPSTokenResponse.status == 200 || connectIPSTokenResponse.status == 0)
@@ -72,7 +69,7 @@ namespace CustApp.Controllers
 
                 UserInfo userInfo = new UserInfo();
                 MNBalance availBaln = new MNBalance();
-                DataTable dtableUser1 = AvailBalnUtils.GetAvailBaln(clientCode);
+                DataTable dtableUser1 = AvailBalnUtils.GetAvailBaln(sessionUserDetails.clientCode);
                 if (dtableUser1 != null && dtableUser1.Rows.Count > 0)
                 {
                     availBaln.amount = dtableUser1.Rows[0]["AvailBaln"].ToString();
@@ -80,7 +77,7 @@ namespace CustApp.Controllers
                 }
 
                 //Check KYC
-                DataTable dtableUserCheckKYC = ProfileUtils.CheckKYC(userName);
+                DataTable dtableUserCheckKYC = ProfileUtils.CheckKYC(sessionUserDetails.userName);
                 if (dtableUserCheckKYC != null && dtableUserCheckKYC.Rows.Count > 0)
                 {
                     userInfo.hasKYC = dtableUserCheckKYC.Rows[0]["hasKYC"].ToString();
@@ -91,7 +88,7 @@ namespace CustApp.Controllers
                 }
 
                 //Check Link Bank Account
-                DataTable dtableUserCheckLinkBankAcc = ProfileUtils.CheckLinkBankAcc(userName);
+                DataTable dtableUserCheckLinkBankAcc = ProfileUtils.CheckLinkBankAcc(sessionUserDetails.userName);
                 if (dtableUserCheckLinkBankAcc != null && dtableUserCheckLinkBankAcc.Rows.Count > 0)
                 {
                     userInfo.BankAccountNumber = dtableUserCheckLinkBankAcc.Rows[0]["HasBankKYC"].ToString();
@@ -99,7 +96,7 @@ namespace CustApp.Controllers
                 }
 
                 //Get BankAccountNumber
-                DataTable dtableUserBankAccNumber = ProfileUtils.BankAccountNumber(userName);
+                DataTable dtableUserBankAccNumber = ProfileUtils.BankAccountNumber(sessionUserDetails.userName);
                 if (dtableUserBankAccNumber != null && dtableUserBankAccNumber.Rows.Count > 0)
                 {
                     userInfo.BankAccountNumber = dtableUserBankAccNumber.Rows[0]["BankAccountNumber"].ToString();
@@ -109,7 +106,7 @@ namespace CustApp.Controllers
                 }
 
                 //Get BankBranchId
-                DataTable dtableUserBankBranchID = ProfileUtils.BankBranchCode(userName);
+                DataTable dtableUserBankBranchID = ProfileUtils.BankBranchCode(sessionUserDetails.userName);
                 if (dtableUserBankBranchID != null && dtableUserBankBranchID.Rows.Count > 0)
                 {
                     userInfo.BankBranchCode = dtableUserBankBranchID.Rows[0]["UserBranchCode"].ToString();
@@ -122,7 +119,7 @@ namespace CustApp.Controllers
                 }
 
                 //Get Bank Register User Name
-                DataTable dtableUserName = ProfileUtils.BankRegisterName(userName);
+                DataTable dtableUserName = ProfileUtils.BankRegisterName(sessionUserDetails.userName);
                 if (dtableUserName != null && dtableUserName.Rows.Count > 0)
                 {
                     userInfo.UserName = dtableUserName.Rows[0]["Name"].ToString();
@@ -133,7 +130,7 @@ namespace CustApp.Controllers
                 }
 
                 //For Profile Picture
-                DataSet DSet = ProfileUtils.GetCusDetailProfileInfoDS(clientCode);
+                DataSet DSet = ProfileUtils.GetCusDetailProfileInfoDS(sessionUserDetails.clientCode);
                 DataTable dKYC = DSet.Tables["dtKycDetail"];
                 DataTable dDoc = DSet.Tables["dtKycDoc"];
                 if (dKYC != null && dKYC.Rows.Count > 0)
@@ -161,15 +158,12 @@ namespace CustApp.Controllers
 
         public async Task<ActionResult> CIPSValidate(ValidateCreditorBankAccount validateCreditorBankAccount)
         {
-            string userName = (string)Session["LOGGED_USERNAME"];
-            string clientCode = (string)Session["LOGGEDUSER_ID"];
-            string name = (string)Session["LOGGEDUSER_NAME"];
-            string userType = (string)Session["LOGGED_USERTYPE"];
+            var sessionUserDetails = SessionUserDetails();
+            TempData["userType"] = sessionUserDetails.userType;
 
-            TempData["userType"] = userType;
             this.ViewData["userType"] = this.TempData["userType"];
             ViewBag.UserType = this.TempData["userType"];
-            ViewBag.Name = name;
+            ViewBag.Name = sessionUserDetails.name;
 
             string retoken = validateCreditorBankAccount.TokenUnique;
             string reqToken = "";
@@ -187,7 +181,7 @@ namespace CustApp.Controllers
                 ReqTokenUtils.InsertReqToken(retoken);
 
                 MNBalance availBaln = new MNBalance();
-                DataTable dtableUser1 = AvailBalnUtils.GetAvailBaln(clientCode);
+                DataTable dtableUser1 = AvailBalnUtils.GetAvailBaln(sessionUserDetails.clientCode);
                 if (dtableUser1 != null && dtableUser1.Rows.Count > 0)
                 {
                     availBaln.amount = dtableUser1.Rows[0]["AvailBaln"].ToString();
@@ -196,7 +190,7 @@ namespace CustApp.Controllers
 
                 //For Profile Picture
                 UserInfo userInfo = new UserInfo();
-                DataSet DSet = ProfileUtils.GetCusDetailProfileInfoDS(clientCode);
+                DataSet DSet = ProfileUtils.GetCusDetailProfileInfoDS(sessionUserDetails.clientCode);
                 DataTable dKYC = DSet.Tables["dtKycDetail"];
                 DataTable dDoc = DSet.Tables["dtKycDoc"];
                 if (dKYC != null && dKYC.Rows.Count > 0)
@@ -303,15 +297,12 @@ namespace CustApp.Controllers
 
         public async Task<ActionResult> CIPSPayment(ConnectIPSDetail cips)
         {
-            string userName = (string)Session["LOGGED_USERNAME"];
-            string clientCode = (string)Session["LOGGEDUSER_ID"];
-            string name = (string)Session["LOGGEDUSER_NAME"];
-            string userType = (string)Session["LOGGED_USERTYPE"];
+            var sessionUserDetails = SessionUserDetails();
+            TempData["userType"] = sessionUserDetails.userType;
 
-            TempData["userType"] = userType;
             this.ViewData["userType"] = this.TempData["userType"];
             ViewBag.UserType = this.TempData["userType"];
-            ViewBag.Name = name;
+            ViewBag.Name = sessionUserDetails.name;
 
             string retoken = cips.TokenUnique;
             string reqToken = "";
@@ -329,7 +320,7 @@ namespace CustApp.Controllers
                 ReqTokenUtils.InsertReqToken(retoken);
 
                 MNBalance availBaln = new MNBalance();
-                DataTable dtableUser1 = AvailBalnUtils.GetAvailBaln(clientCode);
+                DataTable dtableUser1 = AvailBalnUtils.GetAvailBaln(sessionUserDetails.clientCode);
                 if (dtableUser1 != null && dtableUser1.Rows.Count > 0)
                 {
                     availBaln.amount = dtableUser1.Rows[0]["AvailBaln"].ToString();
@@ -338,7 +329,7 @@ namespace CustApp.Controllers
 
                 //For Profile Picture
                 UserInfo userInfo = new UserInfo();
-                DataSet DSet = ProfileUtils.GetCusDetailProfileInfoDS(clientCode);
+                DataSet DSet = ProfileUtils.GetCusDetailProfileInfoDS(sessionUserDetails.clientCode);
                 DataTable dKYC = DSet.Tables["dtKycDetail"];
                 DataTable dDoc = DSet.Tables["dtKycDoc"];
                 if (dKYC != null && dKYC.Rows.Count > 0)
@@ -360,7 +351,7 @@ namespace CustApp.Controllers
                 Session["batchCrncy"] = "NPR";
                 Session["categoryPurpose"] = "ECPG";
                 Session["debtorAgent"] = "0501";
-                Session["debtorBranch"] = Session["BankBranchId"].ToString();
+                Session["debtorBranch"] =int.Parse(cips.senderAccountNumber.Substring(0,3)).ToString();
                 Session["debtorName"] = cips.senderAccountName;
                 //Session["debtorName"] = Session["BankRegisterName"].ToString();
                 Session["debtorAccount"] = cips.senderAccountNumber;
@@ -394,7 +385,7 @@ namespace CustApp.Controllers
                 HttpResponseMessage _res = new HttpResponseMessage();
                 var cipsObject = new CheckPin
                 {
-                    userName = userName,
+                    userName = sessionUserDetails.userName,
                     pin = cips.pin
                 };
 
@@ -476,19 +467,16 @@ namespace CustApp.Controllers
         #region "GET: CIPS Details"
         public ActionResult CIPSDetails()
         {
-            string userName = (string)Session["LOGGED_USERNAME"];
-            string clientCode = (string)Session["LOGGEDUSER_ID"];
-            string name = (string)Session["LOGGEDUSER_NAME"];
-            string userType = (string)Session["LOGGED_USERTYPE"];
+            var sessionUserDetails = SessionUserDetails();
+            TempData["userType"] = sessionUserDetails.userType;
 
-            TempData["userType"] = userType;
             if (TempData["userType"] != null)
             {
                 this.ViewData["userType"] = this.TempData["userType"];
                 ViewBag.UserType = this.TempData["userType"];
-                ViewBag.Name = name;
+                ViewBag.Name = sessionUserDetails.name;
 
-                ViewBag.SenderMobileNo = userName;
+                ViewBag.SenderMobileNo = sessionUserDetails.userName;
                 ViewBag.AccountName = Session["debtorName"];
                 ViewBag.AccountNumber = Session["debtorAccount"];
                 ViewBag.TransactionAmount = Session["batchAmount"];
@@ -524,7 +512,7 @@ namespace CustApp.Controllers
 
                 UserInfo userInfo = new UserInfo();
                 MNBalance availBaln = new MNBalance();
-                DataTable dtableUser1 = AvailBalnUtils.GetAvailBaln(clientCode);
+                DataTable dtableUser1 = AvailBalnUtils.GetAvailBaln(sessionUserDetails.clientCode);
                 if (dtableUser1 != null && dtableUser1.Rows.Count > 0)
                 {
                     availBaln.amount = dtableUser1.Rows[0]["AvailBaln"].ToString();
@@ -532,7 +520,7 @@ namespace CustApp.Controllers
                 }
 
                 //Check KYC
-                DataTable dtableUserCheckKYC = ProfileUtils.CheckKYC(userName);
+                DataTable dtableUserCheckKYC = ProfileUtils.CheckKYC(sessionUserDetails.userName);
                 if (dtableUserCheckKYC != null && dtableUserCheckKYC.Rows.Count > 0)
                 {
                     userInfo.hasKYC = dtableUserCheckKYC.Rows[0]["hasKYC"].ToString();
@@ -542,7 +530,7 @@ namespace CustApp.Controllers
                 }
 
                 //Check Link Bank Account
-                DataTable dtableUserCheckLinkBankAcc = ProfileUtils.CheckLinkBankAcc(userName);
+                DataTable dtableUserCheckLinkBankAcc = ProfileUtils.CheckLinkBankAcc(sessionUserDetails.userName);
                 if (dtableUserCheckLinkBankAcc != null && dtableUserCheckLinkBankAcc.Rows.Count > 0)
                 {
                     userInfo.BankAccountNumber = dtableUserCheckLinkBankAcc.Rows[0]["HasBankKYC"].ToString();
@@ -550,7 +538,7 @@ namespace CustApp.Controllers
                 }
 
                 //For Profile Picture
-                DataSet DSet = ProfileUtils.GetCusDetailProfileInfoDS(clientCode);
+                DataSet DSet = ProfileUtils.GetCusDetailProfileInfoDS(sessionUserDetails.clientCode);
                 DataTable dKYC = DSet.Tables["dtKycDetail"];
                 DataTable dDoc = DSet.Tables["dtKycDoc"];
                 if (dKYC != null && dKYC.Rows.Count > 0)
@@ -577,15 +565,12 @@ namespace CustApp.Controllers
         [HttpPost]
         public async Task<ActionResult> CIPSExecutePayment(ConnectIPSDetail connectIPS)
         {
-            string userName = (string)Session["LOGGED_USERNAME"];
-            string clientCode = (string)Session["LOGGEDUSER_ID"];
-            string name = (string)Session["LOGGEDUSER_NAME"];
-            string userType = (string)Session["LOGGED_USERTYPE"];
+            var sessionUserDetails = SessionUserDetails();
+            TempData["userType"] = sessionUserDetails.userType;
 
-            TempData["userType"] = userType;
             this.ViewData["userType"] = this.TempData["userType"];
             ViewBag.UserType = this.TempData["userType"];
-            ViewBag.Name = name;
+            ViewBag.Name = sessionUserDetails.name;
 
             string retoken = connectIPS.TokenUnique;
             string reqToken = "";
@@ -604,7 +589,7 @@ namespace CustApp.Controllers
                 ReqTokenUtils.InsertReqToken(retoken);
 
                 MNBalance availBaln = new MNBalance();
-                DataTable dtableUser1 = AvailBalnUtils.GetAvailBaln(clientCode);
+                DataTable dtableUser1 = AvailBalnUtils.GetAvailBaln(sessionUserDetails.clientCode);
                 if (dtableUser1 != null && dtableUser1.Rows.Count > 0)
                 {
                     availBaln.amount = dtableUser1.Rows[0]["AvailBaln"].ToString();
@@ -613,7 +598,7 @@ namespace CustApp.Controllers
 
                 //For Profile Picture
                 UserInfo userInfo = new UserInfo();
-                DataSet DSet = ProfileUtils.GetCusDetailProfileInfoDS(clientCode);
+                DataSet DSet = ProfileUtils.GetCusDetailProfileInfoDS(sessionUserDetails.clientCode);
                 DataTable dKYC = DSet.Tables["dtKycDetail"];
                 DataTable dDoc = DSet.Tables["dtKycDoc"];
                 if (dKYC != null && dKYC.Rows.Count > 0)
@@ -674,11 +659,11 @@ namespace CustApp.Controllers
                 {
                     cipsBatchDetail = cipsBatchDetail,
                     cipsTransactionDetailList = cipsTransactionDetailList,
-                    username = userName
+                    username = sessionUserDetails.userName
                 };
 
                 HttpResponseMessage _res = new HttpResponseMessage();
-                string mobile = userName; //mobile is username
+                string mobile = sessionUserDetails.userName; //mobile is username
                 TraceIdGenerator _tig = new TraceIdGenerator();
                 var tid = _tig.GenerateTraceID();
 
@@ -977,23 +962,19 @@ namespace CustApp.Controllers
         #region GetLnkBankAcc
         public ActionResult GetLnkBankAcc()
         {
-            string userName = (string)Session["LOGGED_USERNAME"];
-            string clientCode = (string)Session["LOGGEDUSER_ID"];
-            string name = (string)Session["LOGGEDUSER_NAME"];
-            string userType = (string)Session["LOGGED_USERTYPE"];
-
-            TempData["userType"] = userType;
+            var sessionUserDetails = SessionUserDetails();
+            TempData["userType"] = sessionUserDetails.userType;
 
             if (TempData["userType"] != null)
             {
                 ViewData["userType"] = TempData["userType"];
                 ViewBag.UserType = TempData["userType"];
-                ViewBag.Name = name;
+                ViewBag.Name = sessionUserDetails.name;
                 string HasBankKYC = string.Empty;
                 UserInfo userInfo = new UserInfo();
 
                 //Check Link Bank Account
-                DataTable dtableUserCheckLinkBankAcc = ProfileUtils.CheckLinkBankAcc(userName);
+                DataTable dtableUserCheckLinkBankAcc = ProfileUtils.CheckLinkBankAcc(sessionUserDetails.userName);
                 if (dtableUserCheckLinkBankAcc != null && dtableUserCheckLinkBankAcc.Rows.Count > 0)
                 {
                     userInfo.BankAccountNumber = dtableUserCheckLinkBankAcc.Rows[0]["HasBankKYC"].ToString();
@@ -1008,6 +989,19 @@ namespace CustApp.Controllers
             {
                 return RedirectToAction("Index", "Login");
             }
+        }
+        #endregion
+
+        #region Session User Details
+        private UserSessionDetails SessionUserDetails()
+        {
+            UserSessionDetails details = new UserSessionDetails();
+
+            details.userName = (string)Session["LOGGED_USERNAME"];
+             details.clientCode = (string)Session["LOGGEDUSER_ID"];
+             details.name = (string)Session["LOGGEDUSER_NAME"];
+             details.userType = (string)Session["LOGGED_USERTYPE"];           
+            return details;            
         }
         #endregion
     }

@@ -22047,6 +22047,22 @@ label.error {
   width: 100%;
 }
 
+/*loading*/
+.content {
+    display: none;
+}
+
+.preload {
+    margin: 0;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    margin-right: -50%;
+    transform: translate(-50%,-50%);
+}
+
+/*loading ends*/
+
 /** Responsive  CSS **/
 @media (max-width: 767.98px) {
   /* line 87, assets/sass/components/_statement.scss */

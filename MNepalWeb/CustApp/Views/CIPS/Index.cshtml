@@ -11,6 +11,7 @@
 
 <!-- Main content -->
 <link href="~/Content/NewIcon/style.css" rel="stylesheet" />
+<link href="~/Content/ThaliStyle.css" rel="stylesheet" />
 <style>
     .image_icon {
         width: 100px;
@@ -23,6 +24,36 @@
         margin-right: 13px;
         position: relative;
         z-index: 2;
+    }
+
+    .preload {
+        margin: 0;
+        position: absolute;
+        top: 85%;
+        left: 50%;
+        margin-right: -50%;
+        transform: translate(-50%,-50%);
+    }
+
+    .bootstrap-select {
+        width: 465px !important;
+        background-color: #fff;
+        color: #fff;
+        border: solid 1px #000;
+    }
+
+    .btn-light {
+        color: #000;
+        background-color: #fff;
+        border-color: #fff;
+        font-size: 18px;
+        margin-left: 0px;
+        border: solid 1px #fff;
+        max-height: 43px;
+    }
+
+    .filter-option-inner-inner {
+        margin-left: -22px;
     }
 </style>
 
@@ -230,7 +261,7 @@
                                 <div class="col-md-12">
                                     <div class="form-group">
                                         <label class="col-sm-12">Branch Name (<span style="color:red">*</span>)</label>
-                                        <select id="branchDrpdwn" name="branchName" class="show-tick" style="width:465px; height:43px"></select>
+                                        <select id="branchDrpdwn" name="branchName" class="show-tick1" style="width:465px; height:43px; font-size:18px"></select>
                                     </div>
                                     <div class="form-group" id="branchNameErr" style="color:red; margin-top:-11px;"></div>
                                 </div>
@@ -313,6 +344,23 @@
         </div>
     </div>
 
+    <!-- Failure modal -->
+    <div class="modal fade common-modal" id="failureBankModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-body text-center">
+                    <div class="success-icon">
+                        <img src="~/Content/assets/img/denied-cross.svg" alt="denied-cross">
+                    </div>
+                    <p style="color: #E31837; font-size: 1.111rem; font-weight: 700;">@*Error!*@</p>
+                    <span style="color: #E31837; font-size: 1.111rem; font-weight: 700;" id="message1"></span>
+                    <br /> <br />
+                    <button type="button" class="btn btn-blue" data-dismiss="modal" style="width:80%">OK</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <!-- Failure modal session expired -->
     <div class="modal fade common-modal" id="failureModalSessionExpired" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle">
         <div class="modal-dialog modal-dialog-centered" role="document">
@@ -342,10 +390,10 @@
             $(".pwd1").attr("type", "password");
         });
 
-        @*document.getElementById("failureModal").onclick = function () {
-         var url = '@Url.Action("Index", "CIPS")';
+        document.getElementById("failureBankModal").onclick = function () {
+         var url = '@Url.Action("Index", "UserDashboard")';
          window.location.href = url;
-        };*@
+        };
 
         document.getElementById("failureModalSessionExpired").onclick = function () {
          var url = '@Url.Action("Index", "LogOut")';
@@ -379,6 +427,7 @@
         }
 
         $(".show-tick").prepend("<option value='0' disabled selected>---Select Option---</option>");
+        $(".show-tick1").prepend("<option value='0' disabled selected>---Select Option---</option>");
 
         $(document).ready(function () {
             $("#T-PIN").hide();
@@ -392,9 +441,9 @@
                 url: '@Url.Action("GetLnkBankAcc", "LoadWallet")',
                 success: function (data, textStatus) {
                     if (data != "T") {
-                        $("#message").html("");
-                        $("#message").append("Please link your bank account to get rid of restriction");
-                        $('#failureModal').modal("show");
+                        $("#message1").html("");
+                        $("#message1").append("Please link your bank account to get rid of restriction");
+                        $('#failureBankModal').modal("show");
                     }
                 },
                 error: function () {
@@ -403,7 +452,13 @@
             });
 
             $("#ajaxResponse").hide();
+
+            $('.show-tick').selectpicker({
+                liveSearch: true,
+                showSubtext: true
+            });
         });
+
 
         function checkAmount() {
             var amount = $("[name='txtAmount']").val();
@@ -556,16 +611,27 @@
                     select.empty();
                     select.append($('<option/>', {
                         value: 0,
-                        text: "---Select Option---"
+                        text: "---Select Option---",
                     }));
-
+                    $('#branchDrpdwn').val(0);
                     //append each branchList through json data
                     $.each(data, function (index, itemData) {
                         select.append($('<option/>', {
                             value: itemData.Value,
-                            text: itemData.Text
+                            text: itemData.Text.trim()
                         }));
                     });
+
+
+
+
+                    $('.show-tick1').selectpicker({
+                        liveSearch: true,
+                        showSubtext: true
+                    });
+
+                    $("#branchDrpdwn").selectpicker("refresh");
+
 
                     //get bankBranch id
                     $(document).on('change', 'select', function (e) {

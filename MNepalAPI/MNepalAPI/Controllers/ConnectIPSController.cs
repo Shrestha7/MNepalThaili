@@ -5,6 +5,7 @@ using MNepalAPI.Utilities;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using Newtonsoft.Json.Serialization;
+using NLog;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -31,14 +32,18 @@ namespace MNepalAPI.Controllers
     [MyBasicAuthenticationFilter]
     public class ConnectIPSController : ApiController
     {
+        public readonly Logger Logger = NLog.LogManager.GetCurrentClassLogger();
+
         #region CIPSToken
         [Route("api/ConnectIPS/CIPSToken")]
         [HttpPost]
         public async Task<HttpResponseMessage> CIPSToken(ConnectIPSUserAuthenticaiton connectIPSUserAuthenticaiton)
         {
+            string cipsUsername = "";
+            string clientIp = HttpContext.Current.Request.ServerVariables["HTTP_X_FORWARDED_FOR"];
             try
             {
-                var cipsUsername = ConfigurationManager.AppSettings["CIPSUserName"];
+                cipsUsername = ConfigurationManager.AppSettings["CIPSUserName"];
                 var cipsPassword = ConfigurationManager.AppSettings["CIPSPassword"];
 
                 FormUrlEncodedContent content = new FormUrlEncodedContent(new Dictionary<string, string>()
@@ -104,13 +109,18 @@ namespace MNepalAPI.Controllers
                             connectIPSToken.customer_details = cipsUsername;
                         }
 
+                        //log                    
+                        var eventInfo = new LogEventInfo(LogLevel.Info, Logger.Name, "Success");
+                        eventInfo.Properties["UserName"] = cipsUsername;
+                        Logger.Log(eventInfo);
+                        //log end
+
                         //Database
                         int resultsPayments = ConnectIPSUtilities.ConnectIPS(connectIPSToken);
                         if (resultsPayments == -1)
                         {
                             return Request.CreateResponse(HttpStatusCode.OK, connectIPSToken);
-                        }
-
+                        }                     
 
                     }
                     else
@@ -125,6 +135,11 @@ namespace MNepalAPI.Controllers
 
             catch (Exception ex)
             {
+                var eventInfo = new LogEventInfo(LogLevel.Error, Logger.Name, ex.ToString());
+                eventInfo.Properties["UserName"] = cipsUsername;
+                eventInfo.Properties["Exception"] = ex.Message;
+                eventInfo.Properties["UserIP"] = clientIp;
+                Logger.Log(eventInfo);
                 throw ex;
             }
         }
@@ -193,7 +208,7 @@ namespace MNepalAPI.Controllers
                         {
 
                             var bankListResponse = JsonConvert.DeserializeObject<List<BankList>>(responseContent);
-                            var orderBankListResponse = bankListResponse.OrderBy(x => x.bankName);
+                            var orderBankListResponse = bankListResponse.OrderBy(x => x.bankName.ToLower());
                             return Request.CreateResponse(HttpStatusCode.OK, orderBankListResponse);
                         }
                         return Request.CreateResponse(HttpStatusCode.OK);
@@ -278,7 +293,7 @@ namespace MNepalAPI.Controllers
                         if (httpResponse.Content != null)
                         {
                             var bankBranchLists = JsonConvert.DeserializeObject<List<CIPSBnakBranchDetails>>(responseContent);
-                            var sortBankBranchLists = bankBranchLists.OrderBy(x => x.branchName);
+                            var sortBankBranchLists = bankBranchLists.OrderBy(x => x.branchName.Trim().ToLower());
 
                             return Request.CreateResponse(HttpStatusCode.OK, sortBankBranchLists);
                         }
@@ -357,7 +372,10 @@ namespace MNepalAPI.Controllers
 
                     string generateToken = batchString + transactionString + "," + cipsUserName;
                     TokenGenerationNCHL tokenGenerationNCHL = new TokenGenerationNCHL();
-                    string getCertificate = AppDomain.CurrentDomain.BaseDirectory + "Certificate/NPI.pfx";
+
+                    //string getCertificate = AppDomain.CurrentDomain.BaseDirectory + "Certificate/NIBLMB.p12";
+                    string getCertificate = System.Web.Hosting.HostingEnvironment.MapPath(ConfigurationManager.AppSettings["CIPSKeyPath"]);
+                    
                     DateTime dateTime = DateTime.Now;
 
                     //var getCertificate = HttpContext.Current.Server.MapPath("~/Certificate/NPI.pfx");
