@@ -5,7 +5,6 @@ using MNepalAPI.Utilities;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using Newtonsoft.Json.Serialization;
-using NLog;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -32,8 +31,6 @@ namespace MNepalAPI.Controllers
     [MyBasicAuthenticationFilter]
     public class ConnectIPSController : ApiController
     {
-        public readonly Logger Logger = NLog.LogManager.GetCurrentClassLogger();
-
         #region CIPSToken
         [Route("api/ConnectIPS/CIPSToken")]
         [HttpPost]
@@ -109,12 +106,6 @@ namespace MNepalAPI.Controllers
                             connectIPSToken.customer_details = cipsUsername;
                         }
 
-                        //log                    
-                        var eventInfo = new LogEventInfo(LogLevel.Info, Logger.Name, "Success");
-                        eventInfo.Properties["UserName"] = cipsUsername;
-                        Logger.Log(eventInfo);
-                        //log end
-
                         //Database
                         int resultsPayments = ConnectIPSUtilities.ConnectIPS(connectIPSToken);
                         if (resultsPayments == -1)
@@ -135,11 +126,6 @@ namespace MNepalAPI.Controllers
 
             catch (Exception ex)
             {
-                var eventInfo = new LogEventInfo(LogLevel.Error, Logger.Name, ex.ToString());
-                eventInfo.Properties["UserName"] = cipsUsername;
-                eventInfo.Properties["Exception"] = ex.Message;
-                eventInfo.Properties["UserIP"] = clientIp;
-                Logger.Log(eventInfo);
                 throw ex;
             }
         }
@@ -1016,6 +1002,18 @@ namespace MNepalAPI.Controllers
         //    }
         //    return Request.CreateResponse(HttpStatusCode.OK);
         //}
+
+        #region ChangeToHash
+        [Route("api/ConnectIPS/ChangeToHash")]
+        [HttpPost]
+        public async Task<HttpResponseMessage> ChangeToHash(string pin)
+        {
+            var hashPin = HashAlgo.Hash(pin);
+
+            return Request.CreateResponse(HttpStatusCode.OK, hashPin);
+
+        }
+        #endregion
 
 
     }
