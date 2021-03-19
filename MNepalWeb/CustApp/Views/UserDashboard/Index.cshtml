@@ -39,7 +39,7 @@
 <style>
     .image_icon {
         width: 50px;
-    } 
+    }
 </style>
 <div class="main-content">
     <div class="bg-grey pad-50">
@@ -50,7 +50,7 @@
                     <section class="instant-transactions">
                         <div class="top-section clearfix">
                             <h2 class="title">Instant Transactions</h2>
-                            <a href="#" class="customize">customize</a>
+                            @*<a href="#" class="customize">customize</a>*@
                         </div>
 
                         <div class="transactions-grid clearfix">
@@ -211,21 +211,24 @@
                 @*<div class="col-md-6 match-height">*@
                 <div class="thaili-slider-wrapper, col-md-6 match-height">
                     <div class="thaili-slider">
-                        <div class="item">
-                            <img src="~/Content/assets/img/slider/554_335Pixel-NIBL_Education-Loan_Slide.jpg" alt="slider-image1" style="border-radius: 10px;">
-                        </div>
+                        @*<div class="item">
+                                <img src="~/Content/assets/img/slider/554_335Pixel-NIBL_Education-Loan_Slide.jpg" alt="slider-image1" style="border-radius: 10px;">
+                            </div>
 
-                        <div class="item">
-                            <img src="~/Content/assets/img/slider/554_335Pixel-NIBL_KETA-KETI_Slide.jpg" alt="slider-image2" style="border-radius: 10px;">
-                        </div>
+                            <div class="item">
+                                <img src="~/Content/assets/img/slider/554_335Pixel-NIBL_KETA-KETI_Slide.jpg" alt="slider-image2" style="border-radius: 10px;">
+                            </div>
 
-                        <div class="item">
-                            <img src="~/Content/assets/img/slider/554_335Pixel-NIBL_Re1-Account_Slide.jpg" alt="slider-image3" style="border-radius: 10px;">
-                        </div>
+                            <div class="item">
+                                <img src="~/Content/assets/img/slider/554_335Pixel-NIBL_Re1-Account_Slide.jpg" alt="slider-image3" style="border-radius: 10px;">
+                            </div>
 
-                        <div class="item">
-                            <img src="~/Content/assets/img/slider/554_335Pixel-NIBL_Recurring_Slide.jpg" alt="slider-image4" style="border-radius: 10px;">
-                        </div>
+                            <div class="item">
+                                <img src="~/Content/assets/img/slider/554_335Pixel-NIBL_Recurring_Slide.jpg" alt="slider-image4" style="border-radius: 10px;">
+                            </div>*@
+
+                        <ul id="files">
+                        </ul>
 
                     </div>
                     <!-- /thaili-slider -->
@@ -500,9 +503,9 @@
 }
 
 @*<script type="text/javascript" src="https://code.jquery.com/jquery-1.10.2.js"></script>
-<script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>*@
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>*@
 <script type="text/javascript">
-   
+
 
     function checkKYC() {
         $.ajax({
@@ -573,6 +576,17 @@
             error: function () {
                 alert("Data Not Found");
             }
+        });
+
+
+        $.getJSON('api/apiName', function (data) {
+            var fileList = $("#files");
+            debugger;
+            // browse over file
+            $.each(data, function (key, val) {
+                var row = ('<li>' + val + '</li>');
+                $("#files").append(row);
+            });
         });
     });
 

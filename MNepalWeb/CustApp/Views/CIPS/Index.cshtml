@@ -622,16 +622,12 @@
                         }));
                     });
 
-
-
-
                     $('.show-tick1').selectpicker({
                         liveSearch: true,
                         showSubtext: true
                     });
 
-                    $("#branchDrpdwn").selectpicker("refresh");
-
+                    $("#branchDrpdwn").selectpicker("refresh");  // to reset selected value
 
                     //get bankBranch id
                     $(document).on('change', 'select', function (e) {

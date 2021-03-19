@@ -216,6 +216,7 @@
     <Compile Include="BasicAuthentication\RandomCodeGenerate.cs" />
     <Compile Include="Connection\DatabaseConnection.cs" />
     <Compile Include="Controllers\ConnectIPSController.cs" />
+    <Compile Include="Controllers\ImageController.cs" />
     <Compile Include="Controllers\PushNotificationController.cs" />
     <Compile Include="Controllers\SendBulkSMSController.cs" />
     <Compile Include="Global.asax.cs">
@@ -256,6 +257,16 @@
     <Content Include="favicon.ico" />
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Global.asax" />
+    <Content Include="Image\slider\NIBL-Keta-Keti_Slide.jpg" />
+    <Content Include="Image\slider\NIBL_Education-Loan_Slide.jpg" />
+    <Content Include="Image\slider\NIBL_Education-Loan_Slide_Web.jpg" />
+    <Content Include="Image\slider\NIBL_KETA-KETI_Slide_Web.jpg" />
+    <Content Include="Image\slider\NIBL_Re1-Account_Slide.jpg" />
+    <Content Include="Image\slider\NIBL_Re1-Account_Slide_Web.jpg" />
+    <Content Include="Image\slider\NIBL_Recurring_Slide.jpg" />
+    <Content Include="Image\slider\NIBL_Recurring_Slide_web.jpg" />
+    <Content Include="Image\slider\slider-img.jpg" />
+    <Content Include="Image\slider\slider-img2.jpg" />
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
     <Content Include="Areas\HelpPage\Views\Web.config" />
