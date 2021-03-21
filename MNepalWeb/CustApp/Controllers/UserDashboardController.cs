@@ -12,6 +12,13 @@ using System.Threading.Tasks;
 using System.Web.Script.Serialization;
 using Newtonsoft.Json.Linq;
 using System.Net;
+using System.Configuration;
+using System.Text;
+using System.Net.Http.Headers;
+using static CustApp.Models.CIPS;
+using Newtonsoft.Json;
+using System.Collections.Generic;
+using System.Text.RegularExpressions;
 
 namespace CustApp.Controllers
 {
@@ -20,13 +27,26 @@ namespace CustApp.Controllers
     {
         // GET: UserDashboardContent
         [HttpGet]
-        public ActionResult Index()
+        public async Task<ActionResult> Index()
         {
             string userName = (string)Session["LOGGED_USERNAME"];
             string clientCode = (string)Session["LOGGEDUSER_ID"];
             string name = (string)Session["LOGGEDUSER_NAME"];
             string userType = (string)Session["LOGGED_USERTYPE"];
             //ViewBag.bankBalance = (string)Session["bankBal"];
+
+            //slider image begins
+            string sliderImage = await SliderImage();
+            string sliderImageUrl = ConfigurationManager.AppSettings["APIBaseURL"].Replace("/api", "");
+            List<string> stringSliderImage = new List<string>();
+            string[] imageSlider = sliderImage.Split(new Char[] { ',' });
+            foreach (var item in imageSlider)
+            {
+                string imageSliderText = Regex.Replace(item, "^\\[|\\]|\"|\"$", ""); // to remove unnecessary string                
+                stringSliderImage.Add(sliderImageUrl + imageSliderText);
+            }
+            ViewBag.ImageSlider = stringSliderImage;
+            //slider image ends
 
             if (this.TempData["user_message"] != null)
             {
@@ -395,5 +415,23 @@ namespace CustApp.Controllers
                 return RedirectToAction("Index", "Login");
             }
         }
+
+        [HttpGet]
+        public async Task<string> SliderImage()
+        {
+            using (var httpClient = new HttpClient())
+            {
+                var UserName = ConfigurationManager.AppSettings["BasicAuthUserName"];
+                var UserPassword = ConfigurationManager.AppSettings["BasicAuthPassword"];
+                var APIBaseURL = ConfigurationManager.AppSettings["APIBaseURL"];
+
+                var byteArray = Encoding.ASCII.GetBytes(UserName + ":" + UserPassword);
+                httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Basic", Convert.ToBase64String(byteArray));
+                var httpResponse = await httpClient.GetAsync(APIBaseURL + "Image/SliderImage");
+                var responseContent = await httpResponse.Content.ReadAsStringAsync();
+                return responseContent;
+            }
+        }
+
     }
 }

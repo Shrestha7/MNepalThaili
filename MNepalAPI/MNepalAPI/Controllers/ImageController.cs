@@ -6,6 +6,8 @@ using System.IO;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
+using System.Net.Http.Headers;
+using System.Text;
 using System.Threading.Tasks;
 using System.Web.Http;
 
@@ -17,19 +19,17 @@ namespace MNepalAPI.Controllers
         #region SliderImage
         [Route("api/Image/SliderImage")]
         [HttpGet]
+       
         public async Task<HttpResponseMessage> SliderImage()
         {
             try
             {
-                var re = Request;
-                var headers = re.Headers;
-
-                if (headers.Contains("token"))
+                using (var httpClient = new HttpClient())
                 {
-                    //from header
-                    string authorizationToken = headers.GetValues("token").First();
-                    if (authorizationToken == null || authorizationToken == "")
-                        return Request.CreateErrorResponse(HttpStatusCode.Unauthorized, "Invalid Token");
+                    var UserName = ConfigurationManager.AppSettings["CIPSAuthUserName"];
+                    var UserPassword = ConfigurationManager.AppSettings["CIPSAuthPassword"];
+                    var byteArray = Encoding.ASCII.GetBytes(UserName + ":" + UserPassword);
+                    httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Basic", Convert.ToBase64String(byteArray));
 
                     string dirPath = System.Web.Hosting.HostingEnvironment.MapPath(ConfigurationManager.AppSettings["SliderImageSource"]);
                     string imageSourcePath = ConfigurationManager.AppSettings["SliderPath"];
@@ -40,16 +40,7 @@ namespace MNepalAPI.Controllers
                         files.Add(imageSourcePath + fInfo.Name);
                     }
                     return Request.CreateResponse(HttpStatusCode.OK, files);
-
-
                 }
-                else
-                {
-                    return Request.CreateErrorResponse(HttpStatusCode.Unauthorized, "Invalid Token");
-                }
-
-
-
             }
             catch (Exception ex)
             {
