@@ -244,7 +244,7 @@
                                 </div>
                             </div>
                             <br />
-                            <br />                           
+                            <br />
                             <br />
 
 
@@ -513,14 +513,32 @@
                         //disable the button until we get the response
                         $('#btnSubmit').attr("disabled", true);
                     },
-                    complete: function (jqXHR, textStatus) {
-                        //enable the button
-                        $('.preload').hide();
-                        $('#btnSubmit').attr("disabled", false);
+                    //complete: function (jqXHR, textStatus) {
+                    //    //enable the button
+                    //    $('.preload').hide();
+                    //    $('#btnSubmit').attr("disabled", false);
+                    //}
+                    complete: function (data) {
+                        if (data.responseJSON.responseText == "Invalid PIN ") {
+                            $('#btnSubmit').attr("disabled", false);
+                        }
+
+                        //for sending to logout if 3 wrong t-pin attempt
+                       // if (data.responseJSON.responseText == "Invalid PIN! You have already attempt 3 times with wrong PIN,Please try again after 10 minutes") {
+                            if (data.responseJSON.responseText == data.responseJSON.blockMessage) {
+
+        $("#failureModal").click(function () {
+            debugger;
+  location.href = '@Url.Action("Index", "LogOut")';
+        });
+                        }
+
+
                     }
                 });
 
             }
+
             else {
                 checkValidation();
                 $("#message").html("");

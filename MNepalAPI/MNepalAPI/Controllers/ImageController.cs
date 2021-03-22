@@ -1,4 +1,5 @@
 ﻿using MNepalAPI.BasicAuthentication;
+using MNepalAPI.Helper;
 using System;
 using System.Collections.Generic;
 using System.Configuration;
@@ -44,9 +45,9 @@ namespace MNepalAPI.Controllers
             }
             catch (Exception ex)
             {
-
-                throw;
+                HelperStoreSqlLog.WriteError(ex, "SliderImage");
             }
+            return Request.CreateErrorResponse(HttpStatusCode.Unauthorized, "Unauthorized");
         }
         #endregion
 

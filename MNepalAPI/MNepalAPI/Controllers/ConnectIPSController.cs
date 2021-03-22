@@ -126,8 +126,10 @@ namespace MNepalAPI.Controllers
 
             catch (Exception ex)
             {
-                throw ex;
+                HelperStoreSqlLog.WriteError(ex, "CIPSToken");
             }
+            return Request.CreateErrorResponse(HttpStatusCode.Unauthorized, "Unauthorized");
+
         }
         #endregion
 
@@ -206,14 +208,14 @@ namespace MNepalAPI.Controllers
                     return Request.CreateErrorResponse(HttpStatusCode.Unauthorized, "Invalid Token");
                 }
 
-
-
             }
             catch (Exception ex)
             {
 
-                throw;
+                HelperStoreSqlLog.WriteError(ex, "GetCIPSBankList");
             }
+            return Request.CreateErrorResponse(HttpStatusCode.Unauthorized, "Unauthorized");
+
         }
         #endregion
 
@@ -295,9 +297,10 @@ namespace MNepalAPI.Controllers
             }
             catch (Exception ex)
             {
-
-                throw;
+                HelperStoreSqlLog.WriteError(ex, "GetCIPSBranchList");
             }
+            return Request.CreateErrorResponse(HttpStatusCode.Unauthorized, "Unauthorized");
+
         }
         #endregion
 
@@ -639,9 +642,10 @@ namespace MNepalAPI.Controllers
             }
             catch (Exception ex)
             {
-
-                throw;
+                HelperStoreSqlLog.WriteError(ex, "BankToBank");
             }
+            return Request.CreateErrorResponse(HttpStatusCode.Unauthorized, "Unauthorized");
+
         }
         #endregion
 
@@ -725,12 +729,14 @@ namespace MNepalAPI.Controllers
             catch (Exception ex)
             {
 
-                throw ex;
+                HelperStoreSqlLog.WriteError(ex, "GetCIPSChargeList");
             }
+            return Request.CreateErrorResponse(HttpStatusCode.Unauthorized, "Unauthorized");
+
         }
         #endregion
 
-        #region CIPSToken
+        #region BasicAuth
         [Route("api/ConnectIPS/BasicAuth")]
         [HttpPost]
         public async Task<HttpResponseMessage> BasicAuth(BasicAuth basicAuth)
@@ -752,10 +758,11 @@ namespace MNepalAPI.Controllers
 
             }
             catch (Exception ex)
-            {
-
-                throw;
+            { 
+                HelperStoreSqlLog.WriteError(ex, "BasicAuth");
             }
+            return Request.CreateErrorResponse(HttpStatusCode.Unauthorized, "Unauthorized");
+
         }
         #endregion
 
@@ -854,11 +861,12 @@ namespace MNepalAPI.Controllers
                     return Request.CreateErrorResponse(HttpStatusCode.Unauthorized, "Invalid Token");
                 }
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-
-                throw;
+                HelperStoreSqlLog.WriteError(ex, "ValidateBankAccount");
             }
+            return Request.CreateErrorResponse(HttpStatusCode.Unauthorized, "Unauthorized");
+
 
         }
         #endregion

@@ -1,0 +1,35 @@
+------Debug(2021-03-22 10:34:33.1150)IT25------
+
+                      Exception Type: |
+                      Exception Message: |
+                      Stack Trace: |
+                      Additional Info:Hi I am NLog Debug Level
+
+------Info(2021-03-22 10:34:33.4898)IT25------
+
+                      Exception Type: |
+                      Exception Message: |
+                      Stack Trace: |
+                      Additional Info:Hi I am NLog Info Level
+
+------Warn(2021-03-22 10:34:33.5991)IT25------
+
+                      Exception Type: |
+                      Exception Message: |
+                      Stack Trace: |
+                      Additional Info:Hi I am NLog Warn Level
+
+------Error(2021-03-22 10:34:37.4427)IT25------
+
+                      Exception Type:System.NullReferenceException |
+                      Exception Message:Object reference not set to an instance of an object. |
+                      Stack Trace: |
+                      Additional Info:Hi I am NLog Error Level
+
+------Fatal(2021-03-22 10:34:37.7239)IT25------
+
+                      Exception Type:System.NullReferenceException |
+                      Exception Message:Object reference not set to an instance of an object. |
+                      Stack Trace: |
+                      Additional Info:Hi I am NLog Fatal Level
+

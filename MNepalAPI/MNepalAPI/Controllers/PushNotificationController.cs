@@ -1,4 +1,5 @@
 ﻿using MNepalAPI.BasicAuthentication;
+using MNepalAPI.Helper;
 using MNepalAPI.Utilities;
 using Newtonsoft.Json;
 using System;
@@ -24,69 +25,77 @@ namespace MNepalAPI.Controllers
         [HttpPost]
         public async Task<HttpResponseMessage> PushNotification([FromBody] Notificationsobject notifications)
         {
-            var notificationsobject = new Notificationsobject
+            try
             {
-                to = notifications.to,
-                data = new Data
+                var notificationsobject = new Notificationsobject
                 {
-                    extra_information = notifications.data.extra_information,
-                    redirectUrl = notifications.data.redirectUrl
-                },
-                notification = new Notification
-                {
-                    title = notifications.notification.title,
-                    text = notifications.notification.text,
-                    click_action = "OPEN_ACTIVITY_1"
-                }
-            };
-
-            // Serialize our concrete class into a JSON String
-            var stringPayload = await Task.Run(() => JsonConvert.SerializeObject(notificationsobject));
-
-            // Wrap our JSON inside a StringContent which then can be used by the HttpClient class
-            var httpContent = new StringContent(stringPayload, Encoding.UTF8, "application/json");
-
-            using (var httpClient = new HttpClient())
-            {
-                var AuthorizationKey = ConfigurationManager.AppSettings["AuthorizationKey"];
-                var AuthorizationKeyValue = ConfigurationManager.AppSettings["AuthorizationKeyValue"];
-                var NotificationPostUrl = ConfigurationManager.AppSettings["NotificationPostUrl"];
-                httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(AuthorizationKey, AuthorizationKeyValue);
-
-                // Do the actual request and await the response
-                var httpResponse = await httpClient.PostAsync(NotificationPostUrl, httpContent);
-                var a = httpResponse;
-                var b = a;
-
-                // If the response contains content we want to read it!
-                if (httpResponse.Content != null)
-                {
-                    var responseContent = await httpResponse.Content.ReadAsStringAsync();
-
-                    //Deserialize Object to get object value
-                    var result = JsonConvert.DeserializeObject<Response>(responseContent);
-                    var message_Id = result.message_id;
-
-                    NotificationModel notification = new NotificationModel();
-                    notification.title = notifications.notification.title;
-                    notification.text = notifications.notification.text;
-                    notification.imageName = notifications.data.extra_information;
-                    notification.redirectUrl = notifications.data.redirectUrl;
-                    notification.pushNotificationDate = DateTime.Now;
-                    notification.messageId = message_Id;
-
-                    //Database
-                    int resultsPayments = NotificationUtilities.Notification(notification);
-                    if (resultsPayments == -1)
+                    to = notifications.to,
+                    data = new Data
                     {
-                        return Request.CreateResponse(HttpStatusCode.OK, new { notification });
+                        extra_information = notifications.data.extra_information,
+                        redirectUrl = notifications.data.redirectUrl
+                    },
+                    notification = new Notification
+                    {
+                        title = notifications.notification.title,
+                        text = notifications.notification.text,
+                        click_action = "OPEN_ACTIVITY_1"
                     }
-                    //return Request.CreateResponse(HttpStatusCode.OK,responseContent);
-                    // From here on you could deserialize the ResponseContent back again to a concrete C# type using Json.Net
-                }
-            }
+                };
 
-            return Request.CreateResponse(HttpStatusCode.OK);
+                // Serialize our concrete class into a JSON String
+                var stringPayload = await Task.Run(() => JsonConvert.SerializeObject(notificationsobject));
+
+                // Wrap our JSON inside a StringContent which then can be used by the HttpClient class
+                var httpContent = new StringContent(stringPayload, Encoding.UTF8, "application/json");
+
+                using (var httpClient = new HttpClient())
+                {
+                    var AuthorizationKey = ConfigurationManager.AppSettings["AuthorizationKey"];
+                    var AuthorizationKeyValue = ConfigurationManager.AppSettings["AuthorizationKeyValue"];
+                    var NotificationPostUrl = ConfigurationManager.AppSettings["NotificationPostUrl"];
+                    httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(AuthorizationKey, AuthorizationKeyValue);
+
+                    // Do the actual request and await the response
+                    var httpResponse = await httpClient.PostAsync(NotificationPostUrl, httpContent);
+                    var a = httpResponse;
+                    var b = a;
+
+                    // If the response contains content we want to read it!
+                    if (httpResponse.Content != null)
+                    {
+                        var responseContent = await httpResponse.Content.ReadAsStringAsync();
+
+                        //Deserialize Object to get object value
+                        var result = JsonConvert.DeserializeObject<Response>(responseContent);
+                        var message_Id = result.message_id;
+
+                        NotificationModel notification = new NotificationModel();
+                        notification.title = notifications.notification.title;
+                        notification.text = notifications.notification.text;
+                        notification.imageName = notifications.data.extra_information;
+                        notification.redirectUrl = notifications.data.redirectUrl;
+                        notification.pushNotificationDate = DateTime.Now;
+                        notification.messageId = message_Id;
+
+                        //Database
+                        int resultsPayments = NotificationUtilities.Notification(notification);
+                        if (resultsPayments == -1)
+                        {
+                            return Request.CreateResponse(HttpStatusCode.OK, new { notification });
+                        }
+                        //return Request.CreateResponse(HttpStatusCode.OK,responseContent);
+                        // From here on you could deserialize the ResponseContent back again to a concrete C# type using Json.Net
+                    }
+                }
+
+                return Request.CreateResponse(HttpStatusCode.OK);
+            }
+            catch (Exception ex)
+            {
+                HelperStoreSqlLog.WriteError(ex, "PushNotification");
+            }
+            return Request.CreateErrorResponse(HttpStatusCode.Unauthorized, "Unauthorized");
 
         }
 

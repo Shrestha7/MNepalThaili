@@ -733,7 +733,7 @@ namespace CustApp.Controllers
                                     responseMessage = txnRespmsg;
                                 }
                             }
-                            return Json(new { responseCode = responseCode, responseText = responseMessage },
+                            return Json(new { responseCode = responseCode, responseText = responseMessage, blockMessage = BlockMessage },
                             JsonRequestBehavior.AllowGet);
                         }
                         else
@@ -745,20 +745,20 @@ namespace CustApp.Controllers
                             message = json.d;
                             if (message == null)
                             {
-                                return Json(new { responseCode = responseCode, responseText = responsetext },
+                                return Json(new { responseCode = responseCode, responseText = responsetext, blockMessage = BlockMessage },
                             JsonRequestBehavior.AllowGet);
                             }
                             else
                             {
                                 dynamic item = JValue.Parse(message);
-                                return Json(new { responseCode = responseCode, responseText = (string)item["StatusMessage"] },
+                                return Json(new { responseCode = responseCode, responseText = (string)item["StatusMessage"], blockMessage = BlockMessage },
                                 JsonRequestBehavior.AllowGet);
                             }
                         }
                     }
                     catch (Exception ex)
                     {
-                        return Json(new { responseCode = "400", responseText = ex.Message },
+                        return Json(new { responseCode = "400", responseText = ex.Message, blockMessage = BlockMessage },
                             JsonRequestBehavior.AllowGet);
                     }
 
