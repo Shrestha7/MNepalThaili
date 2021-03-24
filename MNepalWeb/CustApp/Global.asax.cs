@@ -89,6 +89,5 @@ namespace CustApp
         {
             this.Response.AppendHeader("X-Frame-Options", "DENY");
         }
-
     }
 }

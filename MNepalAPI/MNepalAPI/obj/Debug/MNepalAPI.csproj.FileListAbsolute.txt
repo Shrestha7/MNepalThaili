@@ -1,4 +1,3 @@
-D:\Thaili\MNepalAPI\MNepalAPI\bin\NLog.config
 D:\Thaili\MNepalAPI\MNepalAPI\bin\MNepalAPI.dll.config
 D:\Thaili\MNepalAPI\MNepalAPI\bin\MNepalAPI.xml
 D:\Thaili\MNepalAPI\MNepalAPI\bin\MNepalAPI.dll
@@ -72,9 +71,6 @@ D:\Thaili\MNepalAPI\MNepalAPI\bin\Microsoft.Extensions.Options.dll
 D:\Thaili\MNepalAPI\MNepalAPI\bin\Microsoft.Extensions.Primitives.dll
 D:\Thaili\MNepalAPI\MNepalAPI\bin\Microsoft.Web.Infrastructure.dll
 D:\Thaili\MNepalAPI\MNepalAPI\bin\Newtonsoft.Json.dll
-D:\Thaili\MNepalAPI\MNepalAPI\bin\NLog.dll
-D:\Thaili\MNepalAPI\MNepalAPI\bin\NLog.Extended.dll
-D:\Thaili\MNepalAPI\MNepalAPI\bin\NLog.Web.dll
 D:\Thaili\MNepalAPI\MNepalAPI\bin\Swashbuckle.Core.dll
 D:\Thaili\MNepalAPI\MNepalAPI\bin\System.Buffers.dll
 D:\Thaili\MNepalAPI\MNepalAPI\bin\System.Diagnostics.DiagnosticSource.dll
@@ -115,9 +111,6 @@ D:\Thaili\MNepalAPI\MNepalAPI\bin\Microsoft.Extensions.Logging.Abstractions.xml
 D:\Thaili\MNepalAPI\MNepalAPI\bin\Microsoft.Extensions.Options.xml
 D:\Thaili\MNepalAPI\MNepalAPI\bin\Microsoft.Extensions.Primitives.xml
 D:\Thaili\MNepalAPI\MNepalAPI\bin\Newtonsoft.Json.xml
-D:\Thaili\MNepalAPI\MNepalAPI\bin\NLog.xml
-D:\Thaili\MNepalAPI\MNepalAPI\bin\NLog.Extended.xml
-D:\Thaili\MNepalAPI\MNepalAPI\bin\NLog.Web.xml
 D:\Thaili\MNepalAPI\MNepalAPI\bin\System.Buffers.xml
 D:\Thaili\MNepalAPI\MNepalAPI\bin\System.Diagnostics.DiagnosticSource.xml
 D:\Thaili\MNepalAPI\MNepalAPI\bin\System.Memory.xml

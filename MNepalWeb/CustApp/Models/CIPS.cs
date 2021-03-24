@@ -176,6 +176,5 @@ namespace CustApp.Models
             public string pin { get; set; }
         }
 
-
     }
 }

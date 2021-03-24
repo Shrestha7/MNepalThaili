@@ -27,25 +27,25 @@ namespace MNepalAPI.Helper
                 .WriteTo.MSSqlServer(ConnectionString, new MSSqlServerSinkOptions() { TableName = "MNThailiLog" })
                 .CreateLogger();
 
-            Warninglog = new LoggerConfiguration()
-                .MinimumLevel.Warning()
-                //.WriteTo.MSSqlServer(ConnectionString, "Serilogs")
-                .CreateLogger();
+            //Warninglog = new LoggerConfiguration()
+            //    .MinimumLevel.Warning()
+            //    //.WriteTo.MSSqlServer(ConnectionString, "Serilogs")
+            //    .CreateLogger();
 
-            Debuglog = new LoggerConfiguration()
-                .MinimumLevel.Debug()
-                //.WriteTo.MSSqlServer(ConnectionString, "Serilogs")
-                .CreateLogger();
+            //Debuglog = new LoggerConfiguration()
+            //    .MinimumLevel.Debug()
+            //    //.WriteTo.MSSqlServer(ConnectionString, "Serilogs")
+            //    .CreateLogger();
 
-            Verboselog = new LoggerConfiguration()
-                .MinimumLevel.Verbose()
-                //.WriteTo.MSSqlServer(ConnectionString, "Serilogs")
-                .CreateLogger();
+            //Verboselog = new LoggerConfiguration()
+            //    .MinimumLevel.Verbose()
+            //    //.WriteTo.MSSqlServer(ConnectionString, "Serilogs")
+            //    .CreateLogger();
 
-            Fatallog = new LoggerConfiguration()
-                .MinimumLevel.Fatal()
-                .WriteTo.MSSqlServer(ConnectionString, new MSSqlServerSinkOptions() { TableName = "Serilogs"})
-                .CreateLogger();
+            //Fatallog = new LoggerConfiguration()
+            //    .MinimumLevel.Fatal()
+            //    .WriteTo.MSSqlServer(ConnectionString, new MSSqlServerSinkOptions() { TableName = "Serilogs"})
+            //    .CreateLogger();
 
         }
 
@@ -86,5 +86,6 @@ namespace MNepalAPI.Helper
             //Fatal - critical errors causing complete failure of the application
             Fatallog.Write(LogEventLevel.Fatal, ex, message);
         }
+
     }
 }

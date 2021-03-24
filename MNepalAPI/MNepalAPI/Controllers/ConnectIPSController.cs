@@ -5,6 +5,7 @@ using MNepalAPI.Utilities;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using Newtonsoft.Json.Serialization;
+using Serilog;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -409,7 +410,7 @@ namespace MNepalAPI.Controllers
                         if (httpResponse.StatusCode == HttpStatusCode.Unauthorized || httpResponse.StatusCode == HttpStatusCode.BadRequest)
                         {
                             // Check if the unauthorized is because of invalid token
-                            if (responseContent.Contains("invalid_token"))
+                            if (responseContent.Contains("invalid_token") || responseContent.Contains("INVALID TOKEN"))
                             {
                                 // Get refresh token from database matching the accesstoken from the header
                                 var accessToken1 = CIPSUtilities.GetAccessToken(authorizationToken);

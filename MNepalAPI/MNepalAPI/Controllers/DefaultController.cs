@@ -1,5 +1,4 @@
-﻿using NLog;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
@@ -7,12 +6,13 @@ using System.Net.Http;
 using System.Web.Http;
 using System.Web.Mvc;
 using MNepalAPI.Helper;
+using Serilog;
 
 namespace MNepalAPI.Controllers
 {
     public class DefaultController : ApiController
     {
-        public readonly Logger Logger = NLog.LogManager.GetCurrentClassLogger();
+        //public readonly Logger Logger = NLog.LogManager.GetCurrentClassLogger();
         //public readonly Logger Logger = LogManager.GetLogger("database");
         // GET: Default
         //public ActionResult Index()
@@ -42,9 +42,11 @@ namespace MNepalAPI.Controllers
             }
             catch (Exception e)
             {
+                Log.Error("Username", "11");
                 HelperStoreSqlLog.WriteError(e, "teee");
                 HelperStoreSqlLog.WriteFatal(e, "Fateeeeal");
                 HelperStoreSqlLog.WriteVerbose(e, "Verboeeeese");
+
             }
             return null;
         }

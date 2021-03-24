@@ -5,6 +5,7 @@ using CustApp.UserModels;
 using CustApp.Utilities;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using Rotativa;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -205,7 +206,7 @@ namespace CustApp.Controllers
                 }
 
 
-                
+
 
                 HttpResponseMessage _res = new HttpResponseMessage();
                 var cipsObject = new ValidateCreditorBankAccount
@@ -262,7 +263,7 @@ namespace CustApp.Controllers
                                 code = Convert.ToInt32(json.responseCode);
                                 respmsg = json.responseMessage;
                             }
-                            return Json(new { responseCode = code, responseText = respmsg},
+                            return Json(new { responseCode = code, responseText = respmsg },
                             JsonRequestBehavior.AllowGet);
                         }
                         else
@@ -299,7 +300,6 @@ namespace CustApp.Controllers
         {
             var sessionUserDetails = SessionUserDetails();
             TempData["userType"] = sessionUserDetails.userType;
-
             this.ViewData["userType"] = this.TempData["userType"];
             ViewBag.UserType = this.TempData["userType"];
             ViewBag.Name = sessionUserDetails.name;
@@ -346,12 +346,12 @@ namespace CustApp.Controllers
                 RandomCodeGenerator randomCodeGenerator = new RandomCodeGenerator();
 
                 Session["batchId"] = randomCodeGenerator.CreateRandomCode(20);
-                Session["batchAmount"] = cips.amount;
+                Session["batchAmount"] = cips.amount;              
                 Session["batchCount"] = 1;
                 Session["batchCrncy"] = "NPR";
                 Session["categoryPurpose"] = "ECPG";
                 Session["debtorAgent"] = "0501";
-                Session["debtorBranch"] =int.Parse(cips.senderAccountNumber.Substring(0,3)).ToString();
+                Session["debtorBranch"] = int.Parse(cips.senderAccountNumber.Substring(0, 3)).ToString();
                 Session["debtorName"] = cips.senderAccountName;
                 //Session["debtorName"] = Session["BankRegisterName"].ToString();
                 Session["debtorAccount"] = cips.senderAccountNumber;
@@ -486,6 +486,10 @@ namespace CustApp.Controllers
                 ViewBag.BranchName = Session["branchName"];
                 ViewBag.Remarks = Session["transactionDetail"];
 
+                
+
+
+
                 //applicable charge
                 if (ViewBag.TransactionAmount <= 500)
                 {
@@ -503,6 +507,7 @@ namespace CustApp.Controllers
                 {
                     ViewBag.Charge = 15;
                 }
+                Session["cipsCharge"] = ViewBag.Charge;
                 //applicable charge ends
 
                 int id = TraceIdGenerator.GetID() + 1;
@@ -615,7 +620,10 @@ namespace CustApp.Controllers
 
                 Cipsbatchdetail cipsBatchDetail = new Cipsbatchdetail();
                 cipsBatchDetail.batchId = Session["batchId"].ToString();
-                
+
+                string batchAmount = Session["batchAmount"].ToString();
+
+
 
                 decimal decimalRounded = Decimal.Parse(connectIPS.amount.ToString("0.00"));
 
@@ -733,7 +741,7 @@ namespace CustApp.Controllers
                                     responseMessage = txnRespmsg;
                                 }
                             }
-                            return Json(new { responseCode = responseCode, responseText = responseMessage, blockMessage = BlockMessage },
+                            return Json(new { responseCode = responseCode, responseText = responseMessage },
                             JsonRequestBehavior.AllowGet);
                         }
                         else
@@ -745,27 +753,27 @@ namespace CustApp.Controllers
                             message = json.d;
                             if (message == null)
                             {
-                                return Json(new { responseCode = responseCode, responseText = responsetext, blockMessage = BlockMessage },
+                                return Json(new { responseCode = responseCode, responseText = responsetext },
                             JsonRequestBehavior.AllowGet);
                             }
                             else
                             {
                                 dynamic item = JValue.Parse(message);
-                                return Json(new { responseCode = responseCode, responseText = (string)item["StatusMessage"], blockMessage = BlockMessage },
+                                return Json(new { responseCode = responseCode, responseText = (string)item["StatusMessage"] },
                                 JsonRequestBehavior.AllowGet);
                             }
                         }
                     }
                     catch (Exception ex)
                     {
-                        return Json(new { responseCode = "400", responseText = ex.Message, blockMessage = BlockMessage },
+                        return Json(new { responseCode = "400", responseText = ex.Message },
                             JsonRequestBehavior.AllowGet);
                     }
 
                 }
             }
             {
-                return Json(new { responseCode = "400", responseText = "Please refresh the page again.", blockMessage = BlockMessage },
+                return Json(new { responseCode = "400", responseText = "Please refresh the page again." },
                             JsonRequestBehavior.AllowGet);
             }
 
@@ -998,10 +1006,26 @@ namespace CustApp.Controllers
             UserSessionDetails details = new UserSessionDetails();
 
             details.userName = (string)Session["LOGGED_USERNAME"];
-             details.clientCode = (string)Session["LOGGEDUSER_ID"];
-             details.name = (string)Session["LOGGEDUSER_NAME"];
-             details.userType = (string)Session["LOGGED_USERTYPE"];           
-            return details;            
+            details.clientCode = (string)Session["LOGGEDUSER_ID"];
+            details.name = (string)Session["LOGGEDUSER_NAME"];
+            details.userType = (string)Session["LOGGED_USERTYPE"];
+            return details;
+        }
+        #endregion
+
+        #region
+        public ActionResult CIPSInvoice()
+        {
+            var a = Session["debtorName"];
+            return View();
+        }
+        #endregion
+        #region
+
+        public ActionResult ConvertToPDF()
+        {
+            var printpdf = new ActionAsPdf("CIPSInvoice");
+            return printpdf;
         }
         #endregion
     }
