@@ -1013,18 +1013,28 @@ namespace CustApp.Controllers
         }
         #endregion
 
-        #region
+        #region CIPSInvoice
         public ActionResult CIPSInvoice()
         {
-            var a = Session["debtorName"];
             return View();
         }
         #endregion
-        #region
 
-        public ActionResult ConvertToPDF()
+        #region ConvertToPDF
+        public ActionResult CIPSPaymentInvoice()
         {
-            var printpdf = new ActionAsPdf("CIPSInvoice");
+            var dic = new Dictionary<string, string>();
+            dic.Add("SenderName", (string)Session["debtorName"]);
+            dic.Add("SenderAccountNumber", (string)Session["debtorAccount"]);
+            dic.Add("DestinationAccountNumber", (string)Session["creditorAccount"]);
+            dic.Add("DestinationAccountName", (string)Session["creditorName"]);
+            dic.Add("DestinationBank", (string)Session["bankName"]);
+            dic.Add("DestinationBranch", (string)Session["branchName"]);
+            dic.Add("Remarks", (string)Session["endToEndId"]);
+            dic.Add("Amount", Session["amount"].ToString());
+            dic.Add("Charge", Session["cipsCharge"].ToString());
+
+            var printpdf = new ViewAsPdf("CIPSInvoice", dic);
             return printpdf;
         }
         #endregion

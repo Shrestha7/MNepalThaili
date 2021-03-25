@@ -23,6 +23,15 @@
         z-index: 2;
     }
 
+    .preload {
+        margin: 0;
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        margin-right: -50%;
+        transform: translate(-50%,-50%);
+    }
+
     .show-tick {
         margin-top: 10px;
         height: 45px;
@@ -35,6 +44,10 @@
 
     @Html.AntiForgeryToken()
     @Html.ValidationSummary(true)
+
+    <div class="preload" style="display:none">
+        <img src="~/Content/image/loading.gif" class="img-responsive" />
+    </div>
 
     <div class="main-content">
         <div class="two-colbg">
@@ -274,15 +287,15 @@
                     <p class="msg"></p>
                     <span class="msg">Your payment has been confirmed.</span>
                     <br /> <br />
-                <div class="row">
-                    <div class="col-md-6">
-                        <a class="btn btn-blue" href="@Url.Action("ConvertToPDF", "CIPS")" target="_blank" id="btnPDF">Download PDF</a>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <a class="btn btn-blue" href="@Url.Action("CIPSPaymentInvoice", "CIPS")" target="_blank" id="btnPDF">Download PDF</a>
+                        </div>
+                        <div class="col-md-6">
+                            <button type="button" class="btn btn-blue" data-dismiss="modal" style="width:80%">OK</button>
+                        </div>
                     </div>
-                    <div class="col-md-6">
-                        <button type="button" class="btn btn-blue" data-dismiss="modal" style="width:80%">OK</button>
-                    </div>                   
-                </div>
-                    
+
                 </div>
             </div>
         </div>
@@ -336,7 +349,7 @@
         });
 
         $("#btnPDF").on("click", function () {
-            win = window.open("ConvertToPDF", "_blank");
+            win = window.open("CIPSPaymentInvoice", "_blank");
             win.document.body.innerHTML = htmlData;
 
         });
@@ -447,7 +460,7 @@
 
         $('#btnSubmit').click(function (e) {
             e.preventDefault();
-            debugger;
+            
             var accountNumber = document.getElementById("accountNumber").innerText;
             var transactionAmount = document.getElementById("transactionAmount").innerText;
             var beneficiaryAccountNumber= document.getElementById("beneficiaryAccountNumber").innerText;
@@ -481,12 +494,10 @@
                         __RequestVerificationToken: token,
                         connectIPS: dataToPost,
                     },
-                    async: false,
+                    async: true,
                     success: function (data) {
-                        debugger;
                         $(".preload").hide();
                         if (data.responseCode == "200" || data.responseCode == "0") {
-                            debugger;
                             $("#ajaxResponse").html("");
                             //var resp = JSON.parse(data.responseText);
                             var resp = data.responseText;
@@ -542,17 +553,6 @@
                 $('#failureModal').modal("show");
 
             }
-        });
-
-
-        $('#btnPDF').click(function (e) {
-            debugger;
-            console.log(window.accountNumber);
-                $.ajax({
-                    url: '@Url.Action("ConvertToPDF", "CIPS")',
-                    type: "GET"
-                });
-
         });
     </script>
 

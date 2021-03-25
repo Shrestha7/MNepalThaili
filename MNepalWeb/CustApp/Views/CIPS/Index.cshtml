@@ -191,7 +191,7 @@
                                 <div class="col-md-12">
                                     <div class="form-group">
                                         <label class="col-sm-12">Sender Account Number (<span style="color:red">*</span>)</label>
-                                        <input type="text" value="@ViewBag.BankAccountNumber" @*disabled="disabled"*@ class="form-control select2" id="senderAccountNumber" name="txtSenderAccountNumber" placeholder="Account Number" maxlength="20" />
+                                        <input type="text" value="@ViewBag.BankAccountNumber" disabled="disabled" class="form-control select2" id="senderAccountNumber" name="txtSenderAccountNumber" placeholder="Account Number" maxlength="20" />
                                     </div>
                                     <div class="form-group" id="accountNumberErr" style="color:red; margin-top:-11px;"></div>
                                 </div>
@@ -434,7 +434,7 @@
             $("#AccountValidate").hide();
             $("#AccountValidateErr").hide();
             $("#btnSubmit").hide();
-            debugger;
+            
             $.ajax({
                 cache: false,
                 type: "GET",
@@ -548,7 +548,7 @@
         }
 
         function checkBranch() {
-            debugger;
+            
             var branchName = $("select[name='branchName'] option:selected").val();
             if (branchName == '0') {
                 $("#branchNameErr").html("");
@@ -584,7 +584,7 @@
         //get banklist
         $('#bankDrpdwn').change(function (e){
             e.preventDefault();
-            debugger;
+            
             var dropdown = document.getElementById('bankDrpdwn');
             var selectedOption = dropdown.options[dropdown.selectedIndex];
             var selectedBankId = selectedOption.getAttribute('bankId');
@@ -606,7 +606,7 @@
                 data: dataToPost,
                 async: true,
                 success: function (data) {
-                    debugger;
+                    
                     var select = $("#branchDrpdwn");
                     select.empty();
                     select.append($('<option/>', {
@@ -631,7 +631,7 @@
 
                     //get bankBranch id
                     $(document).on('change', 'select', function (e) {
-                        debugger;
+                        
                         var branchId = $('option:selected', this).attr('value');
                         var branchName = $('option:selected', this).text();
                         window.branchId = branchId;
@@ -650,9 +650,9 @@
         });
 
         $('#btnValidate').click(function (e) {
-            debugger;
+            
             e.preventDefault();
-            debugger;
+            
             var senderAccountName = $("[name='txtSenderAccountName']").val();
             var senderAccountNumber = $("[name='txtSenderAccountNumber']").val();
             var amount = $("[name='txtAmount']").val();
@@ -698,7 +698,7 @@
                     async: true,
                     success: function (data) {
                         $(".preload").show();
-                        debugger;
+                        
                         if (data.responseCode == "000") {
                             $("#amount").attr("disabled", "disabled");
                             $("#accountNumber").attr("disabled", "disabled");
@@ -764,9 +764,9 @@
 
 
         $('#btnSubmit').click(function (e) {
-            debugger;
+            
             e.preventDefault();
-            debugger;
+            
             var senderAccountName = $("[name='txtSenderAccountName']").val();
             var senderAccountNumber = $("[name='txtSenderAccountNumber']").val();
             var amount = $("[name='txtAmount']").val();

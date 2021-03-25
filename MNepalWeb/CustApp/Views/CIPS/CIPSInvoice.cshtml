@@ -1,19 +1,29 @@
-﻿
+﻿@model Dictionary<string, string>
+
 @{
     Layout = null;
 }
 
 <!DOCTYPE html>
-
 <html>
 <head>
     <meta name="viewport" content="width=device-width" />
-    <title>CIPS Invoice</title>
+    <title>CIPS Payment Invoice - Thaili Digital Paisa</title>
 </head>
 <body class="container">
-    <div class="row">
-        <div class="col-md-6">Account Name: </div>
-        <div class="col-md-6">@ViewBag.AccountName</div>
+    <div class="row" style="margin:600px 100px 500px 100px; font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif">
+        <h1 style="text-align:center">ConnectIPS Transfer Advice</h1><hr />
+        <h4 style="text-align:right">Date : @DateTime.Now.ToString("dd MMM yyyy")</h4><br /><br />
+        <div class="col-md-12"><span style="font-size:30px">Sender A/C Name : @Model["SenderName"]</span> </div>
+        <div class="col-md-12"><span style="font-size:30px">Sender A/C Number : @Model["SenderAccountNumber"]</span> </div>
+        <div class="col-md-12"><span style="font-size:30px">Destination A/C Number : @Model["DestinationAccountNumber"]</span> </div>
+        <div class="col-md-12"><span style="font-size:30px">Destination A/C Name : @Model["DestinationAccountName"] </span></div>
+        <div class="col-md-12"><span style="font-size:30px">Destination Bank Name : @Model["DestinationBank"] </span></div>
+        <div class="col-md-12"><span style="font-size:30px">Destination Branch Name : @Model["DestinationBranch"]</span> </div>
+        <div class="col-md-12"><span style="font-size:30px">Remarks : @Model["Remarks"]</span> </div>
+        <div class="col-md-12"><span style="font-size:30px">Amount : NPR. @Model["Amount"]</span> </div>
+        <div class="col-md-12"><span style="font-size:30px">Charge : NPR. @Model["Charge"]</span> </div>
+
     </div>
 </body>
 </html>
