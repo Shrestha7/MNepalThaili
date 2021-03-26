@@ -53,7 +53,7 @@ namespace CustApp.Controllers
             try
             {
                 if (IsValidUserName(userName))
-                { 
+                {
                     code = TraceIdGenerator.GetUniqueKey();
                     string messagereply = "Dear " + ViewBag.FName + "," + "\n";
                     messagereply += " Your Verification Code is " + code
@@ -89,7 +89,7 @@ namespace CustApp.Controllers
 
                     Session["Mobile"] = mobile;
                     Session["Code"] = code;
-                    return RedirectToAction("Recover"); 
+                    return RedirectToAction("Recover");
                 }
                 else
                 {
@@ -107,7 +107,7 @@ namespace CustApp.Controllers
             }
             this.TempData["forget_message"] = result
                                                   ? "" + displayMessage
-                                                  :displayMessage;
+                                                  : displayMessage;
             this.TempData["message_class"] = result ? "success_info" : "failed_info";
             this.TempData["message_topic"] = messageTopic;
             return View("Index");
@@ -336,8 +336,9 @@ namespace CustApp.Controllers
             return RedirectToAction("ChangePassword");
         }
 
-        
-        public ActionResult ResendCode(FormCollection collection){
+
+        public ActionResult ResendCode(FormCollection collection)
+        {
             if (this.TempData["forget_message"] != null)
             {
                 this.ViewData["forget_message"] = this.TempData["forget_message"];
@@ -367,7 +368,7 @@ namespace CustApp.Controllers
                 if (IsValidUserName(userName))
                 {
                     code = TraceIdGenerator.GetUniqueKey();
-                    string messagereply = "Dear " + ViewBag.FName +"," + "\n";
+                    string messagereply = "Dear " + ViewBag.FName + "," + "\n";
                     messagereply += " Your Verification Code is " + code
                         + "." + "\n" + "Close this message and enter code to recover account.";
                     messagereply += "-NIBL Thaili";

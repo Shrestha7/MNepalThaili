@@ -2,20 +2,18 @@
 using CustApp.Helper;
 using CustApp.Models;
 using CustApp.UserModels;
-using CustApp.ViewModel;
+using CustApp.Utilities;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.IO;
 using System.Linq;
+using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
-using System.Web;
 using System.Web.Mvc;
 using System.Web.Script.Serialization;
-using System.Data;
-using CustApp.Utilities;
-using System.Net;
 
 namespace CustApp.Controllers
 {
@@ -292,7 +290,7 @@ namespace CustApp.Controllers
                     string ava = string.Empty;
                     string avatra = string.Empty;
                     string avamsg = string.Empty;
-                  //  string BlockMessage = LoginUtils.GetMessage("01");
+                    //  string BlockMessage = LoginUtils.GetMessage("01");
                     try
                     {
                         if (_res.IsSuccessStatusCode)
@@ -320,8 +318,8 @@ namespace CustApp.Controllers
 
 
                             //return Json(new { responseCode = responseCode, responseText = respmsg },
-                        return Json(new { responseCode = responseCode, responseText = respmsg, blockMessage = BlockMessage },
-                    JsonRequestBehavior.AllowGet);
+                            return Json(new { responseCode = responseCode, responseText = respmsg, blockMessage = BlockMessage },
+                        JsonRequestBehavior.AllowGet);
                         }
 
                         else
@@ -345,8 +343,8 @@ namespace CustApp.Controllers
                                 //  message = (string)item["StatusMessage"];
                                 //end 01
                                 //return Json(new { responseCode = responseCode, responseText = (string)item["StatusMessage"] },
-                                 return Json(new { responseCode = responseCode, responseText = (string)item["StatusMessage"], blockMessage = BlockMessage },
-                           JsonRequestBehavior.AllowGet);
+                                return Json(new { responseCode = responseCode, responseText = (string)item["StatusMessage"], blockMessage = BlockMessage },
+                          JsonRequestBehavior.AllowGet);
                             }
 
                             //    string StatusMessage = "";
@@ -376,9 +374,9 @@ namespace CustApp.Controllers
                     }
                     catch (Exception ex)
                     {
-                      //  return Json(new { responseCode = "400", responseText = ex.Message },
-                          return Json(new { responseCode = "400", responseText = ex.Message, blockMessage = BlockMessage },
-                  JsonRequestBehavior.AllowGet);
+                        //  return Json(new { responseCode = "400", responseText = ex.Message },
+                        return Json(new { responseCode = "400", responseText = ex.Message, blockMessage = BlockMessage },
+                JsonRequestBehavior.AllowGet);
                     }
 
                     this.TempData["merchantpay_messsage"] = result
@@ -392,7 +390,7 @@ namespace CustApp.Controllers
             }
             else
             {
-               // return RedirectToAction("Index", "Login");
+                // return RedirectToAction("Index", "Login");
                 return Json(new { responseCode = "400", responseText = "Please refresh the page again.", blockMessage = BlockMessage },
                           JsonRequestBehavior.AllowGet);
             }
@@ -920,7 +918,7 @@ namespace CustApp.Controllers
                     string ava = string.Empty;
                     string avatra = string.Empty;
                     string avamsg = string.Empty;
-                   // string BlockMessage = LoginUtils.GetMessage("01");
+                    // string BlockMessage = LoginUtils.GetMessage("01");
                     try
                     {
                         if (_res.IsSuccessStatusCode)
@@ -1002,8 +1000,8 @@ namespace CustApp.Controllers
                              JsonRequestBehavior.AllowGet);
             }
         }
-        
-        
+
+
         #endregion
 
 
@@ -1233,7 +1231,7 @@ namespace CustApp.Controllers
                     string ava = string.Empty;
                     string avatra = string.Empty;
                     string avamsg = string.Empty;
-                   // string BlockMessage = LoginUtils.GetMessage("01");
+                    // string BlockMessage = LoginUtils.GetMessage("01");
 
                     try
                     {
@@ -1260,8 +1258,8 @@ namespace CustApp.Controllers
 
 
                             //return Json(new { responseCode = responseCode, responseText = respmsg },
-                        return Json(new { responseCode = responseCode, responseText = respmsg, blockMessage = BlockMessage },
-                     JsonRequestBehavior.AllowGet);
+                            return Json(new { responseCode = responseCode, responseText = respmsg, blockMessage = BlockMessage },
+                         JsonRequestBehavior.AllowGet);
                         }
 
                         else
@@ -1274,9 +1272,9 @@ namespace CustApp.Controllers
                             if (message == null)
                             {
                                 //return Json(new { responseCode = responseCode, responseText = responsetext },
-                             return Json(new { responseCode = responseCode, responseText = responsetext, blockMessage = BlockMessage },
+                                return Json(new { responseCode = responseCode, responseText = responsetext, blockMessage = BlockMessage },
 
-                                    JsonRequestBehavior.AllowGet);
+                                       JsonRequestBehavior.AllowGet);
                             }
 
                             else
@@ -1318,7 +1316,7 @@ namespace CustApp.Controllers
             }
 
         }
-        
+
 
         #endregion
 

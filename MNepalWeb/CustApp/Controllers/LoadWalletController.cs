@@ -1,22 +1,20 @@
-﻿using CustApp.Helper;
+﻿using CustApp.App_Start;
+using CustApp.Helper;
 using CustApp.Models;
+using CustApp.Settings;
+using CustApp.Utilities;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.IO;
+using System.Linq;
+using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
 using System.Web.Mvc;
 using System.Web.Script.Serialization;
 using System.Web.SessionState;
-using CustApp.App_Start;
-using CustApp.Utilities;
-using System.Data;
-using CustApp.Settings;
-using System.Linq;
-using System.Net;
-using System.Web;
-using System.Text;
 
 namespace CustApp.Controllers
 {
@@ -266,7 +264,7 @@ namespace CustApp.Controllers
             {
                 reqToken = "0";
             }
-            string BlockMessage = LoginUtils.GetMessage("01"); 
+            string BlockMessage = LoginUtils.GetMessage("01");
 
 
             if (reqToken == "0")
@@ -388,7 +386,7 @@ namespace CustApp.Controllers
             }
             else
             {
-               // return Json(new { responseCode = "400", responseText = "Please refresh the page again." },
+                // return Json(new { responseCode = "400", responseText = "Please refresh the page again." },
                 return Json(new { responseCode = "400", responseText = "Please refresh the page again.", blockMessage = BlockMessage },
                             JsonRequestBehavior.AllowGet);
             }
@@ -553,7 +551,7 @@ namespace CustApp.Controllers
 
                 bool result = false;
                 string errorMessage = string.Empty;
-                
+
                 string reqToken = "";
                 DataTable dtableVToken = ReqTokenUtils.GetReqToken(retoken);
                 if (dtableVToken != null && dtableVToken.Rows.Count > 0)
@@ -646,7 +644,7 @@ namespace CustApp.Controllers
             string Amount = (string)Session["LOGGED_AMOUNT"];
             string Remarks = (string)Session["LOGGED_Remarks"];
             string retrievalReference = (string)Session["LOGGED_retrievalReference"];
-            
+
 
             ViewBag.PaymentReferenceNumber = PaymentReferenceNumber;
             ViewBag.ItemCode = ItemCode;
@@ -743,118 +741,118 @@ namespace CustApp.Controllers
 
 
         #endregion
-    //    [HttpPost]
-    //    public HttpResponseMessage loadwalletrequest(string shopparam, Stream input)
-    //    {
-    //        string result = "";
-    //        StreamReader sr = new StreamReader(input);
-    //        string s = sr.ReadToEnd();
-    //        sr.Dispose();
-    //        NameValueCollection qs = HttpUtility.ParseQueryString(s);
+        //    [HttpPost]
+        //    public HttpResponseMessage loadwalletrequest(string shopparam, Stream input)
+        //    {
+        //        string result = "";
+        //        StreamReader sr = new StreamReader(input);
+        //        string s = sr.ReadToEnd();
+        //        sr.Dispose();
+        //        NameValueCollection qs = HttpUtility.ParseQueryString(s);
 
-    //        //return View();
-    //        return Request.CreateResponse(HttpStatusCode.BadRequest);
-    //    }
+        //        //return View();
+        //        return Request.CreateResponse(HttpStatusCode.BadRequest);
+        //    }
 
-    //    public abstract class loadwalletrequest(string shopparam, Stream input)
-    //    {
-    //        string result = "";
-    //    StreamReader sr = new StreamReader(input);
-    //    string s = sr.ReadToEnd();
-    //    sr.Dispose();
-    //        NameValueCollection qs = HttpUtility.ParseQueryString(s);
+        //    public abstract class loadwalletrequest(string shopparam, Stream input)
+        //    {
+        //        string result = "";
+        //    StreamReader sr = new StreamReader(input);
+        //    string s = sr.ReadToEnd();
+        //    sr.Dispose();
+        //        NameValueCollection qs = HttpUtility.ParseQueryString(s);
 
-    //        return View();
-    //}
+        //        return View();
+        //}
 
         #region Withdraw
         public ActionResult Withdraw()
+        {
+            string userName = (string)Session["LOGGED_USERNAME"];
+            string clientCode = (string)Session["LOGGEDUSER_ID"];
+            string name = (string)Session["LOGGEDUSER_NAME"];
+            string userType = (string)Session["LOGGED_USERTYPE"];
+
+            TempData["userType"] = userType;
+
+            if (TempData["userType"] != null)
             {
-                string userName = (string)Session["LOGGED_USERNAME"];
-                string clientCode = (string)Session["LOGGEDUSER_ID"];
-                string name = (string)Session["LOGGEDUSER_NAME"];
-                string userType = (string)Session["LOGGED_USERTYPE"];
+                this.ViewData["userType"] = this.TempData["userType"];
+                ViewBag.UserType = this.TempData["userType"];
+                ViewBag.Name = name;
 
-                TempData["userType"] = userType;
-
-                if (TempData["userType"] != null)
+                ///start milayako
+                MNBalance availBaln = new MNBalance();
+                DataTable dtableUser1 = AvailBalnUtils.GetAvailBaln(clientCode);
+                if (dtableUser1 != null && dtableUser1.Rows.Count > 0)
                 {
-                    this.ViewData["userType"] = this.TempData["userType"];
-                    ViewBag.UserType = this.TempData["userType"];
-                    ViewBag.Name = name;
+                    availBaln.amount = dtableUser1.Rows[0]["AvailBaln"].ToString();
 
-                    ///start milayako
-                    MNBalance availBaln = new MNBalance();
-                    DataTable dtableUser1 = AvailBalnUtils.GetAvailBaln(clientCode);
-                    if (dtableUser1 != null && dtableUser1.Rows.Count > 0)
-                    {
-                        availBaln.amount = dtableUser1.Rows[0]["AvailBaln"].ToString();
-
-                        ViewBag.AvailBalnAmount = availBaln.amount;
-                    }
-                    UserInfo userInfo = new UserInfo();
-
-                    //Check KYC
-                    DataTable dtableUserCheckKYC = ProfileUtils.CheckKYC(userName);
-                    if (dtableUserCheckKYC != null && dtableUserCheckKYC.Rows.Count > 0)
-                    {
-                        userInfo.hasKYC = dtableUserCheckKYC.Rows[0]["hasKYC"].ToString();
-                        userInfo.IsRejected = dtableUserCheckKYC.Rows[0]["IsRejected"].ToString();
-
-                        ViewBag.hasKYC = userInfo.hasKYC;
-                        ViewBag.IsRejected = userInfo.IsRejected;
-                    }
-
-                    //Check Link Bank Account
-                    DataTable dtableUserCheckLinkBankAcc = ProfileUtils.CheckLinkBankAcc(userName);
-                    if (dtableUserCheckLinkBankAcc != null && dtableUserCheckLinkBankAcc.Rows.Count > 0)
-                    {
-                        userInfo.BankAccountNumber = dtableUserCheckLinkBankAcc.Rows[0]["HasBankKYC"].ToString();
-
-                        ViewBag.HasBankKYC = userInfo.BankAccountNumber;
-                    }
-
-                    //For Profile Pic//
-                    DataSet DSet = ProfileUtils.GetCusDetailProfileInfoDS(clientCode);
-                    DataTable dKYC = DSet.Tables["dtKycDetail"];
-                    DataTable dDoc = DSet.Tables["dtKycDoc"];
-                    if (dKYC != null && dKYC.Rows.Count > 0)
-                    {
-                        userInfo.CustStatus = dKYC.Rows[0]["CustStatus"].ToString();
-                        ViewBag.CustStatus = userInfo.CustStatus;
-                    }
-                    if (dDoc != null && dDoc.Rows.Count > 0)
-                    {
-                        userInfo.PassportImage = dDoc.Rows[0]["PassportImage"].ToString();
-                        ViewBag.PassportImage = userInfo.PassportImage;
-                    }
-                    //end milayako
-
-
-                    if (this.ViewData["fundTransfer_messsage"] != null)
-                    {
-                        this.ViewData["fundTransfer_messsage"] = this.TempData["fundTransfer_messsage"];
-                        this.ViewData["message_class"] = this.TempData["message_class"];
-                    }
-
-                    ViewBag.SenderMobileNo = userName;
-
-                    int id = TraceIdGenerator.GetID() + 1;
-                    string stringid = (id).ToString();//this.GetID() + 1
-                    string traceID = stringid.PadLeft(11, '0') + 'W';
-                    ViewBag.TraceID = traceID;
-
-                    return View();
+                    ViewBag.AvailBalnAmount = availBaln.amount;
                 }
-                else
+                UserInfo userInfo = new UserInfo();
+
+                //Check KYC
+                DataTable dtableUserCheckKYC = ProfileUtils.CheckKYC(userName);
+                if (dtableUserCheckKYC != null && dtableUserCheckKYC.Rows.Count > 0)
                 {
-                    return RedirectToAction("Index", "Login");
+                    userInfo.hasKYC = dtableUserCheckKYC.Rows[0]["hasKYC"].ToString();
+                    userInfo.IsRejected = dtableUserCheckKYC.Rows[0]["IsRejected"].ToString();
+
+                    ViewBag.hasKYC = userInfo.hasKYC;
+                    ViewBag.IsRejected = userInfo.IsRejected;
                 }
+
+                //Check Link Bank Account
+                DataTable dtableUserCheckLinkBankAcc = ProfileUtils.CheckLinkBankAcc(userName);
+                if (dtableUserCheckLinkBankAcc != null && dtableUserCheckLinkBankAcc.Rows.Count > 0)
+                {
+                    userInfo.BankAccountNumber = dtableUserCheckLinkBankAcc.Rows[0]["HasBankKYC"].ToString();
+
+                    ViewBag.HasBankKYC = userInfo.BankAccountNumber;
+                }
+
+                //For Profile Pic//
+                DataSet DSet = ProfileUtils.GetCusDetailProfileInfoDS(clientCode);
+                DataTable dKYC = DSet.Tables["dtKycDetail"];
+                DataTable dDoc = DSet.Tables["dtKycDoc"];
+                if (dKYC != null && dKYC.Rows.Count > 0)
+                {
+                    userInfo.CustStatus = dKYC.Rows[0]["CustStatus"].ToString();
+                    ViewBag.CustStatus = userInfo.CustStatus;
+                }
+                if (dDoc != null && dDoc.Rows.Count > 0)
+                {
+                    userInfo.PassportImage = dDoc.Rows[0]["PassportImage"].ToString();
+                    ViewBag.PassportImage = userInfo.PassportImage;
+                }
+                //end milayako
+
+
+                if (this.ViewData["fundTransfer_messsage"] != null)
+                {
+                    this.ViewData["fundTransfer_messsage"] = this.TempData["fundTransfer_messsage"];
+                    this.ViewData["message_class"] = this.TempData["message_class"];
+                }
+
+                ViewBag.SenderMobileNo = userName;
+
+                int id = TraceIdGenerator.GetID() + 1;
+                string stringid = (id).ToString();//this.GetID() + 1
+                string traceID = stringid.PadLeft(11, '0') + 'W';
+                ViewBag.TraceID = traceID;
+
+                return View();
             }
+            else
+            {
+                return RedirectToAction("Index", "Login");
+            }
+        }
         #endregion
 
         #region ebanking test api call
-        
+
         public async Task<ActionResult> FundTransferTran1() //async Task<ActionResult>
         //MNFundTransfer _ft
         {
@@ -973,7 +971,7 @@ namespace CustApp.Controllers
 
         }
 
-        
+
         #endregion
 
 
@@ -1086,6 +1084,6 @@ namespace CustApp.Controllers
             else
                 return View();
         }
-      
+
     }
 }

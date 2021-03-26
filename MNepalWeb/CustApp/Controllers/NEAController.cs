@@ -1,19 +1,17 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
+﻿using CustApp.App_Start;
+using CustApp.Helper;
 using CustApp.Models;
 using CustApp.Utilities;
-using System.Web.Mvc;
-using System.Data;
-using System.Net.Http;
-using CustApp.Helper;
-using System.IO;
-using CustApp.App_Start;
-using System.Web.Script.Serialization;
 using Newtonsoft.Json.Linq;
-using System.Threading.Tasks;
+using System;
+using System.Collections.Generic;
+using System.Data;
+using System.IO;
 using System.Net;
+using System.Net.Http;
+using System.Threading.Tasks;
+using System.Web.Mvc;
+using System.Web.Script.Serialization;
 
 namespace CustApp.Controllers
 {
@@ -451,7 +449,7 @@ namespace CustApp.Controllers
                 return RedirectToAction("Index", "Login");
             }
         }
-        
+
         #endregion
 
         #region "POST: NEA ExecutePayment"
@@ -698,13 +696,13 @@ namespace CustApp.Controllers
             }
             else
             {
-               // return Json(new { responseCode = "400", responseText = "Please refresh the page again." },
+                // return Json(new { responseCode = "400", responseText = "Please refresh the page again." },
                 return Json(new { responseCode = "400", responseText = "Please refresh the page again.", blockMessage = BlockMessage },
                             JsonRequestBehavior.AllowGet);
             }
 
         }
-        
+
         #endregion
 
         #region Get NEA Branch Name

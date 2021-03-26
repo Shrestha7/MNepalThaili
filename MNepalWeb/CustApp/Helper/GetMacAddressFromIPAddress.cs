@@ -1,12 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Diagnostics;
-using System.Linq;
 using System.Net;
 using System.Net.NetworkInformation;
 using System.Runtime.InteropServices;
 using System.Text;
-using System.Web;
 
 namespace CustApp.Helper
 {
@@ -14,277 +11,277 @@ namespace CustApp.Helper
     {
         /// <summary> Ping timeout (in ms) </summary>
 
-            private const int PING_TIMEOUT = 1000;
+        private const int PING_TIMEOUT = 1000;
 
-            // *********************************************************************
-            /// <summary>
-            /// Initializes a new instance of <see cref="GetMacAddressFromIPAddress"/>.
-            /// </summary>
+        // *********************************************************************
+        /// <summary>
+        /// Initializes a new instance of <see cref="GetMacAddressFromIPAddress"/>.
+        /// </summary>
 
-            public GetMacAddressFromIPAddress()
+        public GetMacAddressFromIPAddress()
+        {
+
+        }
+
+
+
+        // *********************************************************************
+        /// <summary>
+        /// Gets the MAC address from specified <paramref name="IPAddress"/>
+        /// using nbtstat in hyphen (-) separated format.
+        /// </summary>
+        /// <remarks>
+        /// <para>
+        /// The same class can be modified to accept hostname and then resolve
+        /// the hostname to Ip address to get the MAC address or just pass "-a"
+        /// argument to "nbtstat" to get the mac address from hostname. If you
+        /// want to find the MAC address from only the IP address change the
+        /// switch to "-A".
+        /// </para>
+        /// <para>
+        /// The current program can resolve both hostname as well as IP address
+        /// to MAC address. The "-a" argument can actually accept both IP address
+        /// as well as hostname.
+        /// </para>
+
+        /// </remarks>
+
+        /// <param name="ipAddress">The IP address or hostname for the machine
+
+        /// for which the MAC address is desired.</param>
+
+        /// <returns>A string containing the MAC address if MAC address could be
+
+        /// found.An empty or null string otherwise.</returns>
+
+        public string GetMacAddress(string ipAddress)
+        {
+            string macAddress = string.Empty;
+
+            if (!IsHostAccessible(ipAddress)) return null;
+
+            try
             {
 
-            }
+                ProcessStartInfo processStartInfo = new ProcessStartInfo();
 
-    
+                Process process = new Process();
 
-            // *********************************************************************
-            /// <summary>
-            /// Gets the MAC address from specified <paramref name="IPAddress"/>
-            /// using nbtstat in hyphen (-) separated format.
-            /// </summary>
-            /// <remarks>
-            /// <para>
-            /// The same class can be modified to accept hostname and then resolve
-            /// the hostname to Ip address to get the MAC address or just pass "-a"
-            /// argument to "nbtstat" to get the mac address from hostname. If you
-            /// want to find the MAC address from only the IP address change the
-            /// switch to "-A".
-            /// </para>
-            /// <para>
-            /// The current program can resolve both hostname as well as IP address
-            /// to MAC address. The "-a" argument can actually accept both IP address
-            /// as well as hostname.
-            /// </para>
+                processStartInfo.FileName = "nbtstat";
 
-            /// </remarks>
+                processStartInfo.RedirectStandardInput = false;
 
-            /// <param name="ipAddress">The IP address or hostname for the machine
+                processStartInfo.RedirectStandardOutput = true;
 
-            /// for which the MAC address is desired.</param>
+                processStartInfo.Arguments = "-a " + ipAddress;
 
-            /// <returns>A string containing the MAC address if MAC address could be
-
-            /// found.An empty or null string otherwise.</returns>
-
-            public string GetMacAddress(string ipAddress)
-            {
-                string macAddress = string.Empty;
-
-                if (!IsHostAccessible(ipAddress)) return null;
-
-                try
-                {
-
-                    ProcessStartInfo processStartInfo = new ProcessStartInfo();
-
-                    Process process = new Process();
-
-                    processStartInfo.FileName = "nbtstat";
-
-                    processStartInfo.RedirectStandardInput = false;
-
-                    processStartInfo.RedirectStandardOutput = true;
-
-                    processStartInfo.Arguments = "-a " + ipAddress;
-
-                    processStartInfo.UseShellExecute = false;
+                processStartInfo.UseShellExecute = false;
 
                 process = Process.Start(processStartInfo);
 
                 int Counter = -1;
 
-                    while (Counter <= -1)
+                while (Counter <= -1)
+                {
+
+                    // Look for the words "mac address" in the output.
+                    // The output usually looks likes this:
+
+                    // Local Area Connection:
+
+                    //Node IpAddress: [13.15.111.222] Scope Id: []
+
+                    //           NetBIOS Remote Machine Name Table
+                    //       Name               Type        Status
+                    //    --------------------------------------------
+
+                    //    SAMGLS0790W    <00>  UNIQUE      Registered
+                    //    SAMPLS0790W    <20>  UNIQUE      Registered
+                    //    NA            <00>  GROUP       Registered
+                    //    MAC Address = 00-21-70-2B-A5-43
+
+
+
+                    Counter = macAddress.Trim().ToLower().IndexOf("mac address", 0);
+
+                    if (Counter > -1)
                     {
-
-                        // Look for the words "mac address" in the output.
-                        // The output usually looks likes this:
-
-                        // Local Area Connection:
-
-                        //Node IpAddress: [13.15.111.222] Scope Id: []
-
-                        //           NetBIOS Remote Machine Name Table
-                        //       Name               Type        Status
-                        //    --------------------------------------------
-
-                        //    SAMGLS0790W    <00>  UNIQUE      Registered
-                        //    SAMPLS0790W    <20>  UNIQUE      Registered
-                        //    NA            <00>  GROUP       Registered
-                        //    MAC Address = 00-21-70-2B-A5-43
-
-    
-
-                        Counter = macAddress.Trim().ToLower().IndexOf("mac address", 0);
-
-                        if (Counter > -1)
-                        {
-                            break;
-                        }
-                        macAddress = process.StandardOutput.ReadLine();
+                        break;
                     }
-
-                    process.WaitForExit();
-
-                    macAddress = macAddress.Trim();
-
+                    macAddress = process.StandardOutput.ReadLine();
                 }
 
-               catch (Exception e)
-               {
-                   // Something unexpected happened? Inform the user
-                   // The possibilities are:
-                   // 1.That the machine is not on the network currently
-                   // 2. The IP address/hostname supplied are not on the same network
-                   // 3. The host was not found on the same subnet or could not be
-                   //    resolved
-                   Console.WriteLine("Failed because:" + e.ToString());
+                process.WaitForExit();
 
-               }
+                macAddress = macAddress.Trim();
 
-               return macAddress;
+            }
 
-           }
+            catch (Exception e)
+            {
+                // Something unexpected happened? Inform the user
+                // The possibilities are:
+                // 1.That the machine is not on the network currently
+                // 2. The IP address/hostname supplied are not on the same network
+                // 3. The host was not found on the same subnet or could not be
+                //    resolved
+                Console.WriteLine("Failed because:" + e.ToString());
 
-   
+            }
 
-           #region Getting MAC from ARP
+            return macAddress;
 
-   
+        }
 
-           [DllImport("iphlpapi.dll", ExactSpelling = true)]
 
-           static extern int SendARP(int DestIP, int SrcIP, byte[] pMacAddr,
-               ref uint PhyAddrLen);
 
-   
+        #region Getting MAC from ARP
 
-           // *********************************************************************
-           /// <summary>
-           /// Gets the MAC address from ARP table in colon (:) separated format.
-           /// </summary>
-           /// <param name="hostNameOrAddress">Host name or IP address of the
-           /// remote host for which MAC address is desired.</param>
-           /// <returns>A string containing MAC address; null if MAC address could
-           /// not be found.</returns>
 
-           private string GetMACAddressFromARP(string hostNameOrAddress)
-           {
 
-               if (!IsHostAccessible(hostNameOrAddress)) return null;
+        [DllImport("iphlpapi.dll", ExactSpelling = true)]
 
-   
+        static extern int SendARP(int DestIP, int SrcIP, byte[] pMacAddr,
+            ref uint PhyAddrLen);
 
-               IPHostEntry hostEntry = Dns.GetHostEntry(hostNameOrAddress);
-               if (hostEntry.AddressList.Length == 0)
-                   return null;
 
-               byte[] macAddr = new byte[6];
 
-               uint macAddrLen = (uint)macAddr.Length;
+        // *********************************************************************
+        /// <summary>
+        /// Gets the MAC address from ARP table in colon (:) separated format.
+        /// </summary>
+        /// <param name="hostNameOrAddress">Host name or IP address of the
+        /// remote host for which MAC address is desired.</param>
+        /// <returns>A string containing MAC address; null if MAC address could
+        /// not be found.</returns>
 
-               if (SendARP((int) hostEntry.AddressList[0].Address, 0, macAddr,
+        private string GetMACAddressFromARP(string hostNameOrAddress)
+        {
 
-                   ref macAddrLen) != 0)
+            if (!IsHostAccessible(hostNameOrAddress)) return null;
 
-                   return null;
 
-   
 
-               StringBuilder macAddressString = new StringBuilder();
+            IPHostEntry hostEntry = Dns.GetHostEntry(hostNameOrAddress);
+            if (hostEntry.AddressList.Length == 0)
+                return null;
 
-               for (int i = 0; i<macAddr.Length; i++)
-               {
+            byte[] macAddr = new byte[6];
 
-                   if (macAddressString.Length > 0)
+            uint macAddrLen = (uint)macAddr.Length;
 
-                       macAddressString.Append(":");
-   
+            if (SendARP((int)hostEntry.AddressList[0].Address, 0, macAddr,
 
-                   macAddressString.AppendFormat("{0:x2}", macAddr[i]);
+                ref macAddrLen) != 0)
 
-               }
+                return null;
 
-   
 
-               return macAddressString.ToString();
 
-           } // end GetMACAddressFromARP
+            StringBuilder macAddressString = new StringBuilder();
 
-   
+            for (int i = 0; i < macAddr.Length; i++)
+            {
 
-           #endregion Getting MAC from ARP
+                if (macAddressString.Length > 0)
 
-   
+                    macAddressString.Append(":");
 
-           // *********************************************************************
 
-           /// <summary>
+                macAddressString.AppendFormat("{0:x2}", macAddr[i]);
 
-           /// Checks to see if the host specified by
+            }
 
-           /// <paramref name="hostNameOrAddress"/> is currently accessible.
 
-           /// </summary>
 
-           /// <param name="hostNameOrAddress">Host name or IP address of the
+            return macAddressString.ToString();
 
-           /// remote host for which MAC address is desired.</param>
+        } // end GetMACAddressFromARP
 
-           /// <returns><see langword="true" /> if the host is currently accessible;
 
-           /// <see langword="false"/> otherwise.</returns>
 
-           private static bool IsHostAccessible(string hostNameOrAddress)
+        #endregion Getting MAC from ARP
 
-           {
 
-               Ping ping = new Ping();
 
-               PingReply reply = ping.Send(hostNameOrAddress, PING_TIMEOUT);
+        // *********************************************************************
 
-               return reply.Status == IPStatus.Success;
+        /// <summary>
 
-           }
+        /// Checks to see if the host specified by
 
-   
+        /// <paramref name="hostNameOrAddress"/> is currently accessible.
 
-           // *********************************************************************
-           /// <summary>
-           /// The netry point for the application.
-           /// </summary>
-           /// <param name="args">An array of command line arguments.</param>
-           
-           [STAThread]
-           static void Main(string[] args)
-           {
-               bool macRequired = true;
+        /// </summary>
 
-               while (macRequired)
-               {
+        /// <param name="hostNameOrAddress">Host name or IP address of the
 
-                   Console.WriteLine("Enter the IP address for which mac address is " +
+        /// remote host for which MAC address is desired.</param>
 
-                                   "required:(Enter exit to quit the program.)");
+        /// <returns><see langword="true" /> if the host is currently accessible;
 
-                   string ipAddress = Console.ReadLine();
+        /// <see langword="false"/> otherwise.</returns>
 
-                   StringComparer cp = StringComparer.OrdinalIgnoreCase;
+        private static bool IsHostAccessible(string hostNameOrAddress)
 
-                   if (cp.Compare(ipAddress, "Exit") == 0) break;
+        {
 
-   
+            Ping ping = new Ping();
 
-                   GetMacAddressFromIPAddress getMacAddress =
+            PingReply reply = ping.Send(hostNameOrAddress, PING_TIMEOUT);
 
-                       new GetMacAddressFromIPAddress();
+            return reply.Status == IPStatus.Success;
 
-   
+        }
 
-                   Console.WriteLine("Please wait while I try to find the MAC address...");
 
-                   // You may also use the ARP table. Call GetMACAddressFromARP here
 
-                   string MacAddress = getMacAddress.GetMacAddress(ipAddress);
+        // *********************************************************************
+        /// <summary>
+        /// The netry point for the application.
+        /// </summary>
+        /// <param name="args">An array of command line arguments.</param>
 
-   
+        [STAThread]
+        static void Main(string[] args)
+        {
+            bool macRequired = true;
 
-                   Console.WriteLine(MacAddress);
+            while (macRequired)
+            {
 
-               } // end while
+                Console.WriteLine("Enter the IP address for which mac address is " +
 
-           }
+                                "required:(Enter exit to quit the program.)");
 
-  
+                string ipAddress = Console.ReadLine();
+
+                StringComparer cp = StringComparer.OrdinalIgnoreCase;
+
+                if (cp.Compare(ipAddress, "Exit") == 0) break;
+
+
+
+                GetMacAddressFromIPAddress getMacAddress =
+
+                    new GetMacAddressFromIPAddress();
+
+
+
+                Console.WriteLine("Please wait while I try to find the MAC address...");
+
+                // You may also use the ARP table. Call GetMACAddressFromARP here
+
+                string MacAddress = getMacAddress.GetMacAddress(ipAddress);
+
+
+
+                Console.WriteLine(MacAddress);
+
+            } // end while
+
+        }
+
+
     }  // end class GetMacAddressFromIPAddress
 }

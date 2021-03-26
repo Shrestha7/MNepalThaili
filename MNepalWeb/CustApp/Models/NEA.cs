@@ -1,12 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-using System.ComponentModel.DataAnnotations;
-
-namespace CustApp.Models
+﻿namespace CustApp.Models
 {
-   
+
     public class NEAFundTransfer
     {
         public NEAFundTransfer(string tid, string sc, string mobile, string sa, string amount, string da, string note, string TPin, string SCNo, string NEABranchName, string CustomerID, string Remarks)

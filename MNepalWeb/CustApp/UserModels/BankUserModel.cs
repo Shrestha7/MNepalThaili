@@ -23,7 +23,7 @@ namespace CustApp.UserModels
                 try
                 {
                     connection.Open();
-                    
+
                     using (SqlCommand cmdBank = new SqlCommand("s_MNBankTable", connection, transaction))
                     {
 
@@ -36,7 +36,7 @@ namespace CustApp.UserModels
                     }
                     if (connection.State != ConnectionState.Closed)
                         connection.Close();
-                    
+
                     return dsBank;
                 }
                 catch (ArithmeticException ex)
@@ -77,7 +77,7 @@ namespace CustApp.UserModels
                         cmd.Parameters.Add("@mode", SqlDbType.NVarChar).Value = objUserInfo.Mode;
                         cmd.CommandType = CommandType.StoredProcedure;
 
-                        
+
                         using (SqlDataAdapter daBank = new SqlDataAdapter(cmd))
                         {
                             daBank.Fill(ds);

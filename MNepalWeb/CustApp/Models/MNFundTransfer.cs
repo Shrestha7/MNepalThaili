@@ -1,9 +1,4 @@
-﻿﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-
-namespace CustApp.Models
+﻿namespace CustApp.Models
 {
     public class MNFundTransfer//:ReplyMessage
     {
@@ -18,9 +13,9 @@ namespace CustApp.Models
             this.pin = pin;
             this.note = note;
             this.sourcechannel = sourcechannel;
-        } 
-        
-      
+        }
+
+
 
         public MNFundTransfer()
         {
@@ -41,7 +36,7 @@ namespace CustApp.Models
         public string note { get; set; }
         public string sourcechannel { get; set; }
         public string prod { get; set; }
-       
+
         public bool valid()
         {
             if (this.tid != "" && this.sc != "" && this.mobile != "" && this.amount != "")

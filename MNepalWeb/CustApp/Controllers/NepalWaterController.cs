@@ -7,11 +7,9 @@ using System;
 using System.Collections.Generic;
 using System.Data;
 using System.IO;
-using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
-using System.Web;
 using System.Web.Mvc;
 using System.Web.Script.Serialization;
 
@@ -598,7 +596,7 @@ namespace CustApp.Controllers
                     string ava = string.Empty;
                     string avatra = string.Empty;
                     string avamsg = string.Empty;
-                   // string BlockMessage = LoginUtils.GetMessage("01");
+                    // string BlockMessage = LoginUtils.GetMessage("01");
                     try
                     {
                         if (_res.IsSuccessStatusCode)
@@ -625,9 +623,9 @@ namespace CustApp.Controllers
                                     responseCode = code;
                                 }
                             }
-                           // return Json(new { responseCode = responseCode, responseText = respmsg },
-                             return Json(new { responseCode = responseCode, responseText = respmsg, blockMessage = BlockMessage },
-                      JsonRequestBehavior.AllowGet);
+                            // return Json(new { responseCode = responseCode, responseText = respmsg },
+                            return Json(new { responseCode = responseCode, responseText = respmsg, blockMessage = BlockMessage },
+                     JsonRequestBehavior.AllowGet);
                         }
                         else
                         {

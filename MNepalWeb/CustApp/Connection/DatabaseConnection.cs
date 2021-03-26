@@ -1,10 +1,8 @@
 ﻿using Microsoft.Practices.EnterpriseLibrary.Data;
 using Microsoft.Practices.EnterpriseLibrary.Data.Sql;
 using System;
-using System.Collections.Generic;
 using System.Configuration;
 using System.Data.SqlClient;
-using System.Linq;
 using System.Web;
 
 namespace CustApp.Connection
@@ -18,15 +16,15 @@ namespace CustApp.Connection
         {
             get
             {
-               // return ConfigurationManager.ConnectionStrings["MNepalDBConnectionString"].ConnectionString;
+                // return ConfigurationManager.ConnectionStrings["MNepalDBConnectionString"].ConnectionString;
 
                 ConnectionStringSettings settings =
                     ConfigurationManager.ConnectionStrings["MNepalDBConnectionString"];
                 string connectString = settings.ConnectionString;
                 SqlConnectionStringBuilder builder = new SqlConnectionStringBuilder(connectString);
-                if(HttpContext.Current.Session["UserName"]!=null)
+                if (HttpContext.Current.Session["UserName"] != null)
                 {
-                    builder.WorkstationID = HttpContext.Current.Session["UserName"].ToString()+"|"+HttpContext.Current.Session["UserBranch"];
+                    builder.WorkstationID = HttpContext.Current.Session["UserName"].ToString() + "|" + HttpContext.Current.Session["UserBranch"];
                 }
 
                 return builder.ToString();

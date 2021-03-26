@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Web;
 
 namespace CustApp.ViewModel
 {
@@ -18,20 +14,22 @@ namespace CustApp.ViewModel
         //public string TraceNo { get; set; }
         //public string TrasStatus { get; set; }
         //public string RetrievalRef { get; set; }
-        
-        public string Balance {
-          get {
+
+        public string Balance
+        {
+            get
+            {
                 return _Balance;
             }
             set
             {
                 _Balance = string.Format("{0:n}", Decimal.Parse(value == "" ? "0" : value));
             }
-       }
-      
+        }
+
         public string Status { get; set; }
 
-       
+
         public string Debit
         {
             get
@@ -44,12 +42,13 @@ namespace CustApp.ViewModel
                 //{
                 //    value=value.Substring(1);
                 //}
-              _Debit = string.Format("{0:n}", Decimal.Parse(value == "" ? "0" : value));
+                _Debit = string.Format("{0:n}", Decimal.Parse(value == "" ? "0" : value));
             }
         }
 
-        
-        public string Credit {
+
+        public string Credit
+        {
             get
             {
                 return _Credit;
@@ -62,7 +61,7 @@ namespace CustApp.ViewModel
 
         public string Desc2 { get; set; }
 
-        public string  TimeStamp{ get; set; }
+        public string TimeStamp { get; set; }
 
 
 

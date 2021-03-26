@@ -6,17 +6,14 @@ using CustApp.ViewModel;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.IO;
-using System.Linq;
+using System.Net;
 using System.Net.Http;
+using System.Security.Cryptography;
 using System.Threading.Tasks;
-using System.Web;
 using System.Web.Mvc;
 using System.Web.Script.Serialization;
-using System.Data;
-using System.Web.Helpers;
-using System.Security.Cryptography;
-using System.Net;
 
 namespace CustApp.Controllers
 {
@@ -210,7 +207,7 @@ namespace CustApp.Controllers
                 ViewBag.UserType = this.TempData["userType"];
                 ViewBag.Name = name;
 
-            
+
 
                 ///start milayako
                 MNBalance availBaln = new MNBalance();
@@ -343,9 +340,9 @@ namespace CustApp.Controllers
                                     responseCode = code;
                                 }
                             }
-                           // return Json(new { responseCode = responseCode, responseText = respmsg },
-                       return Json(new { responseCode = responseCode, responseText = respmsg, blockMessage = BlockMessage },
-                       JsonRequestBehavior.AllowGet);
+                            // return Json(new { responseCode = responseCode, responseText = respmsg },
+                            return Json(new { responseCode = responseCode, responseText = respmsg, blockMessage = BlockMessage },
+                            JsonRequestBehavior.AllowGet);
 
                             //JsonParse msg = ser.Deserialize<JsonParse>(message);
                             //if (msg.StatusCode == "200")
@@ -388,9 +385,9 @@ namespace CustApp.Controllers
                             message = json.d;
                             if (message == null)
                             {
-                               // return Json(new { responseCode = responseCode, responseText = responsetext },
-                             return Json(new { responseCode = responseCode, responseText = responsetext, blockMessage = BlockMessage },
-                           JsonRequestBehavior.AllowGet);
+                                // return Json(new { responseCode = responseCode, responseText = responsetext },
+                                return Json(new { responseCode = responseCode, responseText = responsetext, blockMessage = BlockMessage },
+                              JsonRequestBehavior.AllowGet);
                             }
                             else
                             {
@@ -399,8 +396,8 @@ namespace CustApp.Controllers
                                 //  message = (string)item["StatusMessage"];
                                 //end 01
                                 //return Json(new { responseCode = responseCode, responseText = (string)item["StatusMessage"] },
-                               return Json(new { responseCode = responseCode, responseText = (string)item["StatusMessage"], blockMessage = BlockMessage },
-                                JsonRequestBehavior.AllowGet);
+                                return Json(new { responseCode = responseCode, responseText = (string)item["StatusMessage"], blockMessage = BlockMessage },
+                                 JsonRequestBehavior.AllowGet);
                             }
 
                             //    string StatusMessage = "";
@@ -430,9 +427,9 @@ namespace CustApp.Controllers
                     }
                     catch (Exception ex)
                     {
-                       //return Json(new { responseCode = "400", responseText = ex.Message },
-                          return Json(new { responseCode = "400", responseText = ex.Message, blockMessage = BlockMessage },
-                          JsonRequestBehavior.AllowGet);
+                        //return Json(new { responseCode = "400", responseText = ex.Message },
+                        return Json(new { responseCode = "400", responseText = ex.Message, blockMessage = BlockMessage },
+                        JsonRequestBehavior.AllowGet);
                     }
 
                     this.TempData["topup_messsage"] = result
@@ -445,7 +442,7 @@ namespace CustApp.Controllers
             }
             else
             {
-               // return Json(new { responseCode = "400", responseText = "Please refresh the page again." },
+                // return Json(new { responseCode = "400", responseText = "Please refresh the page again." },
                 return Json(new { responseCode = "400", responseText = "Please refresh the page again.", blockMessage = BlockMessage },
                             JsonRequestBehavior.AllowGet);
             }
@@ -693,9 +690,9 @@ namespace CustApp.Controllers
                                     responseCode = code;
                                 }
                             }
-                           // return Json(new { responseCode = responseCode, responseText = respmsg },
-                           return Json(new { responseCode = responseCode, responseText = respmsg, blockMessage = BlockMessage },
-                     JsonRequestBehavior.AllowGet);
+                            // return Json(new { responseCode = responseCode, responseText = respmsg },
+                            return Json(new { responseCode = responseCode, responseText = respmsg, blockMessage = BlockMessage },
+                      JsonRequestBehavior.AllowGet);
 
 
                             //JsonParse msg = ser.Deserialize<JsonParse>(message);
@@ -737,16 +734,16 @@ namespace CustApp.Controllers
                             if (message == null)
                             {
                                 //return Json(new { responseCode = responseCode, responseText = responsetext },
-                            return Json(new { responseCode = responseCode, responseText = responsetext, blockMessage = BlockMessage },
-                    JsonRequestBehavior.AllowGet);
+                                return Json(new { responseCode = responseCode, responseText = responsetext, blockMessage = BlockMessage },
+                        JsonRequestBehavior.AllowGet);
                             }
 
                             else
                             {
                                 dynamic item = JValue.Parse(message);
-                              //  return Json(new { responseCode = responseCode, responseText = (string)item["StatusMessage"] },
-                                  return Json(new { responseCode = responseCode, responseText = (string)item["StatusMessage"], blockMessage = BlockMessage },
-                           JsonRequestBehavior.AllowGet);
+                                //  return Json(new { responseCode = responseCode, responseText = (string)item["StatusMessage"] },
+                                return Json(new { responseCode = responseCode, responseText = (string)item["StatusMessage"], blockMessage = BlockMessage },
+                         JsonRequestBehavior.AllowGet);
 
                             }
 
@@ -756,9 +753,9 @@ namespace CustApp.Controllers
 
                     catch (Exception ex)
                     {
-                       // return Json(new { responseCode = "400", responseText = ex.Message },
-                         return Json(new { responseCode = "400", responseText = ex.Message, blockMessage = BlockMessage },
-                   JsonRequestBehavior.AllowGet);
+                        // return Json(new { responseCode = "400", responseText = ex.Message },
+                        return Json(new { responseCode = "400", responseText = ex.Message, blockMessage = BlockMessage },
+                  JsonRequestBehavior.AllowGet);
                     }
 
                     this.TempData["topup_messsage"] = result
@@ -986,7 +983,7 @@ namespace CustApp.Controllers
                                     responseCode = code;
                                 }
                             }
-                          //  return Json(new { responseCode = responseCode, responseText = respmsg },
+                            //  return Json(new { responseCode = responseCode, responseText = respmsg },
                             return Json(new { responseCode = responseCode, responseText = respmsg, blockMessage = BlockMessage },
                       JsonRequestBehavior.AllowGet);
                             //JsonParse msg = ser.Deserialize<JsonParse>(message);
@@ -1027,16 +1024,16 @@ namespace CustApp.Controllers
                             message = json.d;
                             if (message == null)
                             {
-                               // return Json(new { responseCode = responseCode, responseText = responsetext },
-                            return Json(new { responseCode = responseCode, responseText = responsetext, blockMessage = BlockMessage },
-                            JsonRequestBehavior.AllowGet);
+                                // return Json(new { responseCode = responseCode, responseText = responsetext },
+                                return Json(new { responseCode = responseCode, responseText = responsetext, blockMessage = BlockMessage },
+                                JsonRequestBehavior.AllowGet);
                             }
                             else
                             {
                                 dynamic item = JValue.Parse(message);
-                               // return Json(new { responseCode = responseCode, responseText = (string)item["StatusMessage"] },
-                                 return Json(new { responseCode = responseCode, responseText = (string)item["StatusMessage"], blockMessage = BlockMessage },
-                         JsonRequestBehavior.AllowGet);
+                                // return Json(new { responseCode = responseCode, responseText = (string)item["StatusMessage"] },
+                                return Json(new { responseCode = responseCode, responseText = (string)item["StatusMessage"], blockMessage = BlockMessage },
+                        JsonRequestBehavior.AllowGet);
 
 
 
@@ -1050,9 +1047,9 @@ namespace CustApp.Controllers
                     }
                     catch (Exception ex)
                     {
-                       // return Json(new { responseCode = "400", responseText = ex.Message },
-                       return Json(new { responseCode = "400", responseText = ex.Message, blockMessage = BlockMessage },
-                   JsonRequestBehavior.AllowGet);
+                        // return Json(new { responseCode = "400", responseText = ex.Message },
+                        return Json(new { responseCode = "400", responseText = ex.Message, blockMessage = BlockMessage },
+                    JsonRequestBehavior.AllowGet);
                     }
 
                     this.TempData["topup_messsage"] = result
@@ -1065,7 +1062,7 @@ namespace CustApp.Controllers
             }
             else
             {
-               // return Json(new { responseCode = "400", responseText = "Please refresh the page again." },
+                // return Json(new { responseCode = "400", responseText = "Please refresh the page again." },
                 return Json(new { responseCode = "400", responseText = "Please refresh the page again.", blockMessage = BlockMessage },
                             JsonRequestBehavior.AllowGet);
             }
@@ -1278,9 +1275,9 @@ namespace CustApp.Controllers
                                     responseCode = code;
                                 }
                             }
-                          //  return Json(new { responseCode = responseCode, responseText = respmsg },
-                 return Json(new { responseCode = responseCode, responseText = respmsg, blockMessage = BlockMessage },
-                  JsonRequestBehavior.AllowGet);
+                            //  return Json(new { responseCode = responseCode, responseText = respmsg },
+                            return Json(new { responseCode = responseCode, responseText = respmsg, blockMessage = BlockMessage },
+                             JsonRequestBehavior.AllowGet);
 
 
                         }
@@ -1293,9 +1290,9 @@ namespace CustApp.Controllers
                             message = json.d;
                             if (message == null)
                             {
-                               // return Json(new { responseCode = responseCode, responseText = responsetext },
-                             return Json(new { responseCode = responseCode, responseText = responsetext, blockMessage = BlockMessage },
-                       JsonRequestBehavior.AllowGet);
+                                // return Json(new { responseCode = responseCode, responseText = responsetext },
+                                return Json(new { responseCode = responseCode, responseText = responsetext, blockMessage = BlockMessage },
+                          JsonRequestBehavior.AllowGet);
                             }
                             else
                             {
@@ -1303,9 +1300,9 @@ namespace CustApp.Controllers
                                 //start 01
                                 //  message = (string)item["StatusMessage"];
                                 //end 01
-                               // return Json(new { responseCode = responseCode, responseText = (string)item["StatusMessage"] },
-                                 return Json(new { responseCode = responseCode, responseText = (string)item["StatusMessage"], blockMessage = BlockMessage },
-                           JsonRequestBehavior.AllowGet);
+                                // return Json(new { responseCode = responseCode, responseText = (string)item["StatusMessage"] },
+                                return Json(new { responseCode = responseCode, responseText = (string)item["StatusMessage"], blockMessage = BlockMessage },
+                          JsonRequestBehavior.AllowGet);
                             }
 
 
@@ -1314,9 +1311,9 @@ namespace CustApp.Controllers
                     }
                     catch (Exception ex)
                     {
-                       // return Json(new { responseCode = "400", responseText = ex.Message },
-                       return Json(new { responseCode = "400", responseText = ex.Message, blockMessage = BlockMessage },
-                    JsonRequestBehavior.AllowGet);
+                        // return Json(new { responseCode = "400", responseText = ex.Message },
+                        return Json(new { responseCode = "400", responseText = ex.Message, blockMessage = BlockMessage },
+                     JsonRequestBehavior.AllowGet);
                     }
 
                     this.TempData["topup_messsage"] = result
@@ -2490,7 +2487,7 @@ namespace CustApp.Controllers
                                     responseCode = code;
                                 }
                             }
-                           // return Json(new { responseCode = responseCode, responseText = respmsg, rechargePin = couponNo },
+                            // return Json(new { responseCode = responseCode, responseText = respmsg, rechargePin = couponNo },
                             return Json(new { responseCode = responseCode, responseText = respmsg, rechargePin = couponNo, blockMessage = BlockMessage },
 
                                 JsonRequestBehavior.AllowGet);
@@ -2506,17 +2503,17 @@ namespace CustApp.Controllers
                             message = json.d;
                             if (message == null)
                             {
-                              //  return Json(new { responseCode = responseCode, responseText = responsetext },
-                            return Json(new { responseCode = responseCode, responseText = responsetext, blockMessage = BlockMessage },
-                   JsonRequestBehavior.AllowGet);
+                                //  return Json(new { responseCode = responseCode, responseText = responsetext },
+                                return Json(new { responseCode = responseCode, responseText = responsetext, blockMessage = BlockMessage },
+                       JsonRequestBehavior.AllowGet);
                             }
 
                             else
                             {
                                 dynamic item = JValue.Parse(message);
-                               // return Json(new { responseCode = responseCode, responseText = (string)item["StatusMessage"] },
-                                  return Json(new { responseCode = responseCode, responseText = (string)item["StatusMessage"], blockMessage = BlockMessage },
-                           JsonRequestBehavior.AllowGet);
+                                // return Json(new { responseCode = responseCode, responseText = (string)item["StatusMessage"] },
+                                return Json(new { responseCode = responseCode, responseText = (string)item["StatusMessage"], blockMessage = BlockMessage },
+                         JsonRequestBehavior.AllowGet);
 
                             }
 
@@ -2526,7 +2523,7 @@ namespace CustApp.Controllers
 
                     catch (Exception ex)
                     {
-                       // return Json(new { responseCode = "400", responseText = ex.Message },
+                        // return Json(new { responseCode = "400", responseText = ex.Message },
                         return Json(new { responseCode = "400", responseText = ex.Message, blockMessage = BlockMessage },
                     JsonRequestBehavior.AllowGet);
                     }
@@ -2540,8 +2537,9 @@ namespace CustApp.Controllers
                 }
 
             }
-            else {
-              //  return Json(new { responseCode = "400", responseText = "Please refresh the page again." },
+            else
+            {
+                //  return Json(new { responseCode = "400", responseText = "Please refresh the page again." },
                 return Json(new { responseCode = "400", responseText = "Please refresh the page again.", blockMessage = BlockMessage },
                             JsonRequestBehavior.AllowGet);
             }

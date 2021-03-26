@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-
-namespace CustApp.Models
+﻿namespace CustApp.Models
 {
     public class ISP
     {
@@ -12,7 +7,7 @@ namespace CustApp.Models
         public string ServiceCode { get; set; }
         public string TestNumbers { get; set; }
         public string Commission { get; set; }
-		public string Description { get; set; }
+        public string Description { get; set; }
         public string Bonus { get; set; }
         public string BillDate { get; set; }
         public string PackageAmount { get; set; }
@@ -37,7 +32,7 @@ namespace CustApp.Models
         public string billNumber { get; set; }
         public string responseCode { get; set; }
         public string retrievalReference { get; set; }
-		public string DHServiceCode { get; set; }
+        public string DHServiceCode { get; set; }
         public string smartCards { get; set; }
 
     }
@@ -73,7 +68,7 @@ namespace CustApp.Models
         public string billDateFrom { get; set; }
         public string billDateTo { get; set; }
         public string payPointType { get; set; }
-		public string PackageAmount { get; set; }
+        public string PackageAmount { get; set; }
         public string PackageId { get; set; }
         public string PackageRemainingDays { get; set; }
         public string smartCards { get; set; }

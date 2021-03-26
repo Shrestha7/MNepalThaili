@@ -1,22 +1,22 @@
 ﻿using CustApp.App_Start;
 using CustApp.Helper;
 using CustApp.Models;
+using CustApp.UserModels;
+using CustApp.Utilities;
+using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
+using System.Data;
+using System.Dynamic;
 using System.IO;
+using System.Linq;
+using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
 using System.Web.Mvc;
 using System.Web.Script.Serialization;
 using System.Web.SessionState;
-using System.Data;
-using CustApp.Utilities;
-using CustApp.UserModels;
-using System.Linq;
-using System.Dynamic;
-using Newtonsoft.Json;
-using System.Net;
 
 namespace CustApp.Controllers
 {
@@ -333,7 +333,7 @@ namespace CustApp.Controllers
                         string ava = string.Empty;
                         string avatra = string.Empty;
                         string avamsg = string.Empty;
-                       //string BlockMessage = LoginUtils.GetMessage("01");
+                        //string BlockMessage = LoginUtils.GetMessage("01");
                         if (_res.IsSuccessStatusCode)
                         {
                             responseCode = (int)_res.StatusCode;
@@ -365,7 +365,7 @@ namespace CustApp.Controllers
                             message = (string)item["StatusMessage"];
                         }
 
-                      //  return Json(new { responseCode = responseCode, responseText = message },
+                        //  return Json(new { responseCode = responseCode, responseText = message },
                         return Json(new { responseCode = responseCode, responseText = message, blockMessage = BlockMessage },
                             JsonRequestBehavior.AllowGet);
                     }
@@ -373,7 +373,7 @@ namespace CustApp.Controllers
                 }
                 else
                 {
-                  //  return Json(new { responseCode = "400", responseText = "Please refresh the page again." },
+                    //  return Json(new { responseCode = "400", responseText = "Please refresh the page again." },
                     return Json(new { responseCode = "400", responseText = "Please refresh the page again.", blockMessage = BlockMessage },
                             JsonRequestBehavior.AllowGet);
                 }
@@ -386,7 +386,7 @@ namespace CustApp.Controllers
         }
 
         #endregion
-        
+
         public ActionResult GetCheckingAgent(string Username)
         {
             if ((Username != "") || (Username != null))
@@ -407,7 +407,7 @@ namespace CustApp.Controllers
             else
                 return View();
         }
-        
+
         #region "Cash Out By Agent"
         //GET: Cash/OutAgent1
         public ActionResult OutAgent1()
@@ -935,7 +935,7 @@ namespace CustApp.Controllers
                 this.ViewData["userType"] = this.TempData["userType"];
                 ViewBag.UserType = this.TempData["userType"];
                 ViewBag.Name = name;
-                
+
                 MNBalance availBaln = new MNBalance();
                 DataTable dtableUser1 = AvailBalnUtils.GetAvailBaln(clientCode);
                 if (dtableUser1 != null && dtableUser1.Rows.Count > 0)
@@ -1021,7 +1021,7 @@ namespace CustApp.Controllers
 
                 string convert;
                 ParaChanged = change;
-                
+
                 var result = new List<CashOutList>();
                 if (Session["CashOutList"] != null && ParaChanged == "F")
                 {
@@ -1075,7 +1075,7 @@ namespace CustApp.Controllers
             HttpResponseMessage _res = new HttpResponseMessage();
             string tokenID = token; //token is Token ID
             string userName = (string)Session["LOGGED_USERNAME"];
-            string tpin = pin; 
+            string tpin = pin;
             if (userName != null)
             {
                 TraceIdGenerator _tig = new TraceIdGenerator();
@@ -1140,9 +1140,9 @@ namespace CustApp.Controllers
                                     responseCode = code;
                                 }
                             }
-                           // return Json(new { responseCode = responseCode, responseText = respmsg },
-                           return Json(new { responseCode = responseCode, responseText = respmsg, blockMessage = BlockMessage },
-                            JsonRequestBehavior.AllowGet);
+                            // return Json(new { responseCode = responseCode, responseText = respmsg },
+                            return Json(new { responseCode = responseCode, responseText = respmsg, blockMessage = BlockMessage },
+                             JsonRequestBehavior.AllowGet);
 
                         }
                         else
@@ -1155,7 +1155,7 @@ namespace CustApp.Controllers
                             message = json.d;
                             if (message == null)
                             {
-                               // return Json(new { responseCode = responseCode, responseText = responsetext },
+                                // return Json(new { responseCode = responseCode, responseText = responsetext },
                                 return Json(new { responseCode = responseCode, responseText = responsetext, blockMessage = BlockMessage },
                             JsonRequestBehavior.AllowGet);
                             }
@@ -1163,7 +1163,7 @@ namespace CustApp.Controllers
                             else
                             {
                                 dynamic item = JValue.Parse(message);
-                               // return Json(new { responseCode = responseCode, responseText = (string)item["StatusMessage"] },
+                                // return Json(new { responseCode = responseCode, responseText = (string)item["StatusMessage"] },
                                 return Json(new { responseCode = responseCode, responseText = (string)item["StatusMessage"], blockMessage = BlockMessage },
                                  JsonRequestBehavior.AllowGet);
 
@@ -1224,7 +1224,7 @@ namespace CustApp.Controllers
 
             return res;
         }
-        
+
         public ActionResult GetCheckingUserName(string Username)
         {
             if ((Username != "") || (Username != null))
@@ -1265,6 +1265,6 @@ namespace CustApp.Controllers
             else
                 return View();
         }
-        
+
     }
 }

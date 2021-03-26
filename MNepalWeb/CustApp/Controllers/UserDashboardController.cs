@@ -1,24 +1,22 @@
-﻿using CustApp.Models;
-using CustApp.Utilities;
-using System.Data;
-using System.Web.Mvc;
-using System.Web.SessionState;
-using System.Net.Http;
+﻿using CustApp.App_Start;
 using CustApp.Helper;
-using System.IO;
-using CustApp.App_Start;
-using System;
-using System.Threading.Tasks;
-using System.Web.Script.Serialization;
+using CustApp.Models;
+using CustApp.Utilities;
 using Newtonsoft.Json.Linq;
-using System.Net;
-using System.Configuration;
-using System.Text;
-using System.Net.Http.Headers;
-using static CustApp.Models.CIPS;
-using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
+using System.Configuration;
+using System.Data;
+using System.IO;
+using System.Net;
+using System.Net.Http;
+using System.Net.Http.Headers;
+using System.Text;
 using System.Text.RegularExpressions;
+using System.Threading.Tasks;
+using System.Web.Mvc;
+using System.Web.Script.Serialization;
+using System.Web.SessionState;
 
 namespace CustApp.Controllers
 {

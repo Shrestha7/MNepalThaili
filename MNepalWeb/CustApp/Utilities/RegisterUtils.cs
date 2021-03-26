@@ -40,8 +40,8 @@ namespace CustApp.Utilities
             var objMobileInfo = new UserInfo
             {
                 ContactNumber1 = mobileNo,
-               // Mode = "GCMN" //Get Check Mobile No
-                  Mode = "GCUMN" //Get Check Mobile No of user
+                // Mode = "GCMN" //Get Check Mobile No
+                Mode = "GCUMN" //Get Check Mobile No of user
 
             };
             return objMobileModel.GetMobileInfo(objMobileInfo);
@@ -65,7 +65,7 @@ namespace CustApp.Utilities
             var objMobileModel = new RegisterUserModel();
             var objMobileInfo = new UserInfo
             {
-                ContactNumber1 = mobileNo, 
+                ContactNumber1 = mobileNo,
                 Mode = "GCMMN" //Get Check Mobile No of agent
 
             };
@@ -228,14 +228,14 @@ namespace CustApp.Utilities
                 //CZone = userInfo.CZone,
                 //CDistrict = userInfo.CDistrict,
                 CVDC = userInfo.CVDC,
-                
+
                 CWardNo = userInfo.CWardNo,
                 CHouseNo = userInfo.CHouseNo,
                 CAddress = userInfo.CAddress,
                 Citizenship = userInfo.Citizenship,
                 CitizenshipIssueDate = DateTime.ParseExact(userInfo.CitizenshipIssueDate, "dd/MM/yyyy", CultureInfo.InvariantCulture)
                                                 .ToString("MM/dd/yyyy", CultureInfo.InvariantCulture),
-                
+
                 CitizenshipPlaceOfIssue = userInfo.CitizenshipPlaceOfIssue,
                 License = userInfo.License,
                 //LicenseIssueDate = DateTime.ParseExact(userInfo.LicenseIssueDate, "dd/MM/yyyy", CultureInfo.InvariantCulture)
@@ -278,7 +278,7 @@ namespace CustApp.Utilities
             return objMobileModel.AgentRegisterUserInfo(objMobileInfo);
         }
 
-        
+
         public static int CustomerRegAppRegisterCustomerInfo(UserInfo userInfo)
         {
             var objMobileModel = new RegisterUserModel();
@@ -357,7 +357,7 @@ namespace CustApp.Utilities
             return objMobileModel.CustomerRegAppRegisterUserInfo(objMobileInfo);
         }
 
-        
+
 
 
 
@@ -395,19 +395,19 @@ namespace CustApp.Utilities
                 BankNo = userInfo.BankNo,
                 BranchCode = userInfo.BranchCode,
                 IsDefault = userInfo.IsDefault,
-                ProfileCode=userInfo.ProfileCode,
-                TxnAccounts=userInfo.TxnAccounts,
-                AdminUserName=userInfo.AdminUserName,
-                AdminBranch=userInfo.AdminBranch,
-                Transaction=userInfo.Transaction,
-                DateRange=userInfo.DateRange,
-                StartDate=userInfo.StartDate,
-                EndDate=userInfo.EndDate,
-                LimitType=userInfo.LimitType,
+                ProfileCode = userInfo.ProfileCode,
+                TxnAccounts = userInfo.TxnAccounts,
+                AdminUserName = userInfo.AdminUserName,
+                AdminBranch = userInfo.AdminBranch,
+                Transaction = userInfo.Transaction,
+                DateRange = userInfo.DateRange,
+                StartDate = userInfo.StartDate,
+                EndDate = userInfo.EndDate,
+                LimitType = userInfo.LimitType,
                 TransactionLimit = userInfo.TransactionLimit,
-                TransactionCount=userInfo.TransactionCount,
-                TransactionLimitMonthly=userInfo.TransactionLimitMonthly,
-                TransactionLimitDaily=userInfo.TransactionLimitDaily,
+                TransactionCount = userInfo.TransactionCount,
+                TransactionLimitMonthly = userInfo.TransactionLimitMonthly,
+                TransactionLimitDaily = userInfo.TransactionLimitDaily,
                 Mode = "IUP" //INSERT USERS PROFILE
             };
             return objMobileModel.RegisterUsersInfo(objMobileInfo);
@@ -415,7 +415,7 @@ namespace CustApp.Utilities
 
 
 
-        public static int RegisterMerchantInfo(UserInfo userInfo,string MerchantCategory)
+        public static int RegisterMerchantInfo(UserInfo userInfo, string MerchantCategory)
         {
             var objMobileModel = new RegisterUserModel();
             var objMobileInfo = new UserInfo
@@ -441,8 +441,8 @@ namespace CustApp.Utilities
                 BankNo = userInfo.BankNo,
                 BranchCode = userInfo.BranchCode,
                 IsDefault = userInfo.IsDefault,
-        
-               
+
+
             };
             return objMobileModel.RegisterMerchantInfo(objMobileInfo, MerchantCategory);
         }
@@ -464,11 +464,11 @@ namespace CustApp.Utilities
                 Gender = srInfo.Gender,
                 DOB = DateTime.ParseExact(srInfo.DOB, "yyyy-MM-dd", CultureInfo.InvariantCulture)
                                                 .ToString("MM/dd/yyyy", CultureInfo.InvariantCulture),//userInfo.DOB DateOfBirth in A.D.,
-                //BSDateOfBirth = DateTime.ParseExact(srInfo.BSDateOfBirth, "yyyy-MM-dd", CultureInfo.InvariantCulture)
-                //                                .ToString("MM/dd/yyyy", CultureInfo.InvariantCulture), //DateOfBirth in B.S.
+                                                                                                      //BSDateOfBirth = DateTime.ParseExact(srInfo.BSDateOfBirth, "yyyy-MM-dd", CultureInfo.InvariantCulture)
+                                                                                                      //                                .ToString("MM/dd/yyyy", CultureInfo.InvariantCulture), //DateOfBirth in B.S.
 
-                 BSDateOfBirth = srInfo.BSDateOfBirth,
-               
+                BSDateOfBirth = srInfo.BSDateOfBirth,
+
 
                 //DateADBS = srInfo.DateADBS,
                 Country = srInfo.Country,
@@ -495,7 +495,7 @@ namespace CustApp.Utilities
                 //CZone = srInfo.CZone,
                 //CDistrict = srInfo.CDistrict,
                 CVDC = srInfo.CVDC,
-                
+
                 CWardNo = srInfo.CWardNo,
                 CHouseNo = srInfo.CHouseNo,
                 CStreet = srInfo.CStreet,
@@ -519,7 +519,7 @@ namespace CustApp.Utilities
                 PassportExpireDate = srInfo.PassportExpireDate,
                 PassportPlaceOfIssue = srInfo.PassportPlaceOfIssue,
                 PanNo = srInfo.PanNo,
-                Document = srInfo.Document,              
+                Document = srInfo.Document,
                 PIN = CustomerUtils.GeneratePin(),
                 Password = CustomerUtils.GeneratePassword(),
                 Status = srInfo.Status,
@@ -534,7 +534,7 @@ namespace CustApp.Utilities
                 Source = srInfo.Source,
                 //BankAccountNumber = srInfo.BankAccountNumber,
                 //BankNo = srInfo.BankNo,
-                BranchCode = srInfo.BranchCode,  
+                BranchCode = srInfo.BranchCode,
                 FrontImage = srInfo.FrontImageName,
                 BackImage = srInfo.BackImageName,
                 PassportImage = srInfo.PassportImageName,
@@ -567,7 +567,7 @@ namespace CustApp.Utilities
                 //Status = srInfo.Status,
                 //IsRejected = srInfo.IsRejected,
                 //BranchCode = srInfo.BranchCode,
-              
+
                 Mode = "QISR" //INSERT SELF REGISTRATION PROFILE
             };
             return objMobileModel.CustomerQuickSelfRegInfo(objMobileInfo);
@@ -577,7 +577,7 @@ namespace CustApp.Utilities
         public static int InsertResponseQuickSelfReg(string userName, string retRef, string statusCode, string statusMsg)
         {
             var objMobileModel = new RegisterUserModel();
-            
+
             return objMobileModel.InsertResponseQuickSelfReg(userName, retRef, statusCode, statusMsg);
         }
 
@@ -594,17 +594,17 @@ namespace CustApp.Utilities
                 //UserType = srInfo.UserType,
                 //OTPCode = srInfo.OTPCode,
                 retrievalReference = srInfo.retrievalReference,
-                ClientCode= srInfo.ClientCode,
+                ClientCode = srInfo.ClientCode,
                 PaymentReferenceNumber = srInfo.PaymentReferenceNumber,
                 ItemCode = srInfo.ItemCode,
                 Amount = srInfo.Amount,
                 EBDate = srInfo.EBDate,
-                 
+
                 Mode = "QISREB" //INSERT SELF REGISTRATION PROFILE
             };
             return objMobileModel.EBanking(objMobileInfo);
         }
         #endregion
-         
+
     }
 }

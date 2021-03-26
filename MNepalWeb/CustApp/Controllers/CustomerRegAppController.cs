@@ -1,15 +1,15 @@
-﻿using System;
+﻿using CustApp.Models;
+using CustApp.Utilities;
+using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-using System.Web.Mvc;
 using System.Data;
 using System.Globalization;
 using System.IO;
+using System.Linq;
+using System.Web;
 using System.Web.Helpers;
+using System.Web.Mvc;
 using System.Web.SessionState;
-using CustApp.Models;
-using CustApp.Utilities;
 
 namespace ThailiMNepalApp.Controllers
 {
@@ -29,7 +29,7 @@ namespace ThailiMNepalApp.Controllers
             string userType = (string)Session["LOGGED_USERTYPE"];
 
 
-          
+
             string provincestring = "SELECT * FROM MNProvince (NOLOCK)";
             DataTable dt = new DataTable();
             dt = objdal.MyMethod(provincestring);
@@ -102,8 +102,8 @@ namespace ThailiMNepalApp.Controllers
                 return RedirectToAction("Index", "Login");
             }
         }
-        
-       
+
+
         public JsonResult getdistrict(int id)
         {
             string provincestring = "SELECT * FROM MNDistrict (NOLOCK) where ProvinceID='" + id + "'";
@@ -553,7 +553,7 @@ namespace ThailiMNepalApp.Controllers
             else
                 return View();
         }
-       
+
         //end  00
     }
 }

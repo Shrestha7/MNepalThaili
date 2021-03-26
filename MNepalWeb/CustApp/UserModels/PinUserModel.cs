@@ -1,11 +1,11 @@
-﻿using Microsoft.Practices.EnterpriseLibrary.Data;
-using CustApp.Connection;
+﻿using CustApp.Connection;
+using CustApp.Helper;
 using CustApp.Models;
+using Microsoft.Practices.EnterpriseLibrary.Data;
 using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
-using CustApp.Helper;
 
 namespace CustApp.UserModels
 {
@@ -26,7 +26,7 @@ namespace CustApp.UserModels
                 database = DatabaseConnection.GetDatabase();
                 using (var command = database.GetStoredProcCommand("[s_MNChangePassword]"))
                 {
-					                     
+
                     database.AddInParameter(command, "@OPassword", DbType.String, HashAlgo.Hash(objPasswordInfo.OPIN));
                     database.AddInParameter(command, "@Password", DbType.String, HashAlgo.Hash(objPasswordInfo.PIN));
 
@@ -58,7 +58,7 @@ namespace CustApp.UserModels
 
 
 
-        public int UpdateUserPin(UserInfo model,string status)
+        public int UpdateUserPin(UserInfo model, string status)
         {
             int ret;
             SqlConnection conn = null;
@@ -96,17 +96,17 @@ namespace CustApp.UserModels
             }
             finally
             {
-                
-               
+
+
             }
 
             return ret;
         }
-        
 
-        public List<UserInfo> GetPinApproveList(string BranchCode,bool COC,string MobileNo)
+
+        public List<UserInfo> GetPinApproveList(string BranchCode, bool COC, string MobileNo)
         {
-           List<UserInfo> UserInfos = new List<UserInfo>();
+            List<UserInfo> UserInfos = new List<UserInfo>();
             SqlConnection conn = null;
             string Command = string.Empty;
             SqlDataReader rdr;
@@ -119,9 +119,9 @@ namespace CustApp.UserModels
                         Command = @"SELECT * FROM v_MNClientDetail (NOLOCK) WHERE Status in (@Status1,@Status2,@Status3) AND IsApproved=@IsApproved";
                         if (!COC)
                         {
-                            Command = Command + " AND ModifyingBranch='"+BranchCode+"'";
+                            Command = Command + " AND ModifyingBranch='" + BranchCode + "'";
                         }
-                        if(!string.IsNullOrEmpty(MobileNo))
+                        if (!string.IsNullOrEmpty(MobileNo))
                         {
                             Command = Command + " AND UserName='" + MobileNo + "'";
                         }
@@ -136,7 +136,7 @@ namespace CustApp.UserModels
                             conn.Open();
                         }
                         rdr = cmd.ExecuteReader();
-                        while(rdr.Read())
+                        while (rdr.Read())
                         {
                             UserInfo Info = new UserInfo();
                             Info.UserName = rdr["UserName"].ToString();
@@ -146,7 +146,7 @@ namespace CustApp.UserModels
                             Info.ModifyingAdmin = rdr["ModifiedBy"].ToString();
                             Info.BankAccountNumber = rdr["BankAccountNumber"].ToString();
                             Info.Status = rdr["Status"].ToString();
-                            
+
                             UserInfos.Add(Info);
                         }
                         if (conn.State != ConnectionState.Closed)
@@ -170,7 +170,7 @@ namespace CustApp.UserModels
         }
 
 
-        public int ApproveUserPin(UserInfo model,string Mode)
+        public int ApproveUserPin(UserInfo model, string Mode)
         {
             Database database;
             int ret;
@@ -181,7 +181,7 @@ namespace CustApp.UserModels
                 using (var command = database.GetStoredProcCommand("[s_MNPinResetApp]"))
                 {
                     database.AddInParameter(command, "@ClientCode", DbType.String, model.ClientCode);
-                    database.AddInParameter(command, "@PIN", DbType.String,model.PIN);
+                    database.AddInParameter(command, "@PIN", DbType.String, model.PIN);
                     database.AddInParameter(command, "@Password", DbType.String, model.Password);
                     database.AddInParameter(command, "@Mode", DbType.String, Mode);
                     database.AddOutParameter(command, "@RegIDOut", DbType.Int32, model.RegIDOut);
@@ -203,7 +203,7 @@ namespace CustApp.UserModels
             return ret;
         }
 
-        public int RevertPasswordReset(string  ClientCode)
+        public int RevertPasswordReset(string ClientCode)
         {
             int ret;
             SqlConnection conn = null;
@@ -317,7 +317,7 @@ namespace CustApp.UserModels
                     using (SqlCommand cmd = new SqlCommand())
                     {
                         Command = @"SELECT * FROM v_MNClientDetail (NOLOCK) WHERE Status = 'APR' AND IsApproved=@IsApproved";
-                       
+
                         if (!string.IsNullOrEmpty(UserName))
                         {
                             Command = Command + " AND UserName='" + UserName + "'";

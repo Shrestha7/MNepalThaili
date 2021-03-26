@@ -1,11 +1,7 @@
 ﻿using CustApp.Models;
-using System;
+using CustApp.UserModels;
 using System.Collections.Generic;
 using System.Data;
-using System.Linq;
-using System.Web;
-using CustApp.UserModels;
-using System.Data.SqlClient;
 
 namespace CustApp.Utilities
 {
@@ -54,14 +50,14 @@ namespace CustApp.Utilities
                 Password = " ",
                 Mode = "LOGOUT" // Check User Login
             };
-           objUserModel.GetUserInformation(objUserInfo);
+            objUserModel.GetUserInformation(objUserInfo);
         }
 
         public static bool ResetFLogin(ViewModel.ResetVM model)
         {
             var objUserModel = new LoginUserModels();
-            
-            int i= objUserModel.ResetFirstPassword(model);
+
+            int i = objUserModel.ResetFirstPassword(model);
             if (i == 100)
                 return true;
             else
@@ -72,12 +68,12 @@ namespace CustApp.Utilities
 
         public static Dictionary<string, string> CheckCred(ViewModel.ResetVM model)
         {
-          var objUserModel = new LoginUserModels();
-          return objUserModel.Checkcredential(model.ClientCode);
+            var objUserModel = new LoginUserModels();
+            return objUserModel.Checkcredential(model.ClientCode);
         }
 
 
-        public static void LogAction (MNAdminLog log)
+        public static void LogAction(MNAdminLog log)
         {
             LoginUserModels logModel = new LoginUserModels();
             logModel.LogAction(log);
@@ -89,7 +85,7 @@ namespace CustApp.Utilities
         /// </summary>
         /// <param name="Controller">Browsed Controller</param>
         /// <param name="Action">Browsed Action</param>
-        public void CheckUser(string Controller,string Action)
+        public void CheckUser(string Controller, string Action)
         {
 
         }

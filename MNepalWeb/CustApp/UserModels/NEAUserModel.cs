@@ -1,7 +1,7 @@
-﻿using System;
+﻿using CustApp.Connection;
+using System;
 using System.Collections.Generic;
 using System.Data;
-using CustApp.Connection;
 using System.Data.SqlClient;
 
 namespace CustApp.UserModels

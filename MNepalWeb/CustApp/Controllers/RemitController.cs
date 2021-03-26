@@ -124,7 +124,7 @@ namespace CustApp.Controllers
         [HttpPost]
         public async Task<ActionResult> RequestToken(FormCollection collection, MNFundTransfer _ft)
         {
-            var user=HttpContext.User;
+            var user = HttpContext.User;
             MNRemit remitInfo = new MNRemit();
             remitInfo.TraceID = collection["txtTraceID"].ToString();
             remitInfo.SenderMobileNo = collection["txtSenderMobileNo"].ToString();
@@ -140,7 +140,7 @@ namespace CustApp.Controllers
             remitInfo.ServiceCode = collection["txtServiceCode"].ToString();
             remitInfo.SourceChannel = collection["txtSrc"].ToString();
 
-            if (string.IsNullOrEmpty(remitInfo.Amount)) 
+            if (string.IsNullOrEmpty(remitInfo.Amount))
             {
                 ModelState.AddModelError("Amount", "*Please enter Amount");
             }
@@ -192,10 +192,10 @@ namespace CustApp.Controllers
 
                         //new added
                         _ft.sa = "";
-                        _ft.RequestTokenCode =remitInfo.RequestTokenCode;
+                        _ft.RequestTokenCode = remitInfo.RequestTokenCode;
                         _ft.ClientCode = "1";
                         _ft.BeneficialName = remitInfo.BeneficialName;
-                      
+
                         /*tid=689622
                         &mobile=9803200158
                         &sc=40
@@ -210,7 +210,7 @@ namespace CustApp.Controllers
                         string Query = "";
                         using (HttpClient client = new HttpClient())
                         {
-                            
+
                             var uri = "http://27.111.30.126/MNepal.WCF/remit/token?";
                             var content = new FormUrlEncodedContent(new[]
                             {
@@ -228,19 +228,19 @@ namespace CustApp.Controllers
                                 new KeyValuePair<string, string>("bn",_ft.BeneficialName)
 
                             });
-                            
+
                             Query = content.ReadAsStringAsync().Result;
                             var URL = new Uri(uri + Query);
                             _res = await client.GetAsync(URL);
-                            
-                            int responseCode =(int)_res.StatusCode;
+
+                            int responseCode = (int)_res.StatusCode;
                             string message = string.Empty;
 
 
                             string responsetext = string.Empty;
 
                             string responseBody = _res.ReasonPhrase.ToString();// + " ," + await _res.Content.ReadAsStringAsync();
-                           // _res.ReasonPhrase = responseBody;
+                                                                               // _res.ReasonPhrase = responseBody;
 
                             if (_res.IsSuccessStatusCode)
                             {
@@ -256,7 +256,7 @@ namespace CustApp.Controllers
                                 int code = (int)item["StatusCode"];
                                 JavaScriptSerializer ser = new JavaScriptSerializer();
                                 ResponseMessage myNames = ser.Deserialize<ResponseMessage>((string)item["StatusMessage"]);
-                                
+
                                 ser.Serialize(myNames);
 
                                 string av = myNames.AvailableBalance;
@@ -270,7 +270,7 @@ namespace CustApp.Controllers
                                 Rvm.Token = myNames.RequestedToken;
                                 Rvm.Method = "TRQ";
 
-                                return View("RemitComplete",Rvm);
+                                return View("RemitComplete", Rvm);
 
 
                             }
@@ -283,15 +283,15 @@ namespace CustApp.Controllers
                                 //values require casting
                                 message = json.d;
                                 dynamic item = JValue.Parse(message);
-                             
+
 
                                 result = false;
-                                this.TempData["remit_messsage"] = "Error while inserting the information. ERROR :: "+(string)item["StatusMessage"];
+                                this.TempData["remit_messsage"] = "Error while inserting the information. ERROR :: " + (string)item["StatusMessage"];
                                 this.TempData["message_class"] = "failed_info";
                                 return this.RedirectToAction("RequestToken");
 
                             }
-                         
+
                         }
 
                     }
@@ -301,9 +301,9 @@ namespace CustApp.Controllers
                         this.TempData["remit_messsage"] = result
                                                        ? "Remit information is successfully added."
                                                        : "Error while inserting the information. ERROR :: "
-                                                         +"Could not insert Remit info.";
+                                                         + "Could not insert Remit info.";
                         this.TempData["message_class"] = result ? "success_info" : "failed_info";
-                            return this.RedirectToAction("RequestToken");
+                        return this.RedirectToAction("RequestToken");
 
                     }
                 }
@@ -465,7 +465,7 @@ namespace CustApp.Controllers
                         ResponseMessage myNames = ser.Deserialize<ResponseMessage>(msg.StatusMessage);
                         RemitViewModel Rvm = new RemitViewModel();
                         string av = myNames.AvailableBalance;
-                       string amttransfer = myNames.AmountTransferredBalance;
+                        string amttransfer = myNames.AmountTransferredBalance;
                         Rvm.Method = "TRD";
                         Rvm.Message = myNames.Message;
                         Rvm.TokenAmount = myNames.AmountTransferredBalance;
@@ -493,7 +493,7 @@ namespace CustApp.Controllers
                     //    JsonRequestBehavior.AllowGet);
                 }
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 result = false;
                 errorMessage = ex.Message;
@@ -511,7 +511,7 @@ namespace CustApp.Controllers
         #endregion
 
 
-        
+
 
     }
 }

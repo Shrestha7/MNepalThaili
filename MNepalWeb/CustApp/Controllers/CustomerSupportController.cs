@@ -1,20 +1,19 @@
-﻿using Newtonsoft.Json.Linq;
+﻿using CustApp.App_Start;
+using CustApp.Models;
+using CustApp.Utilities;
+using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Drawing;
 using System.IO;
-using System.Linq;
+using System.Net;
 using System.Net.Http;
+using System.Net.Mail;
 using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
 using System.Web.Script.Serialization;
-using CustApp.App_Start;
-using CustApp.Models;
-using CustApp.Utilities;
-using System.Net.Mail;
-using System.Net;
 
 namespace CustApp.Controllers
 {
@@ -88,7 +87,7 @@ namespace CustApp.Controllers
         public async Task<ActionResult> CustomerSupportInsert(CustomerSupport customerSupport)
         {
             string MobileNumber, Name, Email, Remarks, Category;
-            HttpPostedFileBase Image= customerSupport.Image;
+            HttpPostedFileBase Image = customerSupport.Image;
 
             MobileNumber = (string)Session["LOGGED_USERNAME"];
             Name = (string)Session["LOGGEDUSER_NAME"];
@@ -368,6 +367,6 @@ namespace CustApp.Controllers
 
         }
     }
-#endregion
+    #endregion
 
 }

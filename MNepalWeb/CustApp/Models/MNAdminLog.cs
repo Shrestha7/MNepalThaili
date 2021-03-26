@@ -1,10 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
 
-namespace CustApp.Models {
-    public class MNAdminLog {
+namespace CustApp.Models
+{
+    public class MNAdminLog
+    {
 
         public string UserId { get; set; }
         public string UserType { get; set; }
@@ -18,7 +17,7 @@ namespace CustApp.Models {
         public string Branch { get; set; }
         public string PrivateIP { get; set; }
         public string ClientDetails { get; set; }
-        
+
 
 
     }

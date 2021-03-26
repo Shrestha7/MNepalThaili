@@ -1,9 +1,6 @@
 ﻿using CustApp.Models;
 using CustApp.UserModels;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Web;
 
 namespace CustApp.Utilities
 {
@@ -15,7 +12,7 @@ namespace CustApp.Utilities
         {
             var objMemberInfo = new UserInfo()
             {
-				OPIN = member.OPIN,
+                OPIN = member.OPIN,
                 PIN = member.PIN,
                 ClientCode = member.ClientCode,
                 Mode = "CPIN" // Change Password
@@ -24,38 +21,38 @@ namespace CustApp.Utilities
         }
 
 
-        public static bool UpdateUserPin(UserInfo model,string status)
+        public static bool UpdateUserPin(UserInfo model, string status)
         {
-           
-            return new PinUserModel().UpdateUserPin(model,status)==1;
+
+            return new PinUserModel().UpdateUserPin(model, status) == 1;
         }
 
 
 
 
-     
 
-        public static List<UserInfo> GetPinResetList(string BranchCode,bool COC,string MobileNo)
+
+        public static List<UserInfo> GetPinResetList(string BranchCode, bool COC, string MobileNo)
         {
-            return new PinUserModel().GetPinApproveList(BranchCode, COC,MobileNo);
+            return new PinUserModel().GetPinApproveList(BranchCode, COC, MobileNo);
         }
 
 
 
-        public static bool ApproveUserPinInfo(UserInfo member,string Mode)
+        public static bool ApproveUserPinInfo(UserInfo member, string Mode)
         {
             var objMemberInfo = new UserInfo()
             {
                 PIN = member.PIN,
                 ClientCode = member.ClientCode,
-                Password=member.Password
-                
+                Password = member.Password
+
 
             };
-            return new PinUserModel().ApproveUserPin(objMemberInfo,Mode) == 0;
+            return new PinUserModel().ApproveUserPin(objMemberInfo, Mode) == 0;
         }
 
-        public static bool RevertPinInfo( string ClientCode)
+        public static bool RevertPinInfo(string ClientCode)
         {
             return new PinUserModel().RevertPasswordReset(ClientCode) == 1;
         }

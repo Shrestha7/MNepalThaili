@@ -9,8 +9,6 @@ using System.Data;
 using System.IO;
 using System.Net;
 using System.Net.Http;
-using System.Net.Http.Headers;
-using System.Text;
 using System.Threading.Tasks;
 using System.Web.Mvc;
 using System.Web.Script.Serialization;
@@ -311,117 +309,117 @@ namespace CustApp.Controllers
                 UserInfo userInfo = new UserInfo();
                 string mobileNumber = collection["mobileNumber"].ToString();
 
-                    //api call
-                    HttpResponseMessage _res = new HttpResponseMessage();
+                //api call
+                HttpResponseMessage _res = new HttpResponseMessage();
 
-                    //specify to use TLS 1.2 as default connection
-                    ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12 | SecurityProtocolType.Tls11 | SecurityProtocolType.Tls;
+                //specify to use TLS 1.2 as default connection
+                ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12 | SecurityProtocolType.Tls11 | SecurityProtocolType.Tls;
 
-                    using (var client = new HttpClient())
-                    {
-                        //var re = Request;
-                        //var headers = re.Headers;
-                        ////client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("token", "AQAAANCMnd8BFdERjHoAwE/Cl+sBAAAALb0J21uJQkW66f/5tn51oAAAAAACAAAAAAAQZgAAAAEAACAAAACujThGwSJ93BGelKQrjJ748rl2+xgpln4Cd1rtWKH6dgAAAAAOgAAAAAIAACAAAAA2q7bCrhkwFnASE36rJgfFlhqqZBTGliq5KiTPnbWiDSAAAACoZSqNV4SH5AwklADAn7cxHloBR7Ft7KW2Z24p/TnjWkAAAAC4IjJh6LMIy/8zKvr5r7/yuPlDtSnmTH/sVYxmDyBQ6JeDlR56+2dHFAvgF3i83Bt/SYP4dGZ9zpQjc1MzVIir");
-                        //var AuthUsername = System.Configuration.ConfigurationManager.AppSettings["AuthUsername"];
-                        //var AuthPassword = System.Configuration.ConfigurationManager.AppSettings["AuthPassword"];
-                        //client.BaseAddress = new Uri(System.Configuration.ConfigurationManager.AppSettings["DematBaseAddress"]);
-                        //var GetPendingPayments = System.Configuration.ConfigurationManager.AppSettings["GetPendingPayments"];
-                        ////var content = new StringContent("application/json");
-                        //var byteArray = new UTF8Encoding().GetBytes(AuthUsername + ":" + AuthPassword);
-                        //client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Basic", Convert.ToBase64String(byteArray));
+                using (var client = new HttpClient())
+                {
+                    //var re = Request;
+                    //var headers = re.Headers;
+                    ////client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("token", "AQAAANCMnd8BFdERjHoAwE/Cl+sBAAAALb0J21uJQkW66f/5tn51oAAAAAACAAAAAAAQZgAAAAEAACAAAACujThGwSJ93BGelKQrjJ748rl2+xgpln4Cd1rtWKH6dgAAAAAOgAAAAAIAACAAAAA2q7bCrhkwFnASE36rJgfFlhqqZBTGliq5KiTPnbWiDSAAAACoZSqNV4SH5AwklADAn7cxHloBR7Ft7KW2Z24p/TnjWkAAAAC4IjJh6LMIy/8zKvr5r7/yuPlDtSnmTH/sVYxmDyBQ6JeDlR56+2dHFAvgF3i83Bt/SYP4dGZ9zpQjc1MzVIir");
+                    //var AuthUsername = System.Configuration.ConfigurationManager.AppSettings["AuthUsername"];
+                    //var AuthPassword = System.Configuration.ConfigurationManager.AppSettings["AuthPassword"];
+                    //client.BaseAddress = new Uri(System.Configuration.ConfigurationManager.AppSettings["DematBaseAddress"]);
+                    //var GetPendingPayments = System.Configuration.ConfigurationManager.AppSettings["GetPendingPayments"];
+                    ////var content = new StringContent("application/json");
+                    //var byteArray = new UTF8Encoding().GetBytes(AuthUsername + ":" + AuthPassword);
+                    //client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Basic", Convert.ToBase64String(byteArray));
 
-                        //dematGet.BoId = dmat.dCode;
+                    //dematGet.BoId = dmat.dCode;
 
-                        //var jsonObject = JsonConvert.SerializeObject(dematGet);
-                        //var content = new StringContent(jsonObject, Encoding.UTF8, "application/json");
+                    //var jsonObject = JsonConvert.SerializeObject(dematGet);
+                    //var content = new StringContent(jsonObject, Encoding.UTF8, "application/json");
 
-                        var action = "reset.svc/ResetThailiPin";
-                        var uri = Path.Combine(ApplicationInitilize.WCFUrl, action);
-                        var content = new FormUrlEncodedContent(new[]{
+                    var action = "reset.svc/ResetThailiPin";
+                    var uri = Path.Combine(ApplicationInitilize.WCFUrl, action);
+                    var content = new FormUrlEncodedContent(new[]{
                     new KeyValuePair<string,string>("UserName",mobileNumber),
                     new KeyValuePair<string,string>("clientCode",clientCode),
                     new KeyValuePair<string,string>("name",name)
 
                 });
-                        _res = await client.PostAsync(new Uri(uri), content);
+                    _res = await client.PostAsync(new Uri(uri), content);
 
-                        string responseBody = _res.StatusCode.ToString() + " ," + await _res.Content.ReadAsStringAsync();
-                        _res.ReasonPhrase = responseBody;
-                        string errorMessage = string.Empty;
-                        int responseCode = 0;
-                        string message = string.Empty;
-                        string responsetext = string.Empty;
-                        bool result = false;
-                        string ava = string.Empty;
-                        string avatra = string.Empty;
-                        string avamsg = string.Empty;
+                    string responseBody = _res.StatusCode.ToString() + " ," + await _res.Content.ReadAsStringAsync();
+                    _res.ReasonPhrase = responseBody;
+                    string errorMessage = string.Empty;
+                    int responseCode = 0;
+                    string message = string.Empty;
+                    string responsetext = string.Empty;
+                    bool result = false;
+                    string ava = string.Empty;
+                    string avatra = string.Empty;
+                    string avamsg = string.Empty;
 
-                        try
+                    try
+                    {
+                        if (_res.IsSuccessStatusCode)
                         {
-                            if (_res.IsSuccessStatusCode)
+                            result = true;
+                            responseCode = (int)_res.StatusCode;
+                            responsetext = await _res.Content.ReadAsStringAsync();
+                            message = _res.Content.ReadAsStringAsync().Result;
+                            string respmsg = "";
+                            if (!string.IsNullOrEmpty(message))
                             {
-                                result = true;
-                                responseCode = (int)_res.StatusCode;
-                                responsetext = await _res.Content.ReadAsStringAsync();
-                                message = _res.Content.ReadAsStringAsync().Result;
-                                string respmsg = "";
-                                if (!string.IsNullOrEmpty(message))
+                                JavaScriptSerializer ser = new JavaScriptSerializer();
+                                var json = ser.Deserialize<JsonParse>(responsetext);
+                                message = json.d;
+                                JsonParse myNames = ser.Deserialize<JsonParse>(json.d);
+                                int code = Convert.ToInt32(myNames.StatusCode);
+                                respmsg = myNames.StatusMessage;
+                                if (code != responseCode)
                                 {
-                                    JavaScriptSerializer ser = new JavaScriptSerializer();
-                                    var json = ser.Deserialize<JsonParse>(responsetext);
-                                    message = json.d;
-                                    JsonParse myNames = ser.Deserialize<JsonParse>(json.d);
-                                    int code = Convert.ToInt32(myNames.StatusCode);
-                                    respmsg = myNames.StatusMessage;
-                                    if (code != responseCode)
-                                    {
-                                        responseCode = code;
-                                    }
+                                    responseCode = code;
                                 }
+                            }
 
 
-                                return Json(new { responseCode = responseCode, responseText = respmsg },
-                                JsonRequestBehavior.AllowGet);
+                            return Json(new { responseCode = responseCode, responseText = respmsg },
+                            JsonRequestBehavior.AllowGet);
+                        }
+                        else
+                        {
+                            result = false;
+                            responseCode = (int)_res.StatusCode;
+                            responsetext = await _res.Content.ReadAsStringAsync();
+                            dynamic json = JValue.Parse(responsetext);
+                            message = json.d;
+                            if (message == null)
+                            {
+                                return Json(new { responseCode = responseCode, responseText = responsetext },
+                            JsonRequestBehavior.AllowGet);
                             }
                             else
                             {
-                                result = false;
-                                responseCode = (int)_res.StatusCode;
-                                responsetext = await _res.Content.ReadAsStringAsync();
-                                dynamic json = JValue.Parse(responsetext);
-                                message = json.d;
-                                if (message == null)
-                                {
-                                    return Json(new { responseCode = responseCode, responseText = responsetext },
-                                JsonRequestBehavior.AllowGet);
-                                }
-                                else
-                                {
-                                    dynamic item = JValue.Parse(message);
+                                dynamic item = JValue.Parse(message);
 
-                                    return Json(new { responseCode = responseCode, responseText = (string)item["StatusMessage"] },
-                                    JsonRequestBehavior.AllowGet);
-                                }
+                                return Json(new { responseCode = responseCode, responseText = (string)item["StatusMessage"] },
+                                JsonRequestBehavior.AllowGet);
                             }
-
-                        }
-                        catch (Exception ex)
-                        {
-
-                            return Json(new { responseCode = "400", responseText = ex.Message },
-                                JsonRequestBehavior.AllowGet);
                         }
 
                     }
+                    catch (Exception ex)
+                    {
+
+                        return Json(new { responseCode = "400", responseText = ex.Message },
+                            JsonRequestBehavior.AllowGet);
+                    }
 
                 }
-                else
-                {
-                    return Json(new { responseCode = "400", responseText = "Please refresh the page again." },
-                                JsonRequestBehavior.AllowGet);
-                }
 
-                       
+            }
+            else
+            {
+                return Json(new { responseCode = "400", responseText = "Please refresh the page again." },
+                            JsonRequestBehavior.AllowGet);
+            }
+
+
         }
     }
 }

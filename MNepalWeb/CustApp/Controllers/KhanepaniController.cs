@@ -7,11 +7,9 @@ using System;
 using System.Collections.Generic;
 using System.Data;
 using System.IO;
-using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
-using System.Web;
 using System.Web.Mvc;
 using System.Web.Script.Serialization;
 
@@ -317,7 +315,7 @@ namespace CustApp.Controllers
                 {
                     return RedirectToAction("Index");
                 }
-                
+
                 Khanepani KPObj = new Khanepani();
                 KPObj.KhanepaniCounter = S_KhanepaniCounter;
                 KPObj.CustomerID = S_CustomerID;
@@ -586,7 +584,7 @@ namespace CustApp.Controllers
                     string ava = string.Empty;
                     string avatra = string.Empty;
                     string avamsg = string.Empty;
-                   // string BlockMessage = LoginUtils.GetMessage("01");
+                    // string BlockMessage = LoginUtils.GetMessage("01");
                     try
                     {
                         if (_res.IsSuccessStatusCode)
@@ -614,8 +612,8 @@ namespace CustApp.Controllers
                                 }
                             }
                             //  return Json(new { responseCode = responseCode, responseText = respmsg },
-                              return Json(new { responseCode = responseCode, responseText = respmsg, blockMessage = BlockMessage},
-                            JsonRequestBehavior.AllowGet);
+                            return Json(new { responseCode = responseCode, responseText = respmsg, blockMessage = BlockMessage },
+                          JsonRequestBehavior.AllowGet);
                         }
                         else
                         {
@@ -652,7 +650,7 @@ namespace CustApp.Controllers
             }
             else
             {
-               // return Json(new { responseCode = "400", responseText = "Please refresh the page again." },
+                // return Json(new { responseCode = "400", responseText = "Please refresh the page again." },
                 return Json(new { responseCode = "400", responseText = "Please refresh the page again.", blockMessage = BlockMessage },
                             JsonRequestBehavior.AllowGet);
             }

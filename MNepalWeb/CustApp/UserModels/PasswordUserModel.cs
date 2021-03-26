@@ -1,20 +1,17 @@
-﻿using Microsoft.Practices.EnterpriseLibrary.Data;
-using CustApp.Connection;
+﻿using CustApp.Connection;
+using CustApp.Helper;
 using CustApp.Models;
+using Microsoft.Practices.EnterpriseLibrary.Data;
 using System;
-using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
-using System.Linq;
-using System.Web;
-using CustApp.Helper;
 
 namespace CustApp.UserModels
 {
     public class PasswordUserModel
     {
 
-        
+
         /// <summary>
         /// Retrieve the user information based on mode
         /// </summary>
@@ -30,7 +27,7 @@ namespace CustApp.UserModels
                 database = DatabaseConnection.GetDatabase();
                 using (var command = database.GetStoredProcCommand("[s_MNChangePassword]"))
                 {
-					database.AddInParameter(command, "@OPassword", DbType.String, HashAlgo.Hash(objPasswordInfo.OPassword));
+                    database.AddInParameter(command, "@OPassword", DbType.String, HashAlgo.Hash(objPasswordInfo.OPassword));
                     database.AddInParameter(command, "@Password", DbType.String, HashAlgo.Hash(objPasswordInfo.Password));
                     database.AddInParameter(command, "@ClientCode", DbType.String, objPasswordInfo.ClientCode);
                     database.AddInParameter(command, "@mode", DbType.String, objPasswordInfo.Mode);
@@ -69,13 +66,13 @@ namespace CustApp.UserModels
 
             try
             {
-            
+
                 using (conn = new SqlConnection(DatabaseConnection.ConnectionStr()))
                 {
-                    
+
                     conn.Open();
                     sTrans = conn.BeginTransaction();
-                    using (SqlCommand cmd = new SqlCommand("[s_MNForgetPassword]", conn,sTrans))
+                    using (SqlCommand cmd = new SqlCommand("[s_MNForgetPassword]", conn, sTrans))
                     {
                         cmd.Parameters.AddWithValue("@UserName", objPasswordInfo.UserName);
                         cmd.Parameters.AddWithValue("@Password", HashAlgo.Hash(objPasswordInfo.Password));
@@ -88,7 +85,7 @@ namespace CustApp.UserModels
                         ret = Convert.ToInt64(cmd.Parameters["@RegIDOut"].Value);
                         sTrans.Commit();
                         conn.Close();
-                        
+
                     }
                 }
 
@@ -129,7 +126,7 @@ namespace CustApp.UserModels
                     database.AddOutParameter(command, "@RegIDOut", DbType.Int32, objPasswordInfo.RegIDOut);
                     ret = database.ExecuteNonQuery(command);
                     ret = (int)database.GetParameterValue(command, "RegIDOut");
-                    
+
                 }
 
             }

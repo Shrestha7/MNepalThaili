@@ -1,7 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
 
 namespace CustApp.Models
 {
@@ -19,12 +16,12 @@ namespace CustApp.Models
         public string TranID { get; set; }
 
         public string Date { get; set; }
-       
+
         public string Debit { get; set; }
         public string Credit { get; set; }
         //
         public string Balance { get; set; }
-        
+
         //end milayako 01
         public int SNo { get; set; }
 

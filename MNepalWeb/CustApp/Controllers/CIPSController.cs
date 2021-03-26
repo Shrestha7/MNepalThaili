@@ -1,25 +1,19 @@
-﻿using CustApp.App_Start;
-using CustApp.Helper;
+﻿using CustApp.Helper;
 using CustApp.Models;
-using CustApp.UserModels;
 using CustApp.Utilities;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using Rotativa;
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Configuration;
 using System.Data;
-using System.Data.SqlClient;
-using System.IO;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Text;
 using System.Threading.Tasks;
-using System.Web;
 using System.Web.Mvc;
 using System.Web.Script.Serialization;
 using static CustApp.Models.CIPS;
@@ -346,7 +340,7 @@ namespace CustApp.Controllers
                 RandomCodeGenerator randomCodeGenerator = new RandomCodeGenerator();
 
                 Session["batchId"] = randomCodeGenerator.CreateRandomCode(20);
-                Session["batchAmount"] = cips.amount;              
+                Session["batchAmount"] = cips.amount;
                 Session["batchCount"] = 1;
                 Session["batchCrncy"] = "NPR";
                 Session["categoryPurpose"] = "ECPG";
@@ -381,6 +375,7 @@ namespace CustApp.Controllers
                 Session["addenda2"] = DateTime.Now.ToString("yyyy-MM-dd");
                 Session["addenda3"] = "Addenda info3";
                 Session["addenda4"] = "Addenda info4";
+                Session["TimeStamp"] = DateTime.Now;
 
                 HttpResponseMessage _res = new HttpResponseMessage();
                 var cipsObject = new CheckPin
@@ -486,7 +481,7 @@ namespace CustApp.Controllers
                 ViewBag.BranchName = Session["branchName"];
                 ViewBag.Remarks = Session["transactionDetail"];
 
-                
+
 
 
 
@@ -720,6 +715,7 @@ namespace CustApp.Controllers
                             {
                                 JavaScriptSerializer ser = new JavaScriptSerializer();
                                 var json = ser.Deserialize<ConnectIPSResponse>(responsetext);
+                                Session["BatchId"] = json.cipsBatchResponse.batchId;
                                 int code = Convert.ToInt32(json.cipsBatchResponse.responseCode);
                                 int txncode = Convert.ToInt32(json.cipsTxnResponseList.FirstOrDefault().responseCode);
 
@@ -1033,6 +1029,8 @@ namespace CustApp.Controllers
             dic.Add("Remarks", (string)Session["endToEndId"]);
             dic.Add("Amount", Session["amount"].ToString());
             dic.Add("Charge", Session["cipsCharge"].ToString());
+            dic.Add("ReferenceNo", Session["BatchId"].ToString());
+            dic.Add("TimeStamp", Session["TimeStamp"].ToString()); 
 
             var printpdf = new ViewAsPdf("CIPSInvoice", dic);
             return printpdf;

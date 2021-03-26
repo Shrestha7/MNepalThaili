@@ -1,9 +1,9 @@
 ﻿using CustApp.Models;
 using CustApp.Utilities;
+using System;
 using System.Data;
 using System.Web.Mvc;
 using System.Web.SessionState;
-using System;
 
 namespace CustApp.Controllers
 {
@@ -60,7 +60,7 @@ namespace CustApp.Controllers
                 DataSet DSet = ProfileUtils.GetCusDetailProfileInfoDS(clientCode);
 
                 DataTable dtableUser = DSet.Tables["dtUserInfo"];
-                DataTable dKYC= DSet.Tables["dtKycDetail"];
+                DataTable dKYC = DSet.Tables["dtKycDetail"];
                 DataTable dDoc = DSet.Tables["dtKycDoc"];
                 if (dtableUser != null && dtableUser.Rows.Count > 0)
                 {
@@ -102,7 +102,7 @@ namespace CustApp.Controllers
                         ViewBag.BankAccountNumber = userInfo.BankAccountNumber;
                         ViewBag.BankName = "NIBL";
                     }
-                        if (ViewBag.hasKYC != "T")
+                    if (ViewBag.hasKYC != "T")
                     {
                         ViewBag.Address = " ";
                         ViewBag.Status = " ";
@@ -140,7 +140,7 @@ namespace CustApp.Controllers
 
                 }
 
-                 if (dKYC != null && dKYC.Rows.Count > 0)
+                if (dKYC != null && dKYC.Rows.Count > 0)
                 {
                     userInfo.DOB = dKYC.Rows[0]["DateOfBirth"].ToString().Split()[0];
                     userInfo.Gender = dKYC.Rows[0]["Gender"].ToString();
@@ -181,20 +181,20 @@ namespace CustApp.Controllers
                     }
                 }
 
-                 if(dDoc != null && dDoc.Rows.Count > 0)
+                if (dDoc != null && dDoc.Rows.Count > 0)
                 {
                     userInfo.Document = dDoc.Rows[0]["DocType"].ToString();
                     userInfo.FrontImage = dDoc.Rows[0]["FrontImage"].ToString();
                     userInfo.BackImage = dDoc.Rows[0]["BackImage"].ToString();
                     userInfo.PassportImage = dDoc.Rows[0]["PassportImage"].ToString();
-                    
+
                     ViewBag.DocType = userInfo.Document;
                     ViewBag.FrontImage = userInfo.FrontImage;
                     ViewBag.BackImage = userInfo.BackImage;
                     ViewBag.PassportImage = userInfo.PassportImage;
                 }
 
-                
+
                 return View();
             }
             else
@@ -224,7 +224,7 @@ namespace CustApp.Controllers
                 DataTable dtableUser = ProfileUtils.GetUserProfileInfo(clientCode);
                 if (dtableUser != null && dtableUser.Rows.Count > 0)
                 {
-                   
+
                     userInfo.Name = dtableUser.Rows[0]["Name"].ToString();
                     userInfo.UserName = dtableUser.Rows[0]["UserName"].ToString();
                     userInfo.UserBranchName = dtableUser.Rows[0]["UserBranchName"].ToString();
@@ -252,7 +252,7 @@ namespace CustApp.Controllers
                     ViewBag.Status = userInfo.Status;
                     ViewBag.BankNo = userInfo.BankNo;
                     ///
-                    
+
                     //ViewBag.Address = userInfo.Address;                    
                     //ViewBag.ContactNumber1 = userInfo.ContactNumber1;
                     //ViewBag.ContactNumber2 = userInfo.ContactNumber2;

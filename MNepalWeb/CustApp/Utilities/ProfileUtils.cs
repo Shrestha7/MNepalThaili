@@ -1,10 +1,7 @@
 ﻿using CustApp.Models;
 using CustApp.UserModels;
-using System;
 using System.Collections.Generic;
 using System.Data;
-using System.Linq;
-using System.Web;
 
 namespace CustApp.Utilities
 {
@@ -42,7 +39,7 @@ namespace CustApp.Utilities
             var objUserInfo = new UserInfo
             {
                 ClientCode = clientCode
-               
+
             };
             return objUserModel.GetCustModifiedValue(objUserInfo);
         }
@@ -66,7 +63,7 @@ namespace CustApp.Utilities
             var objUserInfo = new UserInfo
             {
                 ClientCode = clientCode,
-                Mode = "GCDPI" 
+                Mode = "GCDPI"
             };
             return objUserModel.GetCusDetailProfileDSet(objUserInfo);
         }
@@ -160,7 +157,7 @@ namespace CustApp.Utilities
         }
 
         #endregion
-        
+
         #region "REJECTED LIST FOR UNAPPROVE CUSTOMER Information"
 
         public static DataTable GetUnApproveRJCustomerProfile(string userType)
@@ -197,7 +194,7 @@ namespace CustApp.Utilities
         {
             var objUserModel = new LoginUserModels();
             var objUserInfo = new UserInfo();
-           
+
             return objUserModel.GetAllAdminInformation(objUserInfo, IsModified);
         }
 
@@ -223,7 +220,7 @@ namespace CustApp.Utilities
             var objUserInfo = new CustomerSRInfo
             {
                 ClientCode = clientCode,
-                
+
             };
             return objUserModel.GetSelfRegInfoDSet(objUserInfo);
         }
@@ -253,7 +250,7 @@ namespace CustApp.Utilities
             return objUserModel.CheckLinkBankAcc(objUserInfo);
         }
         #endregion
-        
+
         #region GetBankAccountNumber
         public static DataTable BankAccountNumber(string UserName)
         {
@@ -301,7 +298,7 @@ namespace CustApp.Utilities
             return objUserModel.GetCustomerName(objUserInfo);
         }
         #endregion
-        
+
         //start foe ebanking clientcode
         #region to get clientcode from given mobile no
         public static DataTable EBankingClientCode(string Mobile)

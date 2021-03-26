@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Web;
 using System.Web.Mvc;
@@ -17,7 +16,7 @@ namespace CustApp.Models
 
         [Display(Name = "DOB")]
         public string DOB { get; set; }
-        
+
         [Display(Name = "CitizenshipIssueDate")]
         public string CitizenshipIssueDate { get; set; }
 
@@ -58,18 +57,18 @@ namespace CustApp.Models
         [Display(Name = "GrandFather Name")]
         public string GrandFatherName { get; set; }
         [Display(Name = "FatherInlaw Name")]
-        public string  FatherInlawName{ get; set; }
+        public string FatherInlawName { get; set; }
 
 
         public string Occupation { get; set; }
 
-       
+
         public string PanNo { get; set; }
 
         public string Photo1 { get; set; }
         public string Country { get; set; }
 
-        
+
         public string ContactNumber2
         {
             get;
@@ -96,15 +95,15 @@ namespace CustApp.Models
         public string CAddress { get; set; }
 
         public string Citizenship { get; set; }
-        
+
         public string CitizenshipPlaceOfIssue { get; set; }
 
         public string License { get; set; }
-        
+
         public string LicensePlaceOfIssue { get; set; }
-       
+
         public string Passport { get; set; }
-        
+
         public string PassportPlaceOfIssue { get; set; }
         /// <summary>
         /// /
@@ -157,7 +156,7 @@ namespace CustApp.Models
             set;
         }
 
-       
+
         public string ProfileName
         {
             get;
@@ -184,7 +183,7 @@ namespace CustApp.Models
             set;
         }
 
-        [Display(Name= "Name")]
+        [Display(Name = "Name")]
         public string Name
         {
             get;
@@ -196,7 +195,7 @@ namespace CustApp.Models
             set;
         }
 
-        
+
         public string PIN
         {
             get;
@@ -497,9 +496,9 @@ namespace CustApp.Models
 
         public string LimitType { get; set; }
         public string TransactionLimit { get; set; }
-        public string  TransactionCount { get; set; }
+        public string TransactionCount { get; set; }
         public string TransactionLimitMonthly { get; set; }
-        public string TransactionLimitDaily{ get; set; }
+        public string TransactionLimitDaily { get; set; }
         public string StartDate { get; set; }
         public string EndDate { get; set; }
         public string SelfRegistered { get; set; }
@@ -509,8 +508,8 @@ namespace CustApp.Models
         public string BankName { get; set; }
 
         public string HasBankKYC { get; set; }
-        
-		public string BankBranchCode { get; set; }
+
+        public string BankBranchCode { get; set; }
     }
 
     public class UserSessionDetails

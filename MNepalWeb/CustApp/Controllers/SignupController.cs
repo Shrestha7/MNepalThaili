@@ -186,7 +186,7 @@ namespace CustApp.Controllers
             string mobile = (string)Session["Mobile"];
             string code = (string)Session["Code"];
 
-             
+
             Session["verificationCode"] = verificationCode;
 
 
@@ -288,7 +288,7 @@ namespace CustApp.Controllers
             DataTable dt = new DataTable();
             dt = objdal.MyMethod(provincestring);
             List<SelectListItem> list = new List<SelectListItem>();
-            list.Add(new SelectListItem { Text = "--Select Province--", Value = "0"});
+            list.Add(new SelectListItem { Text = "--Select Province--", Value = "0" });
             foreach (DataRow row in dt.Rows)
             {
 
@@ -592,12 +592,12 @@ namespace CustApp.Controllers
             string mobile = (string)Session["Mobile"];
             string verificationCode = (string)Session["verificationCode"];
 
-            
 
 
 
 
-            if ((mobile != null)&&(verificationCode != null))
+
+            if ((mobile != null) && (verificationCode != null))
             {
                 if (this.TempData["registration_message"] != null)
                 {
@@ -813,7 +813,7 @@ namespace CustApp.Controllers
                         DateTime ADDOB = DateTime.Parse(srInfo.DOB);
                         string DOBAD = ADDOB.ToString("yyyy-MM-dd");
                         srInfo.DOB = DOBAD;
-                        
+
                         srInfo.Nationality = dtableSrInfo.Rows[0]["Nationality"].ToString();
                         srInfo.Country = dtableSrInfo.Rows[0]["CountryCode"].ToString();
                     }
@@ -831,7 +831,7 @@ namespace CustApp.Controllers
             }
 
         }
-        
+
         // POST: Signup/CustomerKYC1
         [AcceptVerbs(HttpVerbs.Post)]
         [HttpPost]
@@ -1358,19 +1358,19 @@ namespace CustApp.Controllers
                     string datepassportExpire = passportExpireDate.ToString("dd/MM/yyyy");
                     ViewBag.PassportIssueDate = datepassportIssue;
                     ViewBag.PassportExpireDate = datepassportExpire;
-                    
+
                 }
             }
 
 
             return View(TempData["CustomerKYC"]);
         }
-        
+
         [AcceptVerbs(HttpVerbs.Post)]
         [HttpPost]
         public async Task<ActionResult> CustomerKYC4(FormCollection collection, CustomerSRInfo model)
         {
-            
+
             CustomerSRInfo srInfo = new CustomerSRInfo();
             try
             {
@@ -1511,7 +1511,7 @@ namespace CustApp.Controllers
                     {
                         //srInfo.LicenseExpireDate = "";
                         srInfo.LicenseExpireDate = defaultdate.ToString().Split()[0];
-                        
+
                     }
 
                     if (!string.IsNullOrEmpty(srInfo.BSLicenseExpireDate))
@@ -1561,7 +1561,7 @@ namespace CustApp.Controllers
                         srInfo.PassportExpireDate = defaultdate.ToString().Split()[0];
                     }
 
-                    
+
 
                     //srInfo.PassportImage = ParseCv(model.PassportPhoto);
                     //srInfo.FrontImage = ParseCv(model.Front);
@@ -1629,7 +1629,7 @@ namespace CustApp.Controllers
                                     }
 
                                     await SavePhoto(srInfo);
-                                    
+
                                     string sPP = Session["PP"].ToString();
                                     string sFront = Session["Front"].ToString();
                                     string sBack = Session["Back"].ToString();
@@ -1659,7 +1659,7 @@ namespace CustApp.Controllers
                                     {
                                         srInfo.FrontImageName = ViewBag.FrontImage;
                                     }
-                                    if (sBack != null && sBack != "") 
+                                    if (sBack != null && sBack != "")
                                     {
                                         srInfo.BackImageName = Session["Back"].ToString();
                                     }
@@ -1687,7 +1687,7 @@ namespace CustApp.Controllers
                                         SMSUtils SMS = new SMSUtils();
 
                                         string Message = string.Format("Dear " + srInfo.FName + ",\n Your KYC request has been queued for the approval. You'll be notified shortly" + " .\n Thank You -NIBL Thaili");
-                                         
+
 
 
 
@@ -1704,10 +1704,10 @@ namespace CustApp.Controllers
 
 
                                         Log.Message = "Your KYC request has been queued for the approval. You'll be notified shortly.";
-                                         
 
 
-                                         
+
+
 
 
                                         //Log SMS
@@ -1741,7 +1741,7 @@ namespace CustApp.Controllers
                         result = false;
                     }
 
-               
+
 
 
 
@@ -2287,21 +2287,21 @@ namespace CustApp.Controllers
             ViewBag.PaymentReferenceNumber = PaymentReferenceNumber;
             ViewBag.ItemCode = ItemCode;
             ViewBag.Amount = Amount;
-            
+
             if (this.TempData["forget_message"] != null)
             {
                 this.ViewData["forget_message"] = this.TempData["forget_message"];
                 this.ViewData["message_class"] = this.TempData["message_class"];
-            } 
+            }
             return View();
         }
 
 
-        
+
         #endregion
 
         #region EBanking for Mobile
-        public ActionResult EBankingMob(string Amount,string Mobile)
+        public ActionResult EBankingMob(string Amount, string Mobile)
         {
             //string mobile = (string)Session["Mobile"];
 
@@ -2309,7 +2309,7 @@ namespace CustApp.Controllers
             DateTime currentDate = DateTime.Now;
             long elapsedTicks = currentDate.Ticks;
             string elapsedTick = Convert.ToString(elapsedTicks);
-            ViewBag.PaymentReferenceNumber = elapsedTick.Substring((elapsedTick.Length - 10), 10); 
+            ViewBag.PaymentReferenceNumber = elapsedTick.Substring((elapsedTick.Length - 10), 10);
             ViewBag.Amount = Amount;
 
             if (this.TempData["registration_message"] != null)
@@ -2330,8 +2330,8 @@ namespace CustApp.Controllers
                 //ViewBag.ClientCode = srobj.ClientCode;
             }
             //end clientcode
-            
-            
+
+
             return View(srobj);
 
         }
@@ -2353,7 +2353,7 @@ namespace CustApp.Controllers
             try
             {
                 //string mobile = (string)Session["Mobile"];
-                string code = (string)Session["Code"]; 
+                string code = (string)Session["Code"];
 
                 //srInfo.UserName = mobile;
                 srInfo.ClientCode = ClientCode;

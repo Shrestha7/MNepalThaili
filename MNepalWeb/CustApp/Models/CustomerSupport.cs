@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
+﻿using System.Web;
 
 namespace CustApp.Models
 {
@@ -14,8 +11,8 @@ namespace CustApp.Models
         public string Date { get; set; }
         public string Category { get; set; }
         public HttpPostedFileBase Image { get; set; }
-    
-     
+
+
 
         public CustomerSupport()
         {

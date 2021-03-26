@@ -3,8 +3,6 @@
 @{
     ViewBag.Title = "ConnectIPS";
     string hasBankKYC = ViewBag.HasBankKYC;
-    //float TotalAmountDue = parseFloat(@ViewBag.TotalAmountDue);
-
 }
 
 <!-- Main content -->
@@ -259,14 +257,10 @@
                             <br />
                             <br />
                             <br />
-
-
-
                             <div class="box-footer">
                                 <input type="button" class="btn btn-blue btn-big col-md-5" name="btnCommand" value="Pay" id="btnSubmit" />
                                 <input type="button" value="Cancel" class="btn btn-default btn-big col-md-5" id="cancelButton" />
                             </div>
-
                         </section>
                     </div>
 
@@ -459,8 +453,7 @@
         });
 
         $('#btnSubmit').click(function (e) {
-            e.preventDefault();
-            
+            e.preventDefault();            
             var accountNumber = document.getElementById("accountNumber").innerText;
             var transactionAmount = document.getElementById("transactionAmount").innerText;
             var beneficiaryAccountNumber= document.getElementById("beneficiaryAccountNumber").innerText;
@@ -468,7 +461,6 @@
             var beneficiaryBankName = document.getElementById("beneficiaryBankName").innerText;
             var branchName = document.getElementById("branchName").innerText;
             var remarks = document.getElementById("remarks").innerText;
-
             var token = $('input[name="__RequestVerificationToken"]').val();
 
             if ((accountNumber != "") && (transactionAmount != "") && (beneficiaryAccountNumber != "") && (beneficiaryAccountName != "") &&

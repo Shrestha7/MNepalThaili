@@ -1,10 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using Microsoft.Practices.EnterpriseLibrary.Data;
-using System.Data;
-using CustApp.Connection;
-using System.Data.SqlClient;
+﻿using CustApp.Connection;
 using CustApp.Models;
+using Microsoft.Practices.EnterpriseLibrary.Data;
+using System;
+using System.Collections.Generic;
+using System.Data;
+using System.Data.SqlClient;
 
 namespace CustApp.UserModels
 {
@@ -57,7 +57,7 @@ namespace CustApp.UserModels
             return ListNEA;
         }
         #endregion
-        
+
         #region Khanepani
         public Dictionary<string, string> GetKhanepaniName()
         {
@@ -174,7 +174,7 @@ namespace CustApp.UserModels
                     database.AddInParameter(command, "@mode", DbType.String, objUserInfo.Mode);
                     database.AddInParameter(command, "@KhanepaniCounter", DbType.String, null);
                     database.AddInParameter(command, "@refStan", DbType.String, objUserInfo.refStan);
-                    string[] tables = new string[] { "dtResponse", "dtPayment"};
+                    string[] tables = new string[] { "dtResponse", "dtPayment" };
                     using (var dataset = new DataSet())
                     {
                         database.LoadDataSet(command, dataset, tables);

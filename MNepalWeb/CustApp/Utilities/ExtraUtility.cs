@@ -11,7 +11,6 @@ using System.Threading;
 using System.Web;
 using System.Web.UI;
 using System.Web.UI.WebControls;
-using System.Xml.Serialization;
 
 namespace CustApp.Utilities
 {
@@ -70,7 +69,7 @@ namespace CustApp.Utilities
             }
             string[] splitStr = inputstring.Split(' ');
             string[] Joinstr = new string[splitStr.Length];
-            
+
             for (int i = 0; i < splitStr.Length; i++)
             {
                 if (!string.IsNullOrEmpty(splitStr[i].Trim()))
@@ -88,19 +87,19 @@ namespace CustApp.Utilities
         public static bool IsValidDate(this string InputDate)
         {
             DateTime d;
-            bool isValid= DateTime.TryParseExact(InputDate,"dd/MM/yyyy", CultureInfo.InvariantCulture, DateTimeStyles.None, out d);
+            bool isValid = DateTime.TryParseExact(InputDate, "dd/MM/yyyy", CultureInfo.InvariantCulture, DateTimeStyles.None, out d);
             return isValid;
         }
 
-        public  static string ToMoneyFormat()
+        public static string ToMoneyFormat()
         {
             return "";
         }
 
         public static string ToMMddYYYY(string DateInDDMMYYY)
         {
-          return  DateTime.ParseExact(DateInDDMMYYY, "dd/MM/yyyy", CultureInfo.InvariantCulture)
-                                                  .ToString("MM/dd/yyyy", CultureInfo.InvariantCulture);
+            return DateTime.ParseExact(DateInDDMMYYY, "dd/MM/yyyy", CultureInfo.InvariantCulture)
+                                                    .ToString("MM/dd/yyyy", CultureInfo.InvariantCulture);
         }
         public static bool HasSessionKey(string Key)
         {
@@ -208,10 +207,10 @@ namespace CustApp.Utilities
                         }
                     }
                 }
-            
-         
-         
-              
+
+
+
+
             }
 
             catch (ThreadAbortException Ex)
@@ -308,10 +307,10 @@ namespace CustApp.Utilities
                             {
                                 if (row[property.Name] != System.DBNull.Value)   // Don't copy over DBNull
                                 {
-                                    var type= Nullable.GetUnderlyingType(property.PropertyType);
+                                    var type = Nullable.GetUnderlyingType(property.PropertyType);
                                     object propertyValue = System.Convert.ChangeType(
                                             row[property.Name],
-                                           type==null?property.PropertyType:type
+                                           type == null ? property.PropertyType : type
                                         );
                                     property.SetValue(classObject, propertyValue, null);
                                 }

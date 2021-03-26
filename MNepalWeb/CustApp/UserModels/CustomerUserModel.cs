@@ -1,8 +1,6 @@
-﻿using Microsoft.Practices.EnterpriseLibrary.Data;
-using CustApp.Connection;
+﻿using CustApp.Connection;
 using CustApp.Models;
-using CustApp.Utilities;
-using CustApp.ViewModel;
+using Microsoft.Practices.EnterpriseLibrary.Data;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -27,7 +25,7 @@ namespace CustApp.UserModels
                 database = DatabaseConnection.GetDatabase();
                 using (var command = database.GetStoredProcCommand("[s_MNUserInfoSearch]"))
                 {
-                    database.AddInParameter(command, "@MobileNo", DbType.String, objUserInfo.ContactNumber1); 
+                    database.AddInParameter(command, "@MobileNo", DbType.String, objUserInfo.ContactNumber1);
                     database.AddInParameter(command, "@Name", DbType.String, objUserInfo.Name);
                     database.AddInParameter(command, "@WalletNumber", DbType.String, objUserInfo.WalletNumber);
                     database.AddInParameter(command, "@ClientCode", DbType.String, objUserInfo.ClientCode);
@@ -95,7 +93,7 @@ namespace CustApp.UserModels
                         sqlCmd.Parameters.Add(new SqlParameter("@NewMobileNo", objCustomerUserInfo.NewMobileNo));
                         sqlCmd.Parameters.Add(new SqlParameter("@ContactNumber1", objCustomerUserInfo.ContactNumber1));
                         sqlCmd.Parameters.Add(new SqlParameter("@ContactNumber2", objCustomerUserInfo.ContactNumber2));
-                        sqlCmd.Parameters.Add(new SqlParameter("@Pin"," "));
+                        sqlCmd.Parameters.Add(new SqlParameter("@Pin", " "));
                         sqlCmd.Parameters.Add(new SqlParameter("@ClientStatus", objCustomerUserInfo.ClientStatus));
                         sqlCmd.Parameters.Add(new SqlParameter("@Status", objCustomerUserInfo.Status));
                         sqlCmd.Parameters.Add(new SqlParameter("@TxnAccounts", objCustomerUserInfo.TxnAccounts));
@@ -514,7 +512,7 @@ namespace CustApp.UserModels
             try
             {
                 database = DatabaseConnection.GetDatabase();
-                
+
                 using (var command = database.GetStoredProcCommand("[s_MNUserInfoSearch]"))
                 {
                     database.AddInParameter(command, "@MobileNo", DbType.String, objUserInfo.ContactNumber1);
@@ -542,12 +540,12 @@ namespace CustApp.UserModels
             {
                 database = null;
                 Database.ClearParameterCache();
-                
+
             }
 
             return dtableResult;
         }
-       
+
         public bool InsertSMSLog(SMSLog log)
         {
             SqlConnection conn = null;
@@ -559,49 +557,49 @@ namespace CustApp.UserModels
                 {
 
 
-                        SqlCommand cmd = new SqlCommand();
-                        cmd.CommandType = CommandType.Text;
-                        cmd.CommandText = @"INSERT INTO MNSMSPinLog(UserName,Message,SentOn,SentBy,Purpose)
+                    SqlCommand cmd = new SqlCommand();
+                    cmd.CommandType = CommandType.Text;
+                    cmd.CommandText = @"INSERT INTO MNSMSPinLog(UserName,Message,SentOn,SentBy,Purpose)
                                            Values (@UserName,@Message,@SentOn,@SentBy,@Purpose)";
-                        cmd.Parameters.AddWithValue("@UserName",log.UserName);
-                        cmd.Parameters.AddWithValue("@Message", log.Message);
-                        cmd.Parameters.AddWithValue("@SentOn", log.SentOn);
-                        cmd.Parameters.AddWithValue("@SentBy", log.SentBy);
-                        cmd.Parameters.AddWithValue("@Purpose", log.Purpose);
+                    cmd.Parameters.AddWithValue("@UserName", log.UserName);
+                    cmd.Parameters.AddWithValue("@Message", log.Message);
+                    cmd.Parameters.AddWithValue("@SentOn", log.SentOn);
+                    cmd.Parameters.AddWithValue("@SentBy", log.SentBy);
+                    cmd.Parameters.AddWithValue("@Purpose", log.Purpose);
 
-                        if (conn.State != ConnectionState.Open)
-                            conn.Open();
+                    if (conn.State != ConnectionState.Open)
+                        conn.Open();
 
-                        cmd.Connection = conn;
-                        strans = conn.BeginTransaction();
-                        cmd.Transaction = strans;
-                        int i = cmd.ExecuteNonQuery();
-                        if (i==1)
-                        {
-                            strans.Commit();
-                            result = true;
-                            
-                        }
-                        else
-                        {
-                            result = false;
-                        }
+                    cmd.Connection = conn;
+                    strans = conn.BeginTransaction();
+                    cmd.Transaction = strans;
+                    int i = cmd.ExecuteNonQuery();
+                    if (i == 1)
+                    {
+                        strans.Commit();
+                        result = true;
 
-                      cmd.Dispose();
-                   
+                    }
+                    else
+                    {
+                        result = false;
+                    }
+
+                    cmd.Dispose();
+
 
                 }
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 strans.Rollback();
-                result= false;
+                result = false;
             }
             finally
             {
                 if (conn.State != ConnectionState.Closed)
                     conn.Close();
-              
+
             }
             return result;
         }
@@ -624,7 +622,7 @@ namespace CustApp.UserModels
 
                         if (!string.IsNullOrEmpty(UserName))
                         {
-                            Command = Command+" AND UserName=@UserName";
+                            Command = Command + " AND UserName=@UserName";
                             cmd.Parameters.AddWithValue("UserName", UserName);
                         }
                         cmd.CommandText = Command;
@@ -679,7 +677,7 @@ namespace CustApp.UserModels
         /// <param name="AccToDelete">XML String of transaction accounts to delete</param>
         /// <param name="AccToAdd">XML String of transaction accounts to add</param>
         /// <returns>-1 if insert fails,99 if no error occurs but data is not inserted,100 Successful</returns>
-        public int InsertIntoMakerChecker(string ClientCode,string ModifyingAdmin,string ModifyingBranch, string ModifiedField,string AccToDelete,string AccToAdd)
+        public int InsertIntoMakerChecker(string ClientCode, string ModifyingAdmin, string ModifyingBranch, string ModifiedField, string AccToDelete, string AccToAdd)
         {
 
             SqlConnection sqlCon = null;
@@ -723,7 +721,7 @@ namespace CustApp.UserModels
 
 
 
-            
+
         }
 
 
@@ -798,7 +796,7 @@ namespace CustApp.UserModels
                         cmd.CommandText = @"UPDATE MNClient SET IsRejected=@IsRejected,IsApproved=@IsApproved,ModifiedBy=@ModifiedBy,ModifyingBranch=@ModifyingBranch
                                                Where ClientCode=@ClientCode ";
 
-                        
+
                         cmd.Parameters.AddWithValue("@ClientCode", objUserInfo.ClientCode);
                         cmd.Parameters.AddWithValue("@IsRejected", Rejected);
                         cmd.Parameters.AddWithValue("@IsApproved", Approve);
@@ -953,7 +951,7 @@ namespace CustApp.UserModels
         public int StatusApprove(string ClientCode)
         {
             SqlConnection conn = null;
-            int ret=0;
+            int ret = 0;
             try
             {
                 using (conn = new SqlConnection(DatabaseConnection.ConnectionStr()))

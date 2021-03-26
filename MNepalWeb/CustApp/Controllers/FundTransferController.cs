@@ -1,22 +1,20 @@
-﻿using CustApp.Helper;
+﻿using CustApp.App_Start;
+using CustApp.Helper;
 using CustApp.Models;
+using CustApp.Settings;
+using CustApp.Utilities;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.IO;
+using System.Linq;
+using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
 using System.Web.Mvc;
 using System.Web.Script.Serialization;
 using System.Web.SessionState;
-using CustApp.App_Start;
-using CustApp.Utilities;
-using System.Data;
-using CustApp.Settings;
-using System.Linq;
-using System.Net;
-using System.Net.Http.Headers;
-using System.Text;
 
 namespace CustApp.Controllers
 {
@@ -345,9 +343,9 @@ namespace CustApp.Controllers
                                     responseCode = code;
                                 }
                             }
-                          //  return Json(new { responseCode = responseCode, responseText = respmsg },
-                             return Json(new { responseCode = responseCode, responseText = respmsg, blockMessage = BlockMessage },
-                      JsonRequestBehavior.AllowGet);
+                            //  return Json(new { responseCode = responseCode, responseText = respmsg },
+                            return Json(new { responseCode = responseCode, responseText = respmsg, blockMessage = BlockMessage },
+                     JsonRequestBehavior.AllowGet);
                         }
                         else
                         {
@@ -359,24 +357,24 @@ namespace CustApp.Controllers
                             if (message == null)
                             {
                                 //return Json(new { responseCode = responseCode, responseText = responsetext },
-                               return Json(new { responseCode = responseCode, responseText = responsetext, blockMessage = BlockMessage },
-                     JsonRequestBehavior.AllowGet);
+                                return Json(new { responseCode = responseCode, responseText = responsetext, blockMessage = BlockMessage },
+                      JsonRequestBehavior.AllowGet);
                             }
                             else
                             {
                                 dynamic item = JValue.Parse(message);
 
-                             //   return Json(new { responseCode = responseCode, responseText = (string)item["StatusMessage"] },
-                               return Json(new { responseCode = responseCode, responseText = (string)item["StatusMessage"], blockMessage = BlockMessage },
-                            JsonRequestBehavior.AllowGet);
+                                //   return Json(new { responseCode = responseCode, responseText = (string)item["StatusMessage"] },
+                                return Json(new { responseCode = responseCode, responseText = (string)item["StatusMessage"], blockMessage = BlockMessage },
+                             JsonRequestBehavior.AllowGet);
                             }
                         }
                     }
                     catch (Exception ex)
                     {
-                       // return Json(new { responseCode = "400", responseText = ex.Message },
-                           return Json(new { responseCode = "400", responseText = ex.Message, blockMessage = BlockMessage },
-                     JsonRequestBehavior.AllowGet);
+                        // return Json(new { responseCode = "400", responseText = ex.Message },
+                        return Json(new { responseCode = "400", responseText = ex.Message, blockMessage = BlockMessage },
+                  JsonRequestBehavior.AllowGet);
                     }
                     this.TempData["fundTransfer_messsage"] = result
                                                     ? "Fund Transfer successfully." + message
@@ -389,7 +387,7 @@ namespace CustApp.Controllers
             }
             else
             {
-               // return Json(new { responseCode = "400", responseText = "Please refresh the page again." },
+                // return Json(new { responseCode = "400", responseText = "Please refresh the page again." },
                 return Json(new { responseCode = "400", responseText = "Please refresh the page again.", blockMessage = BlockMessage },
                             JsonRequestBehavior.AllowGet);
             }

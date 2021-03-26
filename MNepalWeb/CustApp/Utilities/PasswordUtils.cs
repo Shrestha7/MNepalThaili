@@ -1,9 +1,5 @@
 ﻿using CustApp.Models;
 using CustApp.UserModels;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
 
 namespace CustApp.Utilities
 {
@@ -15,7 +11,7 @@ namespace CustApp.Utilities
         {
             var objMemberInfo = new UserInfo()
             {
-				OPassword = member.OPassword,
+                OPassword = member.OPassword,
                 Password = member.Password,
                 ClientCode = member.ClientCode,
                 Mode = "CPWD" // Change Password

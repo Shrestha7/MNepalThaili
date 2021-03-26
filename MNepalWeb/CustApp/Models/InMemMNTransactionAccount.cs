@@ -1,10 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
 
-namespace CustApp.Models {
-    public class InMemMNTransactionAccount {
+namespace CustApp.Models
+{
+    public class InMemMNTransactionAccount
+    {
         public string ClientCode { get; set; }
 
         public string AcNumber { get; set; }

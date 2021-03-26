@@ -1,12 +1,8 @@
-﻿using Microsoft.Practices.EnterpriseLibrary.Data;
-using CustApp.Connection;
+﻿using CustApp.Connection;
 using CustApp.Models;
 using System;
-using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
-using System.Linq;
-using System.Web;
 
 namespace CustApp.UserModels
 {
@@ -22,11 +18,11 @@ namespace CustApp.UserModels
             DataTable dtableResult = null;
             SqlConnection conn = null;
             try
-            {   
-                using(conn = new SqlConnection(DatabaseConnection.ConnectionStr()))
+            {
+                using (conn = new SqlConnection(DatabaseConnection.ConnectionStr()))
                 {
                     conn.Open();
-                    using (SqlCommand cmd = new SqlCommand("[s_MNUserWalletAvailBaln]",conn))
+                    using (SqlCommand cmd = new SqlCommand("[s_MNUserWalletAvailBaln]", conn))
                     {
                         cmd.Parameters.AddWithValue("@ClientCode", objUserInfo.ClientCode);
                         cmd.CommandType = CommandType.StoredProcedure;

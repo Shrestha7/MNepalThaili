@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net;
-using System.Web;
+﻿using System.Net;
 
 namespace CustApp.Utilities
 {
@@ -10,7 +6,7 @@ namespace CustApp.Utilities
     {
         string SMSKey = System.Web.Configuration.WebConfigurationManager.AppSettings["MNepalSMS"];
 
-        public void SendSMS(string Message,string mobile)
+        public void SendSMS(string Message, string mobile)
         {
             string messagereply = Message;
             var client = new WebClient();
@@ -31,6 +27,6 @@ namespace CustApp.Utilities
         }
 
 
-     
+
     }
 }

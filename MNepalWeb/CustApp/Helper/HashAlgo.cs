@@ -1,10 +1,8 @@
 ﻿using CustApp.Models;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
-using System.Web;
 
 namespace CustApp.Helper
 {
@@ -12,7 +10,7 @@ namespace CustApp.Helper
     {
         public static string Hash(string password)
         {
-            var bytes = new System.Text.UTF8Encoding().GetBytes(password+ "mhichapuchha");
+            var bytes = new System.Text.UTF8Encoding().GetBytes(password + "mhichapuchha");
             byte[] hashBytes;
             using (var algorithm = new System.Security.Cryptography.SHA512Managed())
             {
@@ -26,7 +24,7 @@ namespace CustApp.Helper
             RNG rng = new RNG();
             byte[] saltBytes = rng.GenerateRandomCryptographicBytes(saltLength);
             byte[] passwordAsBytes = Encoding.UTF8.GetBytes(password);
-            List<byte> passwordWithSaltBytes = new List<byte>();                                                              
+            List<byte> passwordWithSaltBytes = new List<byte>();
             passwordWithSaltBytes.AddRange(passwordAsBytes);
             passwordWithSaltBytes.AddRange(saltBytes);
             byte[] digestBytes = hashAlgo.ComputeHash(passwordWithSaltBytes.ToArray());

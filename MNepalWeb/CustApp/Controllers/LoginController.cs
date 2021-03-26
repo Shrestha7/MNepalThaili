@@ -1,30 +1,29 @@
-﻿using CustApp.Models;
+﻿using CustApp.App_Start;
+using CustApp.Helper;
+using CustApp.Models;
 using CustApp.Settings;
 using CustApp.Utilities;
+using Newtonsoft.Json.Linq;
 using System;
 using System.Data;
-using System.Linq;
-using System.Web.Mvc;
-using System.Web.Security;
-using System.Threading.Tasks;
-using System.Net.Http;
-using CustApp.Helper;
 using System.IO;
-using System.Web.Script.Serialization;
-using Newtonsoft.Json.Linq;
-using CustApp.App_Start;
-using System.Net;
-using System.Net.Sockets;
+using System.Linq;
 using System.Management;
+using System.Net;
+using System.Net.Http;
 using System.Net.NetworkInformation;
-
+using System.Net.Sockets;
+using System.Threading.Tasks;
 using System.Web;
+using System.Web.Mvc;
+using System.Web.Script.Serialization;
+using System.Web.Security;
 
 namespace CustApp.Controllers
 {
     public class LoginController : Controller
     {
-        string IPAddresses,IPv4;
+        string IPAddresses, IPv4;
         // public object CssSetting { get; private set; }
 
         // GET: Login
@@ -39,7 +38,7 @@ namespace CustApp.Controllers
             }
 
 
-            if (Session["LOGGED_USERNAME"]==null)
+            if (Session["LOGGED_USERNAME"] == null)
             {
                 return View("Index");
             }
@@ -87,7 +86,7 @@ namespace CustApp.Controllers
         {
             string userName = collection["txtUserName"] ?? string.Empty;
             string passWord = collection["txtPassword"] ?? string.Empty;
-            string StatusCheck=null;
+            string StatusCheck = null;
             passWord = HashAlgo.Hash(passWord);
             bool result = false;
             string displayMessage = null;
@@ -114,7 +113,7 @@ namespace CustApp.Controllers
                         if (dtableMobileNo.Rows.Count == 0)
                         {
                             result = false;
-                            displayMessage = "Please enter a valid mobile number."; 
+                            displayMessage = "Please enter a valid mobile number.";
                             messageTopic = "Unregistered Number!";
                             messageClass = CssSetting.FailedMessageClass;
                         }
@@ -126,7 +125,7 @@ namespace CustApp.Controllers
                             string Status = dtableBlockRemarks.Rows[0]["Status"].ToString();
                             string IsApproved = dtableBlockRemarks.Rows[0]["IsApproved"].ToString();
 
-                            if (Status == "Blocked" && IsApproved=="Approve")
+                            if (Status == "Blocked" && IsApproved == "Approve")
                             {
                                 StatusCheck = "Blocked";
                                 messageTopic = "Blocked";
@@ -515,8 +514,8 @@ namespace CustApp.Controllers
 
 
                                     //displayMessage = "You cannot log in at the moment!";
-                                   //displayMessage = "Invalid Login! You have already attempt 3 times with wrong password,Please try again after 10 minutes";
-                                   // displayMessage = "Invalid Login! Your Account has been Blocked for 10 minutes.Please try again later";
+                                    //displayMessage = "Invalid Login! You have already attempt 3 times with wrong password,Please try again after 10 minutes";
+                                    // displayMessage = "Invalid Login! Your Account has been Blocked for 10 minutes.Please try again later";
                                     displayMessage = LoginUtils.GetMessage("02");
                                     messageClass = CssSetting.FailedMessageClass;
                                 }

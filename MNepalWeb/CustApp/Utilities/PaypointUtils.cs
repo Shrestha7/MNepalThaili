@@ -1,9 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
+﻿using CustApp.Models;
 using CustApp.UserModels;
-using CustApp.Models;
+using System.Collections.Generic;
 using System.Data;
 
 namespace CustApp.Utilities
@@ -51,7 +48,7 @@ namespace CustApp.Utilities
                 SCNo = NEAObj.SCNo,
                 NEABranchCode = NEAObj.NEABranchCode,
                 CustomerID = NEAObj.CustomerID,
-                refStan=NEAObj.refStan,
+                refStan = NEAObj.refStan,
                 Mode = "NEA" // GET NEA Details
             };
             return objUserModel.GetNEAPaymentDetails(objUserInfo);
@@ -68,7 +65,7 @@ namespace CustApp.Utilities
                 UserName = KPObj.UserName,
                 KhanepaniCounter = KPObj.KhanepaniCounter,
                 CustomerID = KPObj.CustomerID,
-                refStan=KPObj.refStan,
+                refStan = KPObj.refStan,
                 Mode = "KP" // GET NEA Details
             };
             return objUserModel.GetKPPaymentDetails(objUserInfo);

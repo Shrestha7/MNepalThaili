@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-
-namespace CustApp.ViewModel
+﻿namespace CustApp.ViewModel
 {
     public class UtilityViewModel
     {
@@ -14,6 +9,6 @@ namespace CustApp.ViewModel
         public string Balance { get; set; }
         public string Amount { get; set; }
         public string Method { get; set; }
-      
+
     }
 }

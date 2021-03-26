@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-
-namespace CustApp.Models
+﻿namespace CustApp.Models
 {
     public class StatementInfo
     {
@@ -33,7 +28,7 @@ namespace CustApp.Models
             get;
             set;
         }
-        
+
         public string Debit
         {
             get;
@@ -55,20 +50,20 @@ namespace CustApp.Models
             set;
         }
         //start milayako 01
-        public StatementInfo( string mobileno,  string StartDate, string EndDate)
-        { 
+        public StatementInfo(string mobileno, string StartDate, string EndDate)
+        {
             this.mobileno = mobileno;
             this.StartDate = StartDate;
-            this.EndDate = EndDate; 
-        } 
+            this.EndDate = EndDate;
+        }
 
         public StatementInfo()
         {
 
-        } 
+        }
 
         public string mobileno { get; set; }
-       
+
         //end milayako 01
     }
 }

@@ -1,13 +1,10 @@
 ﻿using CustApp.Models;
 using CustApp.Utilities;
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Management;
 using System.Net;
 using System.Net.NetworkInformation;
 using System.Net.Sockets;
-using System.Web;
 using System.Web.Mvc;
 using System.Web.Security;
 
@@ -184,7 +181,7 @@ namespace CustApp.Controllers
 
                     return RedirectToAction("Index", "Login");
                 }
-                catch(Exception ex)
+                catch (Exception ex)
                 {
                     return RedirectToAction("Index", "Login");
                 }

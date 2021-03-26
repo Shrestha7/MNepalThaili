@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-
-namespace CustApp.Models
+﻿namespace CustApp.Models
 {
     public class DMAT
     {
@@ -31,7 +26,7 @@ namespace CustApp.Models
         public string DematName { get; set; }
         public string TimeStamp { get; set; }
 
-        public string TokenUnique { get; set; }        
+        public string TokenUnique { get; set; }
     }
 
     public class DematGet

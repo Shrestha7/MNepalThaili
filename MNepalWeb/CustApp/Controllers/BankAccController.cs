@@ -1,19 +1,17 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Data;
-using System.Linq;
-using System.Web;
-using System.Web.Mvc;
+﻿using CustApp.App_Start;
+using CustApp.Helper;
 using CustApp.Models;
 using CustApp.Utilities;
-using System.Threading.Tasks;
-using System.Net.Http;
-using CustApp.Helper;
-using System.IO;
-using CustApp.App_Start;
-using System.Web.Script.Serialization;
 using Newtonsoft.Json.Linq;
+using System;
+using System.Collections.Generic;
+using System.Data;
+using System.IO;
 using System.Net;
+using System.Net.Http;
+using System.Threading.Tasks;
+using System.Web.Mvc;
+using System.Web.Script.Serialization;
 
 namespace ThailiMNepalApp.Controllers
 {

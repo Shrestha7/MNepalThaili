@@ -1,8 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Web;
 
 namespace CustApp.Models
 {
@@ -17,17 +14,17 @@ namespace CustApp.Models
         public string ClientCode { get; set; }
 
         [Required]
-        [Display(Name="Full Name")]
+        [Display(Name = "Full Name")]
         public string Name { get; set; }
         [Required]
         [Display(Name = "Date of Birth")]
         public string DOB { get; set; }
-      
+
         [Display(Name = "District")]
         public string PerDistrict { get; set; }
         [Display(Name = "Municipality/VDC")]
         public string PerMunicipality { get; set; }
-        [Display(Name="Ward No")]
+        [Display(Name = "Ward No")]
         public string PerWardNo { get; set; }
         [Display(Name = "Street")]
         public string PerStreet { get; set; }
@@ -88,13 +85,13 @@ namespace CustApp.Models
         public string RelationwithContactPerson { get; set; }
         [Display(Name = "Contact Number")]
         public string ContactPersonNumber { get; set; }
-        public List<Occupation> Occupations{ get; set; }
-        public List<ExtraInfo> ExtraInfos{ get; set; }
+        public List<Occupation> Occupations { get; set; }
+        public List<ExtraInfo> ExtraInfos { get; set; }
         public string Photo { get; set; }
         public string IdenitificationImage { get; set; }
 
     }
-    
+
     public class Occupation
     {
 
@@ -106,14 +103,14 @@ namespace CustApp.Models
         public string Designation { get; set; }
         [Display(Name = "Estimated Annual Income")]
         public int EstimatedIncome { get; set; }
-        
+
     }
     public class ExtraInfo
     {
         public string Key { get; set; }
-        
+
         public string Value { get; set; }
-        
+
     }
 
 }

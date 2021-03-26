@@ -7,11 +7,8 @@ using System;
 using System.Collections.Generic;
 using System.Data;
 using System.IO;
-using System.Linq;
-using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
-using System.Web;
 using System.Web.Mvc;
 using System.Web.Script.Serialization;
 
@@ -154,7 +151,7 @@ namespace CustApp.Controllers
             TraceIdGenerator _tig = new TraceIdGenerator();
             var tid = _tig.GenerateTraceID();
             string tokenID = Session["TokenID"].ToString();
-                        
+
             using (HttpClient client = new HttpClient())
             {
                 var action = "subisu.svc/checkpayment";
@@ -447,7 +444,7 @@ namespace CustApp.Controllers
             string mobile = userName; //mobile is username
             TraceIdGenerator _tig = new TraceIdGenerator();
             var tid = _tig.GenerateTraceID();
-                        
+
             using (HttpClient client = new HttpClient())
             {
                 var destinationTestNumber = System.Configuration.ConfigurationManager.AppSettings["DestinationTestNumber"];

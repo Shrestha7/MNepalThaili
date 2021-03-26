@@ -55,6 +55,7 @@
    /* .filter-option-inner-inner {
         margin-left: -22px;
     }*/
+
 </style>
 
 @using (Html.BeginForm("CIPSPayment", "CIPS", FormMethod.Post, new { @id = "CIPSPayment", @name = "CIPSPayment", @class = "form-horizontal", enctype = "multipart/form-data" }))
@@ -261,7 +262,7 @@
                                 <div class="col-md-12">
                                     <div class="form-group">
                                         <label class="col-sm-12">Branch Name (<span style="color:red">*</span>)</label>
-                                        <select id="branchDrpdwn" name="branchName" class="show-tick1" style="width:465px; height:43px; font-size:18px"></select>
+                                        <select id="branchDrpdwn" name="branchName" class="show-tick" style="width:465px; height:43px; font-size:18px"></select>
                                     </div>
                                     <div class="form-group" id="branchNameErr" style="color:red; margin-top:-11px;"></div>
                                 </div>
@@ -427,8 +428,6 @@
         }
 
         $(".show-tick").prepend("<option value='0' disabled selected>---Select Option---</option>");
-        $(".show-tick1").prepend("<option value='0' disabled selected>---Select Option---</option>");
-
         $(document).ready(function () {
             $("#T-PIN").hide();
             $("#AccountValidate").hide();
@@ -622,7 +621,7 @@
                         }));
                     });
 
-                    $('.show-tick1').selectpicker({
+                    $('.show-tick').selectpicker({
                         liveSearch: true,
                         showSubtext: true
                     });
@@ -663,9 +662,6 @@
             var bankBranchId = window.branchId;
             var branchName = window.branchName;
             var transactionDetail = $("[name='txtTransactionDetail']").val();
-            var pin = $("[name='txtPin']").val();
-
-            //var token = $('input[name="__RequestVerificationToken"]').val();
             var token = $('input[name="__AjaxAntiForgeryForm"]').val();
 
             if ((senderAccountNumber != "") && (amount != "") && (beneficiaryAccountNumber != "") && (beneficiaryAccountName != "") && (bankName != undefined)
@@ -712,9 +708,6 @@
                             $("#Remark").show();
                             $("#btnSubmit").show();
                         }
-                        //else if (data.responseCode != "000") {
-                        //    $("#AccountValidateErr").show();
-                        //}
                         //display error message
                         else {
                             //$("#ajaxResponse").html("");
@@ -763,10 +756,8 @@
         });
 
 
-        $('#btnSubmit').click(function (e) {
-            
-            e.preventDefault();
-            
+        $('#btnSubmit').click(function (e) {            
+            e.preventDefault();            
             var senderAccountName = $("[name='txtSenderAccountName']").val();
             var senderAccountNumber = $("[name='txtSenderAccountNumber']").val();
             var amount = $("[name='txtAmount']").val();
@@ -778,7 +769,6 @@
             var branchName = window.branchName;
             var transactionDetail = $("[name='txtTransactionDetail']").val();
             var pin = $("[name='txtPin']").val();
-
             var token = $('input[name="__RequestVerificationToken"]').val();
 
             if ((senderAccountNumber != "") && (amount != "") && (beneficiaryAccountNumber != "") && (beneficiaryAccountName != "") && (bankName != undefined)

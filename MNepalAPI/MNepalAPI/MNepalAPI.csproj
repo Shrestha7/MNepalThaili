@@ -339,7 +339,6 @@
     <Compile Include="BasicAuthentication\RandomCodeGenerate.cs" />
     <Compile Include="Connection\DatabaseConnection.cs" />
     <Compile Include="Controllers\ConnectIPSController.cs" />
-    <Compile Include="Controllers\DefaultController.cs" />
     <Compile Include="Controllers\ImageController.cs" />
     <Compile Include="Controllers\KhanepaniController.cs" />
     <Compile Include="Controllers\NEAController.cs" />

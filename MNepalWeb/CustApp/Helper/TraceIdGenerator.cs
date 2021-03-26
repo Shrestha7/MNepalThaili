@@ -1,14 +1,9 @@
 ﻿using CustApp.Connection;
-using CustApp.Models;
-using CustApp.UserModels;
 using System;
-using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
-using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
-using System.Web;
 
 namespace CustApp.Helper
 {
@@ -18,7 +13,7 @@ namespace CustApp.Helper
         {
             SqlConnection conn = null;
             try
-            {   
+            {
                 using (conn = new SqlConnection(DatabaseConnection.ConnectionStr()))
                 {
                     conn.Open();
@@ -30,14 +25,14 @@ namespace CustApp.Helper
                         {
                             da.SelectCommand = cmd;
                             da.Fill(dtableResult);
-                                    
+
                             if (dtableResult.Rows.Count == 1)
                             {
                                 id = Convert.ToInt32(dtableResult.Rows[0]["id"].ToString());
                             }
-                                    
+
                         }
-                        
+
                     }
                     return id;
                 }
@@ -65,7 +60,7 @@ namespace CustApp.Helper
                     using (SqlCommand cmd = new SqlCommand(sqlInsert, conn))
                     {
                         cmd.Parameters.Add("@tID", SqlDbType.VarChar).Value = tID;
-        
+
                         cmd.CommandType = CommandType.Text;
                         cmd.ExecuteNonQuery();
                     }

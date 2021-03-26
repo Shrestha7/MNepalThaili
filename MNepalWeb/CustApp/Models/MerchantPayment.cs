@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Web.Mvc;
+﻿using System.ComponentModel.DataAnnotations;
 
 
 //using System;
@@ -70,14 +67,14 @@ namespace CustApp.Models
 
         }
 
-        public MerchantRestaurant(string tid, string TransactionMedium, string RestaurantName, string mobile,  string Amount, string TPin, string note, string sourcechannel)
+        public MerchantRestaurant(string tid, string TransactionMedium, string RestaurantName, string mobile, string Amount, string TPin, string note, string sourcechannel)
         {
             this.tid = tid;
             this.TransactionMedium = TransactionMedium;
             this.RestaurantName = RestaurantName;
-            this.mobile = mobile; 
+            this.mobile = mobile;
             this.Amount = Amount;
-            
+
             this.TPin = TPin;
             this.note = note;
             this.sourcechannel = sourcechannel;
@@ -157,7 +154,7 @@ namespace CustApp.Models
         [Required]
         [Display(Name = "Transaction Medium")]
         public string TransactionMedium { get; set; }
-        
+
         [Required]
         [Display(Name = "Insurance Company Name")]
         public string InsuranceName { get; set; }

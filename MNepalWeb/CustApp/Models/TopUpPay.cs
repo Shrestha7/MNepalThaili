@@ -1,15 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Web;
+﻿using System.ComponentModel.DataAnnotations;
 
 namespace CustApp.Models
 {
     public class TopUpPay
     {
-       
-        public TopUpPay(string tid, string TransactionMedium, string mobile, string mobileNumber, decimal Amount,  string Pin, string note, string sourcechannel)
+
+        public TopUpPay(string tid, string TransactionMedium, string mobile, string mobileNumber, decimal Amount, string Pin, string note, string sourcechannel)
         {
             this.tid = tid;
             this.TransactionMedium = TransactionMedium;
@@ -17,14 +13,14 @@ namespace CustApp.Models
             this.Amount = Amount;
             this.MobileNumber = mobileNumber;
             this.Pin = Pin;
-             this.note = note;
+            this.note = note;
             this.sourcechannel = sourcechannel;
-        } 
+        }
 
         public TopUpPay()
         {
 
-        } 
+        }
 
         public string tid { get; set; }
         public string mobile { get; set; }

@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Web;
 using System.Web.Mvc;
@@ -33,10 +32,10 @@ namespace CustApp.Models
 
         [Display(Name = "BSLicenseIssueDate")]
         public string BSLicenseIssueDate { get; set; }
-        
+
         [Display(Name = "PassportExpireDate")]
         public string PassportExpireDate { get; set; }
-        
+
         [Display(Name = "PassportIssueDate")]
         public string PassportIssueDate { get; set; }
 
@@ -52,7 +51,7 @@ namespace CustApp.Models
 
         [Display(Name = "Father Name")]
         public string FatherName { get; set; }
-        
+
         [Display(Name = "Mother Name")]
         public string MotherName { get; set; }
         [Display(Name = "Spouse Name")]
@@ -120,10 +119,10 @@ namespace CustApp.Models
 
         public HttpPostedFileBase PassportPhoto { get; set; }
 
-        public string FrontImage{ get; set; }
+        public string FrontImage { get; set; }
 
         public string BackImage { get; set; }
-        
+
         public string PassportImage { get; set; }
 
         public string FrontImageName { get; set; }
@@ -152,7 +151,7 @@ namespace CustApp.Models
         public string LName { get; set; }
 
         public string Gender { get; set; }
-        
+
         public List<SelectListItem> Profiles { get; set; }
 
         public List<SelectListItem> BranchCodes { get; set; }
@@ -481,7 +480,7 @@ namespace CustApp.Models
         public string WalletName { get; set; }
         public string WalletCode { get; set; }
         public string WardNumber { get; set; }
-        
+
 
         public string Zone { get; set; }
         public string Address1 { get; set; }
@@ -517,7 +516,7 @@ namespace CustApp.Models
 
         //for ebanking
         public string PaymentReferenceNumber { get; set; }
-        public string ItemCode { get; set; } 
+        public string ItemCode { get; set; }
         public string EBDate { get; set; }
         public string Mobile { get; set; }
         public string bankName { get; set; }

@@ -50,7 +50,7 @@ namespace CustApp.UserModels
         }
 
         #endregion
-        
+
         #region "Checking Mobile Number"
 
 
@@ -101,7 +101,7 @@ namespace CustApp.UserModels
 
 
         #endregion
-        
+
         #region "Checking Client Code"
 
         /// <summary>
@@ -154,7 +154,7 @@ namespace CustApp.UserModels
         }
 
         #endregion
-        
+
         #region "Register User Information "
 
         /// <summary>
@@ -178,7 +178,7 @@ namespace CustApp.UserModels
                         sqlCmd.Parameters.Add(new SqlParameter("@ClientCode", objUserInfo.ClientCode));
                         sqlCmd.Parameters.AddWithValue("@Name", objUserInfo.Name);
                         sqlCmd.Parameters.AddWithValue("@Address", objUserInfo.Address);
-                        
+
                         sqlCmd.Parameters.AddWithValue("@Status", objUserInfo.Status);
                         sqlCmd.Parameters.AddWithValue("@IsApproved", objUserInfo.IsApproved);
                         sqlCmd.Parameters.AddWithValue("@IsRejected", objUserInfo.IsRejected);
@@ -228,7 +228,7 @@ namespace CustApp.UserModels
 
 
 
-   
+
 
         /// <summary>
         /// Register the User Information
@@ -248,9 +248,9 @@ namespace CustApp.UserModels
                     {
                         sqlCmd.CommandType = CommandType.StoredProcedure;
 
-                     
+
                         sqlCmd.Parameters.AddWithValue("@Name", objUserInfo.Name);
-                       sqlCmd.Parameters.AddWithValue("@Address", objUserInfo.Address);
+                        sqlCmd.Parameters.AddWithValue("@Address", objUserInfo.Address);
                         sqlCmd.Parameters.AddWithValue("@PIN", objUserInfo.PIN);
                         sqlCmd.Parameters.AddWithValue("@Status", objUserInfo.Status);
                         sqlCmd.Parameters.AddWithValue("@FName", objUserInfo.FName);
@@ -317,10 +317,10 @@ namespace CustApp.UserModels
                         sqlCmd.Parameters["@RegIDOut"].Direction = ParameterDirection.Output;
 
                         ret = sqlCmd.ExecuteNonQuery();
-                       
+
                         ret = Convert.ToInt32(sqlCmd.Parameters["@RegIDOut"].Value);
-                            
-                        
+
+
                     }
 
                 }
@@ -340,7 +340,7 @@ namespace CustApp.UserModels
             return ret;
         }
 
-        
+
         public int CustomerRegAppRegisterUserInfo(UserInfo objUserInfo)
         {
             SqlConnection sqlCon = null;
@@ -446,7 +446,7 @@ namespace CustApp.UserModels
             return ret;
         }
 
-        
+
 
         public int RegisterUsersInfo(UserInfo objUserInfo)
         {
@@ -542,7 +542,7 @@ namespace CustApp.UserModels
             }
             return ret;
         }
-        public int RegisterMerchantInfo(UserInfo objUserInfo,string MerchantCategory)
+        public int RegisterMerchantInfo(UserInfo objUserInfo, string MerchantCategory)
         {
             SqlConnection sqlCon = null;
             SqlTransaction sTrans = null;
@@ -551,7 +551,7 @@ namespace CustApp.UserModels
             {
                 using (sqlCon = new SqlConnection(DatabaseConnection.ConnectionStr()))
                 {
-                    
+
                     sqlCon.Open();
                     sTrans = sqlCon.BeginTransaction();
                     using (SqlCommand sqlCmd = new SqlCommand("[s_MNMerchantRegistration]", sqlCon))
@@ -589,7 +589,7 @@ namespace CustApp.UserModels
                         sqlCmd.Parameters.AddWithValue("@BankNo", objUserInfo.BankNo);
                         sqlCmd.Parameters.AddWithValue("@BranchCode", objUserInfo.BranchCode);
                         sqlCmd.Parameters.AddWithValue("@BIsDefault", objUserInfo.IsDefault);
-                
+
                         sqlCmd.Parameters.Add("@RegIDOut", SqlDbType.Char, 500);
                         sqlCmd.Parameters["@RegIDOut"].Direction = ParameterDirection.Output;
 
@@ -740,7 +740,7 @@ namespace CustApp.UserModels
                         sqlCmd.Parameters.AddWithValue("@PANNumber", objsrInfo.PanNo);
                         sqlCmd.Parameters.AddWithValue("@OTPCode", objsrInfo.OTPCode);
                         sqlCmd.Parameters.AddWithValue("@Source", objsrInfo.Source);
-                        
+
                         sqlCmd.Parameters.AddWithValue("@DocType", objsrInfo.Document);
                         //sqlCmd.Parameters.AddWithValue("@ContactNumber1", objUserInfo.ContactNumber1);
                         //sqlCmd.Parameters.AddWithValue("@ContactNumber2", objUserInfo.ContactNumber2);
@@ -869,7 +869,7 @@ namespace CustApp.UserModels
 
                         ret = sqlCmd.ExecuteNonQuery();
                         ret = Convert.ToInt32(sqlCmd.Parameters["@RegIDOut"].Value);
-                        
+
                     }
 
                 }
@@ -912,7 +912,7 @@ namespace CustApp.UserModels
                         //sqlCmd.Parameters.AddWithValue("@OTPCode", objsrInfo.OTPCode);
                         //sqlCmd.Parameters.AddWithValue("@Source", objsrInfo.Source);
 
-                       sqlCmd.Parameters.AddWithValue("@ClientCode", objsrInfo.ClientCode);
+                        sqlCmd.Parameters.AddWithValue("@ClientCode", objsrInfo.ClientCode);
                         sqlCmd.Parameters.AddWithValue("@PaymentReferenceNumber", objsrInfo.PaymentReferenceNumber);
                         sqlCmd.Parameters.AddWithValue("@ItemCode", objsrInfo.ItemCode);
                         sqlCmd.Parameters.AddWithValue("@Amount", objsrInfo.Amount);
@@ -947,6 +947,6 @@ namespace CustApp.UserModels
             return ret;
         }
         #endregion
-         
+
     }
 }

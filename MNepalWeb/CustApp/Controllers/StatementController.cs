@@ -1,25 +1,25 @@
-﻿using CustApp.Models;
+﻿using CustApp.App_Start;
+using CustApp.Helper;
+using CustApp.Models;
+using CustApp.UserModels;
 using CustApp.Utilities;
 using CustApp.ViewModel;
+using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Dynamic;
+using System.Globalization;
 using System.IO;
+using System.Linq;
 using System.Net.Http;
+using System.Reflection;
 using System.Threading.Tasks;
 using System.Web.Mvc;
 using System.Web.Script.Serialization;
-using System.Web.SessionState;
-using CustApp.App_Start;
-using CustApp.Helper;
-using Newtonsoft.Json;
-using CustApp.UserModels;
-using System.Dynamic;
-using System.Globalization;
-using System.Reflection;
-using System.Linq;
 using System.Web.Security;
+using System.Web.SessionState;
 
 namespace CustApp.Controllers
 {
@@ -57,7 +57,7 @@ namespace CustApp.Controllers
                 }
 
                 UserInfo userInfo = new UserInfo();
-                
+
                 DataSet DSet = ProfileUtils.GetCusDetailProfileInfoDS(clientCode);
                 DataTable dKYC = DSet.Tables["dtKycDetail"];
                 DataTable dDoc = DSet.Tables["dtKycDoc"];
@@ -113,7 +113,7 @@ namespace CustApp.Controllers
             string userType = (string)Session["LOGGED_USERTYPE"];
 
             TempData["userType"] = userType;
-            
+
             if (TempData["userType"] != null)
             {
                 this.ViewData["userType"] = this.TempData["userType"];
@@ -211,7 +211,7 @@ namespace CustApp.Controllers
 
         //test
 
-      
+
         [HttpGet]
         public async Task<ActionResult> MiniStatement()
         {
@@ -262,7 +262,7 @@ namespace CustApp.Controllers
 
 
         }
-        
+
         ///start milayako 01
         [HttpGet]
         public ActionResult IndexNew()
@@ -278,8 +278,8 @@ namespace CustApp.Controllers
             {
                 this.ViewData["userType"] = this.TempData["userType"];
                 ViewBag.UserType = this.TempData["userType"];
-                ViewBag.Name = name; 
-              
+                ViewBag.Name = name;
+
                 MNBalance availBaln = new MNBalance();
                 DataTable dtableUser1 = AvailBalnUtils.GetAvailBaln(clientCode);
                 if (dtableUser1 != null && dtableUser1.Rows.Count > 0)
@@ -288,7 +288,7 @@ namespace CustApp.Controllers
 
                     ViewBag.AvailBalnAmount = availBaln.amount;
                 }
-                 
+
 
                 if (this.ViewData["fundTransfer_messsage"] != null)
                 {
@@ -309,11 +309,11 @@ namespace CustApp.Controllers
             {
                 return RedirectToAction("Index", "Login");
             }
-        } 
+        }
 
         [HttpGet]
         public async Task<ActionResult> IndexNewOne(StatementInfo _ft)
-        { 
+        {
 
             string userName = (string)Session["LOGGED_USERNAME"];
 
@@ -357,7 +357,7 @@ namespace CustApp.Controllers
                     string ava = string.Empty;
                     string avatra = string.Empty;
                     string avamsg = string.Empty;
-               
+
                     if (_res.IsSuccessStatusCode)
                     {
                         result = true;
@@ -371,8 +371,8 @@ namespace CustApp.Controllers
                             var json = ser.Deserialize<JsonParse>(responsetext);
                             message = json.d;
                             dynamic dyjson = JValue.Parse(responsetext);
-                            MiniStatements = ser.Deserialize<List<MiniStatementVM>>(message); 
-                        } 
+                            MiniStatements = ser.Deserialize<List<MiniStatementVM>>(message);
+                        }
 
                         return View(MiniStatements);
 
@@ -412,10 +412,10 @@ namespace CustApp.Controllers
             }
 
 
-        } 
+        }
         //end milayako 01
-         
-        
+
+
 
         #region Customer Detail Report
         // GET: Report
@@ -554,8 +554,8 @@ namespace CustApp.Controllers
                 return Content(convert, "application/json");
             }
 
-           
-            ac.UserName = UserName;        
+
+            ac.UserName = UserName;
             ac.StartDate = DateTime.ParseExact(StartDate, "dd/MM/yyyy", CultureInfo.InvariantCulture)
                                                     .ToString("yyyy-MM-dd", CultureInfo.InvariantCulture); ;
             ac.EndDate = DateTime.ParseExact(EndDate, "dd/MM/yyyy", CultureInfo.InvariantCulture)
@@ -633,7 +633,8 @@ namespace CustApp.Controllers
             {
                 bankbal = 0;
             }
-            else {
+            else
+            {
                 bankbal = Convert.ToDecimal(Session["bankbal"]);
             }
             if (!Request.IsAjaxRequest())
@@ -716,7 +717,7 @@ namespace CustApp.Controllers
                 dynamic resultset = new ExpandoObject();
                 resultset.TranId = item.TranId;
                 //resultset.Date = item.Date.ToString("dd/MM/yyyy hh:mm:ss.fff tt", CultureInfo.InvariantCulture);//"dd /MM/yyyy", CultureInfo.InvariantCulture);
-               // resultset.Date = item.Date;
+                // resultset.Date = item.Date;
                 resultset.TimeStamp = item.TimeStamp;
                 resultset.Desc1 = item.Desc1;
                 resultset.Debit = item.Debit;
@@ -730,7 +731,7 @@ namespace CustApp.Controllers
                 {
                     bankbal = bankbal - item.Credit;
                 }
-                
+
                 resultset.Type = "Bank Account";
                 resultset.Status = item.Status;
                 obj.Add(resultset);

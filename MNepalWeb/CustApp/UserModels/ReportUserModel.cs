@@ -1,22 +1,19 @@
-﻿using System;
+﻿using CustApp.Connection;
+using CustApp.Models;
+using CustApp.Utilities;
+using CustApp.ViewModel;
+using System;
 using System.Collections.Generic;
 using System.Data;
-using System.Linq;
-using System.Web;
-using CustApp.ViewModel;
 using System.Data.SqlClient;
-using CustApp.Models;
-using CustApp.Connection;
-using System.Globalization;
-using CustApp.Utilities;
 
 namespace CustApp.UserModels
 {
     public class ReportUserModel
-    {        
+    {
 
 
-       
+
         /// <summary>
         /// end 111
         /// </summary>
@@ -75,7 +72,7 @@ namespace CustApp.UserModels
             }
             return Merchants;
         }
-        
+
         public List<MNAgentStatement> GetAgentStatement(string ContactNumber1, string StartDate, string EndDate, string TranID)
         {
             SqlConnection conn = null;
@@ -89,7 +86,7 @@ namespace CustApp.UserModels
                     using (SqlCommand cmd = new SqlCommand())
                     {
                         cmd.CommandText = "s_MNAgentMiniStmt";
-                        cmd.Parameters.AddWithValue("@ContactNumber1", ContactNumber1);                        
+                        cmd.Parameters.AddWithValue("@ContactNumber1", ContactNumber1);
                         cmd.Parameters.AddWithValue("@StartDate", StartDate);
                         cmd.Parameters.AddWithValue("@EndDate", EndDate);
                         cmd.Parameters.AddWithValue("@TranID", TranID);
@@ -134,7 +131,7 @@ namespace CustApp.UserModels
             return AdminActivities;
 
         }
-        
+
         public List<CustomerAccActivity> CustomerAccountActivityNew(CustReport Cus)
         {
             DataSet dataset = new DataSet();
@@ -176,7 +173,7 @@ namespace CustApp.UserModels
                         CustomerAccActivity cuss = new CustomerAccActivity();
                         cuss.TranId = dr["TranID"].ToString();
                         //cuss.Date = DateTime.ParseExact(dr["Date"].ToString(), "dd/MM/yyyy", CultureInfo.InvariantCulture); //hh:mm:ss.fff tt
-                         cuss.TimeStamp = dr["TimeStamp"].ToString();
+                        cuss.TimeStamp = dr["TimeStamp"].ToString();
                         cuss.Desc1 = dr["Description"].ToString();
                         cuss.Debit = decimal.Parse(dr["Debit"].ToString().Trim() == "" ? "0" : dr["Debit"].ToString().Trim());
                         cuss.Credit = decimal.Parse(dr["Credit"].ToString().Trim() == "" ? "0" : dr["Credit"].ToString().Trim());
@@ -185,7 +182,7 @@ namespace CustApp.UserModels
                         ListRec.Add(cuss);
                     }
                 }
-                
+
 
             }
             catch (Exception ex)
@@ -203,7 +200,7 @@ namespace CustApp.UserModels
 
             return ListRec;
         }
-        
+
         public List<CustomerAccActivity> CustomerAccountActivityNewBnkAcc(CustReport Cus)
         {
             DataSet dataset = new DataSet();
@@ -244,7 +241,7 @@ namespace CustApp.UserModels
                         CustomerAccActivity cuss = new CustomerAccActivity();
                         cuss.TranId = dr["TranID"].ToString();
                         //cuss.Date = DateTime.ParseExact(dr["Date"].ToString(), "dd/MM/yyyy", CultureInfo.InvariantCulture); //hh:mm:ss.fff tt
-                       // cuss.Date = dr["Date"].ToString();
+                        // cuss.Date = dr["Date"].ToString();
                         cuss.TimeStamp = dr["TimeStamp"].ToString();
                         cuss.Desc1 = dr["Description"].ToString();
                         cuss.Debit = decimal.Parse(dr["Debit"].ToString().Trim() == "" ? "0" : dr["Debit"].ToString().Trim());

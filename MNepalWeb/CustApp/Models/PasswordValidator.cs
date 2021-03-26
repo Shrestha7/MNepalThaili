@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text.RegularExpressions;
-using System.Web;
-
-namespace CustApp.Models
+﻿namespace CustApp.Models
 {
     public class PasswordValidator
     {
@@ -15,24 +9,28 @@ namespace CustApp.Models
         public bool IsValid(string password)
         {
             return password.Length >= MinimumLength;
-                //&& uppercaseCharacterMatcher.Matches(password).Count
-                //    >= FewestUppercaseCharactersAllowed
-                //&& digitsMatcher.Matches(password).Count >= FewestDigitsAllowed;
+            //&& uppercaseCharacterMatcher.Matches(password).Count
+            //    >= FewestUppercaseCharactersAllowed
+            //&& digitsMatcher.Matches(password).Count >= FewestDigitsAllowed;
         }
 
-        public int FewestUppercaseCharactersAllowed {
+        public int FewestUppercaseCharactersAllowed
+        {
             get { return _FewUpperCaseCharacter; }
             set { _FewUpperCaseCharacter = value; }
         }
-        public int FewestDigitsAllowed {
+        public int FewestDigitsAllowed
+        {
             get { return _FewDigitAllowed; }
             set { _FewDigitAllowed = value; }
         }
-        public int MinimumLength {
+        public int MinimumLength
+        {
             get { return _MinLength; }
             set { _MinLength = value; }
         }
-        public int MaximumLength {
+        public int MaximumLength
+        {
             get { return _MaxLength; }
             set { _MaxLength = value; }
         }

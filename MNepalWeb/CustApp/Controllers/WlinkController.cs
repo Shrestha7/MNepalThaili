@@ -8,10 +8,8 @@ using System.Collections.Generic;
 using System.Data;
 using System.IO;
 using System.Linq;
-using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
-using System.Web;
 using System.Web.Mvc;
 using System.Web.Script.Serialization;
 
@@ -157,7 +155,7 @@ namespace CustApp.Controllers
             TraceIdGenerator _tig = new TraceIdGenerator();
             var tid = _tig.GenerateTraceID();
             string tokenID = Session["TokenID"].ToString();
-                        
+
             using (HttpClient client = new HttpClient())
             {
                 var action = "wlink.svc/checkpayment";
@@ -282,7 +280,7 @@ namespace CustApp.Controllers
                 DataTable dResponse = DPaypointSet.Tables["dtResponse"];
                 DataTable dWlinkPayment = DPaypointSet.Tables["dtNWPayment"];
 
-				List<ISP> ListDetails = new List<ISP>();
+                List<ISP> ListDetails = new List<ISP>();
                 if (dResponse != null && dResponse.Rows.Count > 0)
                 {
                     regobj.CustomerID = dResponse.Rows[0]["account"].ToString();
@@ -290,16 +288,16 @@ namespace CustApp.Controllers
                     regobj.TotalAmountDue = dResponse.Rows[0]["amount"].ToString();
                     regobj.NWBranchCode = dResponse.Rows[0]["serviceCode"].ToString();
                     regobj.payPointType = dResponse.Rows[0]["paypointType"].ToString();
-					regobj.description = dResponse.Rows[0]["description"].ToString();
+                    regobj.description = dResponse.Rows[0]["description"].ToString();
                     if (dWlinkPayment != null && dWlinkPayment.Rows.Count > 0)
                     {
                         //regobj.description = dResponse.Rows[0]["description"].ToString();
                         regobj.billDate = dWlinkPayment.Rows[0]["billDate"].ToString();
                         regobj.billAmount = dWlinkPayment.Rows[0]["billAmount"].ToString();
-						regobj.PackageRemainingDays = dWlinkPayment.Rows[0]["RemainingDays"].ToString();
+                        regobj.PackageRemainingDays = dWlinkPayment.Rows[0]["RemainingDays"].ToString();
 
-                        if (dWlinkPayment.Rows[0]["PackageAmount"].ToString()!=null && dWlinkPayment.Rows[0]["PackageId"].ToString()!=null &&
-                            dWlinkPayment.Rows[0]["Descriptions"].ToString()!=null)
+                        if (dWlinkPayment.Rows[0]["PackageAmount"].ToString() != null && dWlinkPayment.Rows[0]["PackageId"].ToString() != null &&
+                            dWlinkPayment.Rows[0]["Descriptions"].ToString() != null)
                         {
                             try
                             {
@@ -362,7 +360,7 @@ namespace CustApp.Controllers
                 ViewBag.CustomerName = regobj.CustomerName;
                 ViewBag.billDate = regobj.billDate.ToString();
                 ViewBag.paypointType = regobj.payPointType.ToString();
-				ViewBag.remainingDays = regobj.PackageRemainingDays.ToString();
+                ViewBag.remainingDays = regobj.PackageRemainingDays.ToString();
 
 
                 int id = TraceIdGenerator.GetID() + 1;
@@ -502,7 +500,7 @@ namespace CustApp.Controllers
             string mobile = userName; //mobile is username
             TraceIdGenerator _tig = new TraceIdGenerator();
             var tid = _tig.GenerateTraceID();
-                        
+
             using (HttpClient client = new HttpClient())
             {
                 var destinationTestNumber = System.Configuration.ConfigurationManager.AppSettings["DestinationTestNumber"];

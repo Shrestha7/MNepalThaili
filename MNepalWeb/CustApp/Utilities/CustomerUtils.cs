@@ -1,12 +1,9 @@
 ﻿using CustApp.Models;
 using CustApp.UserModels;
-using CustApp.ViewModel;
 using System;
 using System.Collections.Generic;
 using System.Data;
-using System.Linq;
 using System.Text;
-using System.Web;
 
 namespace CustApp.Utilities
 {
@@ -109,7 +106,7 @@ namespace CustApp.Utilities
         /// <param name="name"></param>
         /// <param name="accountNo"></param>
         /// <returns></returns>
-        public static DataTable GetUserProfileByNameAC(string name,string accountNo)
+        public static DataTable GetUserProfileByNameAC(string name, string accountNo)
         {
             var objUserModel = new CustomerUserModel();
             var objUserInfo = new UserInfo
@@ -253,17 +250,17 @@ namespace CustApp.Utilities
                 TxnEnabled = member.TxnEnabled,
                 IsPrimary = member.IsPrimary,
                 AcType = member.AcType,
-                AdminUserName=member.AdminUserName,
-                AdminBranch=member.AdminBranch,
+                AdminUserName = member.AdminUserName,
+                AdminBranch = member.AdminBranch,
                 TxnAccounts = member.TxnAccounts,
                 Mode = "UCINFO",// Modify Customer Info
-                
+
             };
             return new CustomerUserModel().UpdateCustomerUserInfo(objMemberInfo) > 0;
         }
         public static bool InsertMakerChecker(string ClientCode, string ModifyingAdmin, string ModifyingBranch, string ModifiedField, string AccToDelete, string AccToAdd)
         {
-            return new CustomerUserModel().InsertIntoMakerChecker( ClientCode,  ModifyingAdmin,  ModifyingBranch, ModifiedField,  AccToDelete,  AccToAdd) == 100;
+            return new CustomerUserModel().InsertIntoMakerChecker(ClientCode, ModifyingAdmin, ModifyingBranch, ModifiedField, AccToDelete, AccToAdd) == 100;
         }
         public static bool InsertMakerChecker(string ClientCode, string ModifyingAdmin, string ModifyingBranch, string ModifiedField)
         {
@@ -311,10 +308,10 @@ namespace CustApp.Utilities
                 StartDate = member.StartDate,
                 EndDate = member.EndDate,
                 TransactionLimit = member.TransactionLimit,
-                TransactionCount=member.TransactionCount,
-                TransactionLimitDaily=member.TransactionLimitDaily,
-                TransactionLimitMonthly=member.TransactionLimitMonthly,
-                LimitType=member.LimitType,
+                TransactionCount = member.TransactionCount,
+                TransactionLimitDaily = member.TransactionLimitDaily,
+                TransactionLimitMonthly = member.TransactionLimitMonthly,
+                LimitType = member.LimitType,
 
                 Mode = "UCRINFO",// Modify Customer Info
 
@@ -328,17 +325,17 @@ namespace CustApp.Utilities
                 ClientCode = member.ClientCode,
                 Address = member.Address,
                 Name = member.Name,
-               
+
                 EmailAddress = member.EmailAddress,
-                BankNo=member.BankNo,
+                BankNo = member.BankNo,
                 ContactNumber1 = member.ContactNumber1,
                 ContactNumber2 = member.ContactNumber2,
-                         
+
                 BranchCode = member.BranchCode,
                 BankAccountNumber = member.BankAccountNumber
-             
 
-              
+
+
 
             };
             return new CustomerUserModel().UpdateAgentInfo(objMemberInfo) > 0;
@@ -348,9 +345,9 @@ namespace CustApp.Utilities
             var objMemberInfo = new UserInfo()
             {
                 ClientCode = member.ClientCode,
-               
+
                 Name = member.Name,
-               
+
                 ProfileCode = member.ProfileName,
                 EmailAddress = member.EmailAddress,
                 BranchCode = member.BranchCode,
@@ -380,7 +377,7 @@ namespace CustApp.Utilities
                 ContactNumber2 = member.ContactNumber2,
                 BranchCode = member.BranchCode,
                 BankAccountNumber = member.BankAccountNumber,
-                BankNo=member.BankNo,
+                BankNo = member.BankNo,
                 IsApproved = member.IsApproved,
                 IsRejected = member.IsRejected
 
@@ -438,7 +435,7 @@ namespace CustApp.Utilities
         //        ClientCode = member.ClientCode,
         //        AdminUserName = member.AdminUserName,
         //        AdminBranch=member.AdminBranch
-                
+
         //    };
         //    return objUserModel.ApproveCustModified(objUserInfo)==100;
         //}
@@ -463,7 +460,7 @@ namespace CustApp.Utilities
         //        ClientCode = member.ClientCode,
         //        UserName=member.UserName,
         //        Remarks=member.Remarks
-          
+
         //    };
         //    return objUserModel.CustInfoReject(objUserInfo);
         //}
@@ -507,7 +504,7 @@ namespace CustApp.Utilities
         //    return objUserModel.CustInfoApprove(objUserInfo);
         //}
 
-            //end 111
+        //end 111
         public static string GeneratePin()
         {
             int _min = 1000;
@@ -521,7 +518,7 @@ namespace CustApp.Utilities
         {
             int maxlength = 5;
             int minlength = 5;
-            int length = rnd.Next(minlength,maxlength);
+            int length = rnd.Next(minlength, maxlength);
             const string valid = "abcdefghijklmnopqrstuvwxyz";
             StringBuilder res = new StringBuilder();
             while (0 < length--)
@@ -536,14 +533,14 @@ namespace CustApp.Utilities
             Log.SentOn = DateTime.Now.ToString("dd/MM/yyyy hh:mm:ss tt ");
             model.InsertSMSLog(Log);
         }
-       
+
         public static List<UserInfo> GetRejectedUser(string UserName)
         {
             CustomerUserModel model = new CustomerUserModel();
             return model.GetRejectedUser(UserName);
 
         }
-        internal static int AdminInfoApprove(UserInfo member,string Rejected, string Approve)
+        internal static int AdminInfoApprove(UserInfo member, string Rejected, string Approve)
         {
             var objUserModel = new CustomerUserModel();
             var objUserInfo = new UserInfo
@@ -551,8 +548,8 @@ namespace CustApp.Utilities
                 ClientCode = member.ClientCode,
                 UserName = member.UserName,
                 Remarks = member.Remarks,
-                AdminUserName=member.AdminUserName,
-                AdminBranch=member.AdminBranch
+                AdminUserName = member.AdminUserName,
+                AdminBranch = member.AdminBranch
 
             };
             return objUserModel.AdminApprove(objUserInfo, Rejected, Approve);
@@ -578,13 +575,13 @@ namespace CustApp.Utilities
         //    var objUserInfo = new UserInfo
         //    {
         //        UserType = userType
-                
-                
+
+
         //    };
         //    return objUserModel.GetAdminApproveDetailInfo(objUserInfo,UserName);
         //}
 
-            //end 111
+        //end 111
         internal static int AdminRegisterReject(UserInfo member, string Rejected)
         {
             var objUserModel = new CustomerUserModel();
@@ -600,7 +597,7 @@ namespace CustApp.Utilities
             };
             return objUserModel.AdminRegReject(objUserInfo, Rejected);
         }
-        internal static int AdminRegisterApprove(UserInfo member,  string Approve)
+        internal static int AdminRegisterApprove(UserInfo member, string Approve)
         {
             var objUserModel = new CustomerUserModel();
             var objUserInfo = new UserInfo
@@ -613,7 +610,7 @@ namespace CustApp.Utilities
         internal static List<UserInfo> GetUserStatus(string BranchCode, bool COC, string MobileNo)
         {
             var objUserModel = new CustomerUserModel();
-            return objUserModel.GetUserStatusList(BranchCode, COC,MobileNo);
+            return objUserModel.GetUserStatusList(BranchCode, COC, MobileNo);
 
         }
 
@@ -626,7 +623,7 @@ namespace CustApp.Utilities
         {
             var objUserModel = new CustomerUserModel();
 
-            return objUserModel.StatusApprove(ClientCode)==1;
+            return objUserModel.StatusApprove(ClientCode) == 1;
         }
         //Approve and edit Admin info From Rejected List
         public static bool AprvRjAdmin(this UserInfo member)
@@ -674,7 +671,7 @@ namespace CustApp.Utilities
         //Customer Rejected List search//
         //Unapproved Customer
         //By Mobile No//
-        public static DataTable GetCusRejUnByMobileNo(string mobileNo,string userType) //UnApproved Customer//
+        public static DataTable GetCusRejUnByMobileNo(string mobileNo, string userType) //UnApproved Customer//
         {
             var objUserModel = new CustomerUserModel();
             var objUserInfo = new UserInfo

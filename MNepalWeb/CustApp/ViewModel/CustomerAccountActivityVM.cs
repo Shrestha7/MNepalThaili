@@ -1,6 +1,6 @@
-﻿using System;
+﻿using CustApp.Models;
+using System;
 using System.Collections.Generic;
-using CustApp.Models;
 
 
 namespace CustApp.ViewModel
@@ -55,7 +55,8 @@ namespace CustApp.ViewModel
         public string ResponseCode { get; set; }
         public string Description { get; set; }
     }
-    public class CustomerLogVM {
+    public class CustomerLogVM
+    {
         public CustReport Parameter { get; set; }
         public List<CustomerLog> CustomerLogs { get; set; }
 
@@ -65,7 +66,8 @@ namespace CustApp.ViewModel
         public string Name { get; set; }
         public string ClientCode { get; set; }
     }
-    public class MerchantAcDetail{
+    public class MerchantAcDetail
+    {
         public string TransactionType { get; set; }
         public string TransactionDate { get; set; }
         public string Amount { get; set; }
