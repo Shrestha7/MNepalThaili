@@ -195,9 +195,22 @@ namespace MNepalAPI.Controllers
 
                         if (httpResponse.Content != null)
                         {
+                            List<BankList> bankLists = new List<BankList>();
 
                             var bankListResponse = JsonConvert.DeserializeObject<List<BankList>>(responseContent);
-                            var orderBankListResponse = bankListResponse.OrderBy(x => x.bankName.ToLower());
+                            foreach(var item in bankListResponse.ToList())
+                            {
+                                if(item.bankId == "0501" && item.bankName=="Nepal Investment Bank Limited")
+                                {
+                                  bankListResponse.Remove(item);
+                                    continue;
+                                    
+                                }
+
+                                bankLists.Add(item);
+                            }
+                            var orderBankListResponse = bankLists.OrderBy(x => x.bankName.ToLower());
+                           
                             return Request.CreateResponse(HttpStatusCode.OK, orderBankListResponse);
                         }
                         return Request.CreateResponse(HttpStatusCode.OK);

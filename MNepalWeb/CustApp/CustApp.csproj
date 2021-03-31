@@ -203,6 +203,7 @@
     <Compile Include="Models\DAL.cs" />
     <Compile Include="Models\DatatablesJS.cs" />
     <Compile Include="Models\DMAT.cs" />
+    <Compile Include="Models\Merchant.cs" />
     <Compile Include="Models\MNFundTransfer.cs" />
     <Compile Include="Models\HashWithSaltResult.cs" />
     <Compile Include="Models\InMemMNTransactionAccount.cs" />

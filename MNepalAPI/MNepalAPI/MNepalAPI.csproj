@@ -343,6 +343,7 @@
     <Compile Include="Controllers\KhanepaniController.cs" />
     <Compile Include="Controllers\NEAController.cs" />
     <Compile Include="Controllers\PushNotificationController.cs" />
+    <Compile Include="Controllers\QFXController.cs" />
     <Compile Include="Controllers\SendBulkSMSController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
