@@ -19,11 +19,23 @@
         position: relative;
         z-index: 2;
     }
+    .preload {
+        margin: 0;
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        margin-right: -50%;
+        transform: translate(-50%,-50%);
+    }
 </style>
 @using (Html.BeginForm("DMATPayment", "Share", FormMethod.Post, new { @id = "DMATPayment", @name = "DMATPayment", @class = "form-horizontal", enctype = "multipart/form-data" }))
 {
     @Html.AntiForgeryToken()
     @Html.ValidationSummary(true)
+
+    <div class="preload" style="display:none">
+        <img src="~/Content/image/loading.gif" class="img-responsive" />
+    </div>
 
     <div class="main-content">
         <div class="two-colbg">
@@ -289,7 +301,7 @@
 
         $(".placeholder_Month").prepend("<option value='0' disabled selected>---Select Month---</option>");
   //$(".show-tick").prepend("<option value='0' disabled selected>---Select Option---</option>");
-         
+
         function checkValidation() {
             var Cust = $("[name='txtDematNumber']").val();
             var DMAT = $("[name='DMAT']").val();
@@ -297,7 +309,7 @@
 //if (DMAT == null) {
             //    $("#DMATErr").append("<small>" + "Demat Payment option is required" + "</small>");
             //    $("#DMATErr").show();
-            //    $("#btnSubmit").hide(); 
+            //    $("#btnSubmit").hide();
 
             //}
             if ((Cust.trim() == "")) {
@@ -354,8 +366,10 @@
                         __RequestVerificationToken: token,
                         dmat: dataToPost
                     },
-                    async: false,
+                    async: true,
                     success: function (data) {
+                        $(".preload").show();
+                        $("#clearButton").attr("disabled", true);
 
                         if (data.responseCode == "200") {
                             var url = '@Url.Action("Details", "Share")';
@@ -384,12 +398,15 @@
                     },
                     //capture the request before it was sent to server
                     beforeSend: function (jqXHR, settings) {
+                        $(".preload").show();
+                        $("#btnSubmit").attr("disabled", true);
+                        $("#clearButton").attr("disabled", true);
                         //adding some Dummy data to the request
                         settings.data += "&dummyData=whatever";
                         //disable the button until we get the response
-                        $('#btnSubmit').attr("disabled", true);
                     },
                     complete: function (jqXHR, textStatus) {
+                        $(".preload").hide();
                         //enable the button
                         $('#btnSubmit').attr("disabled", false);
                     }

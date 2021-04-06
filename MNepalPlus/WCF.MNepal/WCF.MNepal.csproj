@@ -225,9 +225,12 @@
     <Compile Include="Helper\CashInLimitCheck.cs" />
     <Compile Include="Helper\CashOutTransLimitCheck.cs" />
     <Compile Include="Helper\Constants.cs" />
+    <Compile Include="Helper\CustomerSMS.cs" />
     <Compile Include="Helper\FeeAmountCheck.cs" />
     <Compile Include="Helper\FundTransferLimitCheck.cs" />
     <Compile Include="Helper\HashAlgo.cs" />
+    <Compile Include="Helper\SendSMS.cs" />
+    <Compile Include="Helper\SMSEnable.cs" />
     <Compile Include="Helper\SQLHelperQuery.cs" />
     <Compile Include="Helper\TokenGenerator.cs" />
     <Compile Include="Helper\TraceIdCheck.cs" />
@@ -255,6 +258,7 @@
     <Compile Include="Models\LinkBankAccount.cs" />
     <Compile Include="Models\Login.cs" />
     <Compile Include="Models\LoginAuth.cs" />
+    <Compile Include="Models\MerchantModel.cs" />
     <Compile Include="Models\MerchantTransaction.cs" />
     <Compile Include="Models\Message.cs" />
     <Compile Include="Models\MNBankInfo.cs" />
@@ -269,6 +273,7 @@
     <Compile Include="Models\PwdChange.cs" />
     <Compile Include="Models\ResponseParams.cs" />
     <Compile Include="Models\SMSLog.cs" />
+    <Compile Include="Models\SMSMsg.cs" />
     <Compile Include="Models\SoapTransaction.cs" />
     <Compile Include="Models\SyncDetail.cs" />
     <Compile Include="Models\TopupTransfer.cs" />
@@ -328,6 +333,7 @@
     <Compile Include="UserModels\DematUserModel.cs" />
     <Compile Include="UserModels\FeeAmountUserModel.cs" />
     <Compile Include="UserModels\LoginUserModels.cs" />
+    <Compile Include="UserModels\MerchantUserModel.cs" />
     <Compile Include="UserModels\MobileBalnSync.cs" />
     <Compile Include="UserModels\CustCheckerUserModel.cs" />
     <Compile Include="UserModels\PaypointUserModel.cs" />
@@ -337,6 +343,7 @@
     <Compile Include="UserModels\ReqTokenUserModels.cs" />
     <Compile Include="UserModels\ResetPin.cs" />
     <Compile Include="UserModels\SelfRegisterUserModel.cs" />
+    <Compile Include="UserModels\SMSUserModels.cs" />
     <Compile Include="UserModels\TraceIdCheckerUserModel.cs" />
     <Compile Include="UserModels\TranIDUserModel.cs" />
     <Compile Include="UserModels\TransactionLimitUserModel.cs" />
@@ -352,6 +359,7 @@
     <Compile Include="Utilities\DematUtils.cs" />
     <Compile Include="Utilities\FeeAmtUtils.cs" />
     <Compile Include="Utilities\LoginUtils.cs" />
+    <Compile Include="Utilities\MerchantUtils.cs" />
     <Compile Include="Utilities\PaypointUtils.cs" />
     <Compile Include="Utilities\PinUtils.cs" />
     <Compile Include="Utilities\PwdUtils.cs" />
@@ -359,6 +367,7 @@
     <Compile Include="Utilities\ReqTokenUtils.cs" />
     <Compile Include="Utilities\ResetPinUtils.cs" />
     <Compile Include="Utilities\SelfRegisterUtils.cs" />
+    <Compile Include="Utilities\SMSUtils.cs" />
     <Compile Include="Utilities\TraceIdCheckUtils.cs" />
     <Compile Include="Utilities\TranIDUtils.cs" />
     <Compile Include="Utilities\WalletLimitUtils.cs" />

@@ -343,8 +343,8 @@
     <Compile Include="Controllers\KhanepaniController.cs" />
     <Compile Include="Controllers\NEAController.cs" />
     <Compile Include="Controllers\PushNotificationController.cs" />
-    <Compile Include="Controllers\QFXController.cs" />
     <Compile Include="Controllers\SendBulkSMSController.cs" />
+    <Compile Include="Controllers\ShoppingMallController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
@@ -354,6 +354,7 @@
     <Compile Include="Helper\HelperStoreSqlLog.cs" />
     <Compile Include="Helper\HelpPageSampleGenerator.cs" />
     <Compile Include="Helper\RandomCodeGenerator.cs" />
+    <Compile Include="Helper\SendSMS.cs" />
     <Compile Include="Helper\SMSEnable.cs" />
     <Compile Include="Helper\TokenGenerationNCHL.cs" />
     <Compile Include="Models\Category.cs" />
@@ -362,6 +363,7 @@
     <Compile Include="Models\Khanepani.cs" />
     <Compile Include="Models\NEA.cs" />
     <Compile Include="Models\Notifications.cs" />
+    <Compile Include="Models\ShoppingMall.cs" />
     <Compile Include="Models\SMSMsg.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="UserModel\BulkSMSUserModel.cs" />

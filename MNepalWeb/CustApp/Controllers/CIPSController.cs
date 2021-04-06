@@ -1030,7 +1030,7 @@ namespace CustApp.Controllers
             dic.Add("Amount", Session["amount"].ToString());
             dic.Add("Charge", Session["cipsCharge"].ToString());
             dic.Add("ReferenceNo", Session["BatchId"].ToString());
-            dic.Add("TimeStamp", Session["TimeStamp"].ToString()); 
+            dic.Add("TimeStamp", Session["TimeStamp"].ToString());
 
             var printpdf = new ViewAsPdf("CIPSInvoice", dic);
             return printpdf;

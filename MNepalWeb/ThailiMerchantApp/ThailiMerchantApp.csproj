@@ -7594,7 +7594,6 @@
     <Content Include="Content\bower_components\select2\src\scss\_dropdown.scss" />
     <Content Include="Content\bower_components\select2\src\scss\_multiple.scss" />
     <Content Include="Content\bower_components\select2\src\scss\_single.scss" />
-    <None Include="Properties\PublishProfiles\FolderProfile.pubxml" />
     <None Include="Scripts\jquery-3.3.1.intellisense.js" />
     <Content Include="Scripts\jquery-3.3.1.js" />
     <Content Include="Scripts\jquery-3.3.1.min.js" />
@@ -7721,6 +7720,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
+    <Folder Include="Properties\PublishProfiles\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="fonts\glyphicons-halflings-regular.woff2" />

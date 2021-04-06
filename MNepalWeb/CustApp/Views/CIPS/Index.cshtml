@@ -29,7 +29,7 @@
     .preload {
         margin: 0;
         position: absolute;
-        top: 85%;
+        top: 90%;
         left: 50%;
         margin-right: -50%;
         transform: translate(-50%,-50%);
@@ -52,10 +52,11 @@
         max-height: 43px;
     }
 
-   /* .filter-option-inner-inner {
+    /* .filter-option-inner-inner {
         margin-left: -22px;
     }*/
 
+  
 </style>
 
 @using (Html.BeginForm("CIPSPayment", "CIPS", FormMethod.Post, new { @id = "CIPSPayment", @name = "CIPSPayment", @class = "form-horizontal", enctype = "multipart/form-data" }))
@@ -71,6 +72,7 @@
     <div class="preload" style="display:none">
         <img src="~/Content/image/loading.gif" class="img-responsive" />
     </div>
+    
     <div class="main-content">
         <div class="two-colbg">
             <div class="container">
@@ -315,9 +317,9 @@
                             <br />
 
                             <div class="box-footer">
-                                <input type="button" class="btn btn-blue btn-big col-md-5" name="btnCommand" value="Validate" id="btnValidate" />
-                                <input type="submit" class="btn btn-blue btn-big col-md-5" name="btnCommand" value="Submit" id="btnSubmit" />
-                                <input type="button" value="Clear" class="btn btn-default btn-big col-md-5" id="clearButton" />
+                                <input type="button" style="margin-left:150px" class="btn btn-blue btn-big col-md-5" name="btnCommand" value="Validate" id="btnValidate" />
+                                <input type="submit" style="margin-left:150px" class="btn btn-blue btn-big col-md-5" name="btnCommand" value="Submit" id="btnSubmit" />
+                                @*<input type="button" value="Clear" class="btn btn-default btn-big col-md-5" id="clearButton" />*@
                             </div>
 
                         </section>
@@ -433,7 +435,7 @@
             $("#AccountValidate").hide();
             $("#AccountValidateErr").hide();
             $("#btnSubmit").hide();
-            
+
             $.ajax({
                 cache: false,
                 type: "GET",
@@ -516,6 +518,7 @@
         }
 
         function checkRemarks() {
+            debugger;
             var transactionDetail = $("[name='txtTransactionDetail']").val();
             if ((transactionDetail.trim() == "")) {
                 $("#transactionDetailErr").html("");
@@ -526,12 +529,6 @@
                 $("#transactionDetailErr").hide();
             }
 
-            if (transactionDetail.length > 15) {
-                $("#transactionDetailErr").show();
-            }
-            else {
-                $("#transactionDetailErr").hide();
-            }
         }
 
         function checkBank() {
@@ -547,7 +544,7 @@
         }
 
         function checkBranch() {
-            
+
             var branchName = $("select[name='branchName'] option:selected").val();
             if (branchName == '0') {
                 $("#branchNameErr").html("");
@@ -583,7 +580,7 @@
         //get banklist
         $('#bankDrpdwn').change(function (e){
             e.preventDefault();
-            
+
             var dropdown = document.getElementById('bankDrpdwn');
             var selectedOption = dropdown.options[dropdown.selectedIndex];
             var selectedBankId = selectedOption.getAttribute('bankId');
@@ -591,6 +588,10 @@
 
             window.getBankId = selectedBankId;
             window.getBankName = selectedBankName;
+
+            if (selectedBankId != '0') {
+                $("#bankDrpdwnErr").hide();
+            }
 
             var dataToPost = {
                 bankId: selectedBankId,
@@ -605,7 +606,7 @@
                 data: dataToPost,
                 async: true,
                 success: function (data) {
-                    
+
                     var select = $("#branchDrpdwn");
                     select.empty();
                     select.append($('<option/>', {
@@ -630,7 +631,7 @@
 
                     //get bankBranch id
                     $(document).on('change', 'select', function (e) {
-                        
+
                         var branchId = $('option:selected', this).attr('value');
                         var branchName = $('option:selected', this).text();
                         window.branchId = branchId;
@@ -649,9 +650,7 @@
         });
 
         $('#btnValidate').click(function (e) {
-            
             e.preventDefault();
-            
             var senderAccountName = $("[name='txtSenderAccountName']").val();
             var senderAccountNumber = $("[name='txtSenderAccountNumber']").val();
             var amount = $("[name='txtAmount']").val();
@@ -694,8 +693,7 @@
                     async: true,
                     success: function (data) {
                         $(".preload").show();
-                        
-                        if (data.responseCode == "000") {
+                        if (data.responseCode == "000" || data.responseCode == "999") {
                             $("#amount").attr("disabled", "disabled");
                             $("#accountNumber").attr("disabled", "disabled");
                             $("#beneficiaryAccountName").attr("disabled", "disabled");
@@ -740,7 +738,7 @@
                     },
                     complete: function (jqXHR, textStatus) {
                         //enable the button
-                        $('.preload').hide();
+                        $(".preload").hide();
                         $('#btnValidate').attr("disabled", false);
                     }
                 });
@@ -756,8 +754,8 @@
         });
 
 
-        $('#btnSubmit').click(function (e) {            
-            e.preventDefault();            
+        $('#btnSubmit').click(function (e) {
+            e.preventDefault();
             var senderAccountName = $("[name='txtSenderAccountName']").val();
             var senderAccountNumber = $("[name='txtSenderAccountNumber']").val();
             var amount = $("[name='txtAmount']").val();
@@ -829,6 +827,7 @@
                     //capture the request before it was sent to server
                     beforeSend: function (jqXHR, settings) {
                         $(".preload").show();
+                        $('.mask').show();
                         //adding some Dummy data to the request
                         settings.data += "&dummyData=whatever";
                         //disable the button until we get the response
@@ -836,7 +835,9 @@
                     },
                     complete: function (jqXHR, textStatus) {
                         //enable the button
-                        $('.preload').hide();
+                        $(".preload").hide();
+                        $('.mask').hide();
+
                         $('#btnSubmit').attr("disabled", false);
                     }
                 });

@@ -11,6 +11,7 @@
 
 <!-- Main content -->
 <link href="~/Content/NewIcon/style.css" rel="stylesheet" />
+<link href="~/Content/ThaliStyle.css" rel="stylesheet" />
 <style>
     .image_icon {
         width: 100px;
@@ -24,6 +25,38 @@
         position: relative;
         z-index: 2;
     }
+
+    .preload {
+        margin: 0;
+        position: absolute;
+        top: 90%;
+        left: 50%;
+        margin-right: -50%;
+        transform: translate(-50%,-50%);
+    }
+
+    .bootstrap-select {
+        width: 465px !important;
+        background-color: #fff;
+        color: #fff;
+        border: solid 1px #000;
+    }
+
+    .btn-light {
+        color: #000;
+        background-color: #fff;
+        border-color: #fff;
+        font-size: 18px;
+        margin-left: 0px;
+        border: solid 1px #fff;
+        max-height: 43px;
+    }
+
+    /* .filter-option-inner-inner {
+        margin-left: -22px;
+    }*/
+
+  
 </style>
 
 @using (Html.BeginForm("CIPSPayment", "CIPS", FormMethod.Post, new { @id = "CIPSPayment", @name = "CIPSPayment", @class = "form-horizontal", enctype = "multipart/form-data" }))
@@ -32,9 +65,14 @@
     @Html.ValidationSummary(true)
     <div id="ajaxResponse">
     </div>
+    <form id="__AjaxAntiForgeryForm" action="#" method="post">
+        @Html.AntiForgeryToken()
+    </form>
+
     <div class="preload" style="display:none">
         <img src="~/Content/image/loading.gif" class="img-responsive" />
     </div>
+    
     <div class="main-content">
         <div class="two-colbg">
             <div class="container">
@@ -144,7 +182,7 @@
                             <div class="row">
                                 <div class="col-md-12">
                                     <div class="form-group">
-                                        <label class="col-sm-12">Sender Name :<b style="color:red;">*</b></label>
+                                        <label class="col-sm-12">Sender Name (<span style="color:red">*</span>)</label>
                                         <input type="text" value="@ViewBag.BankRegisterName" disabled="disabled" class="form-control select2" id="senderAccountName" name="txtSenderAccountName" placeholder="Account Name" maxlength="50" />
                                     </div>
                                     <div class="form-group" id="accountNameErr" style="color:red; margin-top:-11px;"></div>
@@ -155,23 +193,23 @@
                             <div class="row">
                                 <div class="col-md-12">
                                     <div class="form-group">
-                                        <label class="col-sm-12">Sender Account Number :<b style="color:red;">*</b></label>
-                                        <input type="text" value="@ViewBag.BankAccountNumber" @*disabled="disabled"*@ class="form-control select2" id="senderAccountNumber" name="txtSenderAccountNumber" placeholder="Account Number" maxlength="20" />
+                                        <label class="col-sm-12">Sender Account Number (<span style="color:red">*</span>)</label>
+                                        <input type="text" value="@ViewBag.BankAccountNumber" disabled="disabled" class="form-control select2" id="senderAccountNumber" name="txtSenderAccountNumber" placeholder="Account Number" maxlength="20" />
                                     </div>
                                     <div class="form-group" id="accountNumberErr" style="color:red; margin-top:-11px;"></div>
                                 </div>
 
                             </div>
-                            <div class="row">
-                                <div class="col-md-12">
-                                    <div class="form-group">
-                                        <label class="col-sm-12">Amount : <b style="color:red;">*</b></label>
-                                        <input type="text" class="form-control select2" id="amount" name="txtAmount" onkeypress="return (event.charCode !=8 && event.charCode ==0 || ( event.charCode == 46 || (event.charCode >= 48 && event.charCode <= 57)))" placeholder="NPR" maxlength="9" oninput="checkAmount()" onpaste="return false" />
-                                    </div>
-                                    <div class="form-group" id="amountErr" style="color:red; margin-top:-11px;"></div>
-                                </div>
 
+                            <label>Amount (<span style="color:red">*</span>)</label>
+
+                            <div class="form-group input-group">
+                                <div class="form-control col-2">NPR.</div>
+                                <input type="text" class="form-control select2" id="amount" name="txtAmount" onkeypress="return (event.charCode !=8 && event.charCode ==0 || ( event.charCode == 46 || (event.charCode >= 48 && event.charCode <= 57)))" placeholder="Amount" maxlength="9" oninput="checkAmount()" onpaste="return false" />
                             </div>
+                            <div class="form-group" id="amountErr" style="color:red; margin-top:-11px;"></div>
+                            <div class="form-group" id="amountErr1" style="color:red; margin-top:-11px;"></div>
+
                             <br>
                             <div class="row">
                                 <div class="col-md-12">
@@ -184,8 +222,8 @@
                             <div class="row">
                                 <div class="col-md-12">
                                     <div class="form-group">
-                                        <label class="col-sm-12">Account Number : <b style="color:red;">*</b></label>
-                                        <input type="text" class="form-control select2" id="accountNumber" onkeypress="return event.charCode >= 48 && event.charCode <= 57" name="txtBeneficiaryAccountNumber" placeholder="Account Number" maxlength="20" oninput="checkBeneficiaryAccountNumber()" @*onpaste="return false"*@ />
+                                        <label class="col-sm-12">Account Number (<span style="color:red">*</span>)</label>
+                                        <input type="text" class="form-control select2" id="accountNumber" onkeypress="return (event.charCode >= 48 && event.charCode <= 57) || (event.charCode >= 65 && event.charCode <= 90) || (event.charCode >= 97 && event.charCode <= 122)" name="txtBeneficiaryAccountNumber" placeholder="Account Number" maxlength="20" oninput="checkBeneficiaryAccountNumber()" @*onpaste="return false"*@ />
                                     </div>
                                     <div class="form-group" id="beneficiaryAccountNumberErr" style="color:red; margin-top:-11px;"></div>
                                 </div>
@@ -195,8 +233,8 @@
                             <div class="row">
                                 <div class="col-md-12">
                                     <div class="form-group">
-                                        <label class="col-sm-12">Account Name : <b style="color:red;">*</b></label>
-                                        <input type="text" class="form-control select2" id="beneficiaryAccountName" onkeypress="return (event.charCode >= 65 && event.charCode <= 90) || (event.charCode >= 97 && event.charCode <= 122) || event.charCode ==32" name="txtBeneficiaryAccountName" placeholder="Account Name" maxlength="20" oninput="checkBeneficiaryAccountName()" @*onpaste="return false"*@ />
+                                        <label class="col-sm-12">Account Name (<span style="color:red">*</span>)</label>
+                                        <input type="text" class="form-control select2" id="beneficiaryAccountName" @*onkeypress="return (event.charCode >= 65 && event.charCode <= 90) || (event.charCode >= 97 && event.charCode <= 122) || event.charCode ==32"*@ name="txtBeneficiaryAccountName" placeholder="Account Name" maxlength="80" oninput="checkBeneficiaryAccountName()" @*onpaste="return false"*@ />
                                     </div>
                                     <div class="form-group" id="beneficiaryAccountNameErr" style="color:red; margin-top:-11px;"></div>
                                 </div>
@@ -206,7 +244,7 @@
                             <div class="row">
                                 <div class="col-md-12">
                                     <div class="form-group">
-                                        <label class="col-sm-12">Bank Name : <b style="color:red;">*</b></label>
+                                        <label class="col-sm-12">Bank Name (<span style="color:red">*</span>)</label>
                                         <select id="bankDrpdwn" onload="getBankId()" name="txtBankName" class="show-tick" style="width:465px; height:43px" oninput="checkBank()">
                                             @foreach (var bank in ViewBag.getBankList)
                                             {
@@ -225,19 +263,45 @@
                             <div class="row">
                                 <div class="col-md-12">
                                     <div class="form-group">
-                                        <label class="col-sm-12">Branch Name : <b style="color:red;">*</b></label>
-                                        <select id="branchDrpdwn" name="branchName" class="show-tick" style="width:465px; height:43px">
-                                        </select>
+                                        <label class="col-sm-12">Branch Name (<span style="color:red">*</span>)</label>
+                                        <select id="branchDrpdwn" name="branchName" class="show-tick" style="width:465px; height:43px; font-size:18px"></select>
                                     </div>
                                     <div class="form-group" id="branchNameErr" style="color:red; margin-top:-11px;"></div>
                                 </div>
 
                             </div>
 
-                            <div class="row">
+                            <div class="row" id="Remark">
                                 <div class="col-md-12">
                                     <div class="form-group">
-                                        <label class="col-sm-12">Pin : <b style="color:red;">*</b></label>
+                                        <label>Remarks (<span style="color:red">*</span>)</label>
+                                        <textarea style="resize: none;" cols="50" rows="2" @*class="form-control select2"*@ id="transactionDetail" name="txtTransactionDetail" placeholder="Remarks" maxlength="15" oninput="checkRemarks()" @*onpaste="return false"*@></textarea>
+                                    </div>
+                                    <div class="form-group" id="transactionDetailErr" style="color:red; margin-top:-11px;"></div>
+                                </div>
+
+                            </div>
+
+                            <div class="row" id="AccountValidate">
+                                <div class="col-md-12">
+                                    <h6 style="color:green">Account Validation Success</h6>
+
+                                </div>
+
+                            </div>
+
+                            <div class="row" id="AccountValidateErr">
+                                <div class="col-md-12">
+                                    <h6 style="color:red">Account Validation Failed</h6>
+                                </div>
+
+                            </div>
+
+
+                            <div class="row" id="T-PIN">
+                                <div class="col-md-12">
+                                    <div class="form-group">
+                                        <label>T-PIN (<span style="color:red">*</span>)</label>
                                         <input type="password" id="pin" name="txtPin" class="form-control pwd1" placeholder="PIN" maxlength="4" onkeypress="return event.charCode >= 48 && event.charCode <= 57" oninput="checkPin()" @*onpaste="return false"*@ />
                                         <span toggle="#password-field" class="fa fa-fw fa-eye field-icon toggle-password, btnShow1"></span>
                                     </div>
@@ -246,23 +310,16 @@
 
                             </div>
 
-                            <div class="row">
-                                <div class="col-md-12">
-                                    <div class="form-group">
-                                        <label class="col-sm-12">Transaction Detail : <b style="color:red;">*</b></label>
-                                        <textarea style="resize: none;" cols="50" rows="2" @*class="form-control select2"*@ id="transactionDetail" name="txtTransactionDetail" placeholder="Remarks" maxlength="15" oninput="checkRemarks()" @*onpaste="return false"*@></textarea>
-                                    </div>
-                                    <div class="form-group" id="transactionDetailErr" style="color:red; margin-top:-11px;"></div>
-                                </div>
 
-                            </div>
+
 
                             <br />
                             <br />
 
                             <div class="box-footer">
-                                <input type="submit" class="btn btn-blue btn-big col-md-5" name="btnCommand" value="Confirm" id="btnSubmit" />
-                                <input type="button" value="Clear" class="btn btn-default btn-big col-md-5" id="clearButton" />
+                                <input type="button" style="margin-left:150px" class="btn btn-blue btn-big col-md-5" name="btnCommand" value="Validate" id="btnValidate" />
+                                <input type="submit" style="margin-left:150px" class="btn btn-blue btn-big col-md-5" name="btnCommand" value="Submit" id="btnSubmit" />
+                                @*<input type="button" value="Clear" class="btn btn-default btn-big col-md-5" id="clearButton" />*@
                             </div>
 
                         </section>
@@ -283,6 +340,23 @@
                     </div>
                     <p style="color: #E31837; font-size: 1.111rem; font-weight: 700;">@*Error!*@</p>
                     <span style="color: #E31837; font-size: 1.111rem; font-weight: 700;" id="message"></span>
+                    <br /> <br />
+                    <button type="button" class="btn btn-blue" data-dismiss="modal" style="width:80%">OK</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Failure modal -->
+    <div class="modal fade common-modal" id="failureBankModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-body text-center">
+                    <div class="success-icon">
+                        <img src="~/Content/assets/img/denied-cross.svg" alt="denied-cross">
+                    </div>
+                    <p style="color: #E31837; font-size: 1.111rem; font-weight: 700;">@*Error!*@</p>
+                    <span style="color: #E31837; font-size: 1.111rem; font-weight: 700;" id="message1"></span>
                     <br /> <br />
                     <button type="button" class="btn btn-blue" data-dismiss="modal" style="width:80%">OK</button>
                 </div>
@@ -319,10 +393,10 @@
             $(".pwd1").attr("type", "password");
         });
 
-        @*document.getElementById("failureModal").onclick = function () {
-         var url = '@Url.Action("Index", "CIPS")';
+        document.getElementById("failureBankModal").onclick = function () {
+         var url = '@Url.Action("Index", "UserDashboard")';
          window.location.href = url;
-        };*@
+        };
 
         document.getElementById("failureModalSessionExpired").onclick = function () {
          var url = '@Url.Action("Index", "LogOut")';
@@ -356,18 +430,21 @@
         }
 
         $(".show-tick").prepend("<option value='0' disabled selected>---Select Option---</option>");
-
         $(document).ready(function () {
-            debugger;
+            $("#T-PIN").hide();
+            $("#AccountValidate").hide();
+            $("#AccountValidateErr").hide();
+            $("#btnSubmit").hide();
+
             $.ajax({
                 cache: false,
                 type: "GET",
                 url: '@Url.Action("GetLnkBankAcc", "LoadWallet")',
                 success: function (data, textStatus) {
                     if (data != "T") {
-                        $("#message").html("");
-                        $("#message").append("Please link your bank account to get rid of restriction");
-                        $('#failureModal').modal("show");
+                        $("#message1").html("");
+                        $("#message1").append("Please link your bank account to get rid of restriction");
+                        $('#failureBankModal').modal("show");
                     }
                 },
                 error: function () {
@@ -376,7 +453,13 @@
             });
 
             $("#ajaxResponse").hide();
+
+            $('.show-tick').selectpicker({
+                liveSearch: true,
+                showSubtext: true
+            });
         });
+
 
         function checkAmount() {
             var amount = $("[name='txtAmount']").val();
@@ -387,6 +470,14 @@
             }
             else {
                 $("#amountErr").hide();
+            }
+	    if (amount < 10 || amount > 50000) {
+                $("#amountErr1").html("");
+                $("#amountErr1").append("<small>" + "Enter amount between 10 and 2000000" + "</small>");
+                $("#amountErr1").show();
+            }
+            else {
+                $("#amountErr1").hide();
             }
         }
 
@@ -427,6 +518,7 @@
         }
 
         function checkRemarks() {
+            debugger;
             var transactionDetail = $("[name='txtTransactionDetail']").val();
             if ((transactionDetail.trim() == "")) {
                 $("#transactionDetailErr").html("");
@@ -437,12 +529,6 @@
                 $("#transactionDetailErr").hide();
             }
 
-            if (transactionDetail.length > 15) {
-                $("#transactionDetailErr").show();
-            } 
-            else {
-                $("#transactionDetailErr").hide();
-            }
         }
 
         function checkBank() {
@@ -458,7 +544,7 @@
         }
 
         function checkBranch() {
-            debugger;
+
             var branchName = $("select[name='branchName'] option:selected").val();
             if (branchName == '0') {
                 $("#branchNameErr").html("");
@@ -470,7 +556,6 @@
             }
         }
 
-
         function checkValidation() {
             checkBeneficiaryAccountName();
             checkBeneficiaryAccountNumber();
@@ -480,8 +565,6 @@
             checkBank();
             checkBranch();
         }
-
-
 
         $("#clearButton").click(function () {
             $("[name='txtAmount']").val("");
@@ -497,7 +580,7 @@
         //get banklist
         $('#bankDrpdwn').change(function (e){
             e.preventDefault();
-            debugger;
+
             var dropdown = document.getElementById('bankDrpdwn');
             var selectedOption = dropdown.options[dropdown.selectedIndex];
             var selectedBankId = selectedOption.getAttribute('bankId');
@@ -505,6 +588,10 @@
 
             window.getBankId = selectedBankId;
             window.getBankName = selectedBankName;
+
+            if (selectedBankId != '0') {
+                $("#bankDrpdwnErr").hide();
+            }
 
             var dataToPost = {
                 bankId: selectedBankId,
@@ -519,25 +606,32 @@
                 data: dataToPost,
                 async: true,
                 success: function (data) {
-                    debugger;
+
                     var select = $("#branchDrpdwn");
                     select.empty();
                     select.append($('<option/>', {
                         value: 0,
-                        text: "---Select Option---"
+                        text: "---Select Option---",
                     }));
-
+                    $('#branchDrpdwn').val(0);
                     //append each branchList through json data
                     $.each(data, function (index, itemData) {
                         select.append($('<option/>', {
                             value: itemData.Value,
-                            text: itemData.Text
+                            text: itemData.Text.trim()
                         }));
                     });
 
+                    $('.show-tick').selectpicker({
+                        liveSearch: true,
+                        showSubtext: true
+                    });
+
+                    $("#branchDrpdwn").selectpicker("refresh");  // to reset selected value
+
                     //get bankBranch id
                     $(document).on('change', 'select', function (e) {
-                        debugger;
+
                         var branchId = $('option:selected', this).attr('value');
                         var branchName = $('option:selected', this).text();
                         window.branchId = branchId;
@@ -555,14 +649,116 @@
             });
         });
 
+        $('#btnValidate').click(function (e) {
+            e.preventDefault();
+            var senderAccountName = $("[name='txtSenderAccountName']").val();
+            var senderAccountNumber = $("[name='txtSenderAccountNumber']").val();
+            var amount = $("[name='txtAmount']").val();
+            var beneficiaryAccountNumber = $("[name='txtBeneficiaryAccountNumber']").val();
+            var beneficiaryAccountName = $("[name='txtBeneficiaryAccountName']").val();
+            var bankName = window.getBankName;
+            var bankId = window.getBankId;
+            var bankBranchId = window.branchId;
+            var branchName = window.branchName;
+            var transactionDetail = $("[name='txtTransactionDetail']").val();
+            var token = $('input[name="__AjaxAntiForgeryForm"]').val();
 
+            if ((senderAccountNumber != "") && (amount != "") && (beneficiaryAccountNumber != "") && (beneficiaryAccountName != "") && (bankName != undefined)
+                && (branchName != undefined) && (transactionDetail != "") ) {
 
+                var dataToPost = {
+                    senderAccountName: senderAccountName,
+                    senderAccountNumber: senderAccountNumber,
+                    amount: amount,
+                    accountId: beneficiaryAccountNumber,
+                    accountName: beneficiaryAccountName,
+                    bankId: bankId,
+                    bankBranchId: bankBranchId,
+                    bankName: bankName,
+                    branchName: branchName,
+                    TokenUnique: token,
+                    transactionDetail: transactionDetail
+
+                };
+
+                e.preventDefault(); //prevent the default action
+                $.ajax({
+                    url: '@Url.Action("CIPSValidate", "CIPS")',
+                    type: "POST",
+                    data:
+                    {
+                        __RequestVerificationToken: token,
+                        validateCreditorBankAccount: dataToPost
+                    },
+                    async: true,
+                    success: function (data) {
+                        $(".preload").show();
+                        $('.mask').show();
+                        if (data.responseCode == "000" || data.responseCode == "999") {
+                            $("#amount").attr("disabled", "disabled");
+                            $("#accountNumber").attr("disabled", "disabled");
+                            $("#beneficiaryAccountName").attr("disabled", "disabled");
+                            $("#bankDrpdwn").attr("disabled", "disabled");
+                            $("#branchDrpdwn").attr("disabled", "disabled");
+                            $("#transactionDetail").attr("disabled", "disabled");
+                            $("#AccountValidate").show();
+                            $("#btnValidate").hide();
+                            $("#T-PIN").show();
+                            $("#Remark").show();
+                            $("#btnSubmit").show();
+                        }
+                        //display error message
+                        else {
+                            //$("#ajaxResponse").html("");
+                            $("#__AjaxAntiForgeryForm").html("");
+                            $("#message").html("");
+                            $("#message").append(data.responseText);
+                            if (data.responseText == "Session expired. Please login again") {
+                                $('#failureModalSessionExpired').modal("show");
+                            }
+                            else {
+                                $('#failureModal').modal("show");
+                            }
+
+                        }
+                    },
+                    error: function (jqXHR, textStatus, errorThrown) {
+                        alert('Failed to retrieve.');
+                        $("#message").html("");
+                        $("#message").append(jqXHR.responseText);
+                        $('#failureModal').modal("show");
+
+                    },
+                    //capture the request before it was sent to server
+                    beforeSend: function (jqXHR, settings) {
+                        $(".preload").show();
+                        $('.mask').show();
+                        //adding some Dummy data to the request
+                        settings.data += "&dummyData=whatever";
+                        //disable the button until we get the response
+                        $('#btnValidate').attr("disabled", true);
+                    },
+                    complete: function (jqXHR, textStatus) {
+                        //enable the button
+                        $(".preload").hide();
+                        $('.mask').hide();
+                        $('#btnValidate').attr("disabled", false);
+                    }
+                });
+
+            }
+            else {
+                checkValidation();
+                $("#message").html("");
+                $("#message").append("Please Enter the required fields.");
+                $('#failureModal').modal("show");
+
+            }
+        });
 
 
         $('#btnSubmit').click(function (e) {
-            debugger;
             e.preventDefault();
-            debugger;
             var senderAccountName = $("[name='txtSenderAccountName']").val();
             var senderAccountNumber = $("[name='txtSenderAccountNumber']").val();
             var amount = $("[name='txtAmount']").val();
@@ -574,7 +770,6 @@
             var branchName = window.branchName;
             var transactionDetail = $("[name='txtTransactionDetail']").val();
             var pin = $("[name='txtPin']").val();
-
             var token = $('input[name="__RequestVerificationToken"]').val();
 
             if ((senderAccountNumber != "") && (amount != "") && (beneficiaryAccountNumber != "") && (beneficiaryAccountName != "") && (bankName != undefined)
@@ -602,11 +797,12 @@
                     data:
                     {
                         __RequestVerificationToken: token,
-                        cips: dataToPost,
+                        cips: dataToPost
                     },
                     async: true,
                     success: function (data) {
                         $(".preload").show();
+                        $('.mask').show();
                         if (data.responseCode == "200") {
                             var url = '@Url.Action("CIPSDetails", "CIPS")';
                             window.location.href = url;
@@ -635,6 +831,7 @@
                     //capture the request before it was sent to server
                     beforeSend: function (jqXHR, settings) {
                         $(".preload").show();
+                        $('.mask').show();
                         //adding some Dummy data to the request
                         settings.data += "&dummyData=whatever";
                         //disable the button until we get the response
@@ -642,7 +839,9 @@
                     },
                     complete: function (jqXHR, textStatus) {
                         //enable the button
-                        $('.preload').hide();
+                        $(".preload").hide();
+                        $('.mask').hide();
+
                         $('#btnSubmit').attr("disabled", false);
                     }
                 });

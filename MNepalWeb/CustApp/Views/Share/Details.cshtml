@@ -21,12 +21,25 @@
         position: relative;
         z-index: 2;
     }
+
+    .preload {
+        margin: 0;
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        margin-right: -50%;
+        transform: translate(-50%,-50%);
+    }
 </style>
 
 @using (Html.BeginForm("DematExecutePayment", "Share", FormMethod.Post, new { @id = "DematExecutePayment", @name = "DematExecutePayment", @class = "form-horizontal", enctype = "multipart/form-data" }))
 {
     @Html.AntiForgeryToken()
     @Html.ValidationSummary(true)
+
+    <div class="preload" style="display:none">
+        <img src="~/Content/image/loading.gif" class="img-responsive" />
+    </div>
 
     <div class="main-content">
         <div class="two-colbg">
@@ -186,7 +199,7 @@
                                     <label>RS.@ViewBag.TotalAmount</label>
                                 </div>
                             </div>
-  <div class="row NoPendingBills" style="color:green; display:none">
+                            <div class="row NoPendingBills" style="color:green; display:none">
                                 <div class="col-md-6">
                                     <label>Status:</label>
                                 </div>
@@ -496,19 +509,19 @@
                     TokenUnique: token
                 };
 
-                
+
                 e.preventDefault(); //prevent the default action
-                $.ajax({                    
+                $.ajax({
                     url: '@Url.Action("DematExecutePayment", "Share")',
                     type: "POST",
                  //data: dataToPost,
                     data: {
                         __RequestVerificationToken: token,
                         demat: dataToPost
-                    },   
+                    },
                     async: false,
                     success: function (data) {
-
+                        $(".preload").show();
                         if (data.responseCode == "200") {
                             $("#ajaxResponse").html("");
                             var resp = JSON.parse(data.responseText);
@@ -542,6 +555,7 @@
                     },
                     //capture the request before it was sent to server
                     beforeSend: function (jqXHR, settings) {
+                        $(".preload").show();
                         //adding some Dummy data to the request
                         settings.data += "&dummyData=whatever";
                         //disable the button until we get the response
@@ -553,7 +567,7 @@
                     //}
 
                     complete: function (data) {
-                        debugger;
+                        $(".preload").hide();
                         if (data.responseJSON.responseText == "Invalid PIN ") {
                             $('#btnSubmit').attr("disabled", false);
                         }

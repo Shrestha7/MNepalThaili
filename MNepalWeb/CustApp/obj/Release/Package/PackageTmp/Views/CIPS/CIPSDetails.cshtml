@@ -3,8 +3,6 @@
 @{
     ViewBag.Title = "ConnectIPS";
     string hasBankKYC = ViewBag.HasBankKYC;
-    //float TotalAmountDue = parseFloat(@ViewBag.TotalAmountDue);
-
 }
 
 <!-- Main content -->
@@ -23,6 +21,15 @@
         z-index: 2;
     }
 
+    .preload {
+        margin: 0;
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        margin-right: -50%;
+        transform: translate(-50%,-50%);
+    }
+
     .show-tick {
         margin-top: 10px;
         height: 45px;
@@ -35,6 +42,10 @@
 
     @Html.AntiForgeryToken()
     @Html.ValidationSummary(true)
+
+    <div class="preload" style="display:none">
+        <img src="~/Content/image/loading.gif" class="img-responsive" />
+    </div>
 
     <div class="main-content">
         <div class="two-colbg">
@@ -244,16 +255,12 @@
                                 </div>
                             </div>
                             <br />
-                            <br />                           
                             <br />
-
-
-
+                            <br />
                             <div class="box-footer">
-                                <input type="submit" class="btn btn-blue btn-big col-md-5" name="btnCommand" value="Pay" id="btnSubmit" />
+                                <input type="button" class="btn btn-blue btn-big col-md-5" name="btnCommand" value="Pay" id="btnSubmit" />
                                 <input type="button" value="Cancel" class="btn btn-default btn-big col-md-5" id="cancelButton" />
                             </div>
-
                         </section>
                     </div>
 
@@ -274,7 +281,15 @@
                     <p class="msg"></p>
                     <span class="msg">Your payment has been confirmed.</span>
                     <br /> <br />
-                    <button type="button" class="btn btn-blue" data-dismiss="modal" style="width:80%">OK</button>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <a class="btn btn-blue" href="@Url.Action("CIPSPaymentInvoice", "CIPS")" target="_blank" id="btnPDF">Download PDF</a>
+                        </div>
+                        <div class="col-md-6">
+                            <button type="button" class="btn btn-blue" data-dismiss="modal" style="width:80%">OK</button>
+                        </div>
+                    </div>
+
                 </div>
             </div>
         </div>
@@ -292,6 +307,7 @@
                     <span style="color: #E31837; font-size: 1.111rem; font-weight: 700;" id="message"></span>
                     <br /> <br />
                     <button type="button" class="btn btn-blue" data-dismiss="modal" style="width:80%">OK</button>
+
                 </div>
             </div>
         </div>
@@ -326,6 +342,11 @@
             $(".pwd1").attr("type", "password");
         });
 
+        $("#btnPDF").on("click", function () {
+            win = window.open("CIPSPaymentInvoice", "_blank");
+            win.document.body.innerHTML = htmlData;
+
+        });
 
         document.getElementById("successModal").onclick = function () {
          var url = '@Url.Action("Index", "UserDashboard")';
@@ -343,9 +364,10 @@
         };
 
         document.getElementById("cancelButton").onclick = function () {
-            var url = '@Url.Action("Index", "CIPS")';
+            var url = '@Url.Action("Index", "UserDashboard")';
             window.location.href = url;
         };
+
 
         function isNumber(evt) {
             evt = (evt) ? evt : window.event;
@@ -430,12 +452,8 @@
             $("[name='Months']").val('0');
         });
 
-
-
-
         $('#btnSubmit').click(function (e) {
-            e.preventDefault();
-            debugger;
+            e.preventDefault();            
             var accountNumber = document.getElementById("accountNumber").innerText;
             var transactionAmount = document.getElementById("transactionAmount").innerText;
             var beneficiaryAccountNumber= document.getElementById("beneficiaryAccountNumber").innerText;
@@ -443,7 +461,6 @@
             var beneficiaryBankName = document.getElementById("beneficiaryBankName").innerText;
             var branchName = document.getElementById("branchName").innerText;
             var remarks = document.getElementById("remarks").innerText;
-
             var token = $('input[name="__RequestVerificationToken"]').val();
 
             if ((accountNumber != "") && (transactionAmount != "") && (beneficiaryAccountNumber != "") && (beneficiaryAccountName != "") &&
@@ -469,11 +486,10 @@
                         __RequestVerificationToken: token,
                         connectIPS: dataToPost,
                     },
-                    async: false,
+                    async: true,
                     success: function (data) {
-                        debugger;
-                        $(".preload").hide();
-                        if (data.responseCode == "200" || data.responseCode=="0") {
+                        $(".preload").show();
+                        if (data.responseCode == "200" || data.responseCode == "0") {
                             $("#ajaxResponse").html("");
                             //var resp = JSON.parse(data.responseText);
                             var resp = data.responseText;
@@ -509,6 +525,7 @@
                     beforeSend: function (jqXHR, settings) {
                         //adding some Dummy data to the request
                         $(".preload").show();
+                        $("#cancelButton").attr("disabled", "disabled");
                         settings.data += "&dummyData=whatever";
                         //disable the button until we get the response
                         $('#btnSubmit').attr("disabled", true);
@@ -521,6 +538,7 @@
                 });
 
             }
+
             else {
                 checkValidation();
                 $("#message").html("");

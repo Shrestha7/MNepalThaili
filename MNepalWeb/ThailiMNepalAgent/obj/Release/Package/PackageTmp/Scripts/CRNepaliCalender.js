@@ -2,7 +2,27 @@
 jQuery(document).ready(function ($) {
     $('#BSCitizenshipIssueDate, #BSLicenseIssueDate, #BSLicenseExpireDate').hide();
 
-    $('#BSCitizenshipIssueDate, #BSLicenseIssueDate, #BSLicenseExpireDate').nepaliDatePicker({
+    $('#BSCitizenshipIssueDate, #BSLicenseIssueDate').nepaliDatePicker({
+        npdMonth: true,
+        npdYear: true,
+        npdYearCount: 100, // Options | Number of years to show
+        ndpEnglishInput: 'DOB1',
+        disableDaysAfter: '1',
+        onChange: function () {
+            if ($('#BSCitizenshipIssueDate').val() != '') {
+                $('#CitizenshipIssueDate').val(GetShowFormattedDate(BS2AD($('#BSCitizenshipIssueDate').val())));
+
+            }
+            if ($('#LicenseIssueDate').val() != '' && $('#LicenseExpireDate').val() != '') {
+                $('#BSLicenseIssueDate').val(AD2BS(GetFormattedDate($('#LicenseIssueDate').val())));
+                $('#BSLicenseExpireDate').val(AD2BS(GetFormattedDate($('#LicenseExpireDate').val())));
+            } 
+            // convert to BS to AD and set value
+
+
+        }
+    });
+    $('#BSLicenseExpireDate').nepaliDatePicker({
         npdMonth: true,
         npdYear: true,
         npdYearCount: 100, // Options | Number of years to show
@@ -16,7 +36,7 @@ jQuery(document).ready(function ($) {
             if ($('#LicenseIssueDate').val() != '' && $('#LicenseExpireDate').val() != '') {
                 $('#BSLicenseIssueDate').val(AD2BS(GetFormattedDate($('#LicenseIssueDate').val())));
                 $('#BSLicenseExpireDate').val(AD2BS(GetFormattedDate($('#LicenseExpireDate').val())));
-            } 
+            }
             // convert to BS to AD and set value
 
 

@@ -19,8 +19,8 @@ namespace MNepalAPI.Helper
         SMSEnable sMSEnable = new SMSEnable();
 
         //SMS
-        private string SMSNTC = System.Web.Configuration.WebConfigurationManager.AppSettings["MNepalNTCSMSServerUrl"];
-        private string SMSNCELL = System.Web.Configuration.WebConfigurationManager.AppSettings["MNepalSMSServerUrl"];
+        private string SMSServer = System.Web.Configuration.WebConfigurationManager.AppSettings["SMSServer"];
+        
 
 
         public string CustSMSEnable(string alertType, string custmobile, string destmobile, string amount, string vid, string couponNumber, string createdDate)
@@ -99,25 +99,8 @@ namespace MNepalAPI.Helper
                     messagereply += AlertRegMessage;
                 }
 
-                var client = new WebClient();
-
-                //FOR SENDER
-                if ((mobile.Trim().Substring(0, 3) == "980") || (mobile.Trim().Substring(0, 3) == "981")) //FOR NCELL
-                {
-                    //FOR NCELL
-                    var content = client.DownloadString(
-                            SMSNCELL
-                            + "977" + mobile.Trim() + "&message=" + messagereply + "");
-                }
-                else if ((mobile.Trim().Substring(0, 3) == "985") || (mobile.Trim().Substring(0, 3) == "984")
-                            || (mobile.Trim().Substring(0, 3) == "986"))
-                {
-                    //FOR NTC
-                    var content = client.DownloadString(
-                        SMSNTC
-                        + "977" + mobile.Trim() + "&message=" + messagereply + "");
-                }
-
+                SendSMS sendSMS = new SendSMS();
+                sendSMS.pushSMS(mobile, messagereply);
                 CSMSEnable = messagereply;
 
             }

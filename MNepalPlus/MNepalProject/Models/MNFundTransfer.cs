@@ -67,6 +67,42 @@ namespace MNepalProject.Models
 
 
 
+        public MNFundTransfer(string tid, string sc, string mobile, string sa, string amount, string da, string note, string pin, string sourcechannel, string merchantType, string Desc1New, string Desc1RevNew, string RemarkRevNew)
+        {
+            this.tid = tid;
+            this.sc = sc;
+            this.mobile = mobile;
+            this.sa = sa;
+            this.amount = amount;
+            this.da = da;
+            this.note = note;
+            this.pin = pin;
+            this.sourcechannel = sourcechannel;
+            this.merchantType = merchantType;
+
+            this.Desc1New = Desc1New;
+            this.Desc1RevNew = Desc1RevNew;
+            this.RemarkRevNew = RemarkRevNew;
+        }
+
+
+        public MNFundTransfer(string tid, string sc, string mobile, string sa, string amount, string da, string note, string pin, string sourcechannel, string reverseStatus, string merchantType, string Desc1New, string Desc1RevNew, string RemarkRevNew)
+        {
+            this.tid = tid;
+            this.sc = sc;
+            this.mobile = mobile;
+            this.sa = sa;
+            this.amount = amount;
+            this.da = da;
+            this.note = note;
+            this.pin = pin;
+            this.sourcechannel = sourcechannel;
+            this.reverseStatus = reverseStatus;
+            this.merchantType = merchantType;
+            this.Desc1New = Desc1New;
+            this.Desc1RevNew = Desc1RevNew;
+            this.RemarkRevNew = RemarkRevNew;
+        }
         public MNFundTransfer()
         {
 
@@ -81,6 +117,8 @@ namespace MNepalProject.Models
         public string da { get; set; }
         public string vid { get; set; }
         public string description1 { get; set; }
+        public string description2 { get; set; }
+        public string description3 { get; set; }
 
         public string amount { get; set; }
 
@@ -95,6 +133,12 @@ namespace MNepalProject.Models
         public string merchantType { get; set; }
 
         public string reverseStatus { get; set; }
+        public string enteredAtDate { get; set; }
+        public string retrievalReferenceNew { get; set; }
+        public string special2 { get; set; }
+        public string Desc1New { get; set; }
+        public string Desc1RevNew { get; set; }
+        public string RemarkRevNew { get; set; }
         public bool valid()
         {
             if (this.tid != "" && this.sc != "" && this.mobile != "" && this.amount != "")
@@ -105,5 +149,19 @@ namespace MNepalProject.Models
 
     }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 

@@ -45,6 +45,9 @@ namespace WCF.MNepal
         public string rollNo { get; set; }
         public string remarks { get; set; }
         public string agentName { get; set; }
+        public string Desc1New { get; set; }
+        public string Desc1RevNew { get; set; }
+        public string RemarkRevNew { get; set; }
         /*
         public bool valid()
         {

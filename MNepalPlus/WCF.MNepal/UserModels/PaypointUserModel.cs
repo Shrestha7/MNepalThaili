@@ -1150,6 +1150,45 @@ namespace WCF.MNepal.UserModels
 
         #endregion
 
+        public DataTable GetvidByUserName(PaypointModel objUserInfo)
+        {
+            SqlConnection conn = null;
+            DataTable dtableResult = null;
 
+            try
+            {
+                using (conn = new SqlConnection(DatabaseConnection.ConnectionString()))
+                {
+                    conn.Open();
+                    using (SqlCommand cmd = new SqlCommand("[s_MNMerchants]", conn))
+                    {
+                        cmd.Parameters.AddWithValue("@UserName", objUserInfo.UserName);
+                        cmd.Parameters.AddWithValue("@mode", objUserInfo.Mode);
+                        cmd.CommandType = CommandType.StoredProcedure;
+                        using (SqlDataAdapter da = new SqlDataAdapter(cmd))
+                        {
+                            using (DataSet dataset = new DataSet())
+                            {
+                                da.Fill(dataset, "dtEmailInfo");
+                                if (dataset.Tables.Count > 0)
+                                {
+                                    dtableResult = dataset.Tables["dtEmailInfo"];
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+            finally
+            {
+                conn.Close();
+            }
+
+            return dtableResult;
+        }
     }
 }

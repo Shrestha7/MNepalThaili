@@ -169,6 +169,7 @@
     <Compile Include="Controllers\LoadWalletController.cs" />
     <Compile Include="Controllers\LoginController.cs" />
     <Compile Include="Controllers\LogOutController.cs" />
+    <Compile Include="Controllers\ShoppingMallLoginController.cs" />
     <Compile Include="Controllers\MerchantPaymentController.cs" />
     <Compile Include="Controllers\NEAController.cs" />
     <Compile Include="Controllers\NepalWaterController.cs" />
@@ -204,6 +205,7 @@
     <Compile Include="Models\DatatablesJS.cs" />
     <Compile Include="Models\DMAT.cs" />
     <Compile Include="Models\Merchant.cs" />
+    <Compile Include="Models\ShoppingMallLogin.cs" />
     <Compile Include="Models\MNFundTransfer.cs" />
     <Compile Include="Models\HashWithSaltResult.cs" />
     <Compile Include="Models\InMemMNTransactionAccount.cs" />
@@ -8519,6 +8521,8 @@
     <Content Include="Views\CIPS\Index.cshtml" />
     <Content Include="Views\Error\Error500.cshtml" />
     <Content Include="Views\CIPS\CIPSInvoice.cshtml" />
+    <Content Include="Views\ShoppingMallLogin\Index.cshtml" />
+    <Content Include="Views\ShoppingMallLogin\LoginMerchantDetails.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="api\" />

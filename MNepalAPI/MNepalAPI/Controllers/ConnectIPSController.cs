@@ -848,7 +848,7 @@ namespace MNepalAPI.Controllers
                         var jsonResponse = JsonConvert.DeserializeObject<ValidateCreditorBankAccount>(responseContent);
 
 
-                        if (jsonResponse.responseCode == "000")
+                        if (jsonResponse.responseCode == "000" || jsonResponse.responseCode == "999")
                         {
                             ValidateCreditorBankAccount validateCreditorBank = new ValidateCreditorBankAccount();
 

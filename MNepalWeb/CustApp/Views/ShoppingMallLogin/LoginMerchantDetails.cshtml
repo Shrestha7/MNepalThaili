@@ -1,0 +1,178 @@
+﻿
+@{
+    ViewBag.Title = "LoginMerchantDetails";
+}
+
+@using (Html.BeginForm("", "", FormMethod.Post, new { @id = "ShoppingMall", @name = "ShoppingMall", @class = "form-horizontal", enctype = "multipart/form-data" }))
+{
+    <div class="col-md-offset-5">
+        <div class="row">
+            <div class="col-md-6">
+                <label>MerchantId</label><span>
+                    <input type="text" value="@ViewBag.merchantId" name="txtMerchantId" disabled="disabled" />
+                </span>
+            </div>
+        </div>
+        <br />
+        <div class="row">
+            <div class="col-md-6">
+                <label>ItemCode</label><span>
+                    <input type="text" value="@ViewBag.itemCode" name="txtItemCode" disabled="disabled" />
+                </span>
+            </div>
+        </div>
+        <br />
+        <div class="row">
+            <div class="col-md-6">
+                <label>Price</label><span>
+                    <input type="text" value="@ViewBag.price" name="txtPrice" disabled="disabled" />
+                </span>
+            </div>
+        </div>
+        <br />
+
+        <div class="row">
+            <div class="col-md-6">
+                <label>T-PIN</label><span>
+                    <input type="text" name="txtPIN" id="TPIN" />
+                </span>
+            </div>
+        </div>
+        <br />
+
+        <div class="row">
+            <div class="col-md-6">
+                <input type="submit" class="btn btn-blue btn-big col-md-5" name="btnCommand" value="Pay" id="btnSubmit" />
+            </div>
+        </div>
+        <br />
+    </div>
+
+    <!-- Failure modal -->
+    <div class="modal fade common-modal" id="failureModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-body text-center">
+                    <div class="success-icon">
+                        <img src="~/Content/assets/img/denied-cross.svg" alt="denied-cross">
+                    </div>
+                    <p style="color: #E31837; font-size: 1.111rem; font-weight: 700;">@*Error!*@</p>
+                    <span style="color: #E31837; font-size: 1.111rem; font-weight: 700;" id="message"></span>
+                    <br /> <br />
+                    <button type="button" class="btn btn-blue" data-dismiss="modal" style="width:80%">OK</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Failure modal -->
+    <div class="modal fade common-modal" id="failureBankModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-body text-center">
+                    <div class="success-icon">
+                        <img src="~/Content/assets/img/denied-cross.svg" alt="denied-cross">
+                    </div>
+                    <p style="color: #E31837; font-size: 1.111rem; font-weight: 700;">@*Error!*@</p>
+                    <span style="color: #E31837; font-size: 1.111rem; font-weight: 700;" id="message1"></span>
+                    <br /> <br />
+                    <button type="button" class="btn btn-blue" data-dismiss="modal" style="width:80%">OK</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Failure modal session expired -->
+    <div class="modal fade common-modal" id="failureModalSessionExpired" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-body text-center">
+                    <div class="success-icon">
+                        <img src="~/Content/assets/img/denied-cross.svg" alt="denied-cross">
+                    </div>
+                    <p style="color: #E31837; font-size: 1.111rem; font-weight: 700;">@*Error!*@</p>
+                    <span style="color: #E31837; font-size: 1.111rem; font-weight: 700;">Session expired. Please login again</span>
+                    <br /> <br />
+                    <button type="button" class="btn btn-blue" data-dismiss="modal" style="width:80%">OK</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+}
+
+@section scripts{
+    <script type="text/javascript">
+        $('#btnSubmit').click(function (e) {
+            e.preventDefault();
+            var pin = $("[name='txtPIN']").val();
+
+            if ((pin != ""))
+            {
+                   var dataToPost = {
+                       pin: pin
+                };
+
+                e.preventDefault(); //prevent the default action
+                $.ajax({
+                    url: '@Url.Action("LoginMerchantVerifyPin", "ShoppingMallLogin")',
+                    type: "POST",
+                    data:
+                    {
+                        shoppingMallLogin: dataToPost
+                    },
+                    async: true,
+                    success: function (data) {
+                        debugger;
+                        if (data.responseCode == "200") {
+                            var url = 'https://www.google.com/';
+                            window.location.href = url;
+                        }
+                        //display error message
+                        else {
+                            $("#ajaxResponse").html("");
+                            $("#message").html("");
+                            $("#message").append(data.responseText);
+                            if (data.responseText == "Session expired. Please login again") {
+                                $('#failureModalSessionExpired').modal("show");
+                            }
+                            else {
+                                $('#failureModal').modal("show");
+                            }
+
+                        }
+                    },
+                    error: function (jqXHR, textStatus, errorThrown) {
+                        alert('Failed to retrieve.');
+                        $("#message").html("");
+                        $("#message").append(jqXHR.responseText);
+                        $('#failureModal').modal("show");
+
+                    },
+                    //capture the request before it was sent to server
+                    beforeSend: function (jqXHR, settings) {
+                        $(".preload").show();
+                        //adding some Dummy data to the request
+                        settings.data += "&dummyData=whatever";
+                        //disable the button until we get the response
+                        $('#btnSubmit').attr("disabled", true);
+                    },
+                    complete: function (jqXHR, textStatus) {
+                        //enable the button
+                        $('.preload').hide();
+                        $('#btnSubmit').attr("disabled", false);
+                    }
+                });
+
+            }
+            else {
+                checkValidation();
+                $("#message").html("");
+                $("#message").append("Please Enter the required fields.");
+                $('#failureModal').modal("show");
+
+            }
+        });
+    </script>
+}
+

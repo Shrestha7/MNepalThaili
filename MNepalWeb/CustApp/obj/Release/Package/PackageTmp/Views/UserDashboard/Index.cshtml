@@ -39,7 +39,7 @@
 <style>
     .image_icon {
         width: 50px;
-    } 
+    }
 </style>
 <div class="main-content">
     <div class="bg-grey pad-50">
@@ -50,7 +50,7 @@
                     <section class="instant-transactions">
                         <div class="top-section clearfix">
                             <h2 class="title">Instant Transactions</h2>
-                            <a href="#" class="customize">customize</a>
+                            @*<a href="#" class="customize">customize</a>*@
                         </div>
 
                         <div class="transactions-grid clearfix">
@@ -199,33 +199,19 @@
                                 }
                             }
                             <!-- /item -->
-
-
                         </div>
-
-
-
                     </section>
                     <!-- /instant transactions -->
                 </div>
                 @*<div class="col-md-6 match-height">*@
                 <div class="thaili-slider-wrapper, col-md-6 match-height">
                     <div class="thaili-slider">
-                        <div class="item">
-                            <img src="~/Content/assets/img/slider/554_335Pixel-NIBL_Education-Loan_Slide.jpg" alt="slider-image1" style="border-radius: 10px;">
-                        </div>
-
-                        <div class="item">
-                            <img src="~/Content/assets/img/slider/554_335Pixel-NIBL_KETA-KETI_Slide.jpg" alt="slider-image2" style="border-radius: 10px;">
-                        </div>
-
-                        <div class="item">
-                            <img src="~/Content/assets/img/slider/554_335Pixel-NIBL_Re1-Account_Slide.jpg" alt="slider-image3" style="border-radius: 10px;">
-                        </div>
-
-                        <div class="item">
-                            <img src="~/Content/assets/img/slider/554_335Pixel-NIBL_Recurring_Slide.jpg" alt="slider-image4" style="border-radius: 10px;">
-                        </div>
+                        @foreach (var item in ViewBag.ImageSlider)
+                        {
+                            <div class="item">
+                                <img src="@item" style="border-radius:10px;" />
+                            </div>
+                        }
 
                     </div>
                     <!-- /thaili-slider -->
@@ -500,9 +486,9 @@
 }
 
 @*<script type="text/javascript" src="https://code.jquery.com/jquery-1.10.2.js"></script>
-<script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>*@
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>*@
 <script type="text/javascript">
-   
+
 
     function checkKYC() {
         $.ajax({
@@ -544,10 +530,7 @@
         });
     }
 
-
-
     $(document).ready(function () {
-
         var checkMsg = $("[name='checkMsg']").val();
         if (checkMsg == "success_info") {
             $('#successModal').modal();

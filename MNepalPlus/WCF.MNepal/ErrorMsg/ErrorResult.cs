@@ -1,10 +1,5 @@
 ﻿using MNepalProject.Models;
-using Newtonsoft.Json;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Net;
-using System.Web;
 
 namespace WCF.MNepal.ErrorMsg
 {
@@ -19,14 +14,15 @@ namespace WCF.MNepal.ErrorMsg
             MNFundTransfer mnft = new MNFundTransfer();
 
             if ((result == "Trace ID Repeated") || (result == "Limit Exceed")
-                                    || (result == "Invalid Source User") || (result == "Invalid Destination User")
-                                    || (result == "Invalid Product Request") || (result == "Please try again") || (result == "")
-                                    || (result == "Error in ResponeCode:Data Not Available"))
+                || (result == "Invalid Source User") || (result == "Invalid Destination User")
+                || (result == "Invalid Product Request") || (result == "Please try again") || (result == "")
+                || (result == "Error in ResponeCode:Data Not Available") 
+                || (result == "GatewayTimeout"))
             {
-
+                result = "Sorry for the inconvenience. Service not available temporarily. Please try again later.";
                 statusCode = "400";
                 message = result;
-                mnft.ResponseStatus(HttpStatusCode.BadRequest, "parameters missing/invalid");
+                mnft.ResponseStatus(HttpStatusCode.BadRequest, result); //"parameters missing/invalid"
                 failedmessage = message;
             }           
             if (result == "Invalid PIN")

@@ -9,10 +9,10 @@ namespace WCF.MNepal.ErrorMsg
     {
         public string Error_90 = "ClientCode not found in MNClient Table";
         public string Error_91 = "Could not create account";
-        public string Error_92 = "s_MNProcessRequest returned error";
+        public string Error_92 = "Sorry for the inconvenience. Service not available temporarily. Please try again later."; //"s_MNProcessRequest returned error";
         public string Error_94 = "comm object response parsing error";
         public string Error_95 = "s_MNProcessRequest returned error";
-        public string Error_98 = "on E: Exception";
+        public string Error_98 = "Sorry for the inconvenience. Service not available temporarily. Please try again later."; //"on E: Exception";
         public string Error_99 = "Timeout reading from server";
 
         public string Error_AcqBank = "Acquiring Bank return an Error";

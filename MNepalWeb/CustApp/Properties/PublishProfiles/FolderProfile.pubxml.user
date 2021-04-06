@@ -7,6 +7,9 @@ https://go.microsoft.com/fwlink/?LinkID=208121.
     <_PublishTargetUrl>C:\Users\manojph\Desktop\CustApp</_PublishTargetUrl>
   </PropertyGroup>
   <ItemGroup>
+    <File Include="App_Browsers/qt.browser">
+      <publishTime>03/23/2021 17:04:42</publishTime>
+    </File>
     <File Include="bin/Antlr3.Runtime.dll">
       <publishTime>09/10/2013 16:29:20</publishTime>
     </File>
@@ -14,10 +17,10 @@ https://go.microsoft.com/fwlink/?LinkID=208121.
       <publishTime>09/10/2013 16:29:20</publishTime>
     </File>
     <File Include="bin/CustApp.dll">
-      <publishTime>03/04/2021 12:24:26</publishTime>
+      <publishTime>04/05/2021 14:34:44</publishTime>
     </File>
     <File Include="bin/CustApp.pdb">
-      <publishTime>03/04/2021 12:24:26</publishTime>
+      <publishTime>04/05/2021 14:34:44</publishTime>
     </File>
     <File Include="bin/Microsoft.CodeDom.Providers.DotNetCompilerPlatform.dll">
       <publishTime>09/05/2018 16:10:50</publishTime>
@@ -183,6 +186,9 @@ https://go.microsoft.com/fwlink/?LinkID=208121.
     </File>
     <File Include="bin/roslyn/VBCSCompiler.exe.config">
       <publishTime>08/08/2018 12:18:16</publishTime>
+    </File>
+    <File Include="bin/Rotativa.dll">
+      <publishTime>09/29/2017 14:13:30</publishTime>
     </File>
     <File Include="bin/System.Net.Http.Formatting.dll">
       <publishTime>11/28/2018 13:00:36</publishTime>
@@ -23416,6 +23422,9 @@ https://go.microsoft.com/fwlink/?LinkID=208121.
     <File Include="Content/eng_date_comp/package.json">
       <publishTime>12/16/2019 15:35:19</publishTime>
     </File>
+    <File Include="Content/image/loading.gif">
+      <publishTime>03/16/2021 15:27:08</publishTime>
+    </File>
     <File Include="Content/image/nibl.png">
       <publishTime>02/03/2019 15:33:06</publishTime>
     </File>
@@ -24140,7 +24149,7 @@ https://go.microsoft.com/fwlink/?LinkID=208121.
       <publishTime>02/03/2019 15:10:17</publishTime>
     </File>
     <File Include="Content/ThaliStyle.css">
-      <publishTime>11/04/2020 12:53:59</publishTime>
+      <publishTime>03/26/2021 10:09:42</publishTime>
     </File>
     <File Include="Content/ui_1.11.4/font-awesome.min.css">
       <publishTime>05/18/2020 14:18:33</publishTime>
@@ -24213,6 +24222,18 @@ https://go.microsoft.com/fwlink/?LinkID=208121.
     </File>
     <File Include="Images/school.png">
       <publishTime>02/03/2019 15:33:29</publishTime>
+    </File>
+    <File Include="Rotativa/help-wkhtmltoimage.txt">
+      <publishTime>03/23/2021 17:04:42</publishTime>
+    </File>
+    <File Include="Rotativa/help-wkhtmltopdf.txt">
+      <publishTime>03/23/2021 17:04:41</publishTime>
+    </File>
+    <File Include="Rotativa/wkhtmltoimage.exe">
+      <publishTime>03/23/2021 17:04:41</publishTime>
+    </File>
+    <File Include="Rotativa/wkhtmltopdf.exe">
+      <publishTime>03/23/2021 17:04:41</publishTime>
     </File>
     <File Include="Scripts/alertify.js">
       <publishTime>02/03/2019 15:34:13</publishTime>
@@ -24632,10 +24653,13 @@ https://go.microsoft.com/fwlink/?LinkID=208121.
       <publishTime>11/05/2020 13:48:15</publishTime>
     </File>
     <File Include="Views/CIPS/CIPSDetails.cshtml">
-      <publishTime>03/04/2021 12:06:50</publishTime>
+      <publishTime>04/05/2021 14:25:33</publishTime>
+    </File>
+    <File Include="Views/CIPS/CIPSInvoice.cshtml">
+      <publishTime>03/29/2021 14:48:13</publishTime>
     </File>
     <File Include="Views/CIPS/Index.cshtml">
-      <publishTime>03/03/2021 13:11:11</publishTime>
+      <publishTime>04/05/2021 13:32:15</publishTime>
     </File>
     <File Include="Views/CustomerRegApp/CreateRegistration.cshtml">
       <publishTime>02/03/2019 15:34:22</publishTime>
@@ -24656,7 +24680,7 @@ https://go.microsoft.com/fwlink/?LinkID=208121.
       <publishTime>09/16/2020 13:34:12</publishTime>
     </File>
     <File Include="Views/ForgetPassword/Index.cshtml">
-      <publishTime>10/16/2020 17:28:48</publishTime>
+      <publishTime>03/19/2021 12:21:48</publishTime>
     </File>
     <File Include="Views/ForgetPassword/Recover.cshtml">
       <publishTime>09/16/2020 13:34:12</publishTime>
@@ -24689,7 +24713,7 @@ https://go.microsoft.com/fwlink/?LinkID=208121.
       <publishTime>09/17/2020 11:20:30</publishTime>
     </File>
     <File Include="Views/Help/ContactUs.cshtml">
-      <publishTime>09/17/2020 11:17:04</publishTime>
+      <publishTime>03/23/2021 11:09:44</publishTime>
     </File>
     <File Include="Views/Home/About.cshtml">
       <publishTime>02/03/2019 15:34:23</publishTime>
@@ -24719,7 +24743,7 @@ https://go.microsoft.com/fwlink/?LinkID=208121.
       <publishTime>10/05/2020 11:20:12</publishTime>
     </File>
     <File Include="Views/Login/Index.cshtml">
-      <publishTime>11/05/2020 14:07:32</publishTime>
+      <publishTime>03/23/2021 11:28:47</publishTime>
     </File>
     <File Include="Views/Login/Reset.cshtml">
       <publishTime>09/16/2020 13:26:08</publishTime>
@@ -24809,7 +24833,7 @@ https://go.microsoft.com/fwlink/?LinkID=208121.
       <publishTime>11/05/2020 14:46:52</publishTime>
     </File>
     <File Include="Views/Shared/_Footer.cshtml">
-      <publishTime>11/10/2020 15:56:57</publishTime>
+      <publishTime>03/16/2021 09:46:22</publishTime>
     </File>
     <File Include="Views/Shared/_Layout.cshtml">
       <publishTime>06/17/2019 11:00:57</publishTime>
@@ -24819,6 +24843,12 @@ https://go.microsoft.com/fwlink/?LinkID=208121.
     </File>
     <File Include="Views/Shared/_PartialLeftUserMenu.cshtml">
       <publishTime>02/03/2019 15:34:24</publishTime>
+    </File>
+    <File Include="Views/ShoppingMallLogin/Index.cshtml">
+      <publishTime>04/01/2021 16:26:45</publishTime>
+    </File>
+    <File Include="Views/ShoppingMallLogin/LoginMerchantDetails.cshtml">
+      <publishTime>04/01/2021 16:49:52</publishTime>
     </File>
     <File Include="Views/Signup/CustomerKYC.cshtml">
       <publishTime>09/16/2020 14:27:50</publishTime>
@@ -24851,7 +24881,7 @@ https://go.microsoft.com/fwlink/?LinkID=208121.
       <publishTime>09/16/2020 14:41:38</publishTime>
     </File>
     <File Include="Views/Signup/Index.cshtml">
-      <publishTime>09/16/2020 14:42:54</publishTime>
+      <publishTime>03/19/2021 12:33:12</publishTime>
     </File>
     <File Include="Views/Signup/ResendCode.cshtml">
       <publishTime>09/16/2020 15:04:13</publishTime>
@@ -24890,7 +24920,7 @@ https://go.microsoft.com/fwlink/?LinkID=208121.
       <publishTime>09/17/2020 11:06:22</publishTime>
     </File>
     <File Include="Views/UserDashboard/Index.cshtml">
-      <publishTime>05/31/2020 12:57:37</publishTime>
+      <publishTime>03/21/2021 14:37:18</publishTime>
     </File>
     <File Include="Views/UtilityPay/ADSLTopUp.cshtml">
       <publishTime>10/05/2020 11:40:49</publishTime>
@@ -24947,7 +24977,7 @@ https://go.microsoft.com/fwlink/?LinkID=208121.
       <publishTime>05/18/2020 12:16:33</publishTime>
     </File>
     <File Include="Web.config">
-      <publishTime>03/04/2021 12:24:30</publishTime>
+      <publishTime>04/05/2021 14:34:48</publishTime>
     </File>
   </ItemGroup>
 </Project>

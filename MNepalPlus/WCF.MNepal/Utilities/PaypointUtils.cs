@@ -687,6 +687,42 @@ namespace WCF.MNepal.Utilities
         }
         #endregion
 
+        public string GetvidByUserNamedt(string UserName)
+        {
+            string vid = "";
+            if (!string.IsNullOrEmpty(UserName))
+            {
+                DataTable dtvid = PaypointUtils.GetvidByUserName(UserName);
+                if (dtvid != null)
+                {
+                    int i = 0;
+                    if (dtvid.Rows.Count != 0)
+                    {
+                        for (i = 0; i < dtvid.Rows.Count; i++)
+                        {
+                            vid = Convert.ToString(dtvid.Rows[i]["mid"]);
+                        }
+                        return vid;
+                    }
+                }
+                else
+                {
+                    return vid;
+                }
+            }
 
+            return vid;
+        }
+
+        public static DataTable GetvidByUserName(string userName)
+        {
+            var objModel = new PaypointUserModel();
+            var objUserInfo = new PaypointModel
+            {
+                UserName = userName,
+                Mode = "GVBU" //Get vid By UserName
+            };
+            return objModel.GetvidByUserName(objUserInfo);
+        }
     }
 }
