@@ -46,8 +46,6 @@ namespace CustApp.Controllers
                 ViewBag.TraceID = traceID;
 
                 UserInfo userInfo = new UserInfo();
-
-
                 MNBalance availBaln = new MNBalance();
                 DataTable dtableUser1 = AvailBalnUtils.GetAvailBaln(clientCode);
                 if (dtableUser1 != null && dtableUser1.Rows.Count > 0)
@@ -114,17 +112,11 @@ namespace CustApp.Controllers
             string userType = (string)Session["LOGGED_USERTYPE"];
 
             TempData["userType"] = userType;
-
-
-
             this.ViewData["userType"] = this.TempData["userType"];
             ViewBag.UserType = this.TempData["userType"];
             ViewBag.Name = name;
 
-
-
             string retoken = dmat.TokenUnique;
-
             string reqToken = "";
             DataTable dtableVToken = ReqTokenUtils.GetReqToken(retoken);
             if (dtableVToken != null && dtableVToken.Rows.Count > 0)
@@ -168,8 +160,6 @@ namespace CustApp.Controllers
 
                 Session["DMATName"] = dmat.DematName;
                 Session["DematNumber"] = dmat.DematCode;
-
-
 
                 //api call here
                 HttpResponseMessage _res = new HttpResponseMessage();
@@ -308,7 +298,6 @@ namespace CustApp.Controllers
                 dMAT.UserName = userName;
                 dMAT.ClientCode = clientCode;
                 dMAT.TimeStamp = Session["timeStamp"].ToString();
-
                 dMAT.refStan = getRetRef(dMAT);
 
                 DMAT DematDetails = new DMAT();
@@ -317,7 +306,6 @@ namespace CustApp.Controllers
                 DataTable dResponse = DMATSet.Tables["dtResponse"];
                 DataTable dPayment = DMATSet.Tables["dtPayment"];
 
-
                 List<ListFees> ListDetails = new List<ListFees>();
                 if (dResponse != null && dResponse.Rows.Count > 0)
                 {
@@ -325,13 +313,10 @@ namespace CustApp.Controllers
                     DematDetails.DematName = dResponse.Rows[0]["DematName"].ToString();
                     DematDetails.TotalAmountDue = dResponse.Rows[0]["TotalAmount"].ToString();
                     DematDetails.Months = dResponse.Rows[0]["Fees"].ToString();
-
                     Session["DematCustomerName"] = DematDetails.DematName;
 
                     string[] lines = DematDetails.Months.Split(new[] { Environment.NewLine }, StringSplitOptions.None); //to split string to new line
                     lines = lines.Take(lines.Length - 1).ToArray();  //to remove last list which is empty 
-
-                    //List<string> list = new List<string>(lines);
 
                     for (int i = 0; i < lines.Length; i++)
                     {
@@ -344,9 +329,6 @@ namespace CustApp.Controllers
                     }
 
                     ViewBag.ListDetails = ListDetails;
-
-
-
                 }
                 else
                 {
@@ -367,18 +349,12 @@ namespace CustApp.Controllers
                 ViewBag.Descriptions = DematDetails.Months;
                 ////Viewbag For details from Nepal Water
 
-
-
-
-
                 int id = TraceIdGenerator.GetID() + 1;
                 string stringid = (id).ToString();//this.GetID() + 1
                 string traceID = stringid.PadLeft(11, '0') + 'W';
                 ViewBag.TraceID = traceID;
 
                 UserInfo userInfo = new UserInfo();
-
-
                 MNBalance availBaln = new MNBalance();
                 DataTable dtableUser1 = AvailBalnUtils.GetAvailBaln(clientCode);
                 if (dtableUser1 != null && dtableUser1.Rows.Count > 0)
@@ -467,7 +443,6 @@ namespace CustApp.Controllers
             if (reqToken == "0")
             {
                 ReqTokenUtils.InsertReqToken(retoken);
-
                 MNBalance availBaln = new MNBalance();
                 DataTable dtableUser1 = AvailBalnUtils.GetAvailBaln(clientCode);
                 if (dtableUser1 != null && dtableUser1.Rows.Count > 0)
@@ -506,10 +481,7 @@ namespace CustApp.Controllers
                 dematObj.refStan = getRetRef(dematObj);
 
                 DMAT regobj = new DMAT();
-
                 DataSet DMATSet = DMATUtils.GetDematDetails(dematObj);
-
-
                 DataTable dResponse = DMATSet.Tables["dtResponse"];
                 DataTable dNWPayment = DMATSet.Tables["dtNWPayment"];
                 if (dResponse != null && dResponse.Rows.Count > 0)
@@ -563,7 +535,6 @@ namespace CustApp.Controllers
                     var b = _res.IsSuccessStatusCode;
 
                     string responseBody = _res.StatusCode.ToString() + " ," + await _res.Content.ReadAsStringAsync();
-                    //string responseBody = "Unauthorized,{ 'd':'{\'StatusCode\':417,\'StatusMessage\':\'Invalid PIN! You have already attempt 3 times with wrong PIN,Please try again after 10 minutes test\'}'}";
                     _res.ReasonPhrase = responseBody;
                     string errorMessage = string.Empty;
                     int responseCode = 0;

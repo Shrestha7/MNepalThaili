@@ -19,6 +19,7 @@ using System.ServiceModel.Web;
 using System.Text;
 using System.Threading;
 using System.Web;
+using System.Web.Configuration;
 using System.Xml;
 using System.Xml.Linq;
 using WCF.MNepal.ErrorMsg;
@@ -206,15 +207,11 @@ namespace WCF.MNepal
                   ResponseFormat = WebMessageFormat.Json)]
         public string executepayment(Stream input)
         {
-            //SMS
-            string SMSNTC = System.Web.Configuration.WebConfigurationManager.AppSettings["MNepalNTCSMSServerUrl"];
-            string SMSNCELL = System.Web.Configuration.WebConfigurationManager.AppSettings["MNepalSMSServerUrl"];
-
-            string PaypointPwd = System.Web.Configuration.WebConfigurationManager.AppSettings["PaypointPwd"];
-            string PaypointUserID = System.Web.Configuration.WebConfigurationManager.AppSettings["PaypointUserID"];
+            string PaypointPwd = WebConfigurationManager.AppSettings["PaypointPwd"];
+            string PaypointUserID = WebConfigurationManager.AppSettings["PaypointUserID"];
             string serviceCodeTestServer = "0";
-            serviceCodeTestServer = System.Web.Configuration.WebConfigurationManager.AppSettings["serviceCodeTestServer"];
-            System.Net.ServicePointManager.ServerCertificateValidationCallback += delegate { return true; };
+            serviceCodeTestServer = WebConfigurationManager.AppSettings["serviceCodeTestServer"];
+            ServicePointManager.ServerCertificateValidationCallback += delegate { return true; };
             StreamReader sr = new StreamReader(input);
             string s = sr.ReadToEnd();
             sr.Dispose();
@@ -229,7 +226,7 @@ namespace WCF.MNepal
             string mobile = qs["mobile"];
             string sc = qs["sc"];
 
-            string da = System.Web.Configuration.WebConfigurationManager.AppSettings["DestinationNoForPaypoint"];
+            string da = WebConfigurationManager.AppSettings["DestinationNoForPaypoint"];
             //FOR Get  vid by username
             PaypointUtils GetvidByUserName = new PaypointUtils();
             vid = GetvidByUserName.GetvidByUserNamedt(da);
@@ -251,7 +248,6 @@ namespace WCF.MNepal
             string resultMessageResCP = "";
             string retrievalReference = qs["retrievalReference"];
 
-
             string serviceCode = qs["special1"];
 
             if (serviceCodeTestServer == "1")
@@ -259,7 +255,7 @@ namespace WCF.MNepal
                 serviceCode = serviceCodeTestServer; //"1";//
             }
 
-            string destinationNumber = System.Web.Configuration.WebConfigurationManager.AppSettings["DestinationNoForTestServer"];
+            string destinationNumber = WebConfigurationManager.AppSettings["DestinationNoForTestServer"];
 
             DematModel reqEPDematInfo = new DematModel();
             string totalAmount = string.Empty;
@@ -286,18 +282,12 @@ namespace WCF.MNepal
             string Desc1RevNew = "Rev-Thaili Pmt to Share for Cust ID:" + mobile + "^^MNP^^Rev-Thaili Pmt to Share for Cust ID:" + mobile;
             string RemarkRevNew = "";
 
-            //int walletBalancePaisaInt = 0;
-            //walletBalancePaisaInt = Convert.ToInt32((Convert.ToDouble(walletBalance)) * 100);
-            //int amountpayInt = Convert.ToDouble(amount);
-
             string transactionDate = DateTime.Now.ToString("yyyy-MM-ddTHH:mm:ss");//"2019-11-22T11:11:02";
             long millisecondstrandId = DateTimeOffset.Now.ToUnixTimeMilliseconds();
             string transactionId = millisecondstrandId.ToString(); //"120163339819";
             string exectransactionDate = DateTime.Now.ToString("yyyy-MM-ddTHH:mm:ss");
             string exectransactionId = millisecondstrandId.ToString();
 
-            // TraceIdGenerator traceid = new TraceIdGenerator();
-            //tid = traceid.GenerateUniqueTraceID();
             tid = RetrievalReference;
             FundTransfer fundtransfer = new FundTransfer
             {
@@ -316,10 +306,8 @@ namespace WCF.MNepal
 
             if (sc == "00")
             {
-
                 try
                 {
-
                     ThreadPool.QueueUserWorkItem(BackgroundTaskWithObject, fundtransfer);
                     if ((tid == null) || (sc == null) || (mobile == null) || (da == null) || (amount == null) || (pin == null) ||
                     ((double.Parse(amount) <= 0)))
@@ -377,7 +365,6 @@ namespace WCF.MNepal
 
                         if (UserNameCheck.IsValidMerchant(da))
                         {
-
                             TransLimitCheck transLimitCheck = new TransLimitCheck();
                             string resultTranLimit = transLimitCheck.LimitCheck(mobile, da, amount, sc, pin, src);
 
@@ -558,8 +545,6 @@ namespace WCF.MNepal
                             }
 
                         } //END IsValidMerchant
-
-                        //} //END Destination mobile No check
 
                     }
 
@@ -819,9 +804,6 @@ namespace WCF.MNepal
                             }
 
                         } //END IsValidMerchant
-
-
-                        //} //END Destination mobile No check
 
                     }
 
@@ -1329,26 +1311,6 @@ namespace WCF.MNepal
 
 
                                     }
-                                    //else
-                                    //{
-                                    //    mnft.Response = "error";
-                                    //    mnft.ResponseStatus(HttpStatusCode.BadRequest, "parameters missing/invalid"); //200 - OK
-                                    //    result = mnft.Response;
-                                    //    statusCode = "400";
-                                    //    message = "parameters missing/invalid";
-                                    //    failedmessage = message;
-
-                                    //    custsmsInfo = new CustActivityModel()
-                                    //    {
-                                    //        UserName = mobile,
-                                    //        RequestMerchant = transactionType,
-                                    //        DestinationNo = fundtransfer.da,
-                                    //        Amount = amount,
-                                    //        SMSStatus = "Failed",
-                                    //        SMSSenderReply = message,
-                                    //        ErrorMessage = failedmessage,
-                                    //    };
-                                    //}
 
                                 } //END MNComAndFocusOneLogsController
                                 else
@@ -1359,21 +1321,6 @@ namespace WCF.MNepal
                                     result = mnft.Response;
                                     failedmessage = result;
                                 }
-
-                                //END TRansLimit Check StatusCode N Message
-                                //else
-                                //{
-                                //    custsmsInfo = new CustActivityModel()
-                                //    {
-                                //        UserName = mobile,
-                                //        RequestMerchant = transactionType,
-                                //        DestinationNo = fundtransfer.da,
-                                //        Amount = amount,
-                                //        SMSStatus = "Failed",
-                                //        SMSSenderReply = message,
-                                //        ErrorMessage = failedmessage,
-                                //    };
-                                //}
 
                             } //END IsValidMerchant
 

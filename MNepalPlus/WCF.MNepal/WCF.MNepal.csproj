@@ -132,6 +132,7 @@
     <None Include="Connected Services\MerchantReference\commoninterface.wsdl" />
     <None Include="Connected Services\WebReference\VerifyThis.disco" />
     <None Include="Connected Services\MerchantReference\commoninterface.disco" />
+    <Content Include="Content\Upload\9841675081_CustomerFeedback_photo_5195.jpg" />
     <Content Include="neareverse.svc" />
     <Content Include="topupAPI.svc" />
     <Content Include="wlink.svc" />

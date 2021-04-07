@@ -425,7 +425,7 @@ namespace CustApp.Controllers
 
                 var byteArray = Encoding.ASCII.GetBytes(UserName + ":" + UserPassword);
                 httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Basic", Convert.ToBase64String(byteArray));
-                var httpResponse = await httpClient.GetAsync(APIBaseURL + "Image/SliderImage");
+                var httpResponse = await httpClient.GetAsync(APIBaseURL + "DashboardImage/SliderImage");
                 var responseContent = await httpResponse.Content.ReadAsStringAsync();
                 return responseContent;
             }

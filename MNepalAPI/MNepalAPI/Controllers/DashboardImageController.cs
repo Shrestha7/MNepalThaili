@@ -15,10 +15,10 @@ using System.Web.Http;
 namespace MNepalAPI.Controllers
 {
     [MyBasicAuthenticationFilter]
-    public class ImageController : ApiController
+    public class DashboardImageController : ApiController
     {
         #region SliderImage
-        [Route("api/Image/SliderImage")]
+        [Route("api/DashboardImage/SliderImage")]
         [HttpGet]
        
         public async Task<HttpResponseMessage> SliderImage()
