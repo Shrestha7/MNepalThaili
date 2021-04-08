@@ -26,14 +26,6 @@
         z-index: 2;
     }
 
-    .preload {
-        margin: 0;
-        position: absolute;
-        top: 90%;
-        left: 50%;
-        margin-right: -50%;
-        transform: translate(-50%,-50%);
-    }
 
     .bootstrap-select {
         width: 465px !important;
@@ -386,6 +378,23 @@
 
     <script type="text/javascript">
 
+        //add div on whole page:
+        var tempDiv = $("<div id='tempOverlayDiv'></div>");
+        tempDiv.css({
+            "background-color": "#000",
+            "opacity": "0.2",
+            "position": "absolute",
+            "left": 0,
+            "top": 0,
+            "width": $(document).width(),
+            "height": $(document).height()
+        });
+
+        // remove div on document ready:
+        $(document).ready(function () {
+            tempDiv.remove();
+        });
+
         $(".btnShow1").mousedown(function () {
             $(".pwd1").attr("type", "text");
         });
@@ -693,6 +702,7 @@
                     async: true,
                     success: function (data) {
                         $(".preload").show();
+                        tempDiv.remove();
                         if (data.responseCode == "000" || data.responseCode == "999") {
                             $("#amount").attr("disabled", "disabled");
                             $("#accountNumber").attr("disabled", "disabled");
@@ -735,6 +745,7 @@
                         settings.data += "&dummyData=whatever";
                         //disable the button until we get the response
                         $('#btnValidate').attr("disabled", true);
+                        $("body").append(tempDiv);
                     },
                     complete: function (jqXHR, textStatus) {
                         //enable the button
@@ -799,6 +810,7 @@
                     async: true,
                     success: function (data) {
                         $(".preload").show();
+                        tempDiv.remove();
                         if (data.responseCode == "200") {
                             var url = '@Url.Action("CIPSDetails", "CIPS")';
                             window.location.href = url;
@@ -827,7 +839,7 @@
                     //capture the request before it was sent to server
                     beforeSend: function (jqXHR, settings) {
                         $(".preload").show();
-                        $('.mask').show();
+                        $("body").append(tempDiv);
                         //adding some Dummy data to the request
                         settings.data += "&dummyData=whatever";
                         //disable the button until we get the response
@@ -836,8 +848,7 @@
                     complete: function (jqXHR, textStatus) {
                         //enable the button
                         $(".preload").hide();
-                        $('.mask').hide();
-
+                        $(".overlay-wrapper").show();
                         $('#btnSubmit').attr("disabled", false);
                     }
                 });

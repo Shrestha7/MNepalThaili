@@ -6,6 +6,7 @@
 
 <!-- Main content -->
 <link href="~/Content/NewIcon/style.css" rel="stylesheet" />
+<link href="~/Content/ThaliStyle.css" rel="stylesheet" />
 <style>
     .image_icon {
         width: 100px;
@@ -18,14 +19,6 @@
         margin-right: 13px;
         position: relative;
         z-index: 2;
-    }
-    .preload {
-        margin: 0;
-        position: absolute;
-        top: 50%;
-        left: 50%;
-        margin-right: -50%;
-        transform: translate(-50%,-50%);
     }
 </style>
 @using (Html.BeginForm("DMATPayment", "Share", FormMethod.Post, new { @id = "DMATPayment", @name = "DMATPayment", @class = "form-horizontal", enctype = "multipart/form-data" }))
@@ -182,8 +175,8 @@
                                        @oninput = "checkValidation()",
                                        @onclick = "checkValidation()",
                                        @id = "DMATPayment",
-                                       data_show_subtext = "true",
-                                       data_live_search = "true"
+                                       //data_show_subtext = "true",
+                                       //data_live_search = "true"
                                    })
 
                                     </div>
@@ -255,6 +248,25 @@
 @section scripts{
 
     <script type="text/javascript">
+
+        //add div on whole page:
+        var tempDiv = $("<div id='tempOverlayDiv'></div>");
+        tempDiv.css({
+            "background-color": "#000",
+            "opacity": "0.2",
+            "position": "absolute",
+            "left": 0,
+            "top": 0,
+            "width": $(document).width(),
+            "height": $(document).height()
+        });
+
+
+        // remove div on document ready:
+        $(document).ready(function () {
+            tempDiv.remove();
+        });
+
 
         $(".btnShow1").mousedown(function () {
             $(".pwd1").attr("type", "text");
@@ -369,6 +381,8 @@
                     async: true,
                     success: function (data) {
                         $(".preload").show();
+                        tempDiv.remove();
+
                         $("#clearButton").attr("disabled", true);
 
                         if (data.responseCode == "200") {
@@ -391,6 +405,7 @@
                     },
                     error: function (jqXHR, textStatus, errorThrown) {
                         alert('Failed to retrieve.');
+                        $("body").remove(tempDiv);
                         $("#message").html("");
                         $("#message").append(jqXHR.responseText);
                         $('#failureModal').modal("show");
@@ -401,12 +416,14 @@
                         $(".preload").show();
                         $("#btnSubmit").attr("disabled", true);
                         $("#clearButton").attr("disabled", true);
+                        $("body").append(tempDiv);
                         //adding some Dummy data to the request
                         settings.data += "&dummyData=whatever";
                         //disable the button until we get the response
                     },
                     complete: function (jqXHR, textStatus) {
                         $(".preload").hide();
+                        $(".overlay-wrapper").show();
                         //enable the button
                         $('#btnSubmit').attr("disabled", false);
                     }

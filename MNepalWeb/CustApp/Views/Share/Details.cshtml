@@ -8,6 +8,8 @@
 
 <!-- Main content -->
 <link href="~/Content/NewIcon/style.css" rel="stylesheet" />
+<link href="~/Content/ThaliStyle.css" rel="stylesheet" />
+
 <style>
     .image_icon {
         width: 100px;
@@ -20,15 +22,6 @@
         margin-right: 13px;
         position: relative;
         z-index: 2;
-    }
-
-    .preload {
-        margin: 0;
-        position: absolute;
-        top: 50%;
-        left: 50%;
-        margin-right: -50%;
-        transform: translate(-50%,-50%);
     }
 </style>
 
@@ -226,8 +219,8 @@
                                         <td style="text-align:center;padding-left:10px; font-size:19px">
                                             @shift.Description<hr />
                                         </td>
+                                       
                                     </tr>
-
                                 }
 
 
@@ -366,7 +359,20 @@
 @section scripts{
 
     <script type="text/javascript">
-        debugger;
+
+        //add div on whole page:
+        var tempDiv = $("<div id='tempOverlayDiv'></div>");
+        tempDiv.css({
+            "background-color": "#000",
+            "opacity": "0.2",
+            "position": "absolute",
+            "left": 0,
+            "top": 0,
+            "width": $(document).width(),
+            "height": $(document).height()
+        });
+
+
         $(".btnShow1").mousedown(function () {
             $(".pwd1").attr("type", "text");
         });
@@ -375,6 +381,7 @@
 });
 
          $(document).ready(function () {
+             tempDiv.remove();
 
             //If Total Due amount is equal to zero
             var amount = $("[name='amount']").val();
@@ -522,6 +529,7 @@
                     async: false,
                     success: function (data) {
                         $(".preload").show();
+                        tempDiv.remove();
                         if (data.responseCode == "200") {
                             $("#ajaxResponse").html("");
                             var resp = JSON.parse(data.responseText);
@@ -556,6 +564,7 @@
                     //capture the request before it was sent to server
                     beforeSend: function (jqXHR, settings) {
                         $(".preload").show();
+                        $("body").append(tempDiv);
                         //adding some Dummy data to the request
                         settings.data += "&dummyData=whatever";
                         //disable the button until we get the response
@@ -568,6 +577,7 @@
 
                     complete: function (data) {
                         $(".preload").hide();
+                        $(".overlay-wrapper").show();
                         if (data.responseJSON.responseText == "Invalid PIN ") {
                             $('#btnSubmit').attr("disabled", false);
                         }
@@ -575,7 +585,6 @@
                         //if (data.responseJSON.responseText == "Invalid PIN! You have already attempt 3 times with wrong PIN,Please try again after 10 minutes") {
                      if (data.responseJSON.responseText == data.responseJSON.blockMessage) {
                             $("#failureModal").click(function () {
-                                        debugger;
                               location.href = '@Url.Action("Index", "LogOut")';
                             });
                         }

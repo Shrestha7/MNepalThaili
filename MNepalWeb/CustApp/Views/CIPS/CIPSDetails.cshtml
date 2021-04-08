@@ -7,6 +7,8 @@
 
 <!-- Main content -->
 <link href="~/Content/NewIcon/style.css" rel="stylesheet" />
+<link href="~/Content/ThaliStyle.css" rel="stylesheet" />
+
 <style>
     .image_icon {
         width: 100px;
@@ -21,20 +23,12 @@
         z-index: 2;
     }
 
-    .preload {
-        margin: 0;
-        position: absolute;
-        top: 50%;
-        left: 50%;
-        margin-right: -50%;
-        transform: translate(-50%,-50%);
-    }
-
     .show-tick {
         margin-top: 10px;
         height: 45px;
         width: 610px;
     }
+
 </style>
 
 @using (Html.BeginForm("CIPSExecutePayment", "CIPS", FormMethod.Post, new { @id = "CIPSExecutePayment", @name = "CIPSExecutePayment", @class = "form-horizontal", enctype = "multipart/form-data" }))
@@ -335,6 +329,23 @@
 
     <script type="text/javascript">
 
+        //add div on whole page:
+        var tempDiv = $("<div id='tempOverlayDiv'></div>");
+        tempDiv.css({
+            "background-color": "#000",
+            "opacity": "0.2",
+            "position": "absolute",
+            "left": 0,
+            "top": 0,
+            "width": $(document).width(),
+            "height": $(document).height()
+        });
+
+        // remove div on document ready:
+        $(document).ready(function () {
+            tempDiv.remove();
+        });
+
         $(".btnShow1").mousedown(function () {
             $(".pwd1").attr("type", "text");
         });
@@ -453,7 +464,7 @@
         });
 
         $('#btnSubmit').click(function (e) {
-            e.preventDefault();            
+            e.preventDefault();
             var accountNumber = document.getElementById("accountNumber").innerText;
             var transactionAmount = document.getElementById("transactionAmount").innerText;
             var beneficiaryAccountNumber= document.getElementById("beneficiaryAccountNumber").innerText;
@@ -489,6 +500,7 @@
                     async: true,
                     success: function (data) {
                         $(".preload").show();
+                        tempDiv.remove();
                         if (data.responseCode == "200" || data.responseCode == "0") {
                             $("#ajaxResponse").html("");
                             //var resp = JSON.parse(data.responseText);
@@ -526,6 +538,7 @@
                         //adding some Dummy data to the request
                         $(".preload").show();
                         $("#cancelButton").attr("disabled", "disabled");
+                        $("body").append(tempDiv);
                         settings.data += "&dummyData=whatever";
                         //disable the button until we get the response
                         $('#btnSubmit').attr("disabled", true);
@@ -533,6 +546,7 @@
                     complete: function (jqXHR, textStatus) {
                         //enable the button
                         $('.preload').hide();
+                        $(".overlay-wrapper").show();
                         $('#btnSubmit').attr("disabled", false);
                     }
                 });
