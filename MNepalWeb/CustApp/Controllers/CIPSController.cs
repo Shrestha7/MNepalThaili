@@ -1025,7 +1025,6 @@ namespace CustApp.Controllers
             dic.Add("DestinationAccountNumber", (string)Session["creditorAccount"]);
             dic.Add("DestinationAccountName", (string)Session["creditorName"]);
             dic.Add("DestinationBank", (string)Session["bankName"]);
-            dic.Add("DestinationBranch", (string)Session["branchName"]);
             dic.Add("Remarks", (string)Session["endToEndId"]);
             dic.Add("Amount", Session["amount"].ToString());
             dic.Add("Charge", Session["cipsCharge"].ToString());

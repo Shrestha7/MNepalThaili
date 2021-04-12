@@ -542,7 +542,8 @@ namespace MNepalAPI.Controllers
                             int resultsMNRequest = CIPSUtilities.cipsMNRequest(cipsMNRequest);
 
 
-                            if (jsonResponseContent.cipsBatchResponse.responseCode == "000" && jsonResponseContent.cipsTxnResponseList.FirstOrDefault().responseCode == "000")
+                            if ((jsonResponseContent.cipsBatchResponse.responseCode == "000" && jsonResponseContent.cipsTxnResponseList.FirstOrDefault().responseCode == "000") ||
+                                (jsonResponseContent.cipsBatchResponse.responseCode == "000" && jsonResponseContent.cipsTxnResponseList.FirstOrDefault().responseCode == "999"))
                             {
                                 //save to MNResponse
                                 MNRequestResponse cipsMNResponse = new MNRequestResponse();
@@ -1037,6 +1038,59 @@ namespace MNepalAPI.Controllers
         }
         #endregion
 
+        #region VerifyTransactionByBatchId
+        [Route("api/ConnectIPS/VerifyTransactionByBatchId")]
+        [HttpPost]
+        public async Task<HttpResponseMessage> VerifyTransactionByBatchId(VerifyTransaction verifyTransaction)
+        {
+            var re = Request;
+            var headers = re.Headers;
+
+            if (headers.Contains("token"))
+            {
+                //from header
+                string authorizationToken = headers.GetValues("token").First();
+                if (authorizationToken == null || authorizationToken == "")
+                    return Request.CreateErrorResponse(HttpStatusCode.Unauthorized, "Invalid Token");
+
+                var accessToken = CIPSUtilities.GetAccessToken(authorizationToken);
+
+                var accessTOken = await GetAccessToken(accessToken);
+
+                var cipsObject = new VerifyTransaction
+                {
+                   batchId = verifyTransaction.batchId
+                };
+
+
+                var stringPayload = await Task.Run(() => JsonConvert.SerializeObject(cipsObject));
+
+                // Wrap our JSON inside a StringContent which then can be used by the HttpClient class
+                var httpContent = new StringContent(stringPayload, Encoding.UTF8, "application/json");
+                using (var httpClient = new HttpClient())
+                {
+                    var ConnectIPSBaseURL = ConfigurationManager.AppSettings["ConnectIPSBaseURL"];
+                    httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("bearer", accessTOken);
+                    ServicePointManager.ServerCertificateValidationCallback = delegate (object sender, X509Certificate certificate, X509Chain chain, SslPolicyErrors sslPolicyErrors) { return true; }; //to remove ssl error
+
+                    var httpResponse = await httpClient.PostAsync(ConnectIPSBaseURL + "api/getcipstxnlistbybatchid", httpContent);
+                    //response
+                    var responseContent = await httpResponse.Content.ReadAsStringAsync();
+
+                    var json = JsonConvert.DeserializeObject(responseContent);
+
+                    return Request.CreateResponse(HttpStatusCode.OK, json);
+                   
+                   
+                }
+
+            }
+            else
+            {
+                return Request.CreateErrorResponse(HttpStatusCode.Unauthorized, "Invalid Token");
+            }
+        }
+        #endregion
 
     }
 }

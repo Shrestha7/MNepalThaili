@@ -237,4 +237,9 @@ namespace MNepalAPI.Models
         public string username { get; set; }
         public string password { get; set; }
     }
+
+    public class VerifyTransaction
+    {
+        public string batchId { get; set; }
+    }
 }

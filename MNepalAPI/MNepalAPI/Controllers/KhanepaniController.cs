@@ -20,7 +20,7 @@ namespace MNepalAPI.Controllers
     public class KhanepaniController : ApiController
     {
         #region KhanepaniList
-        [Route("api/NEA/KhanepaniList")]
+        [Route("api/Khanepani/KhanepaniList")]
         [HttpGet]
         public async Task<HttpResponseMessage> KhanepaniList()
         {
@@ -66,7 +66,7 @@ namespace MNepalAPI.Controllers
         #endregion
 
         #region NepalWaterList
-        [Route("api/NEA/NepalWaterList")]
+        [Route("api/NepalWater/NepalWaterList")]
         [HttpGet]
         public async Task<HttpResponseMessage> NepalWaterList()
         {

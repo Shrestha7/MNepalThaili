@@ -252,7 +252,7 @@
 
                             </div>
 
-                            <div class="row">
+                            @*<div class="row">
                                 <div class="col-md-12">
                                     <div class="form-group">
                                         <label class="col-sm-12">Branch Name (<span style="color:red">*</span>)</label>
@@ -261,7 +261,7 @@
                                     <div class="form-group" id="branchNameErr" style="color:red; margin-top:-11px;"></div>
                                 </div>
 
-                            </div>
+                            </div>*@
 
                             <div class="row" id="Remark">
                                 <div class="col-md-12">
@@ -615,7 +615,7 @@
                 data: dataToPost,
                 async: true,
                 success: function (data) {
-
+                    debugger;
                     var select = $("#branchDrpdwn");
                     select.empty();
                     select.append($('<option/>', {
@@ -630,6 +630,10 @@
                             text: itemData.Text.trim()
                         }));
                     });
+
+                    var anyBranchId = data[0].Value;
+                    window.anyBranchId = anyBranchId;
+                    
 
                     $('.show-tick').selectpicker({
                         liveSearch: true,
@@ -673,7 +677,7 @@
             var token = $('input[name="__AjaxAntiForgeryForm"]').val();
 
             if ((senderAccountNumber != "") && (amount != "") && (beneficiaryAccountNumber != "") && (beneficiaryAccountName != "") && (bankName != undefined)
-                && (branchName != undefined) && (transactionDetail != "") ) {
+                /*&& (branchName != undefined)*/ && (transactionDetail != "") ) {
 
                 var dataToPost = {
                     senderAccountName: senderAccountName,
@@ -684,7 +688,7 @@
                     bankId: bankId,
                     bankBranchId: bankBranchId,
                     bankName: bankName,
-                    branchName: branchName,
+                    //branchName: branchName,
                     TokenUnique: token,
                     transactionDetail: transactionDetail
 
@@ -708,7 +712,7 @@
                             $("#accountNumber").attr("disabled", "disabled");
                             $("#beneficiaryAccountName").attr("disabled", "disabled");
                             $("#bankDrpdwn").attr("disabled", "disabled");
-                            $("#branchDrpdwn").attr("disabled", "disabled");
+                            //$("#branchDrpdwn").attr("disabled", "disabled");
                             $("#transactionDetail").attr("disabled", "disabled");
                             $("#AccountValidate").show();
                             $("#btnValidate").hide();
@@ -774,14 +778,15 @@
             var beneficiaryAccountName = $("[name='txtBeneficiaryAccountName']").val();
             var bankName = window.getBankName;
             var bankId = window.getBankId;
-            var bankBranchId = window.branchId;
+            //var bankBranchId = window.branchId;
+            var bankBranchId = window.anyBranchId;
             var branchName = window.branchName;
             var transactionDetail = $("[name='txtTransactionDetail']").val();
             var pin = $("[name='txtPin']").val();
             var token = $('input[name="__RequestVerificationToken"]').val();
 
             if ((senderAccountNumber != "") && (amount != "") && (beneficiaryAccountNumber != "") && (beneficiaryAccountName != "") && (bankName != undefined)
-                && (branchName != undefined) && (transactionDetail != "") && (pin != "")) {
+                /*&& (branchName != undefined)*/ && (transactionDetail != "") && (pin != "")) {
 
                 var dataToPost = {
                     senderAccountName: senderAccountName,
@@ -792,7 +797,7 @@
                     bankId: bankId,
                     bankBranchId: bankBranchId,
                     bankName: bankName,
-                    branchName: branchName,
+                    //branchName: branchName,
                     transactionDetail: transactionDetail,
                     pin: pin,
                     TokenUnique: token

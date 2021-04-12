@@ -219,14 +219,14 @@
                                 </div>
                             </div>
 
-                            <div class="row">
+                            @*<div class="row">
                                 <div class="col-md-6">
                                     <label>Destination Branch<span style="margin-left:55px">:</span></label>
                                 </div>
                                 <div class="col-md-6">
                                     <label id="branchName">@ViewBag.BranchName</label>
                                 </div>
-                            </div>
+                            </div>*@
 
                             <div class="row">
                                 <div class="col-md-6">
@@ -280,7 +280,7 @@
                             <a class="btn btn-blue" href="@Url.Action("CIPSPaymentInvoice", "CIPS")" target="_blank" id="btnPDF">Download PDF</a>
                         </div>
                         <div class="col-md-6">
-                            <button type="button" class="btn btn-blue" data-dismiss="modal" style="width:80%">OK</button>
+                            <button type="button" class="btn btn-info" data-dismiss="modal" style="width:80%">OK</button>
                         </div>
                     </div>
 
@@ -464,18 +464,19 @@
         });
 
         $('#btnSubmit').click(function (e) {
+            debugger;
             e.preventDefault();
             var accountNumber = document.getElementById("accountNumber").innerText;
             var transactionAmount = document.getElementById("transactionAmount").innerText;
             var beneficiaryAccountNumber= document.getElementById("beneficiaryAccountNumber").innerText;
             var beneficiaryAccountName = document.getElementById("beneficiaryAccountName").innerText;
             var beneficiaryBankName = document.getElementById("beneficiaryBankName").innerText;
-            var branchName = document.getElementById("branchName").innerText;
+            //var branchName = document.getElementById("branchName").innerText;
             var remarks = document.getElementById("remarks").innerText;
             var token = $('input[name="__RequestVerificationToken"]').val();
 
             if ((accountNumber != "") && (transactionAmount != "") && (beneficiaryAccountNumber != "") && (beneficiaryAccountName != "") &&
-                (beneficiaryBankName != "") && (branchName != "") && (remarks != "")) {
+                (beneficiaryBankName != "") /*&& (branchName != "") */&& (remarks != "")) {
 
                 var dataToPost = {
                     accountNumber: accountNumber,
@@ -483,7 +484,7 @@
                     beneficiaryAccountNumber: beneficiaryAccountNumber,
                     beneficiaryAccountName: beneficiaryAccountName,
                     beneficiaryBankName: beneficiaryBankName,
-                    branchName: branchName,
+                    //branchName: branchName,
                     remarks: remarks,
                     TokenUnique: token
                 };
