@@ -963,7 +963,7 @@ namespace MNepalAPI.Controllers
                         message = "Invalid PIN! You have already attempt 3 times with wrong PIN,Please try again after 10 minutes";
                         check.message = message;
 
-                        return Request.CreateResponse(HttpStatusCode.Unauthorized, check);
+                        return Request.CreateResponse(HttpStatusCode.BadRequest, check);
 
                     }
 

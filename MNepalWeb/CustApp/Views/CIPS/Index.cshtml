@@ -526,8 +526,7 @@
             }
         }
 
-        function checkRemarks() {
-            debugger;
+        function checkRemarks() {            
             var transactionDetail = $("[name='txtTransactionDetail']").val();
             if ((transactionDetail.trim() == "")) {
                 $("#transactionDetailErr").html("");
@@ -589,7 +588,6 @@
         //get banklist
         $('#bankDrpdwn').change(function (e){
             e.preventDefault();
-
             var dropdown = document.getElementById('bankDrpdwn');
             var selectedOption = dropdown.options[dropdown.selectedIndex];
             var selectedBankId = selectedOption.getAttribute('bankId');
@@ -615,7 +613,7 @@
                 data: dataToPost,
                 async: true,
                 success: function (data) {
-                    debugger;
+                    
                     var select = $("#branchDrpdwn");
                     select.empty();
                     select.append($('<option/>', {
