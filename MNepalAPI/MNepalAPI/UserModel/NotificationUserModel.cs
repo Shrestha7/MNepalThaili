@@ -28,8 +28,8 @@ namespace MNepalAPI.UserModel
                         sqlCmd.Parameters.AddWithValue("@image", objresNotificationInfo.imageName);
                         sqlCmd.Parameters.AddWithValue("@title", objresNotificationInfo.title);
                         sqlCmd.Parameters.AddWithValue("@text", objresNotificationInfo.text);
-                        sqlCmd.Parameters.AddWithValue("@redirectUrl", objresNotificationInfo.redirectUrl);
                         sqlCmd.Parameters.AddWithValue("@messageId", objresNotificationInfo.messageId);
+                        sqlCmd.Parameters.AddWithValue("@redirectUrl", objresNotificationInfo.redirectUrl);
                         sqlCmd.Parameters.AddWithValue("@pushNotificationDate", objresNotificationInfo.pushNotificationDate);
                         ret = sqlCmd.ExecuteNonQuery();
                     }

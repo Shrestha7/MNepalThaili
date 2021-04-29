@@ -9,16 +9,30 @@ namespace MNepalAPI.Models
     {
         public class Notificationsobject
         {
-            public string to { get; set; }
+            public string to { get; set; } 
+            public string imageUrl { get; set; }
+            public Data data { get; set; }
+            public Notification notification { get; set; }
+        } 
+        public class NotificationsobjectRegistration
+        {
+            public List<string> to { get; set; }
             public string imageUrl { get; set; }
             public Data data { get; set; }
             public Notification notification { get; set; }
         }
-
+        public class Message
+        {
+            public string to { get; set; }
+            public Notification notification { get; set; }
+            public object data { get; set; }
+        }
         public class Data
         {
             public string extra_information { get; set; }
-            public string redirectUrl { get; set; }
+            public string redirectUrl { get; set; } 
+            
+            public string imageUrl { get; set; }
         }
 
         public class Notification
