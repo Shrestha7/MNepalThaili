@@ -4,17 +4,25 @@
     Layout = null;
 }
 
+<style>
+    td {
+        padding: 0 15px;
+    }
+</style>
+
 <!DOCTYPE html>
 <html>
+
 <head>
     <meta name="viewport" content="width=device-width" />
-    <title>CIPS Transfer Advice - Thaili Digital Paisa</title>
+    <title>CIPS Transfer Receipt - Thaili Digital Paisa</title>
 </head>
+
 <body class="container">
     <div class="row" style="margin:600px 100px 200px 100px; font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif">
-        <h1 style="text-align:center">ConnectIPS Transfer Advice</h1><hr /><br />
+        <h1 style="text-align:center">ConnectIPS Transfer Receipt</h1><hr /><br />
         <div class="col-md-12"><span style="font-size:26px"><b>Sender Details</b></span> </div><hr />
-        <table style="font-size:20px" border="0" class="table-bordered table-striped table" align="center" width="500px" height="200px">
+        <table cellspacing="5" style="font-size:20px; margin-right:55px;"  class="table-bordered table-striped table" align="center">
             <tr>
                 <td>Account Name</td>
                 <td>@Model["SenderName"]</td>
@@ -27,43 +35,45 @@
                 <td>Bank Name</td>
                 <td>Nepal Investment Bank Limited</td>
             </tr>
+
         </table><br /><br />
         <div class="col-md-12"><span style="font-size:26px"><b>Receiver Details</b></span> </div><hr />
-        <table style="font-size:20px" border="0" class="table-bordered table-striped table" align="center" width="500px" height="200px">
-            <tr>
-                <td>Account Number</td>
-                <td>@Model["DestinationAccountNumber"]</td>
-            </tr>
+        <table cellspacing="5" style="font-size:20px" class="table-bordered table-striped table" align="center">
             <tr>
                 <td>Account Name</td>
                 <td>@Model["DestinationAccountName"]</td>
             </tr>
+            <tr>
+                <td>Account Number</td>
+                <td>@Model["DestinationAccountNumber"]</td>
+            </tr>
+
             <tr>
                 <td>Bank Name</td>
                 <td>@Model["DestinationBank"]</td>
             </tr>
         </table><br /><br />
         <div class="col-md-12"><span style="font-size:26px"><b>Transaction Details</b></span> </div><hr />
-        <table style="font-size:20px" border="0" class="table-bordered table-striped table" align="center" width="500px" height="200px">
+        <table cellspacing="5" style="font-size:20px; margin-left:140px;" class="table-bordered table-striped table" align="center">
             <tr>
                 <td>Amount</td>
-                <td>@Model["Amount"]</td>
+                <td style="padding-left:40px">@Model["Amount"]</td>
             </tr>
             <tr>
                 <td>Charge</td>
-                <td>@Model["Charge"]</td>
+                <td style="padding-left:40px">@Model["Charge"]</td>
             </tr>
             <tr>
                 <td>Remarks</td>
-                <td>@Model["Remarks"]</td>
+                <td style="padding-left:40px">@Model["Remarks"]</td>
             </tr>
             <tr>
                 <td>Reference No.</td>
-                <td>@Model["ReferenceNo"]</td>
+                <td style="padding-left:40px">@Model["ReferenceNo"]</td>
             </tr>
-             <tr>
+            <tr>
                 <td>TimeStamp</td>
-                <td>@Model["TimeStamp"]</td>
+                <td style="padding-left:40px">@Model["TimeStamp"]</td>
             </tr>
         </table>
     </div>

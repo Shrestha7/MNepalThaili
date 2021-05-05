@@ -277,8 +277,8 @@ D:\Thaili\MNepalPlus\MNepalProject\bin\Microsoft.Owin.Security.OAuth.xml
 D:\Thaili\MNepalPlus\MNepalProject\bin\Microsoft.Owin.Security.Google.xml
 D:\Thaili\MNepalPlus\MNepalProject\bin\Microsoft.Owin.Security.Twitter.xml
 D:\Thaili\MNepalPlus\MNepalProject\bin\Microsoft.Owin.Security.MicrosoftAccount.xml
+D:\Thaili\MNepalPlus\MNepalProject\obj\Debug\MNepalProject.csprojAssemblyReference.cache
 D:\Thaili\MNepalPlus\MNepalProject\obj\Debug\MNepalProject.csproj.CoreCompileInputs.cache
 D:\Thaili\MNepalPlus\MNepalProject\obj\Debug\MNepalProject.csproj.CopyComplete
 D:\Thaili\MNepalPlus\MNepalProject\obj\Debug\MNepalProject.dll
 D:\Thaili\MNepalPlus\MNepalProject\obj\Debug\MNepalProject.pdb
-D:\Thaili\MNepalPlus\MNepalProject\obj\Debug\MNepalProject.csprojAssemblyReference.cache

@@ -15,9 +15,6 @@ namespace MNepalProject.Models
 
         public void ResponseStatus(HttpStatusCode code, string description)
         {
-            WebOperationContext ctx = WebOperationContext.Current;
-            ctx.OutgoingResponse.StatusDescription = description;
-            ctx.OutgoingResponse.StatusCode = code;
         }
     }
 }

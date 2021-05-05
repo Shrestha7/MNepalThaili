@@ -208,18 +208,24 @@
 
                             </div>
                             <hr />
-                            <table>
+                            <table cellspacing="1" cellpadding="15" align="center" id="feeDetails">
+                                <tr>
+                                    <th>Fiscal Year</th>
+                                    <th>Amount</th>
+                                </tr>
 
 
-
-                                @foreach (var shift in ViewBag.ListDetails)
+                                @foreach (var listDetails in ViewBag.ListDetails)
                                 {
 
                                     <tr>
-                                        <td style="text-align:center;padding-left:10px; font-size:19px">
-                                            @shift.Description<hr />
+                                        <td style="text-align:center;padding-left:10px; font-size:15px;">
+                                            @listDetails.FiscalYear
                                         </td>
-                                       
+                                        <td style="text-align:center;padding-left:10px; font-size:15px;">
+                                            @listDetails.Amount
+                                        </td>
+
                                     </tr>
                                 }
 
@@ -266,9 +272,9 @@
 
                                 <div class="col-md-6">
                                     <div class="form-group">
-                                        <label> Tpin (<span style="color:red">*</span>)</label>
+                                        <label>T-PIN (<span style="color:red">*</span>)</label>
 
-                                        @Html.PasswordFor(x => x.TPin, new { @class = "form-control pwd1", @title = "Please use T-Pin number", @placeholder = "T-Pin", @maxlength = "4", @onkeypress = "return isNumber(event)", @oninput = "checkValidation()", @autocomplete = "new-password", @onpaste = "return false" })
+                                        @Html.PasswordFor(x => x.TPin, new { @class = "form-control pwd1", @title = "Please use T-PIN number", @placeholder = "T-PIN", @maxlength = "4", @onkeypress = "return isNumber(event)", @oninput = "checkValidation()", @autocomplete = "new-password", @onpaste = "return false" })
                                         <span toggle="#password-field" class="fa fa-fw fa-eye field-icon toggle-password, btnShow1"></span>
                                     </div>
                                     <div class="form-group" id="PinErr" style="color:red; margin-top:-11px;"></div>
@@ -387,6 +393,7 @@
             var amount = $("[name='amount']").val();
              if ((amount.trim() == "") || (amount.trim() == "0.00") || (amount.trim() == "0")) {
                 $(".hideRow").hide();
+                 $("#feeDetails").hide();
                  $(".NoPendingBills").show();
 
             }
@@ -400,6 +407,10 @@
         document.getElementById("failureModalSessionExpired").onclick = function () {
          var url = '@Url.Action("Index", "LogOut")';
          window.location.href = url;
+        };
+
+        document.getElementById("failureModal").onclick = function () {
+            window.location.reload(true);
         };
 
         function isNumber(evt) {
@@ -454,12 +465,12 @@
 
             if (pin.trim() == "") {
                 $("#PinErr").html("");
-                $("#PinErr").append("<small>" + "Please Enter the T-Pin" + "</small>");
+                $("#PinErr").append("<small>" + "Please Enter the T-PIN" + "</small>");
                 $("#PinErr").show();
             }
             else if (pin.length != 4) {
                 $("#PinErr").html("");
-                $("#PinErr").append("<small>" + "T-Pin must be 4 character long." + "</small>");
+                $("#PinErr").append("<small>" + "T-PIN must be 4 character long." + "</small>");
                 $("#PinErr").show();
             }
             else {
@@ -485,8 +496,6 @@
             //}
         }
 
-
-
         $("#clearButton").click(function () {
             //$("[name='txtCustomerID']").val("");
             //$("[name='amount']").val("");
@@ -494,9 +503,6 @@
             $("[name='TPin']").val("");
             $("[name='Months']").val('0');
         });
-
-
-
 
         $('#btnSubmit').click(function (e) {
             e.preventDefault();
@@ -515,8 +521,7 @@
                     TPin: TPin,
                     TokenUnique: token
                 };
-
-
+                $("#TransactionMedium").attr("disabled", "disabled");
                 e.preventDefault(); //prevent the default action
                 $.ajax({
                     url: '@Url.Action("DematExecutePayment", "Share")',
@@ -526,19 +531,17 @@
                         __RequestVerificationToken: token,
                         demat: dataToPost
                     },
-                    async: false,
+                    async: true,
                     success: function (data) {
                         $(".preload").show();
-                        tempDiv.remove();
+                        tempDiv.remove();                       
                         if (data.responseCode == "200") {
                             $("#ajaxResponse").html("");
                             var resp = JSON.parse(data.responseText);
                             $('#successModal').modal("show");
-
                             $("#TPin").val("");
                             $("#Remarks").val("");
-                            $("#amount").val("");
-
+                            $("#amount").val("");                          
                         }
                         //display error message
                         else {

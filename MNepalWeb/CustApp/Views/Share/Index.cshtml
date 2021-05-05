@@ -276,10 +276,9 @@
         });
 
 
-        @*document.getElementById("successModal").onclick = function () {
-         var url = '@Url.Action("Details", "NepalWater")';
-         window.location.href = url;
-        };*@
+        document.getElementById("failureModal").onclick = function () {
+            window.location.reload(true);
+        };
         document.getElementById("failureModalSessionExpired").onclick = function () {
          var url = '@Url.Action("Index", "LogOut")';
          window.location.href = url;
@@ -332,7 +331,7 @@
             else if (Cust.length != "16") {
                 $("#btnSubmit").hide();
                 $("#CustErr").html("");
-                $("#CustErr").append("<small>" + "BoId must be of 16 digits" + "</small>");
+                $("#CustErr").append("<small>" + "BO ID must be of 16 digits" + "</small>");
                 $("#CustErr").show();
 
             }
@@ -369,6 +368,7 @@
                     TokenUnique: token
                 };
 
+
                 e.preventDefault(); //prevent the default action
                 $.ajax({
                     url: '@Url.Action("DMATPayment", "Share")',
@@ -382,7 +382,6 @@
                     success: function (data) {
                         $(".preload").show();
                         tempDiv.remove();
-
                         $("#clearButton").attr("disabled", true);
 
                         if (data.responseCode == "200") {

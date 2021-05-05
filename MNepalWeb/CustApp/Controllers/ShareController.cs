@@ -233,7 +233,7 @@ namespace CustApp.Controllers
                             responsetext = await _res.Content.ReadAsStringAsync();
                             dynamic json = JValue.Parse(responsetext);
                             message = json.d;
-                            responsetext = JsonConvert.SerializeObject(@"Invalid BoId");
+                            responsetext = JsonConvert.SerializeObject(@"Invalid BO ID");
                             responsetext = responsetext.Replace("\"", string.Empty).Trim();
                             if (message == null)
                             {
@@ -321,11 +321,15 @@ namespace CustApp.Controllers
                     for (int i = 0; i < lines.Length; i++)
                     {
                         string Fees = lines[i];
+                        string[] splitFees = Fees.Split(null);  // split string on space
+
                         ListDetails.Add(new ListFees
                         {
-                            Description = Fees
+                            FiscalYear = splitFees[2],
+                            Description = splitFees[4],
+                            Amount = splitFees[7]
 
-                        });
+                        }); ;
                     }
 
                     ViewBag.ListDetails = ListDetails;

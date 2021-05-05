@@ -195,7 +195,7 @@ namespace MNepalAPI.UserModel
                         sqlCmd.Parameters.AddWithValue("@MiniStmtRecord", objresConnectIPSInfo.miniStmtRecord);
                         sqlCmd.Parameters.AddWithValue("@ReversalStatus", objresConnectIPSInfo.reversalStatus);
                         sqlCmd.Parameters.AddWithValue("@TranId", objresConnectIPSInfo.tranId);
-                        sqlCmd.Parameters.AddWithValue("@DestUsername", objresConnectIPSInfo.destUsername);
+                        sqlCmd.Parameters.AddWithValue("@DestUsername", "");
                        
                         ret = sqlCmd.ExecuteNonQuery();
                     }

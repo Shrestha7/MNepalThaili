@@ -65,6 +65,31 @@ namespace MNepalAPI.Helper
 
                             string msgName; string resultparm; String ParamStr;
                             
+                            if (alertType == "SHARER")
+                            {
+                                resultparm = amount.ToString();
+                                ParamStr = "," + resultparm + "," + couponNumber + "," + createdDate;
+                                AlertParameters = ParamStr.Split(delimeterAlert, StringSplitOptions.None);
+                            }
+
+                            //END FOR MSG
+
+                            //START FOR SENDER SALUTATION
+
+                            if (alertType == "SHARER")
+                            {
+                                if (AlertSalMessage.Contains("%s"))
+                                {
+                                    AlertSalMessage = sMSEnable.GetFinalMessage(AlertSalMessage, AlertSalParameters);
+                                    AlertSalMessage = AlertSalMessage.Replace("\\n", "\n");
+                                }
+                            }
+
+                            //END FOR SENDER SALUTATION
+
+
+                            //START FOR MSG
+
                             if (alertType == "SHARE")
                             {
                                 resultparm = amount.ToString();
@@ -74,8 +99,9 @@ namespace MNepalAPI.Helper
 
                             //END FOR MSG
 
+
                             //START FOR SMS MESSAGE
-                            
+
                             if (AlertMessage.Contains("%s"))
                             {
                                 AlertMessage = sMSEnable.GetFinalMessage(AlertMessage, AlertParameters);
@@ -96,25 +122,6 @@ namespace MNepalAPI.Helper
                     messagereply += AlertMessage + createdDate + Environment.NewLine;
                     messagereply += AlertRegMessage;
                 }
-
-                //var client = new WebClient();
-
-                ////FOR SENDER
-                //if ((mobile.Trim().Substring(0, 3) == "980") || (mobile.Trim().Substring(0, 3) == "981")) //FOR NCELL
-                //{
-                //    //FOR NCELL
-                //    var content = client.DownloadString(
-                //            SMSServer
-                //            + "977" + mobile.Trim() + "&message=" + messagereply + "");
-                //}
-                //else if ((mobile.Trim().Substring(0, 3) == "985") || (mobile.Trim().Substring(0, 3) == "984")
-                //            || (mobile.Trim().Substring(0, 3) == "986"))
-                //{
-                //    //FOR NTC
-                //    var content = client.DownloadString(
-                //        SMSServer
-                //        + "977" + mobile.Trim() + "&message=" + messagereply + "");
-                //}
 
                 SendSMS sendSMS  = new SendSMS();
                 sendSMS.pushSMS(mobile, messagereply);               

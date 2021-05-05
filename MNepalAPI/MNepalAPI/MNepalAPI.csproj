@@ -386,12 +386,12 @@
     <Content Include="Content\bootstrap-theme.min.css" />
     <Content Include="Content\bootstrap.css" />
     <Content Include="Content\bootstrap.min.css" />
+    <Content Include="DashboardImage\slider\NIBL_Education-Loan_Slide_Web.jpg" />
+    <Content Include="DashboardImage\slider\NIBL_KETA-KETI_Slide_Web.jpg" />
+    <Content Include="DashboardImage\slider\NIBL_Re1-Account_Slide_Web.jpg" />
     <Content Include="favicon.ico" />
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Global.asax" />
-    <Content Include="Image\slider\NIBL_Education-Loan_Slide_Web.jpg" />
-    <Content Include="Image\slider\NIBL_KETA-KETI_Slide_Web.jpg" />
-    <Content Include="Image\slider\NIBL_Re1-Account_Slide_Web.jpg" />
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
     <Content Include="Areas\HelpPage\Views\Web.config" />
@@ -469,6 +469,12 @@
     <None Include="packages.config" />
     <Content Include="Scripts\jquery-3.4.1.slim.min.map" />
     <Content Include="Scripts\jquery-3.4.1.min.map" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\MNepalPlus\MNepalProject\MNepalProject.csproj">
+      <Project>{8ccfd27f-dd09-4d52-967b-fef2cd989cc8}</Project>
+      <Name>MNepalProject</Name>
+    </ProjectReference>
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

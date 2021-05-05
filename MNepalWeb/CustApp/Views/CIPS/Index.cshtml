@@ -47,8 +47,8 @@
     /* .filter-option-inner-inner {
         margin-left: -22px;
     }*/
+    
 
-  
 </style>
 
 @using (Html.BeginForm("CIPSPayment", "CIPS", FormMethod.Post, new { @id = "CIPSPayment", @name = "CIPSPayment", @class = "form-horizontal", enctype = "multipart/form-data" }))
@@ -64,7 +64,7 @@
     <div class="preload" style="display:none">
         <img src="~/Content/image/loading.gif" class="img-responsive" />
     </div>
-    
+
     <div class="main-content">
         <div class="two-colbg">
             <div class="container">
@@ -237,7 +237,7 @@
                                 <div class="col-md-12">
                                     <div class="form-group">
                                         <label class="col-sm-12">Bank Name (<span style="color:red">*</span>)</label>
-                                        <select id="bankDrpdwn" onload="getBankId()" name="txtBankName" class="show-tick" style="width:465px; height:43px" oninput="checkBank()">
+                                        <select id="bankDrpdwn" onload="getBankId()" name="txtBankName" class="show-tick"  style="width: 465px;height: 43px;" oninput="checkBank()">
                                             @foreach (var bank in ViewBag.getBankList)
                                             {
                                                 <option bankId="@bank.Value" name="bankList">@bank.Text</option>
@@ -253,21 +253,21 @@
                             </div>
 
                             @*<div class="row">
-                                <div class="col-md-12">
-                                    <div class="form-group">
-                                        <label class="col-sm-12">Branch Name (<span style="color:red">*</span>)</label>
-                                        <select id="branchDrpdwn" name="branchName" class="show-tick" style="width:465px; height:43px; font-size:18px"></select>
+                                    <div class="col-md-12">
+                                        <div class="form-group">
+                                            <label class="col-sm-12">Branch Name (<span style="color:red">*</span>)</label>
+                                            <select id="branchDrpdwn" name="branchName" class="show-tick" style="width:465px; height:43px; font-size:18px"></select>
+                                        </div>
+                                        <div class="form-group" id="branchNameErr" style="color:red; margin-top:-11px;"></div>
                                     </div>
-                                    <div class="form-group" id="branchNameErr" style="color:red; margin-top:-11px;"></div>
-                                </div>
 
-                            </div>*@
+                                </div>*@
 
                             <div class="row" id="Remark">
                                 <div class="col-md-12">
                                     <div class="form-group">
                                         <label>Remarks (<span style="color:red">*</span>)</label>
-                                        <textarea style="resize: none;" cols="50" rows="2" @*class="form-control select2"*@ id="transactionDetail" name="txtTransactionDetail" placeholder="Remarks" maxlength="15" oninput="checkRemarks()" @*onpaste="return false"*@></textarea>
+                                        <input type="text" class="form-control select2" id="transactionDetail" name="txtTransactionDetail" placeholder="Remarks" maxlength="15" oninput="checkRemarks()" @*onpaste="return false"*@></input>
                                     </div>
                                     <div class="form-group" id="transactionDetailErr" style="color:red; margin-top:-11px;"></div>
                                 </div>
@@ -294,7 +294,7 @@
                                 <div class="col-md-12">
                                     <div class="form-group">
                                         <label>T-PIN (<span style="color:red">*</span>)</label>
-                                        <input type="password" id="pin" name="txtPin" class="form-control pwd1" placeholder="PIN" maxlength="4" onkeypress="return event.charCode >= 48 && event.charCode <= 57" oninput="checkPin()" @*onpaste="return false"*@ />
+                                        <input type="password" id="pin" name="txtPin" class="form-control pwd1" placeholder="T-PIN" maxlength="4" onkeypress="return event.charCode >= 48 && event.charCode <= 57" oninput="checkPin()" @*onpaste="return false"*@ />
                                         <span toggle="#password-field" class="fa fa-fw fa-eye field-icon toggle-password, btnShow1"></span>
                                     </div>
                                     <div class="form-group" id="pinErr" style="color:red; margin-top:-11px;"></div>
@@ -356,6 +356,23 @@
         </div>
     </div>
 
+    <!-- Failure modal -->
+    <div class="modal fade common-modal" id="failureModalLogOut" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-body text-center">
+                    <div class="success-icon">
+                        <img src="~/Content/assets/img/denied-cross.svg" alt="denied-cross">
+                    </div>
+                    <p style="color: #E31837; font-size: 1.111rem; font-weight: 700;">@*Error!*@</p>
+                    <span style="color: #E31837; font-size: 1.111rem; font-weight: 700;" id="message2"></span>
+                    <br /> <br />
+                    <button type="button" class="btn btn-blue" data-dismiss="modal" style="width:80%">OK</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <!-- Failure modal session expired -->
     <div class="modal fade common-modal" id="failureModalSessionExpired" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle">
         <div class="modal-dialog modal-dialog-centered" role="document">
@@ -404,6 +421,15 @@
 
         document.getElementById("failureBankModal").onclick = function () {
          var url = '@Url.Action("Index", "UserDashboard")';
+         window.location.href = url;
+        };
+
+        document.getElementById("failureModal").onclick = function () {
+            window.location.reload(true);
+        };
+
+        document.getElementById("failureModalLogOut").onclick = function () {
+         var url = '@Url.Action("Index", "LogOut")';
          window.location.href = url;
         };
 
@@ -480,13 +506,15 @@
             else {
                 $("#amountErr").hide();
             }
-	    if (amount < 10 || amount > 50000) {
+            if (amount < 10 || amount > 2000000) {
                 $("#amountErr1").html("");
                 $("#amountErr1").append("<small>" + "Enter amount between 10 and 2000000" + "</small>");
                 $("#amountErr1").show();
+                $("#btnValidate").attr("disabled", "disabled");
             }
             else {
                 $("#amountErr1").hide();
+                $("#btnValidate").attr("disabled", false);
             }
         }
 
@@ -526,7 +554,7 @@
             }
         }
 
-        function checkRemarks() {            
+        function checkRemarks() {
             var transactionDetail = $("[name='txtTransactionDetail']").val();
             if ((transactionDetail.trim() == "")) {
                 $("#transactionDetailErr").html("");
@@ -613,7 +641,7 @@
                 data: dataToPost,
                 async: true,
                 success: function (data) {
-                    
+
                     var select = $("#branchDrpdwn");
                     select.empty();
                     select.append($('<option/>', {
@@ -631,7 +659,7 @@
 
                     var anyBranchId = data[0].Value;
                     window.anyBranchId = anyBranchId;
-                    
+
 
                     $('.show-tick').selectpicker({
                         liveSearch: true,
@@ -812,11 +840,19 @@
                     },
                     async: true,
                     success: function (data) {
+                        debugger;
                         $(".preload").show();
                         tempDiv.remove();
                         if (data.responseCode == "200") {
                             var url = '@Url.Action("CIPSDetails", "CIPS")';
                             window.location.href = url;
+                        }
+                        else if (data.responseCode == "401") {
+                            $("#ajaxResponse").html("");
+                            $("#message2").html("");
+                            $("#message2").append(data.responseText);
+                            $('#failureModalLogOut').modal("show");
+
                         }
                         //display error message
                         else {

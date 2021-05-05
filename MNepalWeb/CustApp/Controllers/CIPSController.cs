@@ -690,12 +690,20 @@ namespace CustApp.Controllers
 
                     _res = await httpClient.PostAsync(APIBaseURL + "ConnectIPS/BankToBank", httpContent);
                     string responseBody = _res.StatusCode.ToString() + " ," + await _res.Content.ReadAsStringAsync();
+                    string responseMessage = "";
+                   
+                    if (responseBody == "InternalServerError ," || responseBody == "InternalServerError")
+                    {
+                        responseBody = "Internal Server Error";
+                        return Json(new { responseCode = 500, responseText = responseBody},
+                            JsonRequestBehavior.AllowGet);
+                    }
                     _res.ReasonPhrase = responseBody;
                     string errorMessage = string.Empty;
                     int responseCode = 0;
                     string message = string.Empty;
                     string responsetext = string.Empty;
-                    string responseMessage = string.Empty;
+                    responseMessage = string.Empty;
                     bool result = false;
                     string ava = string.Empty;
                     string avatra = string.Empty;

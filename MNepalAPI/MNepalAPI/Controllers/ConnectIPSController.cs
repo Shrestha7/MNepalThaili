@@ -2,6 +2,7 @@
 using MNepalAPI.Helper;
 using MNepalAPI.Models;
 using MNepalAPI.Utilities;
+using MNepalProject.Models;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using Newtonsoft.Json.Serialization;
@@ -844,9 +845,14 @@ namespace MNepalAPI.Controllers
 
                         var httpResponse = await httpClient.PostAsync(ConnectIPSBaseURL + "api/validatebankaccount", httpContent);
                         //response
-                        var responseContent = await httpResponse.Content.ReadAsStringAsync();
+                        var responseContent = await httpResponse.Content.ReadAsStringAsync();   
 
                         var jsonResponse = JsonConvert.DeserializeObject<ValidateCreditorBankAccount>(responseContent);
+
+                        if (jsonResponse.responseMessage == null)
+                        {
+                            return Request.CreateResponse(HttpStatusCode.NotFound);
+                        }
 
 
                         if (jsonResponse.responseCode == "000" || jsonResponse.responseCode == "999")
@@ -960,11 +966,14 @@ namespace MNepalAPI.Controllers
 
                     if (LoginUtils.GetPINBlockTime(checkPin.username)) //check if blocktime is greater than current time 
                     {
-                        message = "Invalid PIN! You have already attempt 3 times with wrong PIN,Please try again after 10 minutes";
+                        message = LoginUtils.GetMessage("01");
+                        statusCode = "401";
+                        MNFundTransfer mnlg = new MNFundTransfer();
+                        mnlg.ResponseStatus(HttpStatusCode.ExpectationFailed, message);
+                        failedMessage = message;
                         check.message = message;
 
-                        return Request.CreateResponse(HttpStatusCode.BadRequest, check);
-
+                        return Request.CreateResponse(HttpStatusCode.Unauthorized, check);
                     }
 
                 }
@@ -974,10 +983,9 @@ namespace MNepalAPI.Controllers
                     return Request.CreateResponse(HttpStatusCode.OK);
                 }
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-
-                throw;
+                HelperStoreSqlLog.WriteError(ex, "CheckPin");
             }
             return Request.CreateResponse(HttpStatusCode.BadRequest, check);
         }

@@ -134,6 +134,7 @@
     <None Include="Connected Services\MerchantReference\commoninterface.disco" />
     <Content Include="Content\Upload\9841675081_CustomerFeedback_photo_5195.jpg" />
     <Content Include="neareverse.svc" />
+    <Content Include="share.svc" />
     <Content Include="topupAPI.svc" />
     <Content Include="wlink.svc" />
     <Content Include="Connected Services\MerchantReference\WCF.MNepal.MerchantReference.ResponseData.datasource">
@@ -173,7 +174,6 @@
     <Content Include="requestCode.svc" />
     <Content Include="reset.svc" />
     <Content Include="selfReg.svc" />
-    <Content Include="share.svc" />
     <Content Include="subisu.svc" />
     <Content Include="topup.svc" />
     <Content Include="Web.config">

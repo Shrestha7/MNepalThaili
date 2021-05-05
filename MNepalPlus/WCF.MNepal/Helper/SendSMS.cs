@@ -10,7 +10,7 @@ namespace WCF.MNepal.Helper
     public class SendSMS
     {
         //SMS
-        private string SMSServer = WebConfigurationManager.AppSettings["SMSServer"];
+        private string SMSServer = WebConfigurationManager.AppSettings["MNepalNTCSMSServerUrl"];
         public void pushSMS(string mobile, string messagereply)
         {
             var client = new WebClient();
