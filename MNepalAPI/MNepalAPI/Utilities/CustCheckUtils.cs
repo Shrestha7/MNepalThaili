@@ -1,4 +1,5 @@
 ﻿using MNepalAPI.UserModel;
+using MNepalProject.Models;
 using System;
 using System.Data;
 
@@ -35,6 +36,28 @@ namespace MNepalAPI.Utilities
             return objModel.GetCustUserInfo(cmobile);
         }
 
+        #endregion
+
+        public static DataTable GetCustUserInfo(string cmobile)
+        {
+            var objModel = new CustCheckerUserModel();
+            var objCustUserInfo = new MNClientExt
+            {
+                UserName = cmobile
+            };
+            return objModel.GetCustUserCheckInfo(objCustUserInfo);
+        }
+
+        #region Merchant Chercker
+        public static bool GetMerchantUserCheckInfo(string cmobile)
+        {
+            var objModel = new CustCheckerUserModel();
+            var objCustUserInfo = new MNClientExt
+            {
+                UserName = cmobile
+            };
+            return objModel.GetMerchantUserCheckInfo(objCustUserInfo).Rows.Count > 0;
+        }
         #endregion
 
     }

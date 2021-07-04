@@ -22,6 +22,7 @@ using System.IO;
 using System.Data.SqlClient;
 using MNepalProject.Connection;
 using System.Globalization;
+using System.Text.RegularExpressions;
 
 namespace MNepalProject.Controllers
 {
@@ -83,7 +84,8 @@ namespace MNepalProject.Controllers
             //}
 
             //START FOR DESCRIPTION 1 :ISO Field 125
-            string description1;
+            string description1="";
+            string dessc2="";
             const int MaxLength = 49;
 
             if ((transaction.merchantType == "school") || (transaction.merchantType == "college"))
@@ -98,6 +100,13 @@ namespace MNepalProject.Controllers
                 if (description1.Length > MaxLength)
                     description1 = description1.Substring(0, MaxLength);
             }
+
+            else if(transaction.merchantType == "nea")
+            {
+               //description1 = "NEA".PadRight(37) + transaction.destBranchCode + "!" + transaction.scn + "!" + transaction.consumerId + "!" + transaction.customerName;
+               transaction.Description = ":"+"NEA".PadRight(40) + transaction.destBranchCode + "!" + transaction.scn + "!" + transaction.consumerId + "!" + transaction.customerName;
+            }
+          
             else
             {
                 description1 = "BILL PAYMENT"; //"Payment To " + getProductID[0]; //"Bank to Merchant's Bank a/c";
@@ -681,7 +690,7 @@ namespace MNepalProject.Controllers
                             Remark1 = "Bank Transfer to " + transaction.DestinationMobile + " (" + DestinationBankName + ")";
 
                             //desc1 = "Transfer To Bank " + getProductID[0];//"Wallet To Bank";
-                            desc1 = description1;
+                            desc1 = "";
                             desc2 = desc2;
                             desc3 = descthree;
                             Remark = Remark1; //"Bank Transfer from " + transaction.SourceMobile + " to " + mnTransactionMaster.DestinationAccount;
@@ -691,8 +700,18 @@ namespace MNepalProject.Controllers
                             desc1 = description1;
                             //desc1 = "BILL PAYMENT"; // "Payment To " + getProductID[0];//"Wallet To Merchant's Bank a/c";
                             desc2 = getProductID[1];
+                            //desc2 = dessc2;
                             desc3 = descthree;
+                            if (mnTransactionMaster.Description.StartsWith(":"))
+                            {
+                                mnTransactionMaster.Description = mnTransactionMaster.Description.Substring(1, mnTransactionMaster.Description.Length -1);
+                            }
                             Remark = mnTransactionMaster.Description + " - " + desc1;
+                            if (Remark.EndsWith("- "))
+                            {
+                                Remark = Remark.Substring(0, Remark.Length - 2);
+                            }
+
                         }
                         else if (mnTransactionMaster.FeatureCode == "31")
                         {

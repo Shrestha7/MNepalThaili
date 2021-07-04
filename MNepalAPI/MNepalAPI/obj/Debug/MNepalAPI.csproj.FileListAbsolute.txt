@@ -1,3 +1,7 @@
+D:\Thaili\MNepalAPI\MNepalAPI\bin\Microsoft.Data.SqlClient.dll
+D:\Thaili\MNepalAPI\MNepalAPI\bin\Microsoft.Data.SqlClient.pdb
+D:\Thaili\MNepalAPI\MNepalAPI\bin\de\Microsoft.Data.SqlClient.resources.dll
+D:\Thaili\MNepalAPI\MNepalAPI\bin\ko\Microsoft.Data.SqlClient.resources.dll
 D:\Thaili\MNepalAPI\MNepalAPI\bin\MNepalAPI.dll.config
 D:\Thaili\MNepalAPI\MNepalAPI\bin\MNepalAPI.xml
 D:\Thaili\MNepalAPI\MNepalAPI\bin\MNepalAPI.dll
@@ -62,7 +66,6 @@ D:\Thaili\MNepalAPI\MNepalAPI\bin\Microsoft.ApplicationInsights.dll
 D:\Thaili\MNepalAPI\MNepalAPI\bin\Microsoft.AspNet.TelemetryCorrelation.dll
 D:\Thaili\MNepalAPI\MNepalAPI\bin\Microsoft.Azure.Services.AppAuthentication.dll
 D:\Thaili\MNepalAPI\MNepalAPI\bin\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.dll
-D:\Thaili\MNepalAPI\MNepalAPI\bin\Microsoft.Data.SqlClient.dll
 D:\Thaili\MNepalAPI\MNepalAPI\bin\Microsoft.Extensions.Configuration.Abstractions.dll
 D:\Thaili\MNepalAPI\MNepalAPI\bin\Microsoft.Extensions.Configuration.Binder.dll
 D:\Thaili\MNepalAPI\MNepalAPI\bin\Microsoft.Extensions.Configuration.dll
@@ -133,7 +136,6 @@ D:\Thaili\MNepalAPI\MNepalAPI\bin\Microsoft.AI.WindowsServer.xml
 D:\Thaili\MNepalAPI\MNepalAPI\bin\Microsoft.ApplicationInsights.pdb
 D:\Thaili\MNepalAPI\MNepalAPI\bin\Microsoft.ApplicationInsights.xml
 D:\Thaili\MNepalAPI\MNepalAPI\bin\Microsoft.AspNet.TelemetryCorrelation.xml
-D:\Thaili\MNepalAPI\MNepalAPI\bin\Microsoft.Data.SqlClient.pdb
 D:\Thaili\MNepalAPI\MNepalAPI\bin\Microsoft.Data.SqlClient.xml
 D:\Thaili\MNepalAPI\MNepalAPI\bin\Microsoft.Extensions.Configuration.xml
 D:\Thaili\MNepalAPI\MNepalAPI\bin\Microsoft.Extensions.Configuration.Abstractions.xml
@@ -183,12 +185,10 @@ D:\Thaili\MNepalAPI\MNepalAPI\bin\Microsoft.AspNet.Identity.EntityFramework.xml
 D:\Thaili\MNepalAPI\MNepalAPI\bin\EntityFramework.xml
 D:\Thaili\MNepalAPI\MNepalAPI\bin\Microsoft.Owin.Security.Cookies.xml
 D:\Thaili\MNepalAPI\MNepalAPI\bin\Microsoft.Owin.Security.OAuth.xml
-D:\Thaili\MNepalAPI\MNepalAPI\bin\de\Microsoft.Data.SqlClient.resources.dll
 D:\Thaili\MNepalAPI\MNepalAPI\bin\es\Microsoft.Data.SqlClient.resources.dll
 D:\Thaili\MNepalAPI\MNepalAPI\bin\fr\Microsoft.Data.SqlClient.resources.dll
 D:\Thaili\MNepalAPI\MNepalAPI\bin\it\Microsoft.Data.SqlClient.resources.dll
 D:\Thaili\MNepalAPI\MNepalAPI\bin\ja\Microsoft.Data.SqlClient.resources.dll
-D:\Thaili\MNepalAPI\MNepalAPI\bin\ko\Microsoft.Data.SqlClient.resources.dll
 D:\Thaili\MNepalAPI\MNepalAPI\bin\pt-BR\Microsoft.Data.SqlClient.resources.dll
 D:\Thaili\MNepalAPI\MNepalAPI\bin\ru\Microsoft.Data.SqlClient.resources.dll
 D:\Thaili\MNepalAPI\MNepalAPI\bin\zh-Hans\Microsoft.Data.SqlClient.resources.dll

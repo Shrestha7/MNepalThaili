@@ -1,5 +1,5 @@
-D:\Thaili\MNepalPlus\WCF.MNepal\obj\Debug\WCF.MNepal.csprojAssemblyReference.cache
 D:\Thaili\MNepalPlus\WCF.MNepal\obj\Debug\WCF.MNepal.csproj.CoreCompileInputs.cache
+D:\Thaili\MNepalPlus\WCF.MNepal\obj\Debug\WCF.MNepal.csprojAssemblyReference.cache
 D:\Thaili\MNepalPlus\WCF.MNepal\bin\WCF.MNepal.dll.config
 D:\Thaili\MNepalPlus\WCF.MNepal\bin\WCF.MNepal.dll
 D:\Thaili\MNepalPlus\WCF.MNepal\bin\WCF.MNepal.pdb

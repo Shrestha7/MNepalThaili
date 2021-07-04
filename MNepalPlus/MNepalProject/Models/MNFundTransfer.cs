@@ -103,6 +103,26 @@ namespace MNepalProject.Models
             this.Desc1RevNew = Desc1RevNew;
             this.RemarkRevNew = RemarkRevNew;
         }
+
+        public MNFundTransfer(string tid, string sc, string mobile, string sa, string amount, string da, string note, string pin, string sourcechannel, string destBranchCode, string scn, string consumerId,string customerName, string merchantType,string merchantName)
+        {
+            this.tid = tid;
+            this.sc = sc;
+            this.mobile = mobile;
+            this.sa = sa;
+            this.amount = amount;
+            this.da = da;
+            this.note = note;
+            this.pin = pin;
+            this.sourcechannel = sourcechannel;
+            //add for merchant
+            this.destBranchCode = destBranchCode;
+            this.scn = scn;
+            this.consumerId = consumerId;
+            this.customerName = customerName;
+            this.merchantType = merchantType;
+            this.merchantName = merchantName;
+        }
         public MNFundTransfer()
         {
 
@@ -139,6 +159,11 @@ namespace MNepalProject.Models
         public string Desc1New { get; set; }
         public string Desc1RevNew { get; set; }
         public string RemarkRevNew { get; set; }
+        public string destBranchCode { get; set; }
+        public string scn { get; set; }
+        public string consumerId { get; set; }
+        public string customerName { get; set; }
+        public string merchantName { get; set; }
         public bool valid()
         {
             if (this.tid != "" && this.sc != "" && this.mobile != "" && this.amount != "")

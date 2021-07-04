@@ -221,6 +221,24 @@ namespace MNepalAPI.Models
         public DateTime enteredAt { get; set; }
         public int merchantId { get; set; }
         public string uId { get; set; }
+        public string requestData { get; set; }
+        public string scn { get; set; }
+        public string consumerId { get; set; }
+        public string customerName { get; set; }
+        public string tId { get; set; }
+        public string sc { get; set; }
+        public string mobile { get; set; }
+        public string da { get; set; }
+        public string pin { get; set; }
+        public string note { get; set; }
+        public string src { get; set; }
+        public string result { get; set; }
+        public string sessionId { get; set; }
+        public string tokenId { get; set; }
+        public string merchantType { get; set; }
+        public string customerId { get; set; }
+
+
     }
 
     public class ValidateCreditorBankAccount

@@ -49,6 +49,13 @@
         public string billNumber { get; set; }
         public string responseCode { get; set; }
         public string retrievalReference { get; set; }
+        public string destBranchCode { get; set; }
+        public string tokenID { get; set; }
+        public string pin { get; set; }
+        public string scn { get; set; }
+        public string merchantName { get; set; }
+        public string merchantType { get; set; }
+
         public bool valid()
         {
             if (this.tid != "" && this.sc != "" && this.mobile != "" && this.amount != "")
@@ -67,4 +74,47 @@
         public string TokenUnique { get; set; }
 
     }
+
+    public class NEADetails
+    {
+        public string serviceId { get; set; }
+        public string serviceCode { get; set; }
+        public string tokenUnique { get; set; }
+        public string scNO { get; set; }
+        public string neaBranchName { get; set; }
+        public string neaBranchCode { get; set; }
+        public string custromerId { get; set; }
+        public string field1 { get; set; }
+        public string field2 { get; set; }
+        public string field3 { get; set; }
+        public string field4 { get; set; }
+        public string field5 { get; set; }
+        public string resultCode { get; set; }
+        public string resultDescription { get; set; }
+        public string additionalData { get; set; }
+        public string userName { get; set; }
+    }
+
+    public class NEABranchDetails
+    {
+        public string resultCode { get; set; }
+        public string resultDescription { get; set; }
+        public Branch[] branch { get; set; }
+    }
+
+    public class Branch
+    {
+        public string code { get; set; }
+        public string name { get; set; }
+    }
+
+
+    public class NeaBillResponse
+    {
+        public string ResultCode { get; set; }
+        public string ResultDescription { get; set; }
+        public string AdditionalData { get; set; }
+    }
+
+
 }

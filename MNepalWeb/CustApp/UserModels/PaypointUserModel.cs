@@ -164,17 +164,14 @@ namespace CustApp.UserModels
             try
             {
                 database = DatabaseConnection.GetDatabase();
-                using (var command = database.GetStoredProcCommand("[s_MNPaypoints]"))
+                using (var command = database.GetStoredProcCommand("[s_MNNEACheckDetails]"))
                 {
                     database.AddInParameter(command, "@SCNo", DbType.String, objUserInfo.SCNo);
-                    database.AddInParameter(command, "@NEABranchName", DbType.String, objUserInfo.NEABranchCode);
+                    database.AddInParameter(command, "@NEABranchCode", DbType.String, objUserInfo.NEABranchCode);
                     database.AddInParameter(command, "@CustomerID", DbType.String, objUserInfo.CustomerID);
-                    database.AddInParameter(command, "@ClientCode", DbType.String, objUserInfo.ClientCode);
                     database.AddInParameter(command, "@UserName", DbType.String, objUserInfo.UserName);
                     database.AddInParameter(command, "@mode", DbType.String, objUserInfo.Mode);
-                    database.AddInParameter(command, "@KhanepaniCounter", DbType.String, null);
-                    database.AddInParameter(command, "@refStan", DbType.String, objUserInfo.refStan);
-                    string[] tables = new string[] { "dtResponse", "dtPayment" };
+                    string[] tables = new string[] { "dtResponse"};
                     using (var dataset = new DataSet())
                     {
                         database.LoadDataSet(command, dataset, tables);

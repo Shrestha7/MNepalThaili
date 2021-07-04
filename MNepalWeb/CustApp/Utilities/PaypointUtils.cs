@@ -43,12 +43,10 @@ namespace CustApp.Utilities
             var objUserModel = new PaypointUserModel();
             var objUserInfo = new NEAFundTransfer
             {
-                ClientCode = NEAObj.ClientCode,
                 UserName = NEAObj.UserName,
                 SCNo = NEAObj.SCNo,
                 NEABranchCode = NEAObj.NEABranchCode,
                 CustomerID = NEAObj.CustomerID,
-                refStan = NEAObj.refStan,
                 Mode = "NEA" // GET NEA Details
             };
             return objUserModel.GetNEAPaymentDetails(objUserInfo);

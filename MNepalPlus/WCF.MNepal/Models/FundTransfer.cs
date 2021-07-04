@@ -48,6 +48,14 @@ namespace WCF.MNepal
         public string Desc1New { get; set; }
         public string Desc1RevNew { get; set; }
         public string RemarkRevNew { get; set; }
+        public string merchantName { get; set; }
+        public string destBranchCode { get; set; }
+        
+        public string scn { get; set; }
+        public string customerId { get; set; }
+        public string customerName { get; set; }
+
+
         /*
         public bool valid()
         {

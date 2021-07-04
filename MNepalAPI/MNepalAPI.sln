@@ -7,6 +7,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MNepalAPI", "MNepalAPI\MNep
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MNepalProject", "..\MNepalPlus\MNepalProject\MNepalProject.csproj", "{8CCFD27F-DD09-4D52-967B-FEF2CD989CC8}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WCF.MNepal", "..\MNepalPlus\WCF.MNepal\WCF.MNepal.csproj", "{A34B77C2-47DF-41F2-805E-629E3C86FFD7}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +23,10 @@ Global
 		{8CCFD27F-DD09-4D52-967B-FEF2CD989CC8}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{8CCFD27F-DD09-4D52-967B-FEF2CD989CC8}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{8CCFD27F-DD09-4D52-967B-FEF2CD989CC8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A34B77C2-47DF-41F2-805E-629E3C86FFD7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A34B77C2-47DF-41F2-805E-629E3C86FFD7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A34B77C2-47DF-41F2-805E-629E3C86FFD7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A34B77C2-47DF-41F2-805E-629E3C86FFD7}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

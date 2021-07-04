@@ -635,7 +635,7 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\WCF.MNepal\WCF.MNepal.csproj">
-      <Project>{A34B77C2-47DF-41F2-805E-629E3C86FFD7}</Project>
+      <Project>{a34b77c2-47df-41f2-805e-629e3c86ffd7}</Project>
       <Name>WCF.MNepal</Name>
     </ProjectReference>
   </ItemGroup>

@@ -133,6 +133,8 @@
     <None Include="Connected Services\WebReference\VerifyThis.disco" />
     <None Include="Connected Services\MerchantReference\commoninterface.disco" />
     <Content Include="Content\Upload\9841675081_CustomerFeedback_photo_5195.jpg" />
+    <Content Include="ft.svc" />
+    <Content Include="nea.svc" />
     <Content Include="neareverse.svc" />
     <Content Include="share.svc" />
     <Content Include="topupAPI.svc" />
@@ -160,7 +162,6 @@
     </None>
     <Content Include="coupon.svc" />
     <Content Include="forgot.svc" />
-    <Content Include="ft.svc" />
     <Content Include="Global.asax" />
     <Content Include="IVR.svc" />
     <Content Include="merchant.svc" />
@@ -280,6 +281,9 @@
     <Compile Include="Models\TopupTransfer.cs" />
     <Compile Include="Models\UserInfo.cs" />
     <Compile Include="Models\UserValidate.cs" />
+    <Compile Include="nea.svc.cs">
+      <DependentUpon>nea.svc</DependentUpon>
+    </Compile>
     <Compile Include="neareverse.svc.cs">
       <DependentUpon>neareverse.svc</DependentUpon>
     </Compile>

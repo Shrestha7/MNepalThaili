@@ -47,6 +47,10 @@ namespace MNepalProject.Models
             this.studName = fundtransfer.studName;
             this.merchantType = fundtransfer.merchantType;
             this.ReverseStatus = fundtransfer.reverseStatus;
+            this.destBranchCode = fundtransfer.destBranchCode;
+            this.scn = fundtransfer.scn;
+            this.consumerId = fundtransfer.consumerId;
+            this.customerName = fundtransfer.customerName;
         }
 
         //added
@@ -259,6 +263,10 @@ namespace MNepalProject.Models
         public string description1 { get; set; }
         public string special2 { get; set; }
         public string paypointMerchant { get; set; }
+        public string destBranchCode { get; set; }
+        public string scn { get; set; }
+        public string consumerId { get; set; }
+        public string customerName { get; set; }
 
 
     }

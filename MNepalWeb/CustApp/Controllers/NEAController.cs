@@ -2,13 +2,18 @@
 using CustApp.Helper;
 using CustApp.Models;
 using CustApp.Utilities;
+using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Data;
+using System.Data.SqlClient;
 using System.IO;
 using System.Net;
 using System.Net.Http;
+using System.Net.Http.Headers;
+using System.Text;
 using System.Threading.Tasks;
 using System.Web.Mvc;
 using System.Web.Script.Serialization;
@@ -20,8 +25,8 @@ namespace CustApp.Controllers
         //string BankBalance;
         DAL objdal = new DAL();
         #region "GET: NEAPayment"
-        public ActionResult Index()
-        {
+        public async Task<ActionResult> Index()
+         {
             string userName = (string)Session["LOGGED_USERNAME"];
             string clientCode = (string)Session["LOGGEDUSER_ID"];
             string name = (string)Session["LOGGEDUSER_NAME"];
@@ -34,8 +39,8 @@ namespace CustApp.Controllers
                 ViewBag.UserType = this.TempData["userType"];
                 ViewBag.Name = name;
 
-
-                ViewBag.NEA = PaypointUtils.GetNEAName();
+                NEABranchDetails neaBranchDetails = await NEABranchDetails();
+                ViewBag.NEA = neaBranchDetails.branch;
                 ViewBag.SenderMobileNo = userName;
 
                 UserInfo userInfo = new UserInfo();
@@ -99,7 +104,7 @@ namespace CustApp.Controllers
         #region "POST: NEACheckPayment"
         [ValidateAntiForgeryToken]
         [HttpPost]
-        public async Task<ActionResult> NEAPayment(NEAFundTransfer _NEAft)
+        public async Task<ActionResult> NEAPayment(NEADetails _NEAft)
         {
 
             string userName = (string)Session["LOGGED_USERNAME"];
@@ -114,7 +119,19 @@ namespace CustApp.Controllers
             ViewBag.Name = name;
 
 
-            string retoken = _NEAft.TokenUnique;
+            NEADetails neaBill = await NEABillPay();
+            _NEAft.serviceId = neaBill.serviceId;
+            _NEAft.serviceCode = neaBill.serviceCode;
+            _NEAft.field1 = _NEAft.scNO;
+            _NEAft.field2 = DateTime.Now.ToString("ddMMyyyyHHmmss");
+            _NEAft.field3 = _NEAft.custromerId;
+            _NEAft.field4 = "0";
+            _NEAft.field5 = _NEAft.neaBranchCode;
+            _NEAft.userName = userName;
+
+
+
+            string retoken = _NEAft.tokenUnique;
             string reqToken = "";
             DataTable dtableVToken = ReqTokenUtils.GetReqToken(retoken);
             if (dtableVToken != null && dtableVToken.Rows.Count > 0)
@@ -155,9 +172,10 @@ namespace CustApp.Controllers
                     ViewBag.PassportImage = userInfo.PassportImage;
                 }
                 //START Session for User Input Data
-                Session["S_SCNo"] = _NEAft.SCNo;
-                Session["S_NEABranchName"] = _NEAft.NEABranchName;
-                Session["S_CustomerID"] = _NEAft.CustomerID;
+                Session["S_SCNo"] = _NEAft.scNO;
+                Session["S_NEABranchName"] = _NEAft.neaBranchName;
+                Session["S_NEABranchCode"] = _NEAft.neaBranchCode;
+                Session["S_CustomerID"] = _NEAft.custromerId;
                 //END Session
                 HttpResponseMessage _res = new HttpResponseMessage();
                 string mobile = userName; //mobile is username
@@ -167,29 +185,36 @@ namespace CustApp.Controllers
                 //specify to use TLS 1.2 as default connection
                 ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12 | SecurityProtocolType.Tls11 | SecurityProtocolType.Tls;
 
-                using (HttpClient client = new HttpClient())
+                using (var httpClient = new HttpClient())
                 {
-                    var action = "paypoint.svc/checkpayment";
-                    var uri = Path.Combine(ApplicationInitilize.WCFUrl, action);
-                    string tokenID = Session["TokenID"].ToString();
-                    var content = new FormUrlEncodedContent(new[]{
-                    new KeyValuePair<string, string>("vid", "14"),//default
-                        new KeyValuePair<string, string>("mobile", mobile),
-                        new KeyValuePair<string,string>("src","gprs"), ////default
-                        new KeyValuePair<string,string>("tokenID",Session["TokenID"].ToString()),//default
-                        new KeyValuePair<string, string>("companyCode", "598"),//default
-                        new KeyValuePair<string,string>("serviceCode", "1"),//default
-                        new KeyValuePair<string, string>("account",  _NEAft.SCNo),//user
-                        new KeyValuePair<string, string>("special1",_NEAft.NEABranchName),//user
-                        new KeyValuePair<string,string>("special2", _NEAft.CustomerID),//user
-                        new KeyValuePair<string, string>("tid", tid),//default
-                        new KeyValuePair<string, string>("ClientCode", clientCode),
-                        new KeyValuePair<string, string>("paypointType", "NEA"),
+                    var UserName = ConfigurationManager.AppSettings["BasicAuthUserName"];
+                    var UserPassword = ConfigurationManager.AppSettings["BasicAuthPassword"];
+                    var APIBaseURL = ConfigurationManager.AppSettings["APIBaseURL"];
 
-                    });
-                    _res = await client.PostAsync(new Uri(uri), content);
-                    string responseBody = _res.StatusCode.ToString() + " ," + await _res.Content.ReadAsStringAsync();
-                    _res.ReasonPhrase = responseBody;
+                    // Serialize our concrete class into a JSON String
+                    var stringPayload = await Task.Run(() => JsonConvert.SerializeObject(_NEAft));
+                    // Wrap our JSON inside a StringContent which then can be used by the HttpClient class
+                    var httpContent = new StringContent(stringPayload, Encoding.UTF8, "application/json");
+
+                    var byteArray = Encoding.ASCII.GetBytes(UserName + ":" + UserPassword);
+                    httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Basic", Convert.ToBase64String(byteArray));
+                    var httpResponse = await httpClient.PostAsync(APIBaseURL + "NEA/NEABill", httpContent);
+
+                    NEADetails neaBranch = new NEADetails();
+
+                    if (httpResponse.Content != null && httpResponse.StatusCode == HttpStatusCode.OK)
+                    {
+                        //response
+                        var responseContent = await httpResponse.Content.ReadAsStringAsync();
+                        var json = JsonConvert.DeserializeObject<NeaBillResponse>(responseContent);
+
+
+                    }
+
+
+
+                    //string responseBody = _res.StatusCode.ToString() + " ," + await _res.Content.ReadAsStringAsync();
+                    //_res.ReasonPhrase = responseBody;
                     string errorMessage = string.Empty;
                     int responseCode = 0;
                     string message = string.Empty;
@@ -200,26 +225,14 @@ namespace CustApp.Controllers
                     string avamsg = string.Empty;
                     try
                     {
-                        if (_res.IsSuccessStatusCode)
+                        if (httpResponse.IsSuccessStatusCode)
                         {
                             result = true;
-                            responseCode = (int)_res.StatusCode;
-                            responsetext = await _res.Content.ReadAsStringAsync();
-                            message = _res.Content.ReadAsStringAsync().Result;
+                            responseCode = (int)httpResponse.StatusCode;
+                            responsetext = await httpResponse.Content.ReadAsStringAsync();
+                            message = httpResponse.Content.ReadAsStringAsync().Result;
                             string respmsg = "";
-                            if (!string.IsNullOrEmpty(message))
-                            {
-                                JavaScriptSerializer ser = new JavaScriptSerializer();
-                                var json = ser.Deserialize<JsonParse>(responsetext);
-                                message = json.d;
-                                JsonParse myNames = ser.Deserialize<JsonParse>(json.d);
-                                int code = Convert.ToInt32(myNames.StatusCode);
-                                respmsg = myNames.StatusMessage;
-                                if (code != responseCode)
-                                {
-                                    responseCode = code;
-                                }
-                            }
+
                             return Json(new { responseCode = responseCode, responseText = respmsg },
                             JsonRequestBehavior.AllowGet);
                         }
@@ -281,6 +294,7 @@ namespace CustApp.Controllers
                 //Session data set
                 string S_SCNo = (string)Session["S_SCNo"];
                 string S_NEABranchName = (string)Session["S_NEABranchName"];
+                string S_NEABranchCode = (string)Session["S_NEABranchCode"];
                 string S_CustomerID = (string)Session["S_CustomerID"];
                 if ((S_SCNo == null) || (S_NEABranchName == null) || (S_CustomerID == null))
                 {
@@ -291,7 +305,8 @@ namespace CustApp.Controllers
 
                 NEAFundTransfer NEAObj = new NEAFundTransfer();
                 NEAObj.SCNo = S_SCNo;
-                NEAObj.NEABranchCode = S_NEABranchName;
+                NEAObj.NEABranchName = S_NEABranchName;
+                NEAObj.NEABranchCode = S_NEABranchCode;
                 NEAObj.CustomerID = S_CustomerID;
                 NEAObj.UserName = userName;
                 NEAObj.ClientCode = clientCode;
@@ -301,86 +316,22 @@ namespace CustApp.Controllers
                 NEAFundTransfer regobj = new NEAFundTransfer();
                 DataSet DPaypointSet = PaypointUtils.GetNEADetails(NEAObj);
                 DataTable dResponse = DPaypointSet.Tables["dtResponse"];
-                DataTable dPayment = DPaypointSet.Tables["dtPayment"];
+                //DataTable dPayment = DPaypointSet.Tables["dtPayment"];
                 //End Database Accessed
 
-                ViewBag.rowNo = dPayment.Rows.Count;
-                int countROW = dPayment.Rows.Count;
-                List<NEAFundTransfer> ListDetails = new List<NEAFundTransfer>(countROW);
+                //ViewBag.rowNo = dPayment.Rows.Count;
+                //int countROW = dPayment.Rows.Count;
+                //List<NEAFundTransfer> ListDetails = new List<NEAFundTransfer>(countROW);
                 if (dResponse != null && dResponse.Rows.Count > 0)
                 {
-                    regobj.SCNo = dResponse.Rows[0]["account"].ToString();
-                    regobj.NEABranchCode = dResponse.Rows[0]["special1"].ToString();
-                    regobj.CustomerID = dResponse.Rows[0]["special2"].ToString();
-                    regobj.CustomerName = dResponse.Rows[0]["customerName"].ToString();
+                    regobj.SCNo = dResponse.Rows[0]["SCN"].ToString();
+                    regobj.NEABranchCode = dResponse.Rows[0]["NEABranchCode"].ToString();
+                    regobj.CustomerID = dResponse.Rows[0]["CustomerId"].ToString();
+                    string[] additionalData = dResponse.Rows[0]["AdditionalData"].ToString().Split('^');
+                    regobj.CustomerName = additionalData[0];
+                    regobj.amount = additionalData[1];
+
                     //regobj.TotalAmountDue = dResponse.Rows[0]["amount"].ToString();
-                    if (dPayment != null && dPayment.Rows.Count > 0)
-                    {
-                        //For Payments months 
-                        for (int i = 0; i < countROW; i++)
-                        {
-                            //Converting paisa to rupee
-                            double NPRbillAmount = Convert.ToDouble(dPayment.Rows[i]["billAmount"].ToString());
-                            NPRbillAmount = NPRbillAmount / 100;
-
-                            double NPRamount = Convert.ToDouble(dPayment.Rows[i]["amount"].ToString());
-                            NPRamount = NPRamount / 100;
-                            //end Converting paisa to rupee
-                            string description = dPayment.Rows[i]["description"].ToString();
-
-                            // using the method to split
-                            char[] spearator = { ':' };
-                            String[] S_description = description.Split(spearator);
-
-                            ListDetails.Add(new NEAFundTransfer
-                            {
-                                billDate = dPayment.Rows[i]["billDate"].ToString(),
-                                description = S_description[1].ToString(),//Number of Days
-                                status = dPayment.Rows[i]["status"].ToString(),
-                                destination = dPayment.Rows[i]["destination"].ToString(),
-                                //totalAmount = dPayment.Rows[i]["totalAmount"].ToString(),
-                                billAmount = NPRbillAmount.ToString(),
-                                amount = NPRamount.ToString()
-                            });
-                        }
-                        //Converting paisa to rupee
-                        regobj.totalAmount = dPayment.Rows[0]["totalAmount"].ToString();
-                        double TotalAmountDue = Convert.ToDouble(regobj.totalAmount.ToString());
-                        TotalAmountDue = TotalAmountDue / 100;
-                        //end Converting paisa to rupee
-
-                        //splitting decimal values 
-                        int S_TotalAmountDue = Convert.ToInt32(TotalAmountDue);
-                        String[] Str_TotalAmountDue = TotalAmountDue.ToString().Split('.');
-                        if (Str_TotalAmountDue.Length == 2)
-                        {
-                            S_TotalAmountDue = Convert.ToInt32(TotalAmountDue.ToString().Split('.')[0]) + 1;//adding 1 to decimal value
-                        }
-                        //end
-                        ViewBag.S_TotalAmountDue = S_TotalAmountDue;
-                        ViewBag.TotalAmountDue = TotalAmountDue;
-
-                        //Payment table
-                        ViewBag.ListDetails = ListDetails;
-                    }
-                    else
-                    {
-                        //Converting paisa to rupee
-                        regobj.totalAmount = dResponse.Rows[0]["amount"].ToString();
-                        double TotalAmountDue = Convert.ToDouble(regobj.totalAmount.ToString());
-                        TotalAmountDue = TotalAmountDue / 100;
-                        //end Converting paisa to rupee
-                        //splitting decimal values 
-                        int S_TotalAmountDue = Convert.ToInt32(TotalAmountDue);
-                        String[] Str_TotalAmountDue = TotalAmountDue.ToString().Split('.');
-                        if (Str_TotalAmountDue.Length == 2)
-                        {
-                            S_TotalAmountDue = Convert.ToInt32(TotalAmountDue.ToString().Split('.')[0]) + 1;//adding 1 to decimal value
-                        }
-                        //end
-                        ViewBag.S_TotalAmountDue = S_TotalAmountDue;
-                        ViewBag.TotalAmountDue = TotalAmountDue;
-                    }
 
                 }
                 else
@@ -393,6 +344,8 @@ namespace CustApp.Controllers
                 ViewBag.NEABranchCode = regobj.NEABranchCode.ToString();
                 ViewBag.CustomerID = regobj.CustomerID;
                 ViewBag.CustomerName = regobj.CustomerName;
+                ViewBag.TotalAmountDue = regobj.amount;
+                Session["amount"] = regobj.amount;
 
                 UserInfo userInfo = new UserInfo();
 
@@ -455,7 +408,7 @@ namespace CustApp.Controllers
         #region "POST: NEA ExecutePayment"
 
         [HttpPost]
-        public async Task<ActionResult> NEAExecutePayment(NEAFundTransfer _NEAft)
+        public async Task<ActionResult> NEAExecutePayment(NEAFundTransfer nea)
         {
 
             //start for sercivecode=special1
@@ -478,7 +431,7 @@ namespace CustApp.Controllers
             ViewBag.Name = name;
 
 
-            string retoken = _NEAft.TokenUnique;
+            string retoken = nea.TokenUnique;
             string reqToken = "";
             DataTable dtableVToken = ReqTokenUtils.GetReqToken(retoken);
             if (dtableVToken != null && dtableVToken.Rows.Count > 0)
@@ -525,29 +478,10 @@ namespace CustApp.Controllers
                 string S_CustomerID = (string)Session["S_CustomerID"];
                 NEAFundTransfer NEAObj = new NEAFundTransfer();
                 NEAObj.SCNo = S_SCNo;
-                NEAObj.NEABranchCode = S_NEABranchName;
+                NEAObj.NEABranchCode = (string)Session["S_NEABranchCode"];
                 NEAObj.CustomerID = S_CustomerID;
                 NEAObj.UserName = userName;
                 NEAObj.ClientCode = clientCode;
-
-                NEAFundTransfer regobj = new NEAFundTransfer();
-                //DataSet dtableUserInfo = PaypointUtils.GetNEADetails(NEAObj);
-                DataSet DPaypointSet = PaypointUtils.GetNEADetails(NEAObj);
-                DataTable dResponse = DPaypointSet.Tables["dtResponse"];
-                DataTable dPayment = DPaypointSet.Tables["dtPayment"];
-                regobj.CustomerName = null;
-                if (dResponse != null && dResponse.Rows.Count > 0)
-                {
-                    regobj.SCNo = dResponse.Rows[0]["account"].ToString();
-                    regobj.NEABranchName = dResponse.Rows[0]["special1"].ToString();
-                    regobj.CustomerID = dResponse.Rows[0]["special2"].ToString();
-                    regobj.CustomerName = dResponse.Rows[0]["customerName"].ToString();
-                    regobj.TotalAmountDue = dResponse.Rows[0]["amount"].ToString();
-                    regobj.refStan = dResponse.Rows[0]["refStan"].ToString();
-                    regobj.billNumber = dResponse.Rows[0]["billNumber"].ToString();
-                    regobj.responseCode = dResponse.Rows[0]["responseCode"].ToString();
-                    regobj.retrievalReference = dResponse.Rows[0]["retrievalReference"].ToString();
-                }
 
                 HttpResponseMessage _res = new HttpResponseMessage();
                 string mobile = userName; //mobile is username
@@ -560,62 +494,89 @@ namespace CustApp.Controllers
 
 
                 //start  for sercivecode=special1
-                string serviceCode1;
+                //string serviceCode1;
 
-                if (serviceCodeTestServer == "1")
-                {
-                    serviceCode1 = serviceCodeTestServer; //"1";//
-                }
+                //if (serviceCodeTestServer == "1")
+                //{
+                //    serviceCode1 = serviceCodeTestServer; //"1";//
+                //}
 
-                else
-                {
-                    serviceCode1 = regobj.NEABranchName;
-                }
+                //else
+                //{
+                //    serviceCode1 = regobj.NEABranchName;
+                //}
                 //end  for sercivecode=special1
 
 
                 //specify to use TLS 1.2 as default connection
                 ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12 | SecurityProtocolType.Tls11 | SecurityProtocolType.Tls;
 
+                nea.mobile = mobile;
+                nea.da = ConfigurationManager.AppSettings["DestinationNumber"];
+                nea.destBranchCode = NEAObj.NEABranchCode;
+                nea.tokenID = Session["TokenID"].ToString();
+                nea.tid = tid;
+                nea.pin = nea.TPin;
+                nea.scn = nea.SCNo;
+                nea.sc = nea.TransactionMedium;
+                nea.merchantName = "nea";
+                nea.merchantType = "nea";
+                nea.amount = (string)Session["amount"];
+
+
+                var stringPayload = await Task.Run(() => JsonConvert.SerializeObject(nea));
+                // Wrap our JSON inside a StringContent which then can be used by the HttpClient class
+                var httpContent = new StringContent(stringPayload, Encoding.UTF8, "application/json");
+
+
+                using (var httpClient = new HttpClient())
+                {
+                    var UserName = ConfigurationManager.AppSettings["BasicAuthUserName"];
+                    var UserPassword = ConfigurationManager.AppSettings["BasicAuthPassword"];
+                    var APIBaseURL = ConfigurationManager.AppSettings["APIBaseURL"];
+
+                    var byteArray = Encoding.ASCII.GetBytes(UserName + ":" + UserPassword);
+                    httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Basic", Convert.ToBase64String(byteArray));
+                    var httpResponse = await httpClient.PostAsync(APIBaseURL + "NEA/NEABillPayment", httpContent);
+
+                    NEABranchDetails neaBranch = new NEABranchDetails();
+
+                    if (httpResponse.Content != null && httpResponse.StatusCode == HttpStatusCode.OK)
+                    {
+                        //response
+                        var responseContent = await httpResponse.Content.ReadAsStringAsync();
+                        var result = JsonConvert.DeserializeObject<NEABranchDetails>(responseContent);
+
+
+                        //return result;
+
+                    }
+                }
+
 
                 using (HttpClient client = new HttpClient())
                 {
-                    var action = "paypoint.svc/executepayment";
-                    var uri = Path.Combine(ApplicationInitilize.WCFUrl, action);
-                    string tokenID = Session["TokenID"].ToString();
-                    var content = new FormUrlEncodedContent(new[]{
-                        new KeyValuePair<string, string>("vid", "14"),//default
-                        new KeyValuePair<string,string>("sc",_NEAft.TransactionMedium),//user 00 10
-                        new KeyValuePair<string, string>("mobile", mobile),
-                        new KeyValuePair<string, string>("amount",_NEAft.amount),//user
-                        new KeyValuePair<string,string>("da","9840066836"),//default --check it
-                        new KeyValuePair<string,string>("pin",_NEAft.TPin),//User
-                        new KeyValuePair<string, string>("note", "Execute "+_NEAft.Remarks),//User
-                        new KeyValuePair<string,string>("src","gprs"), ////default
-                        new KeyValuePair<string,string>("tokenID",Session["TokenID"].ToString()),//default
-                        new KeyValuePair<string, string>("companyCode", "598"),//default
-                       // new KeyValuePair<string,string>("serviceCode", "1"),//default
-                       
-                        //start  for sercivecode=special1
- new KeyValuePair<string,string>("serviceCode", serviceCode1),//default
- //end  for sercivecode=special1
-                    new KeyValuePair<string, string>("account",  regobj.SCNo),//user regobj.SCNo
-                        new KeyValuePair<string, string>("special1",regobj.NEABranchName),//user
-                        new KeyValuePair<string,string>("special2", regobj.CustomerID),//user
-                        new KeyValuePair<string, string>("tid", tid),//default
-                        new KeyValuePair<string, string>("amountpay", regobj.TotalAmountDue),//database
-                        new KeyValuePair<string, string>("refStan", regobj.refStan),//Database
-                        new KeyValuePair<string, string>("billNumber", regobj.billNumber),//Database
-                        new KeyValuePair<string, string>("rltCheckPaymt", regobj.responseCode),//Database
-                        new KeyValuePair<string, string>("ClientCode", clientCode),
-                        new KeyValuePair<string, string>("paypointType", "NEA"),
-                        new KeyValuePair<string, string>("customerName", regobj.CustomerName),
-                        new KeyValuePair<string, string>("walletBalance", availBaln.amount),
-                        //new KeyValuePair<string, string>("bankBalance", bankBal),
-                        new KeyValuePair<string, string>("retrievalReference", regobj.retrievalReference),//Database
-
-                    });
-                    _res = await client.PostAsync(new Uri(uri), content);
+                    //var action = "paypoint.svc/executepayment";
+                    //var uri = Path.Combine(ApplicationInitilize.WCFUrl, action);
+                    //string tokenID = Session["TokenID"].ToString();
+                    //var content = new FormUrlEncodedContent(new[]{
+                    //    new KeyValuePair<string,string>("sc",_NEAft.TransactionMedium),//user 00 10
+                    //    new KeyValuePair<string, string>("mobile", mobile),
+                    //    new KeyValuePair<string, string>("amount",_NEAft.amount),
+                    //    new KeyValuePair<string,string>("da","9840066836"),
+                    //    new KeyValuePair<string,string>("pin",_NEAft.TPin),
+                    //    new KeyValuePair<string, string>("note", "Execute "+_NEAft.Remarks),
+                    //    new KeyValuePair<string,string>("src","gprs"),
+                    //    new KeyValuePair<string,string>("destBranchCode",NEAObj.NEABranchCode),
+                    //    new KeyValuePair<string,string>("scn",NEAObj.SCNo),
+                    //    new KeyValuePair<string,string>("customerId",NEAObj.CustomerID),
+                    //    new KeyValuePair<string,string>("customerName",NEAObj.CustomerName),
+                    //    new KeyValuePair<string,string>("merchantName","nea"),
+                    //    new KeyValuePair<string,string>("merchantType","nea"),
+                    //    new KeyValuePair<string,string>("tokenID",Session["TokenID"].ToString()),
+                    //});
+                    //var content = "";
+                    //_res = await client.PostAsync(new Uri(uri), content);
                     string responseBody = _res.StatusCode.ToString() + " ," + await _res.Content.ReadAsStringAsync();
                     _res.ReasonPhrase = responseBody;
                     string errorMessage = string.Empty;
@@ -723,133 +684,135 @@ namespace CustApp.Controllers
         #region Get NEA refStan From Response Table
         public string getrefStan(NEAFundTransfer NEAObj)
         {
-            // string Query_refStan = "select refStan from MNPaypointResponse where account='" + NEAObj.SCNo + "' AND special1='" + NEAObj.NEABranchCode + "' AND special2='" + NEAObj.CustomerID + "' AND ClientCode='" + NEAObj.ClientCode + "' AND UserName='" + NEAObj.UserName + "'";
-            string Query_refStan = "select refStan from MNPaypointResponse where account='" + NEAObj.SCNo + "' AND special1='" + NEAObj.NEABranchCode + "' AND special2='" + NEAObj.CustomerID + "' AND ClientCode='" + NEAObj.ClientCode + "' AND UserName='" + NEAObj.UserName + "'  order by transactionDate";
+            string Query_refStan = "select RetrievalReference from MNNEACheckBill where SCN='" + NEAObj.SCNo + "' AND UserName='" + NEAObj.UserName + "'";
 
             DataTable dt = new DataTable();
             dt = objdal.MyMethod(Query_refStan);
             string refStan = string.Empty;
             foreach (DataRow row in dt.Rows)
             {
-                refStan = row["refStan"].ToString();
+                refStan = row["RetrievalReference"].ToString();
             }
             return refStan;
         }
         #endregion
 
-        //#region CheckBankBalance
-        //public async Task<ActionResult> BankQuery()
-        //{
-        //    string username = (string)Session["LOGGED_USERNAME"];
-        //    string pin = "";
-        //    if ((username != "") || (username != null))
-        //    {
+        #region
+        public async Task<NEABranchDetails> NEABranchDetails()
+        {
+            try
+            {
+                SqlConnection cn = new SqlConnection(ConfigurationManager.ConnectionStrings["MNepalDBConnectionString"].ConnectionString);
+                string command = "select * from MNNEABranch order by Id desc";
+                cn.Open();
+                SqlDataAdapter da = new SqlDataAdapter(command, cn);
+                DataSet ds = new DataSet();
+                da.Fill(ds);
 
-        //        string result = string.Empty;
-        //        DataTable dtableMobileNo = CustomerUtils.GetUserProfileByMobileNo(username);
-        //        if (dtableMobileNo.Rows.Count == 1)
-        //        {
-        //            pin = dtableMobileNo.Rows[0]["PIN"].ToString();
-        //        }
+                List<NEADetails> neaDetailsList = new List<NEADetails>();
 
-        //    }
+                foreach (DataRow dr in ds.Tables[0].Rows)
+                {
+                    NEADetails details = new NEADetails();
 
-        //    HttpResponseMessage _res = new HttpResponseMessage();
+                    details.serviceCode = dr["ServiceCode"].ToString();
+                    details.serviceId = dr["ServiceId"].ToString();
+                    neaDetailsList.Add(details);
 
-        //    string mobile = username; //mobile is username
+                }
+
+                NEADetails neaBranchDetails = new NEADetails();
+                foreach (var item in neaDetailsList)
+                {
+                    neaBranchDetails = new NEADetails
+                    {
+                        serviceCode = item.serviceCode,
+                        serviceId = item.serviceId
+                    };
+                }
 
 
-        //    TraceIdGenerator _tig = new TraceIdGenerator();
-        //    var tid = _tig.GenerateTraceID();
+                // Serialize our concrete class into a JSON String
+                var stringPayload = await Task.Run(() => JsonConvert.SerializeObject(neaBranchDetails));
+                // Wrap our JSON inside a StringContent which then can be used by the HttpClient class
+                var httpContent = new StringContent(stringPayload, Encoding.UTF8, "application/json");
 
-        //    using (HttpClient client = new HttpClient())
-        //    {
 
-        //        var action = "query.svc/balance?tid=" + tid + "&sc=22&mobile=" + mobile + "&sa=1&pin=" + pin + "&src=web";
-        //        var uri = Path.Combine(ApplicationInitilize.WCFUrl, action);
-        //        //var content = new FormUrlEncodedContent(new[]{
-        //        //        new KeyValuePair<string, string>("tid", tid),
-        //        //        new KeyValuePair<string,string>("sc","22"),
-        //        //        new KeyValuePair<string, string>("mobile",mobile),
-        //        //        new KeyValuePair<string, string>("sa", "1"),
-        //        //        new KeyValuePair<string,string>("pin", pin),
-        //        //        new KeyValuePair<string,string>("src","web")
-        //        //    });
-        //        try
-        //        {
-        //            _res = await client.GetAsync(uri);
-        //            string responseBody = _res.StatusCode.ToString() + " ," + await _res.Content.ReadAsStringAsync();
-        //            _res.ReasonPhrase = responseBody;
-        //            string errorMessage = string.Empty;
-        //            int responseCode = 0;
-        //            string message = string.Empty;
-        //            string responsetext = string.Empty;
-        //            string responsedateTime = string.Empty;
-        //            bool result = false;
-        //            string ava = string.Empty;
-        //            string avatra = string.Empty;
-        //            string avamsg = string.Empty;
+                using (var httpClient = new HttpClient())
+                {
+                    var UserName = ConfigurationManager.AppSettings["BasicAuthUserName"];
+                    var UserPassword = ConfigurationManager.AppSettings["BasicAuthPassword"];
+                    var APIBaseURL = ConfigurationManager.AppSettings["APIBaseURL"];
 
-        //            if (_res.IsSuccessStatusCode)
-        //            {
-        //                result = true;
-        //                responseCode = (int)_res.StatusCode;
-        //                responsetext = await _res.Content.ReadAsStringAsync();
-        //                responsedateTime = await _res.Content.ReadAsStringAsync();
-        //                message = _res.Content.ReadAsStringAsync().Result;
-        //                string respmsg = "";
-        //                string dateTime = "";
-        //                if (!string.IsNullOrEmpty(message))
-        //                {
-        //                    JavaScriptSerializer ser = new JavaScriptSerializer();
-        //                    var json = ser.Deserialize<JsonParse>(responsetext);
-        //                    message = json.d;
-        //                    JsonParse myNames = ser.Deserialize<JsonParse>(json.d);
-        //                    int code = Convert.ToInt32(myNames.StatusCode);
-        //                    respmsg = myNames.StatusMessage;
-        //                    if (code != responseCode)
-        //                    {
-        //                        responseCode = code;
-        //                    }
-        //                }
-        //                this.Session["bankSyncTime"] = DateTime.Now.ToString("dd/MM/yyyy HH:mm:ss tt");
-        //                dateTime = Session["bankSyncTime"].ToString();
-        //                this.Session["bankbal"] = respmsg;
-        //                BankBalance= (string)respmsg;
-        //                ViewBag.AvailBankBalnAmount = (string)respmsg;
-        //                return Json(new { responseCode = responseCode, responseText = respmsg, responsedateTime = dateTime },
-        //                JsonRequestBehavior.AllowGet);
-        //            }
-        //            else
-        //            {
-        //                result = false;
-        //                responseCode = (int)_res.StatusCode;
-        //                responsetext = await _res.Content.ReadAsStringAsync();
-        //                dynamic json = JValue.Parse(responsetext);
-        //                message = json.d;
-        //                if (message == null)
-        //                {
-        //                    return Json(new { responseCode = responseCode, responseText = responsetext },
-        //                JsonRequestBehavior.AllowGet);
+                    var byteArray = Encoding.ASCII.GetBytes(UserName + ":" + UserPassword);
+                    httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Basic", Convert.ToBase64String(byteArray));
+                    var httpResponse = await httpClient.PostAsync(APIBaseURL + "NEA/NEABranch", httpContent);
 
-        //                }
-        //                else
-        //                {
-        //                    dynamic item = JValue.Parse(message);
-        //                    ViewBag.AvailBankBalnAmount = (string)item["StatusMessage"];
-        //                    return Json(new { responseCode = responseCode, responseText = (string)item["StatusMessage"] },
-        //                    JsonRequestBehavior.AllowGet);
+                    NEABranchDetails neaBranch = new NEABranchDetails();
 
-        //                }
-        //            }
-        //        }
-        //        catch (Exception ex)
-        //        {
-        //            return Json(new { responseCode = "400", responseText = ex.Message },
-        //                JsonRequestBehavior.AllowGet);
-        //        }
-        //    }
-        //}
-        //#endregion 
+                    if (httpResponse.Content != null && httpResponse.StatusCode == HttpStatusCode.OK)
+                    {
+                        //response
+                        var responseContent = await httpResponse.Content.ReadAsStringAsync();
+                        var result = JsonConvert.DeserializeObject<NEABranchDetails>(responseContent);
+
+
+                        return result;
+
+                    }
+                }
+                return null;
+            }
+            catch (Exception ex)
+            {
+
+                throw ex;
+            }
+
+        }
+        #endregion
+
+        #region
+        public async Task<NEADetails> NEABillPay()
+        {
+            try
+            {
+                SqlConnection cn = new SqlConnection(ConfigurationManager.ConnectionStrings["MNepalDBConnectionString"].ConnectionString);
+                string command = "select * from MNNeaBillPaymentServiceDetails order by Id desc";
+                cn.Open();
+                SqlDataAdapter da = new SqlDataAdapter(command, cn);
+                DataSet ds = new DataSet();
+                da.Fill(ds);
+
+                List<NEADetails> neaDetailsList = new List<NEADetails>();
+
+                foreach (DataRow dr in ds.Tables[0].Rows)
+                {
+                    NEADetails details = new NEADetails();
+
+                    details.serviceCode = dr["ServiceCode"].ToString();
+                    details.serviceId = dr["ServiceId"].ToString();
+                    neaDetailsList.Add(details);
+
+                }
+                NEADetails neaBranchDetails = new NEADetails();
+                foreach (var item in neaDetailsList)
+                {
+                    neaBranchDetails = new NEADetails
+                    {
+                        serviceCode = item.serviceCode,
+                        serviceId = item.serviceId
+                    };
+                }
+
+                return neaBranchDetails;
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+        }
+        #endregion
     }
 }

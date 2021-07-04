@@ -625,12 +625,12 @@ namespace MNSuperadmin.Controllers
 
                                     await SavePhoto(userInfo);
 
-                                    userInfo.PassportImageName = Session["PP"].ToString();
-                                    userInfo.FrontImageName = Session["Front"].ToString();
-                                    userInfo.BackImageName = Session["Back"].ToString();
-                                    userInfo.RegCertificatePhotoName = Session["RegCerti"].ToString();
-                                    userInfo.TaxClearFrontName = Session["TaxClearFront"].ToString();
-                                    userInfo.TaxClearBackName = Session["TaxClearBack"].ToString();
+                                    //userInfo.PassportImageName = Session["PP"].ToString();
+                                    //userInfo.FrontImageName = Session["Front"].ToString();
+                                    //userInfo.BackImageName = Session["Back"].ToString();
+                                    //userInfo.RegCertificatePhotoName = Session["RegCerti"].ToString();
+                                    //userInfo.TaxClearFrontName = Session["TaxClearFront"].ToString();
+                                    //userInfo.TaxClearBackName = Session["TaxClearBack"].ToString();
 
                                     int results = MerchantUtils.RegisterMerchantInfo(userInfo, MerchantCategory);
                                     if (results > 0)
