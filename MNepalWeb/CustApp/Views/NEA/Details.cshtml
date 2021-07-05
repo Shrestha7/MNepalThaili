@@ -8,6 +8,7 @@
 
 <!-- Main content -->
 <link href="~/Content/NewIcon/style.css" rel="stylesheet" />
+<link href="~/Content/ThaliStyle.css" rel="stylesheet" />
 <style>
     .image_icon {
         width: 100px;
@@ -58,7 +59,9 @@
     @Html.ValidationSummary(true)
 
 
-
+    <div class="preload" style="display:none">
+        <img src="~/Content/image/loading.gif" class="img-responsive" />
+    </div>
 
     <div class="main-content">
         <div class="two-colbg">
@@ -228,9 +231,9 @@
                                 </div>
                             </div>
 
-                           
+
                             <br />
-                            
+
                             <br />
                             <div class="transfer-order clearfix Input-Section">
                                 <h3 class="title">Pay from</h3>
@@ -244,7 +247,7 @@
                                 </select>
                             </div>
                             <div class="row Input-Section">
-                               
+
 
                                 <div class="col-md-12">
                                     <div class="form-group">
@@ -361,6 +364,18 @@
 
     <script type="text/javascript">
 
+        var tempDiv = $("<div id='tempOverlayDiv'></div>");
+        tempDiv.css({
+            "background-color": "#000",
+            "opacity": "0.2",
+            "position": "absolute",
+            "left": 0,
+            "top": 0,
+            "width": $(document).width(),
+            "height": $(document).height()
+        });
+
+
         $(".btnShow1").mousedown(function () {
             $(".pwd1").attr("type", "text");
         });
@@ -388,9 +403,10 @@
         });
 
         document.getElementById("successModal").onclick = function () {
-         var url = '@Url.Action("Index", "NEA")';
+         var url = '@Url.Action("Index", "UserDashboard")';
          window.location.href = url;
         };
+
         document.getElementById("failureModalSessionExpired").onclick = function () {
          var url = '@Url.Action("Index", "LogOut")';
          window.location.href = url;
@@ -538,13 +554,15 @@
                         __RequestVerificationToken: token,
                         nea: dataToPost
                     },
-                    async: false,
+                    async: true,
                     success: function (data)
                     {
+                        $(".preload").show();
+                        tempDiv.remove();
                         if (data.responseCode == "200")
                         {
                             $("#ajaxResponse").html("");
-                            var resp = JSON.parse(data.responseText);
+                            var resp = data.responseText;
                             $('#successModal').modal("show");
                             $("#TPin").val("");
                             $("#Remarks").val("");
@@ -575,6 +593,8 @@
                     },
                     //capture the request before it was sent to server
                     beforeSend: function (jqXHR, settings) {
+                        $(".preload").show();
+                        $("body").append(tempDiv);
                         //adding some Dummy data to the request
                         settings.data += "&dummyData=whatever";
                         //disable the button until we get the response
@@ -582,6 +602,8 @@
 
                     },
                     complete: function (jqXHR, textStatus) {
+                        $(".preload").hide();
+                        $(".overlay-wrapper").show();
                         //enable the button
                         $('#btnSubmit').attr("disabled", false);
                     }

@@ -103,7 +103,8 @@ namespace MNepalProject.Controllers
 
             else if(transaction.merchantType == "nea")
             {
-               //description1 = "NEA".PadRight(37) + transaction.destBranchCode + "!" + transaction.scn + "!" + transaction.consumerId + "!" + transaction.customerName;
+                //description1 = "NEA".PadRight(37) + transaction.destBranchCode + "!" + transaction.scn + "!" + transaction.consumerId + "!" + transaction.customerName;
+                description1 = "NEA Bill Payment to CustomerID: " + transaction.consumerId;
                transaction.Description = ":"+"NEA".PadRight(40) + transaction.destBranchCode + "!" + transaction.scn + "!" + transaction.consumerId + "!" + transaction.customerName;
             }
           
@@ -2020,6 +2021,16 @@ namespace MNepalProject.Controllers
                             //if (name.Length > MaxLength)
                             //    name = name.Substring(0, MaxLength);
                             //Desc1 = name;//"BILL PAYMENT"; //"Payment To " + getProductID[0]; //"Bank to Merchant's Bank a/c";
+
+                            if (mnTransactionMaster.Description.StartsWith(":"))
+                            {
+                                mnTransactionMaster.Description = mnTransactionMaster.Description.Substring(1, mnTransactionMaster.Description.Length -1);
+                            }
+                            Remark = mnTransactionMaster.Description + " - " + Desc1;
+                            if (Remark.EndsWith("- "))
+                            {
+                                Remark = Remark.Substring(0, Remark.Length - 2);
+                            }
                             Desc2 = transaction.DestinationMobile; //desc;
                             Desc3 = transaction.SourceMobile + " - " + transaction.DestinationMobile;
                             Remark = desc + description1;

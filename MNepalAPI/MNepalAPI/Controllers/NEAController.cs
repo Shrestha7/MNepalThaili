@@ -202,8 +202,6 @@ namespace MNepalAPI.Controllers
 
                 var response = await new WCFClient().SendRequest(content);
 
-
-
                 return Request.CreateResponse(HttpStatusCode.OK, response);
 
             }

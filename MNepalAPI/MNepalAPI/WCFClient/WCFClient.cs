@@ -29,7 +29,7 @@ namespace MNepalAPI
 
 
                 _res = await client.PostAsync(new Uri(uri), content);
-                string responseBody = _res.StatusCode.ToString() + " ," + await _res.Content.ReadAsStringAsync();
+                string responseBody = await _res.Content.ReadAsStringAsync();
                 return responseBody;
             }
         }

@@ -6,6 +6,7 @@
 
 <!-- Main content -->
 <link href="~/Content/NewIcon/style.css" rel="stylesheet" />
+<link href="~/Content/ThaliStyle.css" rel="stylesheet" />
 <style>
     .image_icon {
         width: 100px;
@@ -20,33 +21,22 @@
         z-index: 2;
     }
 
-    /*.our-form-control {
-        display: block;
-        width: 100%;
-        height: inherit;
-        padding: inherit;
-        padding-left: 0rem;
-        font-size: 0.944rem;
-        font: 300 13.3333px Arial;
-        font-style: normal;
-        margin-top: 10px;
-        line-height: 1.5;
-        color: #495057;
+    .bootstrap-select {
+        width: 465px !important;
         background-color: #fff;
-        background-clip: padding-box;
-        border: 1px solid #ced4da;
-        border-radius: 0.25rem;
-        transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
-    }*/
+        color: #fff;
+        border: solid 1px #000;
+    }
 
-    /*.our-form-control:focus {
-            color: #495057;
-            background-color: #fff;
-            border-color: #80bdff;
-            outline: 0;
-            box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
-        }*/
-
+    .btn-light {
+        color: #000;
+        background-color: #fff;
+        border-color: #fff;
+        font-size: 18px;
+        margin-left: 0px;
+        border: solid 1px #fff;
+        max-height: 43px;
+    }
 </style>
 
 
@@ -56,7 +46,9 @@
     @Html.ValidationSummary(true)
 
 
-
+    <div class="preload" style="display:none">
+        <img src="~/Content/image/loading.gif" class="img-responsive" />
+    </div>
 
     <div class="main-content">
         <div class="two-colbg">
@@ -181,8 +173,8 @@
                             <div class="row">
                                 <div class="col-md-12">
                                     <div class="form-group">
-                                        <label class="col-sm-12">NEA Locations:<b style="color:red;">*</b></label>
-                                        <select id="neaBranchDrpdwn" onload="getBankId()" name="txtBankName" class="show-tick" style="width: 465px;height: 43px;" oninput="checkBank()">
+                                        <label>NEA Locations:<b style="color:red;">*</b></label>
+                                        <select id="neaBranchDrpdwn" name="txtNeaBranchDrpdwn" class="show-tick" style="width: 465px;height: 43px;">
                                             @foreach (var neaBranch in ViewBag.NEA)
                                             {
                                                 <option code="@neaBranch.code" name="neaBranchList">@neaBranch.name</option>
@@ -227,24 +219,6 @@
         </div>
     </div>
 
-
-    <!-- Success modal -->
-    @*<div class="modal fade common-modal" id="successModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle">
-            <div class="modal-dialog modal-dialog-centered" role="document">
-                <div class="modal-content">
-                    <div class="modal-body text-center">
-                        <div class="success-icon">
-                            <img src="~/Content/assets/img/success-tick.svg" alt="success-tick">
-                        </div>
-                        <p class="msg"></p>
-                        <span class="msg">Your payment has been confirmed.</span>
-                        <br /> <br />
-                        <button type="button" class="btn btn-blue" data-dismiss="modal" style="width:80%">OK</button>
-                    </div>
-                </div>
-            </div>
-        </div>*@
-
     <!-- Failure modal -->
     <div class="modal fade common-modal" id="failureModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle">
         <div class="modal-dialog modal-dialog-centered" role="document">
@@ -283,6 +257,18 @@
 @section scripts{
 
     <script type="text/javascript">
+
+        //add div on whole page:
+        var tempDiv = $("<div id='tempOverlayDiv'></div>");
+        tempDiv.css({
+            "background-color": "#000",
+            "opacity": "0.2",
+            "position": "absolute",
+            "left": 0,
+            "top": 0,
+            "width": $(document).width(),
+            "height": $(document).height()
+        });
 
 
         $(".btnShow1").mousedown(function () {
@@ -359,13 +345,14 @@
             }
         });
 
-        //$(".placeholder_NEALocation").prepend('<option value="" disabled selected >---Select NEA---</option>');
-        function checkValidation() {
-            debugger;
-            var SCNo = $("[name='txtSCNo']").val();
-            var Cust = $("[name='txtCustomerID']").val();
-            var NEABN = $("[name='NEA']").val();
+        $(".show-tick").prepend("<option value='0' disabled selected>---Select Option---</option>");
+        $('.show-tick').selectpicker({
+            liveSearch: true,
+            showSubtext: true
+        });
 
+        function checkSCNo() {
+            var SCNo = $("[name='txtSCNo']").val();
             if ((SCNo.trim() == "")) {
                 $("#SCNoErr").html("");
                 $("#SCNoErr").append("<small>" + "SC Number is required and cannot be empty" + "</small>");
@@ -374,7 +361,10 @@
             else {
                 $("#SCNoErr").hide();
             }
+        }
 
+        function checkCust() {
+            var Cust = $("[name='txtCustomerID']").val();
             if ((Cust.trim() == "")) {
                 $("#CustErr").html("");
                 $("#CustErr").append("<small>" + "Customer ID is required and cannot be empty" + "</small>");
@@ -383,7 +373,12 @@
             else {
                 $("#CustErr").hide();
             }
-            if ((NEABN == null)) {
+
+        }
+
+        function checkNEADrpDwn() {
+            var NEABN = $("[name='txtNeaBranchDrpdwn']").val();
+            if ((NEABN == null) || (NEABN == undefined)) {
                 $("#NEAErr").html("");
                 $("#NEAErr").append("<small>" + "NEA Location is required and cannot be empty" + "</small>");
                 $("#NEAErr").show();
@@ -391,16 +386,30 @@
             else {
                 $("#NEAErr").hide();
             }
+
+        }
+
+
+        function checkValidation() {
+            checkSCNo();
+            checkCust();
+            checkNEADrpDwn();
         }
 
 
 
         $("#clearButton").click(function () {
+            debugger;
             $("#SCNo").val("");
-            $("#CustomerID").val("");
-            $('#NEA').selectpicker('val', '');
+            $("#CustomerID").val("");          
+            //reset selectedDrpdwn value
+            $('select[name=txtNeaBranchDrpdwn]').val(0);
+            $('.show-tick').selectpicker('refresh');
+         
         });
 
+
+        
         $('#btnSubmit').click(function (e) {
             debugger;
             $('#btnSubmit').attr("disabled", true);
@@ -433,25 +442,13 @@
                         __RequestVerificationToken: token,
                         _NEAft: dataToPost
                     },
-                    async: false,
+                    async: true,
                     success: function (data) {
-
+                        $(".preload").show();
+                        tempDiv.remove();
                         if (data.responseCode == "200") {
-                            debugger;
-                            //$("#ajaxResponse").html("");
-                            //var resp = JSON.parse(data.responseText);
-                            //$('#successModal').modal("show");
-
-                            //var delayInMilliseconds = 30000; //30 second
-
-                            //setTimeout(function () {
-
                             var url = '@Url.Action("Details", "NEA")';
                             window.location.href = url;
-                            //}, delayInMilliseconds);
-
-                            //$("#SCNo").val("");
-                            //$("#CustomerID").val("");
 
                         }
                         else {
@@ -476,27 +473,19 @@
                             },
                     //capture the request before it was sent to server
                     beforeSend: function (jqXHR, settings) {
+                        $(".preload").show();
+                        $("body").append(tempDiv);
                         //adding some Dummy data to the request
                         settings.data += "&dummyData=whatever";
                         //disable the button until we get the response
                              },
-                    //complete: function (jqXHR, textStatus) {
-                    //    //enable the button
-                    //    $('#btnSubmit').attr("disabled", false);
-                    //}
-
-
                     complete: function (data) {
-                        debugger;
-
-
+                        $(".preload").hide();
+                        $(".overlay-wrapper").show();
                         if (data.responseJSON.responseCode != "200") {
                             $('#btnSubmit').attr("disabled", false); //enable button if responsecode not equal to 200
 
                         }
-
-
-
                     }
                 });
 

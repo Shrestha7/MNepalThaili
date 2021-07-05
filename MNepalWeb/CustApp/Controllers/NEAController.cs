@@ -483,30 +483,10 @@ namespace CustApp.Controllers
                 NEAObj.UserName = userName;
                 NEAObj.ClientCode = clientCode;
 
-                HttpResponseMessage _res = new HttpResponseMessage();
+               
                 string mobile = userName; //mobile is username
                 TraceIdGenerator _tig = new TraceIdGenerator();
                 var tid = _tig.GenerateTraceID();
-
-                //await BankQuery();
-                //string bankBal = BankBalance;
-
-
-
-                //start  for sercivecode=special1
-                //string serviceCode1;
-
-                //if (serviceCodeTestServer == "1")
-                //{
-                //    serviceCode1 = serviceCodeTestServer; //"1";//
-                //}
-
-                //else
-                //{
-                //    serviceCode1 = regobj.NEABranchName;
-                //}
-                //end  for sercivecode=special1
-
 
                 //specify to use TLS 1.2 as default connection
                 ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12 | SecurityProtocolType.Tls11 | SecurityProtocolType.Tls;
@@ -543,115 +523,83 @@ namespace CustApp.Controllers
 
                     if (httpResponse.Content != null && httpResponse.StatusCode == HttpStatusCode.OK)
                     {
-                        //response
-                        var responseContent = await httpResponse.Content.ReadAsStringAsync();
-                        var result = JsonConvert.DeserializeObject<NEABranchDetails>(responseContent);
+                        ////response
+                        //var responseContent = await httpResponse.Content.ReadAsStringAsync();
+                        string errorMessage = string.Empty;
+                        int responseCode = 0;
+                        string message = string.Empty;
+                        string responsetext = string.Empty;
+                        bool result = false;
+                        string ava = string.Empty;
+                        string avatra = string.Empty;
+                        string avamsg = string.Empty;
 
-
-                        //return result;
-
-                    }
-                }
-
-
-                using (HttpClient client = new HttpClient())
-                {
-                    //var action = "paypoint.svc/executepayment";
-                    //var uri = Path.Combine(ApplicationInitilize.WCFUrl, action);
-                    //string tokenID = Session["TokenID"].ToString();
-                    //var content = new FormUrlEncodedContent(new[]{
-                    //    new KeyValuePair<string,string>("sc",_NEAft.TransactionMedium),//user 00 10
-                    //    new KeyValuePair<string, string>("mobile", mobile),
-                    //    new KeyValuePair<string, string>("amount",_NEAft.amount),
-                    //    new KeyValuePair<string,string>("da","9840066836"),
-                    //    new KeyValuePair<string,string>("pin",_NEAft.TPin),
-                    //    new KeyValuePair<string, string>("note", "Execute "+_NEAft.Remarks),
-                    //    new KeyValuePair<string,string>("src","gprs"),
-                    //    new KeyValuePair<string,string>("destBranchCode",NEAObj.NEABranchCode),
-                    //    new KeyValuePair<string,string>("scn",NEAObj.SCNo),
-                    //    new KeyValuePair<string,string>("customerId",NEAObj.CustomerID),
-                    //    new KeyValuePair<string,string>("customerName",NEAObj.CustomerName),
-                    //    new KeyValuePair<string,string>("merchantName","nea"),
-                    //    new KeyValuePair<string,string>("merchantType","nea"),
-                    //    new KeyValuePair<string,string>("tokenID",Session["TokenID"].ToString()),
-                    //});
-                    //var content = "";
-                    //_res = await client.PostAsync(new Uri(uri), content);
-                    string responseBody = _res.StatusCode.ToString() + " ," + await _res.Content.ReadAsStringAsync();
-                    _res.ReasonPhrase = responseBody;
-                    string errorMessage = string.Empty;
-                    int responseCode = 0;
-                    string message = string.Empty;
-                    string responsetext = string.Empty;
-                    bool result = false;
-                    string ava = string.Empty;
-                    string avatra = string.Empty;
-                    string avamsg = string.Empty;
-                    //string BlockMessage = LoginUtils.GetMessage("01");
-                    try
-                    {
-                        if (_res.IsSuccessStatusCode)
+                        try
                         {
-                            //Session value removed
-                            Session.Remove("S_SCNo");
-                            Session.Remove("S_NEABranchName");
-                            Session.Remove("S_CustomerID");
-
-                            result = true;
-                            responseCode = (int)_res.StatusCode;
-                            responsetext = await _res.Content.ReadAsStringAsync();
-                            message = _res.Content.ReadAsStringAsync().Result;
-                            string respmsg = "";
-                            if (!string.IsNullOrEmpty(message))
+                            if (httpResponse.IsSuccessStatusCode)
                             {
-                                JavaScriptSerializer ser = new JavaScriptSerializer();
-                                var json = ser.Deserialize<JsonParse>(responsetext);
-                                message = json.d;
-                                JsonParse myNames = ser.Deserialize<JsonParse>(json.d);
-                                int code = Convert.ToInt32(myNames.StatusCode);
-                                respmsg = myNames.StatusMessage;
-                                if (code != responseCode)
+                                //Session value removed
+                                Session.Remove("S_SCNo");
+                                Session.Remove("S_NEABranchName");
+                                Session.Remove("S_CustomerID");
+
+                                result = true;
+                                responseCode = (int)httpResponse.StatusCode;
+                                responsetext = await httpResponse.Content.ReadAsStringAsync();
+                                message = httpResponse.Content.ReadAsStringAsync().Result;
+                                string respmsg = "";
+                                if (!string.IsNullOrEmpty(message))
                                 {
-                                    responseCode = code;
+                                    
+                                    var responseMessage = JsonConvert.DeserializeObject(message);
+                                    var json = JsonConvert.DeserializeObject<JsonParse>(responseMessage.ToString());
+                                    var messageObject = JsonConvert.DeserializeObject<JsonParse>(json.d);
+                                    responseCode = int.Parse(messageObject.StatusCode);
                                 }
-                            }
-                            //   return Json(new { responseCode = responseCode, responseText = respmsg },
-                            return Json(new { responseCode = responseCode, responseText = respmsg, blockMessage = BlockMessage },
-
-                          JsonRequestBehavior.AllowGet);
-                        }
-                        else
-                        {
-                            result = false;
-                            responseCode = (int)_res.StatusCode;
-                            responsetext = await _res.Content.ReadAsStringAsync();
-                            dynamic json = JValue.Parse(responsetext);
-                            message = json.d;
-                            if (message == null)
-                            {
-                                // return Json(new { responseCode = responseCode, responseText = responsetext },
-                                return Json(new { responseCode = responseCode, responseText = responsetext, blockMessage = BlockMessage },
-                            JsonRequestBehavior.AllowGet);
-                            }
-                            else
-                            {
-                                dynamic item = JValue.Parse(message);
-
-                                //return Json(new { responseCode = responseCode, responseText = (string)item["StatusMessage"] },
-                                return Json(new { responseCode = responseCode, responseText = (string)item["StatusMessage"], blockMessage = BlockMessage },
+                                //   return Json(new { responseCode = responseCode, responseText = respmsg },
+                                return Json(new { responseCode = responseCode, responseText = respmsg, blockMessage = BlockMessage },
 
                               JsonRequestBehavior.AllowGet);
                             }
+                            else
+                            {
+                                result = false;
+                                responseCode = (int)httpResponse.StatusCode;
+                                responsetext = await httpResponse.Content.ReadAsStringAsync();
+                                dynamic json = JValue.Parse(responsetext);
+                                message = json.d;
+                                if (message == null)
+                                {
+                                    // return Json(new { responseCode = responseCode, responseText = responsetext },
+                                    return Json(new { responseCode = responseCode, responseText = responsetext, blockMessage = BlockMessage },
+                                JsonRequestBehavior.AllowGet);
+                                }
+                                else
+                                {
+                                    dynamic item = JValue.Parse(message);
+
+                                    //return Json(new { responseCode = responseCode, responseText = (string)item["StatusMessage"] },
+                                    return Json(new { responseCode = responseCode, responseText = (string)item["StatusMessage"], blockMessage = BlockMessage },
+
+                                  JsonRequestBehavior.AllowGet);
+                                }
+                            }
                         }
+                        catch (Exception ex)
+                        {
+                            // return Json(new { responseCode = "400", responseText = ex.Message },
+                            return Json(new { responseCode = "400", responseText = ex.Message, blockMessage = BlockMessage },
+
+                          JsonRequestBehavior.AllowGet);
+                        }
+
+
+
                     }
-                    catch (Exception ex)
+                    else
                     {
-                        // return Json(new { responseCode = "400", responseText = ex.Message },
-                        return Json(new { responseCode = "400", responseText = ex.Message, blockMessage = BlockMessage },
-
-                      JsonRequestBehavior.AllowGet);
+                        return null;
                     }
-
                 }
 
             }
