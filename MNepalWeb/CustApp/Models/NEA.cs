@@ -116,6 +116,11 @@
         public string AdditionalData { get; set; }
     }
 
+    public class JsonDetails
+    {
+        public int StatusCode { get; set; }
+        public string StatusMessage { get; set; }
+    }
 
 
 

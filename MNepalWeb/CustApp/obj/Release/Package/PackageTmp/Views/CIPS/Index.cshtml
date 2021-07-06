@@ -26,17 +26,9 @@
         z-index: 2;
     }
 
-    .preload {
-        margin: 0;
-        position: absolute;
-        top: 90%;
-        left: 50%;
-        margin-right: -50%;
-        transform: translate(-50%,-50%);
-    }
 
     .bootstrap-select {
-        width: 465px !important;
+        width: 100% !important;
         background-color: #fff;
         color: #fff;
         border: solid 1px #000;
@@ -55,8 +47,8 @@
     /* .filter-option-inner-inner {
         margin-left: -22px;
     }*/
+    
 
-  
 </style>
 
 @using (Html.BeginForm("CIPSPayment", "CIPS", FormMethod.Post, new { @id = "CIPSPayment", @name = "CIPSPayment", @class = "form-horizontal", enctype = "multipart/form-data" }))
@@ -72,7 +64,7 @@
     <div class="preload" style="display:none">
         <img src="~/Content/image/loading.gif" class="img-responsive" />
     </div>
-    
+
     <div class="main-content">
         <div class="two-colbg">
             <div class="container">
@@ -245,7 +237,7 @@
                                 <div class="col-md-12">
                                     <div class="form-group">
                                         <label class="col-sm-12">Bank Name (<span style="color:red">*</span>)</label>
-                                        <select id="bankDrpdwn" onload="getBankId()" name="txtBankName" class="show-tick" style="width:465px; height:43px" oninput="checkBank()">
+                                        <select id="bankDrpdwn" onload="getBankId()" name="txtBankName" class="show-tick"  style="width: 465px;height: 43px;" oninput="checkBank()">
                                             @foreach (var bank in ViewBag.getBankList)
                                             {
                                                 <option bankId="@bank.Value" name="bankList">@bank.Text</option>
@@ -260,22 +252,22 @@
 
                             </div>
 
-                            <div class="row">
-                                <div class="col-md-12">
-                                    <div class="form-group">
-                                        <label class="col-sm-12">Branch Name (<span style="color:red">*</span>)</label>
-                                        <select id="branchDrpdwn" name="branchName" class="show-tick" style="width:465px; height:43px; font-size:18px"></select>
+                            @*<div class="row">
+                                    <div class="col-md-12">
+                                        <div class="form-group">
+                                            <label class="col-sm-12">Branch Name (<span style="color:red">*</span>)</label>
+                                            <select id="branchDrpdwn" name="branchName" class="show-tick" style="width:465px; height:43px; font-size:18px"></select>
+                                        </div>
+                                        <div class="form-group" id="branchNameErr" style="color:red; margin-top:-11px;"></div>
                                     </div>
-                                    <div class="form-group" id="branchNameErr" style="color:red; margin-top:-11px;"></div>
-                                </div>
 
-                            </div>
+                                </div>*@
 
                             <div class="row" id="Remark">
                                 <div class="col-md-12">
                                     <div class="form-group">
                                         <label>Remarks (<span style="color:red">*</span>)</label>
-                                        <textarea style="resize: none;" cols="50" rows="2" @*class="form-control select2"*@ id="transactionDetail" name="txtTransactionDetail" placeholder="Remarks" maxlength="15" oninput="checkRemarks()" @*onpaste="return false"*@></textarea>
+                                        <input type="text" class="form-control select2" id="transactionDetail" name="txtTransactionDetail" placeholder="Remarks" maxlength="15" oninput="checkRemarks()" @*onpaste="return false"*@></input>
                                     </div>
                                     <div class="form-group" id="transactionDetailErr" style="color:red; margin-top:-11px;"></div>
                                 </div>
@@ -302,7 +294,7 @@
                                 <div class="col-md-12">
                                     <div class="form-group">
                                         <label>T-PIN (<span style="color:red">*</span>)</label>
-                                        <input type="password" id="pin" name="txtPin" class="form-control pwd1" placeholder="PIN" maxlength="4" onkeypress="return event.charCode >= 48 && event.charCode <= 57" oninput="checkPin()" @*onpaste="return false"*@ />
+                                        <input type="password" id="pin" name="txtPin" class="form-control pwd1" placeholder="T-PIN" maxlength="4" onkeypress="return event.charCode >= 48 && event.charCode <= 57" oninput="checkPin()" @*onpaste="return false"*@ />
                                         <span toggle="#password-field" class="fa fa-fw fa-eye field-icon toggle-password, btnShow1"></span>
                                     </div>
                                     <div class="form-group" id="pinErr" style="color:red; margin-top:-11px;"></div>
@@ -364,6 +356,23 @@
         </div>
     </div>
 
+    <!-- Failure modal -->
+    <div class="modal fade common-modal" id="failureModalLogOut" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-body text-center">
+                    <div class="success-icon">
+                        <img src="~/Content/assets/img/denied-cross.svg" alt="denied-cross">
+                    </div>
+                    <p style="color: #E31837; font-size: 1.111rem; font-weight: 700;">@*Error!*@</p>
+                    <span style="color: #E31837; font-size: 1.111rem; font-weight: 700;" id="message2"></span>
+                    <br /> <br />
+                    <button type="button" class="btn btn-blue" data-dismiss="modal" style="width:80%">OK</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <!-- Failure modal session expired -->
     <div class="modal fade common-modal" id="failureModalSessionExpired" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle">
         <div class="modal-dialog modal-dialog-centered" role="document">
@@ -386,6 +395,23 @@
 
     <script type="text/javascript">
 
+        //add div on whole page:
+        var tempDiv = $("<div id='tempOverlayDiv'></div>");
+        tempDiv.css({
+            "background-color": "#000",
+            "opacity": "0.2",
+            "position": "absolute",
+            "left": 0,
+            "top": 0,
+            "width": $(document).width(),
+            "height": $(document).height()
+        });
+
+        // remove div on document ready:
+        $(document).ready(function () {
+            tempDiv.remove();
+        });
+
         $(".btnShow1").mousedown(function () {
             $(".pwd1").attr("type", "text");
         });
@@ -395,6 +421,15 @@
 
         document.getElementById("failureBankModal").onclick = function () {
          var url = '@Url.Action("Index", "UserDashboard")';
+         window.location.href = url;
+        };
+
+        document.getElementById("failureModal").onclick = function () {
+            window.location.reload(true);
+        };
+
+        document.getElementById("failureModalLogOut").onclick = function () {
+         var url = '@Url.Action("Index", "LogOut")';
          window.location.href = url;
         };
 
@@ -471,13 +506,15 @@
             else {
                 $("#amountErr").hide();
             }
-	    if (amount < 10 || amount > 50000) {
+            if (amount < 10 || amount > 2000000) {
                 $("#amountErr1").html("");
                 $("#amountErr1").append("<small>" + "Enter amount between 10 and 2000000" + "</small>");
                 $("#amountErr1").show();
+                $("#btnValidate").attr("disabled", "disabled");
             }
             else {
                 $("#amountErr1").hide();
+                $("#btnValidate").attr("disabled", false);
             }
         }
 
@@ -518,7 +555,6 @@
         }
 
         function checkRemarks() {
-            debugger;
             var transactionDetail = $("[name='txtTransactionDetail']").val();
             if ((transactionDetail.trim() == "")) {
                 $("#transactionDetailErr").html("");
@@ -580,7 +616,6 @@
         //get banklist
         $('#bankDrpdwn').change(function (e){
             e.preventDefault();
-
             var dropdown = document.getElementById('bankDrpdwn');
             var selectedOption = dropdown.options[dropdown.selectedIndex];
             var selectedBankId = selectedOption.getAttribute('bankId');
@@ -621,6 +656,10 @@
                             text: itemData.Text.trim()
                         }));
                     });
+
+                    var anyBranchId = data[0].Value;
+                    window.anyBranchId = anyBranchId;
+
 
                     $('.show-tick').selectpicker({
                         liveSearch: true,
@@ -664,7 +703,7 @@
             var token = $('input[name="__AjaxAntiForgeryForm"]').val();
 
             if ((senderAccountNumber != "") && (amount != "") && (beneficiaryAccountNumber != "") && (beneficiaryAccountName != "") && (bankName != undefined)
-                && (branchName != undefined) && (transactionDetail != "") ) {
+                /*&& (branchName != undefined)*/ && (transactionDetail != "") ) {
 
                 var dataToPost = {
                     senderAccountName: senderAccountName,
@@ -675,7 +714,7 @@
                     bankId: bankId,
                     bankBranchId: bankBranchId,
                     bankName: bankName,
-                    branchName: branchName,
+                    //branchName: branchName,
                     TokenUnique: token,
                     transactionDetail: transactionDetail
 
@@ -693,13 +732,13 @@
                     async: true,
                     success: function (data) {
                         $(".preload").show();
-                        $('.mask').show();
+                        tempDiv.remove();
                         if (data.responseCode == "000" || data.responseCode == "999") {
                             $("#amount").attr("disabled", "disabled");
                             $("#accountNumber").attr("disabled", "disabled");
                             $("#beneficiaryAccountName").attr("disabled", "disabled");
                             $("#bankDrpdwn").attr("disabled", "disabled");
-                            $("#branchDrpdwn").attr("disabled", "disabled");
+                            //$("#branchDrpdwn").attr("disabled", "disabled");
                             $("#transactionDetail").attr("disabled", "disabled");
                             $("#AccountValidate").show();
                             $("#btnValidate").hide();
@@ -732,16 +771,15 @@
                     //capture the request before it was sent to server
                     beforeSend: function (jqXHR, settings) {
                         $(".preload").show();
-                        $('.mask').show();
                         //adding some Dummy data to the request
                         settings.data += "&dummyData=whatever";
                         //disable the button until we get the response
                         $('#btnValidate').attr("disabled", true);
+                        $("body").append(tempDiv);
                     },
                     complete: function (jqXHR, textStatus) {
                         //enable the button
                         $(".preload").hide();
-                        $('.mask').hide();
                         $('#btnValidate').attr("disabled", false);
                     }
                 });
@@ -766,14 +804,15 @@
             var beneficiaryAccountName = $("[name='txtBeneficiaryAccountName']").val();
             var bankName = window.getBankName;
             var bankId = window.getBankId;
-            var bankBranchId = window.branchId;
+            //var bankBranchId = window.branchId;
+            var bankBranchId = window.anyBranchId;
             var branchName = window.branchName;
             var transactionDetail = $("[name='txtTransactionDetail']").val();
             var pin = $("[name='txtPin']").val();
             var token = $('input[name="__RequestVerificationToken"]').val();
 
             if ((senderAccountNumber != "") && (amount != "") && (beneficiaryAccountNumber != "") && (beneficiaryAccountName != "") && (bankName != undefined)
-                && (branchName != undefined) && (transactionDetail != "") && (pin != "")) {
+                /*&& (branchName != undefined)*/ && (transactionDetail != "") && (pin != "")) {
 
                 var dataToPost = {
                     senderAccountName: senderAccountName,
@@ -784,7 +823,7 @@
                     bankId: bankId,
                     bankBranchId: bankBranchId,
                     bankName: bankName,
-                    branchName: branchName,
+                    //branchName: branchName,
                     transactionDetail: transactionDetail,
                     pin: pin,
                     TokenUnique: token
@@ -801,11 +840,19 @@
                     },
                     async: true,
                     success: function (data) {
+                        debugger;
                         $(".preload").show();
-                        $('.mask').show();
+                        tempDiv.remove();
                         if (data.responseCode == "200") {
                             var url = '@Url.Action("CIPSDetails", "CIPS")';
                             window.location.href = url;
+                        }
+                        else if (data.responseCode == "401") {
+                            $("#ajaxResponse").html("");
+                            $("#message2").html("");
+                            $("#message2").append(data.responseText);
+                            $('#failureModalLogOut').modal("show");
+
                         }
                         //display error message
                         else {
@@ -831,7 +878,7 @@
                     //capture the request before it was sent to server
                     beforeSend: function (jqXHR, settings) {
                         $(".preload").show();
-                        $('.mask').show();
+                        $("body").append(tempDiv);
                         //adding some Dummy data to the request
                         settings.data += "&dummyData=whatever";
                         //disable the button until we get the response
@@ -840,8 +887,7 @@
                     complete: function (jqXHR, textStatus) {
                         //enable the button
                         $(".preload").hide();
-                        $('.mask').hide();
-
+                        $(".overlay-wrapper").show();
                         $('#btnSubmit').attr("disabled", false);
                     }
                 });

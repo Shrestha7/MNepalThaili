@@ -36,7 +36,7 @@ namespace MNepalAPI.Models
         public string retrivalReference { get; set; }
         public string additionalData { get; set; }
         public string userName { get; set; }
-       
+
         public string MyProperty { get; set; }
 
     }
@@ -66,5 +66,22 @@ namespace MNepalAPI.Models
         public string resultDescription { get; set; }
         public Branch[] branch { get; set; }
     }
+
+
+    public class JsonResult
+    {
+        public string d { get; set;}
+    }
+
+    public class JsonDetails
+    {
+        public int StatusCode { get; set; }
+        public string StatusMessage { get; set; }
+    }
+
+
+
+
+
 
 }

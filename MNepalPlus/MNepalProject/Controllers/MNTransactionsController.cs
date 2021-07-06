@@ -84,8 +84,8 @@ namespace MNepalProject.Controllers
             //}
 
             //START FOR DESCRIPTION 1 :ISO Field 125
-            string description1="";
-            string dessc2="";
+            string description1 = "";
+            string dessc2 = "";
             const int MaxLength = 49;
 
             if ((transaction.merchantType == "school") || (transaction.merchantType == "college"))
@@ -101,13 +101,13 @@ namespace MNepalProject.Controllers
                     description1 = description1.Substring(0, MaxLength);
             }
 
-            else if(transaction.merchantType == "nea")
+            else if (transaction.merchantType == "nea")
             {
                 //description1 = "NEA".PadRight(37) + transaction.destBranchCode + "!" + transaction.scn + "!" + transaction.consumerId + "!" + transaction.customerName;
-                description1 = "NEA Bill Payment to CustomerID: " + transaction.consumerId;
-               transaction.Description = ":"+"NEA".PadRight(40) + transaction.destBranchCode + "!" + transaction.scn + "!" + transaction.consumerId + "!" + transaction.customerName;
+                description1 = "NEA Bill Payment to  " + transaction.scn;
+                transaction.Description = ":" + "NEA".PadRight(40) + transaction.destBranchCode + "!" + transaction.scn + "!" + transaction.consumerId + "!" + transaction.customerName;
             }
-          
+
             else
             {
                 description1 = "BILL PAYMENT"; //"Payment To " + getProductID[0]; //"Bank to Merchant's Bank a/c";
@@ -705,7 +705,7 @@ namespace MNepalProject.Controllers
                             desc3 = descthree;
                             if (mnTransactionMaster.Description.StartsWith(":"))
                             {
-                                mnTransactionMaster.Description = mnTransactionMaster.Description.Substring(1, mnTransactionMaster.Description.Length -1);
+                                mnTransactionMaster.Description = mnTransactionMaster.Description.Substring(1, mnTransactionMaster.Description.Length - 1);
                             }
                             Remark = mnTransactionMaster.Description + " - " + desc1;
                             if (Remark.EndsWith("- "))
@@ -991,7 +991,7 @@ namespace MNepalProject.Controllers
                         //string OTraceNo;
                         //string OTranDateTime;
                         string IsProcessed = "F";
-                        
+
                         MNRequest mnRequest = new MNRequest(OriginID, OriginType, ServiceCode, SourceBankCode, SourceBranchCode, SourceAccountNo, DestBankCode, DestBranchCode, DestAccountNo,
                             Amount, FeeId, TraceNo, TranDate, RetrievalRef, desc1, desc2, desc3, IsProcessed, Remark, ReverseStatus);
 
@@ -2024,14 +2024,15 @@ namespace MNepalProject.Controllers
 
                             if (mnTransactionMaster.Description.StartsWith(":"))
                             {
-                                mnTransactionMaster.Description = mnTransactionMaster.Description.Substring(1, mnTransactionMaster.Description.Length -1);
+                                mnTransactionMaster.Description = mnTransactionMaster.Description.Substring(1, mnTransactionMaster.Description.Length - 1);
                             }
                             Remark = mnTransactionMaster.Description + " - " + Desc1;
                             if (Remark.EndsWith("- "))
                             {
                                 Remark = Remark.Substring(0, Remark.Length - 2);
                             }
-                            Desc2 = transaction.DestinationMobile; //desc;
+                            //Desc2 = transaction.DestinationMobile; //desc;
+                            Desc2 = getProductID[1];
                             Desc3 = transaction.SourceMobile + " - " + transaction.DestinationMobile;
                             Remark = desc + description1;
                         }
@@ -4650,7 +4651,7 @@ namespace MNepalProject.Controllers
             }
             return JsonConvert.SerializeObject(dtableResult, Formatting.Indented);
         }
-        
+
         #region paypoint
 
         public MNTransactionMaster Validatepaypoint(MNTransactionMaster transactionpaypoint, string PIN)

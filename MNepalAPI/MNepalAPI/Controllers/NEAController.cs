@@ -138,7 +138,7 @@ namespace MNepalAPI.Controllers
 
                 COMMON.RequestData requestData = new COMMON.RequestData();
                 requestData.Field1 = neaBranch.field1;
-                requestData.Field2 = neaBranch.field2;
+                requestData.Field2 = DateTime.Now.ToString("ddMMyyyyHHmmss");
                 requestData.Field3 = neaBranch.field3;
                 requestData.Field4 = neaBranch.field4;
                 requestData.Field5 = neaBranch.field5;
@@ -152,8 +152,6 @@ namespace MNepalAPI.Controllers
                 var json = JsonConvert.DeserializeObject<NEABranchResponse>(serializeJson);
                 neaBranch.retrivalReference = tid;
                 neaBranch.additionalData = json.AdditionalData;
-                neaBranch.field2 = DateTime.Now.ToString("ddMMyyyyHHmmss");
-
                 int resultsPayments = NEAUtilities.NEARequest(neaBranch);
                 return Request.CreateResponse(HttpStatusCode.OK, json);
 
@@ -173,8 +171,6 @@ namespace MNepalAPI.Controllers
         {
             try
             {
-                string result = neaBranch.result;
-
                 //SMS
                 string SMSNTC = System.Web.Configuration.WebConfigurationManager.AppSettings["MNepalNTCSMSServerUrl"];
                 string SMSNCELL = System.Web.Configuration.WebConfigurationManager.AppSettings["MNepalSMSServerUrl"];
@@ -202,7 +198,13 @@ namespace MNepalAPI.Controllers
 
                 var response = await new WCFClient().SendRequest(content);
 
-                return Request.CreateResponse(HttpStatusCode.OK, response);
+
+                var result = JsonConvert.DeserializeObject<JsonResult>(response);
+
+                var jsonResult = JsonConvert.DeserializeObject<JsonDetails>(result.d);          
+                return Request.CreateResponse((HttpStatusCode)jsonResult.StatusCode, jsonResult);
+
+
 
             }
             catch (Exception ex)

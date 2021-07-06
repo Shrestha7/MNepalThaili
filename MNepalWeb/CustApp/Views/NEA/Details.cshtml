@@ -307,6 +307,7 @@
         </div>
     </div>
 
+
     <!-- Success modal -->
     <div class="modal fade common-modal" id="successModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle">
         <div class="modal-dialog modal-dialog-centered" role="document">
@@ -334,6 +335,23 @@
                     </div>
                     <p style="color: #E31837; font-size: 1.111rem; font-weight: 700;">@*Error!*@</p>
                     <span style="color: #E31837; font-size: 1.111rem; font-weight: 700;" id="message"></span>
+                    <br /> <br />
+                    <button type="button" class="btn btn-blue" data-dismiss="modal" style="width:80%">OK</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 3 Times Pin Failure modal -->
+    <div class="modal fade common-modal" id="pinFailureModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-body text-center">
+                    <div class="success-icon">
+                        <img src="~/Content/assets/img/denied-cross.svg" alt="denied-cross">
+                    </div>
+                    <p style="color: #E31837; font-size: 1.111rem; font-weight: 700;">@*Error!*@</p>
+                    <span style="color: #E31837; font-size: 1.111rem; font-weight: 700;" id="pinMessage"></span>
                     <br /> <br />
                     <button type="button" class="btn btn-blue" data-dismiss="modal" style="width:80%">OK</button>
                 </div>
@@ -411,6 +429,10 @@
          var url = '@Url.Action("Index", "LogOut")';
          window.location.href = url;
         };
+        document.getElementById("pinFailureModal").onclick = function () {
+         var url = '@Url.Action("Index", "LogOut")';
+         window.location.href = url;
+        };
         document.getElementById("expireModel").onclick = function () {
          var url = '@Url.Action("Index", "NEA")';
          window.location.href = url;
@@ -484,12 +506,12 @@
 
             if (pin.trim() == "") {
                 $("#PinErr").html("");
-                $("#PinErr").append("<small>" + "Please Enter the T-Pin" + "</small>");
+                $("#PinErr").append("<small>" + "Please Enter the T-PIN" + "</small>");
                 $("#PinErr").show();
             }
             else if (pin.length != 4) {
                 $("#PinErr").html("");
-                $("#PinErr").append("<small>" + "T-Pin must be 4 character long." + "</small>");
+                $("#PinErr").append("<small>" + "T-PIN must be 4 character long." + "</small>");
                 $("#PinErr").show();
             }
             else {
@@ -571,6 +593,14 @@
 
                         }
                         //display error message
+                        else if (data.responseCode == "417") {
+                            $("#ajaxResponse").html("");
+                            $("#message").html("");
+                            $("#pinMessage").append(data.responseText);
+
+                            $('#pinFailureModal').modal("show");
+                        }
+
                         else {
                             $("#ajaxResponse").html("");
                             $("#message").html("");

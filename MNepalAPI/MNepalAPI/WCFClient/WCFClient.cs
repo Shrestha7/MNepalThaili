@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.IO;
 using System.Linq;
 using System.Net;
@@ -23,11 +24,7 @@ namespace MNepalAPI
             using (HttpClient client = new HttpClient())
             {
                 var action = "nea.svc/request";
-                //var uri = Path.Combine("https://10.129.153.42/WCF.MNepal/", action);
-                var uri = Path.Combine("https://localhost:44389/", action);
-
-
-
+                var uri = Path.Combine(ConfigurationManager.AppSettings["WCFService"], action);
                 _res = await client.PostAsync(new Uri(uri), content);
                 string responseBody = await _res.Content.ReadAsStringAsync();
                 return responseBody;

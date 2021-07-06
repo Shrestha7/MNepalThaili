@@ -49,7 +49,7 @@ namespace MNepalAPI.Helper
                             
                             //START FOR SENDER SALUTATION
 
-                            if (alertType == "SHARE")
+                            if (alertType == "NEA")
                             {
                                 if (AlertSalMessage.Contains("%s"))
                                 {
@@ -65,7 +65,7 @@ namespace MNepalAPI.Helper
 
                             string msgName; string resultparm; String ParamStr;
                             
-                            if (alertType == "SHARER")
+                            if (alertType == "NEA")
                             {
                                 resultparm = amount.ToString();
                                 ParamStr = "," + resultparm + "," + couponNumber + "," + createdDate;
@@ -76,7 +76,7 @@ namespace MNepalAPI.Helper
 
                             //START FOR SENDER SALUTATION
 
-                            if (alertType == "SHARER")
+                            if (alertType == "NEA")
                             {
                                 if (AlertSalMessage.Contains("%s"))
                                 {
@@ -90,7 +90,7 @@ namespace MNepalAPI.Helper
 
                             //START FOR MSG
 
-                            if (alertType == "SHARE")
+                            if (alertType == "NEA")
                             {
                                 resultparm = amount.ToString();
                                 ParamStr = "," + resultparm + "," + couponNumber + "," + createdDate;

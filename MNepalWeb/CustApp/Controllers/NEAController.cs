@@ -26,7 +26,7 @@ namespace CustApp.Controllers
         DAL objdal = new DAL();
         #region "GET: NEAPayment"
         public async Task<ActionResult> Index()
-         {
+        {
             string userName = (string)Session["LOGGED_USERNAME"];
             string clientCode = (string)Session["LOGGEDUSER_ID"];
             string name = (string)Session["LOGGEDUSER_NAME"];
@@ -344,7 +344,10 @@ namespace CustApp.Controllers
                 ViewBag.NEABranchCode = regobj.NEABranchCode.ToString();
                 ViewBag.CustomerID = regobj.CustomerID;
                 ViewBag.CustomerName = regobj.CustomerName;
-                ViewBag.TotalAmountDue = regobj.amount;
+                
+                ViewBag.TotalAmountDue = String.Format("{0:0.00}", Convert.ToDecimal(regobj.amount));
+
+
                 Session["amount"] = regobj.amount;
 
                 UserInfo userInfo = new UserInfo();
@@ -483,7 +486,7 @@ namespace CustApp.Controllers
                 NEAObj.UserName = userName;
                 NEAObj.ClientCode = clientCode;
 
-               
+
                 string mobile = userName; //mobile is username
                 TraceIdGenerator _tig = new TraceIdGenerator();
                 var tid = _tig.GenerateTraceID();
@@ -550,11 +553,10 @@ namespace CustApp.Controllers
                                 string respmsg = "";
                                 if (!string.IsNullOrEmpty(message))
                                 {
-                                    
+
                                     var responseMessage = JsonConvert.DeserializeObject(message);
-                                    var json = JsonConvert.DeserializeObject<JsonParse>(responseMessage.ToString());
-                                    var messageObject = JsonConvert.DeserializeObject<JsonParse>(json.d);
-                                    responseCode = int.Parse(messageObject.StatusCode);
+                                    
+                                    
                                 }
                                 //   return Json(new { responseCode = responseCode, responseText = respmsg },
                                 return Json(new { responseCode = responseCode, responseText = respmsg, blockMessage = BlockMessage },
@@ -598,7 +600,16 @@ namespace CustApp.Controllers
                     }
                     else
                     {
-                        return null;
+
+                        int responseCode = (int)httpResponse.StatusCode;
+                        string responsetext = await httpResponse.Content.ReadAsStringAsync();
+                        var json = JsonConvert.DeserializeObject<JsonDetails>(responsetext);
+
+
+                        // return Json(new { responseCode = responseCode, responseText = responsetext },
+                        return Json(new { responseCode = json.StatusCode , responseText = json.StatusMessage, blockMessage = BlockMessage },
+                    JsonRequestBehavior.AllowGet);
+
                     }
                 }
 

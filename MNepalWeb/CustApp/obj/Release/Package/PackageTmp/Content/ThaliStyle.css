@@ -22063,6 +22063,33 @@ label.error {
 
 /*loading ends*/
 
+/*overlay*/
+.overlay-wrapper {
+    position: absolute;
+    top: 0px;
+    bottom: 0px;
+    left: 0px;
+    right: 0px;
+    overflow: hidden;
+    padding: 0;
+    margin: 0;
+    background-color: #000;
+    filter: alpha(opacity=50);
+    opacity: 0.5;
+    z-index: 1000;
+}
+/*overlay ends*/
+
+/*show tick*/
+.show-tick {
+    border: 1px solid #C1C1C1;
+    border-radius: 6px;
+    font-size: 0.944rem;
+    font-weight: 300;
+    margin-top: 10px;
+}
+/*show tick end*/
+
 /** Responsive  CSS **/
 @media (max-width: 767.98px) {
   /* line 87, assets/sass/components/_statement.scss */

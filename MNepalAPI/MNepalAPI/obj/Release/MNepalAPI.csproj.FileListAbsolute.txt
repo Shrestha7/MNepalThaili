@@ -197,3 +197,5 @@ D:\Thaili\MNepalAPI\MNepalAPI\obj\Release\MNepalAPI.csproj.CoreCompileInputs.cac
 D:\Thaili\MNepalAPI\MNepalAPI\obj\Release\MNepalAPI.csproj.CopyComplete
 D:\Thaili\MNepalAPI\MNepalAPI\obj\Release\MNepalAPI.dll
 D:\Thaili\MNepalAPI\MNepalAPI\obj\Release\MNepalAPI.pdb
+D:\Thaili\MNepalAPI\MNepalAPI\bin\MNepalAPI.XmlSerializers.dll
+D:\Thaili\MNepalAPI\MNepalAPI\obj\Release\MNepalAPI.XmlSerializers.dll
