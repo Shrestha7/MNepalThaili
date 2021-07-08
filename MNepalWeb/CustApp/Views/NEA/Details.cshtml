@@ -58,11 +58,6 @@
     @Html.AntiForgeryToken()
     @Html.ValidationSummary(true)
 
-
-    <div class="preload" style="display:none">
-        <img src="~/Content/image/loading.gif" class="img-responsive" />
-    </div>
-
     <div class="main-content">
         <div class="two-colbg">
             <div class="container">
@@ -382,18 +377,6 @@
 
     <script type="text/javascript">
 
-        var tempDiv = $("<div id='tempOverlayDiv'></div>");
-        tempDiv.css({
-            "background-color": "#000",
-            "opacity": "0.2",
-            "position": "absolute",
-            "left": 0,
-            "top": 0,
-            "width": $(document).width(),
-            "height": $(document).height()
-        });
-
-
         $(".btnShow1").mousedown(function () {
             $(".pwd1").attr("type", "text");
         });
@@ -579,8 +562,6 @@
                     async: true,
                     success: function (data)
                     {
-                        $(".preload").show();
-                        tempDiv.remove();
                         if (data.responseCode == "200")
                         {
                             $("#ajaxResponse").html("");
@@ -623,8 +604,6 @@
                     },
                     //capture the request before it was sent to server
                     beforeSend: function (jqXHR, settings) {
-                        $(".preload").show();
-                        $("body").append(tempDiv);
                         //adding some Dummy data to the request
                         settings.data += "&dummyData=whatever";
                         //disable the button until we get the response
@@ -632,8 +611,6 @@
 
                     },
                     complete: function (jqXHR, textStatus) {
-                        $(".preload").hide();
-                        $(".overlay-wrapper").show();
                         //enable the button
                         $('#btnSubmit').attr("disabled", false);
                     }

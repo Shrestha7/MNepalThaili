@@ -45,11 +45,6 @@
     @Html.AntiForgeryToken()
     @Html.ValidationSummary(true)
 
-
-    <div class="preload" style="display:none">
-        <img src="~/Content/image/loading.gif" class="img-responsive" />
-    </div>
-
     <div class="main-content">
         <div class="two-colbg">
             <div class="container">
@@ -258,19 +253,6 @@
 
     <script type="text/javascript">
 
-        //add div on whole page:
-        var tempDiv = $("<div id='tempOverlayDiv'></div>");
-        tempDiv.css({
-            "background-color": "#000",
-            "opacity": "0.2",
-            "position": "absolute",
-            "left": 0,
-            "top": 0,
-            "width": $(document).width(),
-            "height": $(document).height()
-        });
-
-
         $(".btnShow1").mousedown(function () {
             $(".pwd1").attr("type", "text");
         });
@@ -444,8 +426,6 @@
                     },
                     async: true,
                     success: function (data) {
-                        $(".preload").show();
-                        tempDiv.remove();
                         if (data.responseCode == "200") {
                             var url = '@Url.Action("Details", "NEA")';
                             window.location.href = url;
@@ -473,15 +453,11 @@
                             },
                     //capture the request before it was sent to server
                     beforeSend: function (jqXHR, settings) {
-                        $(".preload").show();
-                        $("body").append(tempDiv);
                         //adding some Dummy data to the request
                         settings.data += "&dummyData=whatever";
                         //disable the button until we get the response
                              },
                     complete: function (data) {
-                        $(".preload").hide();
-                        $(".overlay-wrapper").show();
                         if (data.responseJSON.responseCode != "200") {
                             $('#btnSubmit').attr("disabled", false); //enable button if responsecode not equal to 200
 

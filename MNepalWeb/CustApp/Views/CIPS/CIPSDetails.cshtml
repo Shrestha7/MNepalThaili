@@ -37,10 +37,6 @@
     @Html.AntiForgeryToken()
     @Html.ValidationSummary(true)
 
-    <div class="preload" style="display:none">
-        <img src="~/Content/image/loading.gif" class="img-responsive" />
-    </div>
-
     <div class="main-content">
         <div class="two-colbg">
             <div class="container">
@@ -329,19 +325,6 @@
 
     <script type="text/javascript">
 
-        //add div on whole page:
-        var tempDiv = $("<div id='tempOverlayDiv'></div>");
-        tempDiv.css({
-            "background-color": "#000",
-            "opacity": "0.2",
-            "position": "absolute",
-            "left": 0,
-            "top": 0,
-            "width": $(document).width(),
-            "height": $(document).height()
-        });
-
-        // remove div on document ready:
         $(document).ready(function () {
             tempDiv.remove();
         });
@@ -499,8 +482,6 @@
                     },
                     async: true,
                     success: function (data) {
-                        $(".preload").show();
-                        tempDiv.remove();
                         if (data.responseCode == "200" || data.responseCode == "0") {
                             $("#ajaxResponse").html("");
                             //var resp = JSON.parse(data.responseText);
@@ -536,17 +517,13 @@
                     //capture the request before it was sent to server
                     beforeSend: function (jqXHR, settings) {
                         //adding some Dummy data to the request
-                        $(".preload").show();
                         $("#cancelButton").attr("disabled", "disabled");
-                        $("body").append(tempDiv);
                         settings.data += "&dummyData=whatever";
                         //disable the button until we get the response
                         $('#btnSubmit').attr("disabled", true);
                     },
                     complete: function (jqXHR, textStatus) {
                         //enable the button
-                        $('.preload').hide();
-                        $(".overlay-wrapper").show();
                         $('#btnSubmit').attr("disabled", false);
                     }
                 });

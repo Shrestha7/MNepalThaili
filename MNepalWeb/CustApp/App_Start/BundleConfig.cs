@@ -12,6 +12,14 @@ namespace CustApp
 
             bundles.Add(new ScriptBundle("~/bundles/jqueryval").Include(
                         "~/Scripts/jquery.validate*"));
+            
+            //loader UI
+            bundles.Add(new ScriptBundle("~/bundles/blockui").Include(
+                       "~/Scripts/jquery.blockUI.js"));
+
+            bundles.Add(new ScriptBundle("~/bundles/jqueryunobtrusiveajax").Include(
+                      "~/Scripts/jquery.unobtrusive-ajax.min.js"));
+            //loader UI ends
 
             // Use the development version of Modernizr to develop with and learn from. Then, when you're
             // ready for production, use the build tool at https://modernizr.com to pick only the tests you need.
