@@ -135,7 +135,7 @@ namespace WCF.MNepal.Helper
                             HasBankKYC = Convert.ToString(dtCheckBankKYC.Rows[0]["HasBankKYC"].ToString() == "" ? "0" : dtCheckBankKYC.Rows[0]["HasBankKYC"].ToString());
                         }
                         //Without KYC N WithOut Bank Link
-                        if ((hasKYC == "F") || ((hasKYC == "P") && (HasBankKYC == "F")) || ((hasKYC == "P") && (HasBankKYC == "P")) )
+                        if ((hasKYC == "F") || ((hasKYC == "P") && (HasBankKYC == "F")) || ((hasKYC == "P") && (HasBankKYC == "P")))
                         {
                             /*WithOut KYC W2W Only */
                             /// 00 - Wallet To Wallet
@@ -191,7 +191,7 @@ namespace WCF.MNepal.Helper
                                     replyMessage.ResponseStatus(HttpStatusCode.InternalServerError, message);
                                 }
                             }
-                            
+
                             //For Indv
                             totIndvDailyAmt = (totIndvTxnDailyAmt) + decimal.Parse(amount);
                             totIndvMonthlyAmt = (totIndvTxnMonthlyAmt) + decimal.Parse(amount);
@@ -327,7 +327,7 @@ namespace WCF.MNepal.Helper
                                     replyMessage.ResponseStatus(HttpStatusCode.InternalServerError, message);
                                 }
                             }
-                            
+
                             //For Indv
                             totIndvDailyAmt = (totIndvTxnDailyAmt) + decimal.Parse(amount);
                             totIndvMonthlyAmt = (totIndvTxnMonthlyAmt) + decimal.Parse(amount);
@@ -723,7 +723,7 @@ namespace WCF.MNepal.Helper
                                             statusCode = "508";
                                             //decimal dailyLimit = DailyLimit - totAmt;
                                             decimal dailyLimit = DailyLimit - totTxnAmt;
-                                            message = "Daily Transaction count limit reached. Remain daily limit: " + String.Format("{0:0.00}", dailyLimit) ;
+                                            message = "Daily Transaction count limit reached. Remain daily limit: " + String.Format("{0:0.00}", dailyLimit);
                                             replyMessage.ResponseStatus(HttpStatusCode.InternalServerError, message);
                                         }
                                     }
@@ -785,20 +785,43 @@ namespace WCF.MNepal.Helper
                 replyMessage.ResponseStatus(HttpStatusCode.Unauthorized, replyMessage.Response);
             }
 
-            
+
             OutgoingWebResponseContext response = WebOperationContext.Current.OutgoingResponse;
             if (response.StatusCode == HttpStatusCode.OK)
             {
-                var v = new
+                if(statusCode=="" || message =="")
                 {
-                    StatusCode = "200",
-                    StatusMessage = "Success",
-                    BankBaln = BankBaln
+                    var v = new
+                    {
+                        StatusCode = "200",
 
-                };
-                result = JsonConvert.SerializeObject(v);
+                        StatusMessage = "Success",
+
+                        //StatusCode = statusCode,
+                        //StatusMessage = message,
+                        BankBaln = BankBaln
+
+                    };
+                    result = JsonConvert.SerializeObject(v);
+                }
+                else
+                {
+                    var v = new
+                    {
+                        //StatusCode = "200",
+                        //StatusMessage = "Success",
+
+                        StatusCode = statusCode,
+                        StatusMessage = message,
+                        BankBaln = BankBaln
+
+                    };
+                    result = JsonConvert.SerializeObject(v);
+                }
+               
+                
             }
-            else if ((response.StatusCode == HttpStatusCode.Unauthorized) || (response.StatusCode == HttpStatusCode.InternalServerError) 
+            else if ((response.StatusCode == HttpStatusCode.Unauthorized) || (response.StatusCode == HttpStatusCode.InternalServerError)
                 || (response.StatusCode == HttpStatusCode.BadRequest))
             {
                 var v = new
@@ -813,7 +836,7 @@ namespace WCF.MNepal.Helper
             return result;
         }
 
-       
+
 
     }
 
