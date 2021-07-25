@@ -343,6 +343,7 @@
     <Compile Include="Connection\DatabaseConnection.cs" />
     <Compile Include="Controllers\ConnectIPSController.cs" />
     <Compile Include="Controllers\DashboardImageController.cs" />
+    <Compile Include="Controllers\EncryptDecryptController.cs" />
     <Compile Include="Controllers\KhanepaniController.cs" />
     <Compile Include="Controllers\NEAController.cs" />
     <Compile Include="Controllers\PushNotificationController.cs" />
@@ -357,6 +358,7 @@
     <Compile Include="Helper\HelperStoreSqlLog.cs" />
     <Compile Include="Helper\HelpPageSampleGenerator.cs" />
     <Compile Include="Helper\RandomCodeGenerator.cs" />
+    <Compile Include="Helper\RsaEncryption.cs" />
     <Compile Include="Helper\SendSMS.cs" />
     <Compile Include="Helper\SMSEnable.cs" />
     <Compile Include="Helper\TokenGenerationNCHL.cs" />
@@ -364,6 +366,7 @@
     <Compile Include="Models\Category.cs" />
     <Compile Include="Models\ConnectIPS.cs" />
     <Compile Include="Models\ConnectIPSToken.cs" />
+    <Compile Include="Models\EncryptDecrypt.cs" />
     <Compile Include="Models\Khanepani.cs" />
     <Compile Include="Models\NEA.cs" />
     <Compile Include="Models\Notifications.cs" />

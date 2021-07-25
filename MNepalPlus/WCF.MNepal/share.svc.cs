@@ -1,5 +1,4 @@
-﻿using MNepalAPI.Helper;
-using MNepalProject.Connection;
+﻿using MNepalProject.Connection;
 using MNepalProject.Controllers;
 using MNepalProject.Helper;
 using MNepalProject.Models;
@@ -9,7 +8,6 @@ using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
-using System.Configuration;
 using System.Data;
 using System.IO;
 using System.Linq;
@@ -36,8 +34,6 @@ namespace WCF.MNepal
 
     public class share
     {
-        string AlertType = string.Empty;
-
         #region"Check Demat Payment"
         [OperationContract]
         [WebInvoke(Method = "POST",
@@ -202,7 +198,10 @@ namespace WCF.MNepal
         [WebInvoke(Method = "POST",
                   ResponseFormat = WebMessageFormat.Json)]
         public string executepayment(Stream input)
-        {          
+        {
+            //SMS
+            string SMSNTC = System.Web.Configuration.WebConfigurationManager.AppSettings["MNepalNTCSMSServerUrl"];
+            string SMSNCELL = System.Web.Configuration.WebConfigurationManager.AppSettings["MNepalSMSServerUrl"];
 
             string PaypointPwd = System.Web.Configuration.WebConfigurationManager.AppSettings["PaypointPwd"];
             string PaypointUserID = System.Web.Configuration.WebConfigurationManager.AppSettings["PaypointUserID"];
@@ -224,7 +223,7 @@ namespace WCF.MNepal
             string amount = qs["amount"];
             string pin = qs["pin"];
             pin = HashAlgo.Hash(pin);
-            string note = "Demat Payment for BO ID=" + qs["BoId"];//+ ". " + qs["note"];
+            string note = "Demat Payment for BoId=" + qs["BoId"];//+ ". " + qs["note"];
             string ToKenId = qs["tokenID"];
             string tid = qs["tid"];
             string RetrievalReference = qs["RetrievalReference"];
@@ -233,14 +232,8 @@ namespace WCF.MNepal
             string WalletBalance = qs["walletBalance"];
             string da = qs["da"];
             string paymentType = qs["paymentType"];
-            string retrievalReference = qs["retrievalReference"];
             string src = qs["src"];
             string resultMessageResCP = "";
-            string Desc1New = "Thaili Pmt to Share for Cust ID:" + qs["mobile"] + "^^MNP^^Thaili Pmt to Share for Cust ID:" + qs["mobile"];
-
-            string Desc1RevNew = "Rev-Thaili Pmt to Share for Cust ID:" + qs["mobile"] + "^^MNP^^Rev-Thaili Pmt to Share for Cust ID:" + qs["mobile"];
-
-            string RemarkRevNew = "";
 
             string destinationNumber = System.Web.Configuration.WebConfigurationManager.AppSettings["DestinationNoForTestServer"];
 
@@ -286,19 +279,45 @@ namespace WCF.MNepal
                 da = destinationNumber,
                 amount = amount,
                 pin = pin,
-                note = note,
-                sourcechannel = src,
-                Desc1New = Desc1New,
-                Desc1RevNew = Desc1RevNew,
-                RemarkRevNew = RemarkRevNew,
+                note = note
+                //sourcechannel = src
             };
 
             if (sc == "00")
             {
+                //if (walletBalance >= amountpayInt)// if wallet balance less then bill amount then show error msg
+                //{
                 //First transaction MNRequest N Response
                 try
                 {
+
+                    //FundTransfer fundtransfer = new FundTransfer
+                    //{
+                    //    tid = tid,
+                    //    sc = sc,
+                    //    mobile = mobile,
+                    //    da = da,
+                    //    amount = amount,
+                    //    pin = pin,
+                    //    note = note,
+                    //    sourcechannel = src
+                    //};
+
                     ThreadPool.QueueUserWorkItem(BackgroundTaskWithObject, fundtransfer);
+                    //CustActivityModel custsmsInfo = new CustActivityModel();
+
+                    //MNTransactionMaster validTransactionData = new MNTransactionMaster();
+
+
+                    //if (TokenGenerator.TokenChecker(sessionID, mobile, src) == false)
+                    //{
+                    //    // throw ex
+                    //    statusCode = "400";
+                    //    message = "Session expired. Please login again";
+                    //    failedmessage = message;
+                    //}
+                    //else
+                    //{
                     if ((tid == null) || (sc == null) || (mobile == null) || (da == null) || (amount == null) || (pin == null) ||
                     ((double.Parse(amount) <= 0)))
                     {
@@ -401,7 +420,7 @@ namespace WCF.MNepal
                                 //start:Com focus one log///
                                 MNFundTransfer mnft = new MNFundTransfer(tid, fundtransfer.sc, fundtransfer.mobile,
                                     fundtransfer.sa, fundtransfer.amount, fundtransfer.da, fundtransfer.note, fundtransfer.pin,
-                                    fundtransfer.sourcechannel, "Share", fundtransfer.Desc1New, fundtransfer.Desc1RevNew, fundtransfer.RemarkRevNew);   //change
+                                    fundtransfer.sourcechannel, "Share");   //change
                                 var comfocuslog = new MNComAndFocusOneLog(mnft, DateTime.Now);
                                 var mncomfocuslog = new MNComAndFocusOneLogsController();
                                 //mncomfocuslog.InsertIntoComFocusOne(comfocuslog);
@@ -439,13 +458,17 @@ namespace WCF.MNepal
                                     //start:insert into transaction master//
                                     if (mnft.valid())
                                     {
+                                        //var transaction = new MNTransactionMaster(mnft);
+                                        //var mntransaction = new MNTransactionsController();
+                                        //validTransactionData = mntransaction.Validate(transaction, mnft.pin);
+
                                         var transactionpaypoint = new MNTransactionMaster(mnft);
                                         var mntransactionpaypoint = new MNTransactionsController();
                                         validTransactionData = mntransactionpaypoint.Validatepaypoint(transactionpaypoint, mnft.pin);
 
                                         result = validTransactionData.Response;
                                         /*** ***/
-                                        //ErrorMessage em = new ErrorMessage();
+                                        ErrorMessage em = new ErrorMessage();
 
                                         if (validTransactionData.Response == "Error")
                                         {
@@ -459,30 +482,255 @@ namespace WCF.MNepal
                                         }
                                         else
                                         {
-                                            ErrorResult er = new ErrorResult();
-                                            string strmsg = er.Errorlst(result, pin);
-                                            if (strmsg != "")
-                                            {
-                                                mnft.ResponseStatus(HttpStatusCode.BadRequest, result);
-                                                message = strmsg;
-                                                failedmessage = message;
-
-                                                if ((result == "Trace ID Repeated") || (result == "Limit Exceed")
+                                            if ((result == "Trace ID Repeated") || (result == "Limit Exceed")
                                                 || (result == "Invalid Source User") || (result == "Invalid Destination User")
-                                                || (result == "Invalid Product Request") || (result == "Please try again") || (result == "")
-                                                || (result == "Error in ResponeCode:Data Not Available")
-                                                || (result == "GatewayTimeout") || (result == "Invalid PIN"))
-                                                {
-                                                    statusCode = "400";
-                                                }
-                                                else
-                                                {
-                                                    statusCode = result;
-                                                }
+                                                || (result == "Invalid Product Request") || (result == "Please try again") || (result == ""))
+                                            {
+                                                mnft.ResponseStatus(HttpStatusCode.BadRequest, result); //200 - OK
+                                                statusCode = "400";
+                                                message = result;
+                                                failedmessage = message;
+                                            }
+                                            if (result == "Invalid PIN")
+                                            {
+                                                mnft.ResponseStatus(HttpStatusCode.BadRequest, result); //200 - OK
+                                                statusCode = "400";
+                                                message = result;
+                                                failedmessage = message;
+                                            }
+                                            if (result == "111")
+                                            {
+                                                statusCode = result;
+                                                message = em.Error_111;
+                                                failedmessage = message;
+                                                mnft.ResponseStatus(HttpStatusCode.BadRequest, result);
+                                            }
+                                            if (result == "114")
+                                            {
+                                                statusCode = result;
+                                                message = em.Error_114;
+                                                failedmessage = message;
+                                                mnft.ResponseStatus(HttpStatusCode.BadRequest, result);
+                                            }
+                                            if (result == "115")
+                                            {
+                                                statusCode = result;
+                                                message = em.Error_115;
+                                                failedmessage = message;
+                                                mnft.ResponseStatus(HttpStatusCode.BadRequest, result);
+                                            }
+                                            if (result == "116")
+                                            {
+                                                statusCode = result;
+                                                message = em.Error_116;
+                                                failedmessage = message;
+                                                mnft.ResponseStatus(HttpStatusCode.BadRequest, result);
+                                            }
+                                            if (result == "119")
+                                            {
+                                                statusCode = result;
+                                                message = em.Error_119;
+                                                failedmessage = message;
+                                                mnft.ResponseStatus(HttpStatusCode.BadRequest, result);
+                                            }
+                                            if (result == "121")
+                                            {
+                                                statusCode = result;
+                                                message = em.Error_121;
+                                                failedmessage = message;
+                                                mnft.ResponseStatus(HttpStatusCode.BadRequest, result);
+                                            }
+                                            if (result == "163")
+                                            {
+                                                statusCode = result;
+                                                message = em.Error_163;
+                                                failedmessage = message;
+                                                mnft.ResponseStatus(HttpStatusCode.BadRequest, result);
+                                            }
+                                            if (result == "180")
+                                            {
+                                                statusCode = result;
+                                                message = em.Error_180;
+                                                failedmessage = message;
+                                                mnft.ResponseStatus(HttpStatusCode.BadRequest, result);
+                                            }
+                                            if (result == "181")
+                                            {
+                                                statusCode = result;
+                                                message = em.Error_181;
+                                                failedmessage = message;
+                                                mnft.ResponseStatus(HttpStatusCode.BadRequest, result);
+                                            }
+                                            if (result == "182")
+                                            {
+                                                statusCode = result;
+                                                message = em.Error_182;
+                                                failedmessage = message;
+                                                mnft.ResponseStatus(HttpStatusCode.BadRequest, result);
+                                            }
+                                            if (result == "183")
+                                            {
+                                                statusCode = result;
+                                                message = em.Error_183;
+                                                failedmessage = message;
+                                                mnft.ResponseStatus(HttpStatusCode.BadRequest, result);
+                                            }
+                                            if (result == "184")
+                                            {
+                                                statusCode = result;
+                                                message = em.Error_184;
+                                                failedmessage = message;
+                                                mnft.ResponseStatus(HttpStatusCode.BadRequest, result);
+                                            }
+                                            if (result == "185")
+                                            {
+                                                statusCode = result;
+                                                message = em.Error_185;
+                                                failedmessage = message;
+                                                mnft.ResponseStatus(HttpStatusCode.BadRequest, result);
+                                            }
+                                            if (result == "186")
+                                            {
+                                                statusCode = result;
+                                                message = em.Error_186;
+                                                failedmessage = message;
+                                                mnft.ResponseStatus(HttpStatusCode.BadRequest, result);
+                                            }
+                                            if (result == "187")
+                                            {
+                                                statusCode = result;
+                                                message = em.Error_187;
+                                                failedmessage = message;
+                                                mnft.ResponseStatus(HttpStatusCode.BadRequest, result);
+                                            }
+                                            if (result == "188")
+                                            {
+                                                statusCode = result;
+                                                message = em.Error_188;
+                                                failedmessage = message;
+                                                mnft.ResponseStatus(HttpStatusCode.BadRequest, result);
+                                            }
+                                            if (result == "189")
+                                            {
+                                                statusCode = result;
+                                                message = em.Error_189;
+                                                failedmessage = message;
+                                                mnft.ResponseStatus(HttpStatusCode.BadRequest, result);
+                                            }
+                                            if (result == "190")
+                                            {
+                                                statusCode = result;
+                                                message = em.Error_190;
+                                                failedmessage = message;
+                                                mnft.ResponseStatus(HttpStatusCode.BadRequest, result);
+                                            }
+                                            if (result == "800")
+                                            {
+                                                statusCode = result;
+                                                message = em.Error_800;
+                                                failedmessage = message;
+                                                mnft.ResponseStatus(HttpStatusCode.BadRequest, result);
+                                            }
+                                            if (result == "902")
+                                            {
+                                                statusCode = result;
+                                                message = em.Error_902;
+                                                failedmessage = message;
+                                                mnft.ResponseStatus(HttpStatusCode.BadRequest, result);
+                                            }
+                                            if (result == "904")
+                                            {
+                                                statusCode = result;
+                                                message = em.Error_904;
+                                                failedmessage = message;
+                                                mnft.ResponseStatus(HttpStatusCode.BadRequest, result);
+                                            }
+                                            if (result == "906")
+                                            {
+                                                statusCode = result;
+                                                message = em.Error_906;
+                                                failedmessage = message;
+                                                mnft.ResponseStatus(HttpStatusCode.BadRequest, result);
+                                            }
+                                            if (result == "907")
+                                            {
+                                                statusCode = result;
+                                                message = em.Error_907;
+                                                failedmessage = message;
+                                                mnft.ResponseStatus(HttpStatusCode.BadRequest, result);
+                                            }
+                                            if (result == "909")
+                                            {
+                                                statusCode = result;
+                                                message = em.Error_909;
+                                                failedmessage = message;
+                                                mnft.ResponseStatus(HttpStatusCode.BadRequest, result);
+                                            }
+                                            if (result == "911")
+                                            {
+                                                statusCode = result;
+                                                message = em.Error_911;
+                                                failedmessage = message;
+                                                mnft.ResponseStatus(HttpStatusCode.BadRequest, result);
+                                            }
+                                            if (result == "913")
+                                            {
+                                                statusCode = result;
+                                                message = em.Error_913;
+                                                failedmessage = message;
+                                                mnft.ResponseStatus(HttpStatusCode.BadRequest, result);
+                                            }
+                                            if (result == "90")
+                                            {
+                                                statusCode = result;
+                                                message = em.Error_90;
+                                                failedmessage = message;
+                                                mnft.ResponseStatus(HttpStatusCode.BadRequest, result);
+                                            }
+                                            if (result == "91")
+                                            {
+                                                statusCode = result;
+                                                message = em.Error_91;
+                                                failedmessage = message;
+                                                mnft.ResponseStatus(HttpStatusCode.BadRequest, result);
+                                            }
+                                            if (result == "92")
+                                            {
+                                                statusCode = result;
+                                                message = em.Error_92;
+                                                failedmessage = message;
+                                                mnft.ResponseStatus(HttpStatusCode.BadRequest, result);
+                                            }
+                                            if (result == "94")
+                                            {
+                                                statusCode = result;
+                                                message = em.Error_94;
+                                                failedmessage = message;
+                                                mnft.ResponseStatus(HttpStatusCode.BadRequest, result);
+                                            }
+                                            if (result == "95")
+                                            {
+                                                statusCode = result;
+                                                message = em.Error_95;
+                                                failedmessage = message;
+                                                mnft.ResponseStatus(HttpStatusCode.BadRequest, result);
+                                            }
+                                            if (result == "98")
+                                            {
+                                                statusCode = result;
+                                                message = em.Error_98;
+                                                failedmessage = message;
+                                                mnft.ResponseStatus(HttpStatusCode.BadRequest, result);
+                                            }
+                                            if (result == "99")
+                                            {
+                                                statusCode = result;
+                                                message = em.Error_99;
+                                                failedmessage = message;
+                                                mnft.ResponseStatus(HttpStatusCode.BadRequest, result);
                                             }
                                             else if (validTransactionData.ResponseCode == "OK")
                                             {
-                                                LoginUtils.SetPINTries(mobile, "RPT");
                                                 statusCode = "200";
                                                 message = result;
                                                 mnft.ResponseStatus(HttpStatusCode.OK, message);
@@ -490,7 +738,89 @@ namespace WCF.MNepal
                                             } //END ValidTransactionData.ResponseCode
 
 
-                                        } //END validTransactionData.Response WITHOUT MNDB ERROR                                        
+                                        } //END validTransactionData.Response WITHOUT MNDB ERROR
+
+                                        //start comment outgoing
+                                        //OutgoingWebResponseContext response = WebOperationContext.Current.OutgoingResponse;
+                                        //if (response.StatusCode == HttpStatusCode.OK)
+                                        //{
+                                        //    string messagereply = "";
+                                        //    try
+                                        //    {
+                                        //        //messagereply = "Dear " + CustCheckUtils.GetName(mobile) + "," + "\n";
+
+                                        //        //messagereply += " You have successfully paid NPR " + validTransactionData.Amount
+                                        //        //                + " to " + GetMerchantName + " on date " +
+                                        //        //                    (validTransactionData.CreatedDate).ToString("dd/MM/yyyy")
+                                        //        //                + "." + "\n";
+                                        //        //messagereply += "Thank you. MNepal";
+
+                                        //        //var client = new WebClient();
+
+                                        //        ////SENDER
+                                        //        //if ((mobile.Substring(0, 3) == "980") || (mobile.Substring(0, 3) == "981")) //FOR NCELL
+                                        //        //{
+                                        //        //    //FOR NCELL
+                                        //        //    var content = client.DownloadString(
+                                        //        //        "http://smsvas.mos.com.np/PostSMS.ashx?QueueId=&TelecomId=2&KeywordId=3&Password=mnepal120&From=37878&To="
+                                        //        //        + "977" + mobile + "&Text=" + messagereply + "");
+                                        //        //}
+                                        //        //else if ((mobile.Substring(0, 3) == "985") || (mobile.Substring(0, 3) == "984")
+                                        //        //            || (mobile.Substring(0, 3) == "986"))
+                                        //        //{
+                                        //        //    //FOR NTC
+                                        //        //    var content = client.DownloadString(
+                                        //        //        "http://smsvas.mos.com.np/PostSMS.ashx?QueueId=&TelecomId=1&KeywordId=3&Password=mnepal120&From=37878&To="
+                                        //        //        + "977" + mobile + "&Text=" + messagereply + "");
+                                        //        //}
+
+                                        //        statusCode = "200";
+                                        //        var v = new
+                                        //        {
+                                        //            StatusCode = Convert.ToInt32(statusCode),
+                                        //            StatusMessage = result
+                                        //        };
+                                        //        result = JsonConvert.SerializeObject(v);
+
+                                        //    }
+                                        //    catch (Exception ex)
+                                        //    {
+                                        //        // throw ex
+                                        //        statusCode = "400";
+                                        //        message = ex.Message;
+                                        //    }
+
+
+                                        //    custsmsInfo = new CustActivityModel()
+                                        //    {
+                                        //        UserName = fundtransfer.mobile,
+                                        //        RequestMerchant = transactionType,
+                                        //        DestinationNo = fundtransfer.da,
+                                        //        Amount = validTransactionData.Amount.ToString(),
+                                        //        SMSStatus = "Success",
+                                        //        SMSSenderReply = messagereply,
+                                        //        ErrorMessage = "",
+                                        //    };
+
+
+                                        //}
+                                        //else if ((response.StatusCode == HttpStatusCode.BadRequest) || (response.StatusCode == HttpStatusCode.InternalServerError) || (statusCode != "200"))
+                                        //{
+                                        //    custsmsInfo = new CustActivityModel()
+                                        //    {
+                                        //        UserName = mobile,
+                                        //        RequestMerchant = transactionType,
+                                        //        DestinationNo = fundtransfer.da,
+                                        //        Amount = validTransactionData.Amount.ToString(),
+                                        //        SMSStatus = "Failed",
+                                        //        SMSSenderReply = message,
+                                        //        ErrorMessage = failedmessage,
+                                        //    };
+
+                                        //}
+
+                                        //end comment outgoint
+                                        //end:insert into transaction master//
 
                                     } //END:insert into transaction master//
                                     else
@@ -558,10 +888,39 @@ namespace WCF.MNepal
 
             else if (sc == "10")//for bank payment in nepal water
             {
+                //if (bankBalancePaisaInt >= amountpayInt)
+                //{
                 //First transaction MNRequest N Response
                 try
                 {
+
+                    //FundTransfer fundtransfer = new FundTransfer
+                    //{
+                    //    tid = tid,
+                    //    sc = sc,
+                    //    mobile = mobile,
+                    //    da = da,
+                    //    amount = amount,
+                    //    pin = pin,
+                    //    note = note,
+                    //    sourcechannel = src
+                    //};
+
                     ThreadPool.QueueUserWorkItem(BackgroundTaskWithObject, fundtransfer);
+                    //CustActivityModel custsmsInfo = new CustActivityModel();
+
+                    //MNTransactionMaster validTransactionData = new MNTransactionMaster();
+
+
+                    //if (TokenGenerator.TokenChecker(sessionID, mobile, src) == false)
+                    //{
+                    //    // throw ex
+                    //    statusCode = "400";
+                    //    message = "Session expired. Please login again";
+                    //    failedmessage = message;
+                    //}
+                    //else
+                    //{
                     if ((tid == null) || (sc == null) || (mobile == null) || (da == null) || (amount == null) || (pin == null) ||
                         ((double.Parse(amount) <= 0)))
                     {
@@ -589,6 +948,15 @@ namespace WCF.MNepal
                             transactionType = "Demat Txfr to B2W"; //B2W
                         }
 
+                        //change here
+                        //if (!(UserNameCheck.IsValidUser(mobile)))
+                        //{
+                        //    // throw ex
+                        //    statusCode = "400";
+                        //    //message = "Transaction restricted to User";
+                        //    message = "Transaction only for User";
+                        //    failedmessage = message;
+                        //}
                         Pin p = new Pin();
                         if (!p.validPIN(mobile, pin))
                         {
@@ -613,7 +981,6 @@ namespace WCF.MNepal
                         {
                             LoginUtils.SetPINTries(mobile, "RPT");
                         }
-
                         if (UserNameCheck.IsValidMerchant(da))
                         {
 
@@ -652,7 +1019,7 @@ namespace WCF.MNepal
                                 //start:Com focus one log///
                                 MNFundTransfer mnft = new MNFundTransfer(tid, fundtransfer.sc, fundtransfer.mobile,
                                     fundtransfer.sa, fundtransfer.amount, fundtransfer.da, fundtransfer.note, fundtransfer.pin,
-                                    fundtransfer.sourcechannel, "Share", fundtransfer.Desc1New, fundtransfer.Desc1RevNew, fundtransfer.RemarkRevNew);  //change here
+                                    fundtransfer.sourcechannel, "Share");  //change here
                                 var comfocuslog = new MNComAndFocusOneLog(mnft, DateTime.Now);
                                 var mncomfocuslog = new MNComAndFocusOneLogsController();
                                 //mncomfocuslog.InsertIntoComFocusOne(comfocuslog);
@@ -690,11 +1057,17 @@ namespace WCF.MNepal
                                     //start:insert into transaction master//
                                     if (mnft.valid())
                                     {
+                                        //var transaction = new MNTransactionMaster(mnft);
+                                        //var mntransaction = new MNTransactionsController();
+                                        //validTransactionData = mntransaction.Validate(transaction, mnft.pin);
+
+
                                         var transactionpaypoint = new MNTransactionMaster(mnft);  //change here
                                         var mntransactionpaypoint = new MNTransactionsController();
                                         validTransactionData = mntransactionpaypoint.Validatepaypoint(transactionpaypoint, mnft.pin);
                                         result = validTransactionData.Response;
                                         /*** ***/
+                                        ErrorMessage em = new ErrorMessage();
 
                                         if (validTransactionData.Response == "Error")
                                         {
@@ -708,34 +1081,255 @@ namespace WCF.MNepal
                                         }
                                         else
                                         {
-                                            ErrorResult er = new ErrorResult();
-                                            string strmsg = er.Errorlst(result, pin);
-
-                                            if (strmsg != "")
+                                            if ((result == "Trace ID Repeated") || (result == "Limit Exceed")
+                                                || (result == "Invalid Source User") || (result == "Invalid Destination User")
+                                                || (result == "Invalid Product Request") || (result == "Please try again") || (result == ""))
                                             {
-                                                message = strmsg;
-                                                mnft.ResponseStatus(HttpStatusCode.BadRequest, result);
+                                                mnft.ResponseStatus(HttpStatusCode.BadRequest, result); //200 - OK
+                                                statusCode = "400";
+                                                message = result;
                                                 failedmessage = message;
-
-                                                if ((result == "Trace ID Repeated") || (result == "Limit Exceed")
-                                                 || (result == "Invalid Source User") || (result == "Invalid Destination User")
-                                                 || (result == "Invalid Product Request") || (result == "Please try again") || (result == "")
-                                                 || (result == "Error in ResponeCode:Data Not Available")
-                                                 || (result == "GatewayTimeout") || (result == "Invalid PIN"))
-                                                {
-                                                    statusCode = "400";
-
-                                                }
-                                                else
-                                                {
-                                                    statusCode = result;
-                                                }
-
                                             }
-
+                                            if (result == "Invalid PIN")
+                                            {
+                                                mnft.ResponseStatus(HttpStatusCode.BadRequest, result); //200 - OK
+                                                statusCode = "400";
+                                                message = result;
+                                                failedmessage = message;
+                                            }
+                                            if (result == "111")
+                                            {
+                                                statusCode = result;
+                                                message = em.Error_111;
+                                                failedmessage = message;
+                                                mnft.ResponseStatus(HttpStatusCode.BadRequest, result);
+                                            }
+                                            if (result == "114")
+                                            {
+                                                statusCode = result;
+                                                message = em.Error_114;
+                                                failedmessage = message;
+                                                mnft.ResponseStatus(HttpStatusCode.BadRequest, result);
+                                            }
+                                            if (result == "115")
+                                            {
+                                                statusCode = result;
+                                                message = em.Error_115;
+                                                failedmessage = message;
+                                                mnft.ResponseStatus(HttpStatusCode.BadRequest, result);
+                                            }
+                                            if (result == "116")
+                                            {
+                                                statusCode = result;
+                                                message = em.Error_116;
+                                                failedmessage = message;
+                                                mnft.ResponseStatus(HttpStatusCode.BadRequest, result);
+                                            }
+                                            if (result == "119")
+                                            {
+                                                statusCode = result;
+                                                message = em.Error_119;
+                                                failedmessage = message;
+                                                mnft.ResponseStatus(HttpStatusCode.BadRequest, result);
+                                            }
+                                            if (result == "121")
+                                            {
+                                                statusCode = result;
+                                                message = em.Error_121;
+                                                failedmessage = message;
+                                                mnft.ResponseStatus(HttpStatusCode.BadRequest, result);
+                                            }
+                                            if (result == "163")
+                                            {
+                                                statusCode = result;
+                                                message = em.Error_163;
+                                                failedmessage = message;
+                                                mnft.ResponseStatus(HttpStatusCode.BadRequest, result);
+                                            }
+                                            if (result == "180")
+                                            {
+                                                statusCode = result;
+                                                message = em.Error_180;
+                                                failedmessage = message;
+                                                mnft.ResponseStatus(HttpStatusCode.BadRequest, result);
+                                            }
+                                            if (result == "181")
+                                            {
+                                                statusCode = result;
+                                                message = em.Error_181;
+                                                failedmessage = message;
+                                                mnft.ResponseStatus(HttpStatusCode.BadRequest, result);
+                                            }
+                                            if (result == "182")
+                                            {
+                                                statusCode = result;
+                                                message = em.Error_182;
+                                                failedmessage = message;
+                                                mnft.ResponseStatus(HttpStatusCode.BadRequest, result);
+                                            }
+                                            if (result == "183")
+                                            {
+                                                statusCode = result;
+                                                message = em.Error_183;
+                                                failedmessage = message;
+                                                mnft.ResponseStatus(HttpStatusCode.BadRequest, result);
+                                            }
+                                            if (result == "184")
+                                            {
+                                                statusCode = result;
+                                                message = em.Error_184;
+                                                failedmessage = message;
+                                                mnft.ResponseStatus(HttpStatusCode.BadRequest, result);
+                                            }
+                                            if (result == "185")
+                                            {
+                                                statusCode = result;
+                                                message = em.Error_185;
+                                                failedmessage = message;
+                                                mnft.ResponseStatus(HttpStatusCode.BadRequest, result);
+                                            }
+                                            if (result == "186")
+                                            {
+                                                statusCode = result;
+                                                message = em.Error_186;
+                                                failedmessage = message;
+                                                mnft.ResponseStatus(HttpStatusCode.BadRequest, result);
+                                            }
+                                            if (result == "187")
+                                            {
+                                                statusCode = result;
+                                                message = em.Error_187;
+                                                failedmessage = message;
+                                                mnft.ResponseStatus(HttpStatusCode.BadRequest, result);
+                                            }
+                                            if (result == "188")
+                                            {
+                                                statusCode = result;
+                                                message = em.Error_188;
+                                                failedmessage = message;
+                                                mnft.ResponseStatus(HttpStatusCode.BadRequest, result);
+                                            }
+                                            if (result == "189")
+                                            {
+                                                statusCode = result;
+                                                message = em.Error_189;
+                                                failedmessage = message;
+                                                mnft.ResponseStatus(HttpStatusCode.BadRequest, result);
+                                            }
+                                            if (result == "190")
+                                            {
+                                                statusCode = result;
+                                                message = em.Error_190;
+                                                failedmessage = message;
+                                                mnft.ResponseStatus(HttpStatusCode.BadRequest, result);
+                                            }
+                                            if (result == "800")
+                                            {
+                                                statusCode = result;
+                                                message = em.Error_800;
+                                                failedmessage = message;
+                                                mnft.ResponseStatus(HttpStatusCode.BadRequest, result);
+                                            }
+                                            if (result == "902")
+                                            {
+                                                statusCode = result;
+                                                message = em.Error_902;
+                                                failedmessage = message;
+                                                mnft.ResponseStatus(HttpStatusCode.BadRequest, result);
+                                            }
+                                            if (result == "904")
+                                            {
+                                                statusCode = result;
+                                                message = em.Error_904;
+                                                failedmessage = message;
+                                                mnft.ResponseStatus(HttpStatusCode.BadRequest, result);
+                                            }
+                                            if (result == "906")
+                                            {
+                                                statusCode = result;
+                                                message = em.Error_906;
+                                                failedmessage = message;
+                                                mnft.ResponseStatus(HttpStatusCode.BadRequest, result);
+                                            }
+                                            if (result == "907")
+                                            {
+                                                statusCode = result;
+                                                message = em.Error_907;
+                                                failedmessage = message;
+                                                mnft.ResponseStatus(HttpStatusCode.BadRequest, result);
+                                            }
+                                            if (result == "909")
+                                            {
+                                                statusCode = result;
+                                                message = em.Error_909;
+                                                failedmessage = message;
+                                                mnft.ResponseStatus(HttpStatusCode.BadRequest, result);
+                                            }
+                                            if (result == "911")
+                                            {
+                                                statusCode = result;
+                                                message = em.Error_911;
+                                                failedmessage = message;
+                                                mnft.ResponseStatus(HttpStatusCode.BadRequest, result);
+                                            }
+                                            if (result == "913")
+                                            {
+                                                statusCode = result;
+                                                message = em.Error_913;
+                                                failedmessage = message;
+                                                mnft.ResponseStatus(HttpStatusCode.BadRequest, result);
+                                            }
+                                            if (result == "90")
+                                            {
+                                                statusCode = result;
+                                                message = em.Error_90;
+                                                failedmessage = message;
+                                                mnft.ResponseStatus(HttpStatusCode.BadRequest, result);
+                                            }
+                                            if (result == "91")
+                                            {
+                                                statusCode = result;
+                                                message = em.Error_91;
+                                                failedmessage = message;
+                                                mnft.ResponseStatus(HttpStatusCode.BadRequest, result);
+                                            }
+                                            if (result == "92")
+                                            {
+                                                statusCode = result;
+                                                message = em.Error_92;
+                                                failedmessage = message;
+                                                mnft.ResponseStatus(HttpStatusCode.BadRequest, result);
+                                            }
+                                            if (result == "94")
+                                            {
+                                                statusCode = result;
+                                                message = em.Error_94;
+                                                failedmessage = message;
+                                                mnft.ResponseStatus(HttpStatusCode.BadRequest, result);
+                                            }
+                                            if (result == "95")
+                                            {
+                                                statusCode = result;
+                                                message = em.Error_95;
+                                                failedmessage = message;
+                                                mnft.ResponseStatus(HttpStatusCode.BadRequest, result);
+                                            }
+                                            if (result == "98")
+                                            {
+                                                statusCode = result;
+                                                message = em.Error_98;
+                                                failedmessage = message;
+                                                mnft.ResponseStatus(HttpStatusCode.BadRequest, result);
+                                            }
+                                            if (result == "99")
+                                            {
+                                                statusCode = result;
+                                                message = em.Error_99;
+                                                failedmessage = message;
+                                                mnft.ResponseStatus(HttpStatusCode.BadRequest, result);
+                                            }
                                             else if (validTransactionData.ResponseCode == "OK")
                                             {
-                                                LoginUtils.SetPINTries(mobile, "RPT");
                                                 statusCode = "200";
                                                 message = result;
                                                 mnft.ResponseStatus(HttpStatusCode.OK, message);
@@ -807,15 +1401,21 @@ namespace WCF.MNepal
                     message = result + ex + "Error Message ";
                     //mnft.ResponseStatus(HttpStatusCode.BadRequest, result); //200 - OK
                     statusCode = "400";
+                    //failedmessage = message;
                     failedmessage = "Please try again.";
                 }
+                //}
+                //else  //else for  if wallet balance less then bill amount then show error msg
+                //{
+                //    statusCodeBalance = "400";
+                //    message = "Insufficient Balance";
+                //    failedmessage = message;
+
+                //}
             }
 
             try
             {
-
-                var a = statusCode;
-
                 string compResultResp = "";
                 if (statusCode == "200")
                 {
@@ -843,6 +1443,16 @@ namespace WCF.MNepal
                             }
                             else
                             {
+                                //if (companyCode == "598")
+                                //{
+                                //    special1 = "";
+                                //}
+                                //else
+                                //{
+                                //    special1 = special1.ToString();   //change
+                                //}
+
+
                                 //for demat configuration
                                 Constants constants = new Constants();
                                 DematModel dmatPayment = new DematModel();
@@ -912,50 +1522,44 @@ namespace WCF.MNepal
                         //for sending sms  if success 
                         if (compResultResp == "\"000\"")
                         {
-                            SMSEnable sMSEnable = new SMSEnable();
-
                             OutgoingWebResponseContext response2 = WebOperationContext.Current.OutgoingResponse;
                             if (response2.StatusCode == HttpStatusCode.OK)
                             {
                                 string messagereply = "";
                                 try
                                 {
-                                    AlertType = "SHARE";
+                                    messagereply = "Dear " + CustCheckUtils.GetName(mobile) + "," + "\n";
 
-                                    CustomerSMS customerSMS = new CustomerSMS();
-                                    string cSMS = customerSMS.CustSMSEnable(AlertType, mobile.Trim(), "", amount.ToString(), vid, "", (validTransactionData.CreatedDate).ToString("dd/MM/yyyy"));
-                                    if (cSMS == "false")
+                                    messagereply += "You have successfully paid NPR " + validTransactionData.Amount
+                                                    + " to " + BoId + " " +
+                                                    //GetMerchantName 
+                                                    "payment for Demat Account" + " on date " +
+                                                        (validTransactionData.CreatedDate).ToString("dd/MM/yyyy")
+                                                    + "." + "\n";
+                                    messagereply += "Thank you. NIBL Thaili";
+
+                                    var client = new WebClient();
+
+                                    //SENDER
+                                    if ((mobile.Substring(0, 3) == "980") || (mobile.Substring(0, 3) == "981")) //FOR NCELL
                                     {
-                                        custsmsInfo = new CustActivityModel()
-                                        {
-                                            UserName = mobile,
-                                            RequestMerchant = transactionType,
-                                            DestinationNo = fundtransfer.da,
-                                            Amount = validTransactionData.Amount.ToString(),
-                                            SMSStatus = "Failed",
-                                            SMSSenderReply = message,
-                                            ErrorMessage = failedmessage,
-                                        };
+                                        //FOR NCELL
+                                        var content = client.DownloadString(
+                                            SMSNCELL + "977" + mobile + "&message=" + messagereply + "");
                                     }
-                                    else
+                                    else if ((mobile.Substring(0, 3) == "985") || (mobile.Substring(0, 3) == "984")
+                                                || (mobile.Substring(0, 3) == "986"))
                                     {
-                                        custsmsInfo = new CustActivityModel()
-                                        {
-                                            UserName = mobile,
-                                            RequestMerchant = transactionType,
-                                            DestinationNo = fundtransfer.da,
-                                            Amount = validTransactionData.Amount.ToString(),
-                                            SMSStatus = "Success",
-                                            SMSSenderReply = cSMS,
-                                            ErrorMessage = "",
-                                        };
+                                        //FOR NTC
+                                        var content = client.DownloadString(
+                                            SMSNTC + "977" + mobile + "&message=" + messagereply + "");
                                     }
+
                                     statusCode = "200";
                                     var v = new
                                     {
                                         StatusCode = Convert.ToInt32(statusCode),
                                         StatusMessage = result
-                                        // SendToLogout= sendToLogout
                                     };
                                     result = JsonConvert.SerializeObject(v);
 
@@ -978,6 +1582,8 @@ namespace WCF.MNepal
                                     SMSSenderReply = messagereply,
                                     ErrorMessage = "",
                                 };
+
+
                             }
                             else if ((response2.StatusCode == HttpStatusCode.BadRequest) || (response2.StatusCode == HttpStatusCode.InternalServerError) || (statusCode != "200"))
                             {
@@ -994,6 +1600,16 @@ namespace WCF.MNepal
 
                             }
                         }
+                        //}
+                        //else
+                        //{
+                        //    //mnft.ResponseStatus(HttpStatusCode.BadRequest, result); //200 - OK
+                        //    statusCode = "400";
+                        //    //message = result;
+                        //    message = resultMessageResCP;
+                        //    failedmessage = message;
+                        //}
+
 
                     }
                     catch (Exception ex)
@@ -1013,15 +1629,11 @@ namespace WCF.MNepal
                             (statusCode != "904") && (statusCode != "906") && (statusCode != "907") && (statusCode != "909") && (statusCode != "911") &&
                             (statusCode != "913") && (statusCode != "90") && (statusCode != "91") && (statusCode != "94") && (statusCode != "95") &&
                             (statusCode != "98") && (statusCode != "99") && (statusCodeBalance != "400") && (compResultResp != "000") && (statusCodeBalance != "400")
-                            && (statusCode != "200") && (statusCode != "508")
+                            && (statusCode != "200") && (statusCode != "508") && (statusCode == "400")
                             )
                 {
                     //TraceIdGenerator traceRevid = new TraceIdGenerator();
                     //tid = traceRevid.GenerateUniqueTraceID();
-
-                    
-                    RemarkRevNew = "1200" + retrievalReference + DateTime.Now + " Reverse " + note;
-
                     tid = RetrievalReference;
                     if (sc == "00")
                     {
@@ -1041,10 +1653,7 @@ namespace WCF.MNepal
                         amount = amount,
                         pin = pin,
                         note = "reverse " + note,
-                        sourcechannel = src,
-                        Desc1New = Desc1New,
-                        Desc1RevNew = Desc1RevNew,
-                        RemarkRevNew = RemarkRevNew
+                        sourcechannel = src
                     };
                     ThreadPool.QueueUserWorkItem(BackgroundTaskWithObject, fundtransfer);
 
@@ -1066,6 +1675,25 @@ namespace WCF.MNepal
                     }
                     else
                     {
+                        //if (sc == "00")
+                        //{
+                        //    transactionType = "PayPoint Txfr to W2W";
+                        //}
+                        //else 
+                        //{
+                        //    sc = "01";
+                        //    transactionType = "PayPoint Txfr to W2B"; //B2W
+                        //}
+
+                        //if (!(UserNameCheck.IsValidUser(mobile)))
+                        //{
+                        //    // throw ex
+                        //    statusCode = "400";
+                        //    //message = "Transaction restricted to User";
+                        //    message = "Transaction only for User";
+                        //    failedmessage = message;
+                        //}
+
                         //change here
                         Pin p = new Pin();
                         if (!p.validPIN(mobile, pin))
@@ -1088,14 +1716,14 @@ namespace WCF.MNepal
                         if (UserNameCheck.IsValidMerchant(da))
                         {
 
-                            //TransLimitCheck transLimitCheck = new TransLimitCheck();
-                            //string resultTranLimit = transLimitCheck.LimitCheck(mobile, da, amount, sc, pin, src);
+                            TransLimitCheck transLimitCheck = new TransLimitCheck();
+                            string resultTranLimit = transLimitCheck.LimitCheck(mobile, da, amount, sc, pin, src);
 
-                            //var jsonDataResult = JObject.Parse(resultTranLimit);
-                            //statusCode = jsonDataResult["StatusCode"].ToString();
-                            //string statusMsg = jsonDataResult["StatusMessage"].ToString();
-                            //message = jsonDataResult["StatusMessage"].ToString();
-                            //failedmessage = message;
+                            var jsonDataResult = JObject.Parse(resultTranLimit);
+                            statusCode = jsonDataResult["StatusCode"].ToString();
+                            string statusMsg = jsonDataResult["StatusMessage"].ToString();
+                            message = jsonDataResult["StatusMessage"].ToString();
+                            failedmessage = message;
 
                             if (LoginUtils.GetPINBlockTime(mobile)) //check if blocktime is greater than current time 
                             {
@@ -1133,7 +1761,7 @@ namespace WCF.MNepal
                                 //start:Com focus one log///
                                 MNFundTransfer mnft = new MNFundTransfer(tid, fundtransferRev.sc, fundtransferRev.mobile,
                                        fundtransferRev.sa, fundtransferRev.amount, fundtransferRev.da, fundtransferRev.note, fundtransferRev.pin,
-                                       fundtransferRev.sourcechannel, "T", "Demat Bank", fundtransferRev.Desc1New, fundtransferRev.Desc1RevNew, fundtransferRev.RemarkRevNew);
+                                       fundtransferRev.sourcechannel, "T", "Demat Bank");
                                 var comfocuslog = new MNComAndFocusOneLog(mnft, DateTime.Now);
                                 var mncomfocuslog = new MNComAndFocusOneLogsController();
                                 //mncomfocuslog.InsertIntoComFocusOne(comfocuslog);
@@ -1192,82 +1820,298 @@ namespace WCF.MNepal
                                         }
                                         else
                                         {
-                                            ErrorResult er = new ErrorResult();
-                                            string strmsg = er.Errorlst(result, pin);
-                                            if (strmsg != "")
-                                            {
-                                                message = strmsg;
-                                                mnft.ResponseStatus(HttpStatusCode.BadRequest, result);
-                                                failedmessage = message;
-
-                                                if ((result == "Trace ID Repeated") || (result == "Limit Exceed")
+                                            if ((result == "Trace ID Repeated") || (result == "Limit Exceed")
                                                 || (result == "Invalid Source User") || (result == "Invalid Destination User")
-                                                || (result == "Invalid Product Request") || (result == "Please try again") || (result == "")
-                                                || (result == "Error in ResponeCode:Data Not Available")
-                                                || (result == "GatewayTimeout") || (result == "Invalid PIN"))
-                                                {
-                                                    statusCode = "400";
-
-                                                }
-                                                else
-                                                {
-                                                    statusCode = result;
-                                                }
+                                                || (result == "Invalid Product Request") || (result == "Please try again") || (result == ""))
+                                            {
+                                                mnft.ResponseStatus(HttpStatusCode.BadRequest, result); //200 - OK
+                                                statusCode = "400";
+                                                message = result;
+                                                failedmessage = message;
                                             }
+                                            if (result == "Invalid PIN")
+                                            {
+                                                mnft.ResponseStatus(HttpStatusCode.BadRequest, result); //200 - OK
+                                                statusCode = "400";
+                                                message = result;
+                                                failedmessage = message;
+                                            }
+                                            if (result == "111")
+                                            {
+                                                statusCode = result;
+                                                message = em.Error_111;
+                                                failedmessage = message;
+                                                mnft.ResponseStatus(HttpStatusCode.BadRequest, result);
+                                            }
+                                            if (result == "114")
+                                            {
+                                                statusCode = result;
+                                                message = em.Error_114;
+                                                failedmessage = message;
+                                                mnft.ResponseStatus(HttpStatusCode.BadRequest, result);
+                                            }
+                                            if (result == "115")
+                                            {
+                                                statusCode = result;
+                                                message = em.Error_115;
+                                                failedmessage = message;
+                                                mnft.ResponseStatus(HttpStatusCode.BadRequest, result);
+                                            }
+                                            if (result == "116")
+                                            {
+                                                statusCode = result;
+                                                message = em.Error_116;
+                                                failedmessage = message;
+                                                mnft.ResponseStatus(HttpStatusCode.BadRequest, result);
+                                            }
+                                            if (result == "119")
+                                            {
+                                                statusCode = result;
+                                                message = em.Error_119;
+                                                failedmessage = message;
+                                                mnft.ResponseStatus(HttpStatusCode.BadRequest, result);
+                                            }
+                                            if (result == "121")
+                                            {
+                                                statusCode = result;
+                                                message = em.Error_121;
+                                                failedmessage = message;
+                                                mnft.ResponseStatus(HttpStatusCode.BadRequest, result);
+                                            }
+                                            if (result == "163")
+                                            {
+                                                statusCode = result;
+                                                message = em.Error_163;
+                                                failedmessage = message;
+                                                mnft.ResponseStatus(HttpStatusCode.BadRequest, result);
+                                            }
+                                            if (result == "180")
+                                            {
+                                                statusCode = result;
+                                                message = em.Error_180;
+                                                failedmessage = message;
+                                                mnft.ResponseStatus(HttpStatusCode.BadRequest, result);
+                                            }
+                                            if (result == "181")
+                                            {
+                                                statusCode = result;
+                                                message = em.Error_181;
+                                                failedmessage = message;
+                                                mnft.ResponseStatus(HttpStatusCode.BadRequest, result);
+                                            }
+                                            if (result == "182")
+                                            {
+                                                statusCode = result;
+                                                message = em.Error_182;
+                                                failedmessage = message;
+                                                mnft.ResponseStatus(HttpStatusCode.BadRequest, result);
+                                            }
+                                            if (result == "183")
+                                            {
+                                                statusCode = result;
+                                                message = em.Error_183;
+                                                failedmessage = message;
+                                                mnft.ResponseStatus(HttpStatusCode.BadRequest, result);
+                                            }
+                                            if (result == "184")
+                                            {
+                                                statusCode = result;
+                                                message = em.Error_184;
+                                                failedmessage = message;
+                                                mnft.ResponseStatus(HttpStatusCode.BadRequest, result);
+                                            }
+                                            if (result == "185")
+                                            {
+                                                statusCode = result;
+                                                message = em.Error_185;
+                                                failedmessage = message;
+                                                mnft.ResponseStatus(HttpStatusCode.BadRequest, result);
+                                            }
+                                            if (result == "186")
+                                            {
+                                                statusCode = result;
+                                                message = em.Error_186;
+                                                failedmessage = message;
+                                                mnft.ResponseStatus(HttpStatusCode.BadRequest, result);
+                                            }
+                                            if (result == "187")
+                                            {
+                                                statusCode = result;
+                                                message = em.Error_187;
+                                                failedmessage = message;
+                                                mnft.ResponseStatus(HttpStatusCode.BadRequest, result);
+                                            }
+                                            if (result == "188")
+                                            {
+                                                statusCode = result;
+                                                message = em.Error_188;
+                                                failedmessage = message;
+                                                mnft.ResponseStatus(HttpStatusCode.BadRequest, result);
+                                            }
+                                            if (result == "189")
+                                            {
+                                                statusCode = result;
+                                                message = em.Error_189;
+                                                failedmessage = message;
+                                                mnft.ResponseStatus(HttpStatusCode.BadRequest, result);
+                                            }
+                                            if (result == "190")
+                                            {
+                                                statusCode = result;
+                                                message = em.Error_190;
+                                                failedmessage = message;
+                                                mnft.ResponseStatus(HttpStatusCode.BadRequest, result);
+                                            }
+                                            if (result == "800")
+                                            {
+                                                statusCode = result;
+                                                message = em.Error_800;
+                                                failedmessage = message;
+                                                mnft.ResponseStatus(HttpStatusCode.BadRequest, result);
+                                            }
+                                            if (result == "902")
+                                            {
+                                                statusCode = result;
+                                                message = em.Error_902;
+                                                failedmessage = message;
+                                                mnft.ResponseStatus(HttpStatusCode.BadRequest, result);
+                                            }
+                                            if (result == "904")
+                                            {
+                                                statusCode = result;
+                                                message = em.Error_904;
+                                                failedmessage = message;
+                                                mnft.ResponseStatus(HttpStatusCode.BadRequest, result);
+                                            }
+                                            if (result == "906")
+                                            {
+                                                statusCode = result;
+                                                message = em.Error_906;
+                                                failedmessage = message;
+                                                mnft.ResponseStatus(HttpStatusCode.BadRequest, result);
+                                            }
+                                            if (result == "907")
+                                            {
+                                                statusCode = result;
+                                                message = em.Error_907;
+                                                failedmessage = message;
+                                                mnft.ResponseStatus(HttpStatusCode.BadRequest, result);
+                                            }
+                                            if (result == "909")
+                                            {
+                                                statusCode = result;
+                                                message = em.Error_909;
+                                                failedmessage = message;
+                                                mnft.ResponseStatus(HttpStatusCode.BadRequest, result);
+                                            }
+                                            if (result == "911")
+                                            {
+                                                statusCode = result;
+                                                message = em.Error_911;
+                                                failedmessage = message;
+                                                mnft.ResponseStatus(HttpStatusCode.BadRequest, result);
+                                            }
+                                            if (result == "913")
+                                            {
+                                                statusCode = result;
+                                                message = em.Error_913;
+                                                failedmessage = message;
+                                                mnft.ResponseStatus(HttpStatusCode.BadRequest, result);
+                                            }
+                                            if (result == "90")
+                                            {
+                                                statusCode = result;
+                                                message = em.Error_90;
+                                                failedmessage = message;
+                                                mnft.ResponseStatus(HttpStatusCode.BadRequest, result);
+                                            }
+                                            if (result == "91")
+                                            {
+                                                statusCode = result;
+                                                message = em.Error_91;
+                                                failedmessage = message;
+                                                mnft.ResponseStatus(HttpStatusCode.BadRequest, result);
+                                            }
+                                            if (result == "92")
+                                            {
+                                                statusCode = result;
+                                                message = em.Error_92;
+                                                failedmessage = message;
+                                                mnft.ResponseStatus(HttpStatusCode.BadRequest, result);
+                                            }
+                                            if (result == "94")
+                                            {
+                                                statusCode = result;
+                                                message = em.Error_94;
+                                                failedmessage = message;
+                                                mnft.ResponseStatus(HttpStatusCode.BadRequest, result);
+                                            }
+                                            if (result == "95")
+                                            {
+                                                statusCode = result;
+                                                message = em.Error_95;
+                                                failedmessage = message;
+                                                mnft.ResponseStatus(HttpStatusCode.BadRequest, result);
+                                            }
+                                            if (result == "98")
+                                            {
+                                                statusCode = result;
+                                                message = em.Error_98;
+                                                failedmessage = message;
+                                                mnft.ResponseStatus(HttpStatusCode.BadRequest, result);
+                                            }
+                                            if (result == "99")
+                                            {
+                                                statusCode = result;
+                                                message = em.Error_99;
+                                                failedmessage = message;
+                                                mnft.ResponseStatus(HttpStatusCode.BadRequest, result);
+                                            }
+                                            else if (validTransactionData.ResponseCode == "OK")
 
-
-                                            else if ((statusCode == "200") || (validTransactionData.ResponseCode == "OK"))
                                             {
                                                 statusCode = "200";
-                                                mnft.ResponseStatus(HttpStatusCode.OK, "Success");
-                                                var v = new
-                                                {
-                                                    StatusCode = Convert.ToInt32(statusCode),
-                                                    StatusMessage = result
-                                                };
-                                                result = JsonConvert.SerializeObject(v);
-                                            }
+                                                message = result;
+                                                mnft.ResponseStatus(HttpStatusCode.OK, message);
+
+                                            } //END ValidTransactionData.ResponseCode
 
 
                                         } //END validTransactionData.Response WITHOUT MNDB ERROR
                                         /*** ***/
 
-                                        SMSEnable sMSEnable = new SMSEnable();
-                                        AlertType = "SHARER";
+
                                         OutgoingWebResponseContext response1 = WebOperationContext.Current.OutgoingResponse;
                                         if (response1.StatusCode == HttpStatusCode.OK)
                                         {
                                             string messagereply = "";
                                             try
                                             {
+                                                messagereply = "Dear " + CustCheckUtils.GetName(mobile) + "," + "\n";
 
-                                                CustomerSMS customerSMS = new CustomerSMS();
-                                                string cSMS = customerSMS.CustSMSEnable(AlertType, mobile.Trim(), "", validTransactionData.Amount.ToString(), vid, "", (validTransactionData.CreatedDate).ToString("dd/MM/yyyy"));
-                                                if (cSMS == "false")
+                                                messagereply += " You have successfully reverse  NPR " + validTransactionData.Amount
+                                                                    + " to " +
+                                                                    //GetMerchantName 
+                                                                    "Demat Payment." + " on date " +
+                                                                    (validTransactionData.CreatedDate).ToString("dd/MM/yyyy")
+                                                                + "." + "\n";
+                                                messagereply += "Thank you. NIBL Thaili";
+
+                                                var client = new WebClient();
+
+                                                //SENDER
+                                                if ((mobile.Substring(0, 3) == "980") || (mobile.Substring(0, 3) == "981")) //FOR NCELL
                                                 {
-                                                    custsmsInfo = new CustActivityModel()
-                                                    {
-                                                        UserName = mobile,
-                                                        RequestMerchant = transactionType,
-                                                        DestinationNo = fundtransfer.da,
-                                                        Amount = validTransactionData.Amount.ToString(),
-                                                        SMSStatus = "Failed",
-                                                        SMSSenderReply = message,
-                                                        ErrorMessage = failedmessage,
-                                                    };
+                                                    //FOR NCELL
+                                                    var content = client.DownloadString(
+                                                        SMSNCELL + "977" + mobile + "&message=" + messagereply + "");
                                                 }
-                                                else
+                                                else if ((mobile.Substring(0, 3) == "985") || (mobile.Substring(0, 3) == "984")
+                                                            || (mobile.Substring(0, 3) == "986"))
                                                 {
-                                                    custsmsInfo = new CustActivityModel()
-                                                    {
-                                                        UserName = fundtransfer.mobile,
-                                                        RequestMerchant = transactionType,
-                                                        DestinationNo = fundtransfer.da,
-                                                        Amount = validTransactionData.Amount.ToString(),
-                                                        SMSStatus = "Success",
-                                                        SMSSenderReply = cSMS,
-                                                        ErrorMessage = "",
-                                                    };
+                                                    //FOR NTC
+                                                    var content = client.DownloadString(
+                                                        SMSNTC + "977" + mobile + "&message=" + messagereply + "");
                                                 }
 
                                                 statusCode = "200";
@@ -1348,29 +2192,28 @@ namespace WCF.MNepal
                                     failedmessage = result;
                                 }
 
-                        } //END TRansLimit Check StatusCode N Message
-                        else
-                        {
-                            custsmsInfo = new CustActivityModel()
+                            } //END TRansLimit Check StatusCode N Message
+                            else
                             {
-                                UserName = mobile,
-                                RequestMerchant = transactionType,
-                                DestinationNo = fundtransfer.da,
-                                Amount = amount,
-                                SMSStatus = "Failed",
-                                SMSSenderReply = message,
-                                ErrorMessage = failedmessage,
-                            };
-                        }
+                                custsmsInfo = new CustActivityModel()
+                                {
+                                    UserName = mobile,
+                                    RequestMerchant = transactionType,
+                                    DestinationNo = fundtransfer.da,
+                                    Amount = amount,
+                                    SMSStatus = "Failed",
+                                    SMSSenderReply = message,
+                                    ErrorMessage = failedmessage,
+                                };
+                            }
 
-                    } //END IsValidMerchant
+                        } //END IsValidMerchant
 
                         //} //END Destination mobile No check
 
                     }
                 }
 
-                AlertType = "SHARE";
                 //for sending sms  if success 
                 if (compResultResp == "000")
                 {
@@ -1380,33 +2223,33 @@ namespace WCF.MNepal
                         string messagereply = "";
                         try
                         {
-                            CustomerSMS customerSMS = new CustomerSMS();
-                            string cSMS = customerSMS.CustSMSEnable(AlertType, mobile.Trim(), "", amount.ToString(), vid, "", (validTransactionData.CreatedDate).ToString("dd/MM/yyyy"));
-                            if (cSMS == "false")
+                            messagereply = "Dear " + CustCheckUtils.GetName(mobile) + "," + "\n";
+
+                            messagereply += " You have successfully paid NPR " + validTransactionData.Amount
+                                            + " to " + " account name: " + account + ". " +
+                                            //GetMerchantName 
+                                            "Utility payment for Demat." + " on date " +
+                                                (validTransactionData.CreatedDate).ToString("dd/MM/yyyy")
+                                            + "." + "\n";
+                            messagereply += "Thank you. NIBL";
+
+                            var client = new WebClient();
+
+                            //SENDER
+                            if ((mobile.Substring(0, 3) == "980") || (mobile.Substring(0, 3) == "981")) //FOR NCELL
                             {
-                                custsmsInfo = new CustActivityModel()
-                                {
-                                    UserName = mobile,
-                                    RequestMerchant = transactionType,
-                                    DestinationNo = fundtransfer.da,
-                                    Amount = validTransactionData.Amount.ToString(),
-                                    SMSStatus = "Failed",
-                                    SMSSenderReply = message,
-                                    ErrorMessage = failedmessage,
-                                };
+                                //FOR NCELL
+                                var content = client.DownloadString(
+                                    "http://smsvas.mos.com.np/PostSMS.ashx?QueueId=&TelecomId=2&KeywordId=3&Password=mnepal120&From=37878&To="
+                                    + "977" + mobile + "&message=" + messagereply + "");
                             }
-                            else
+                            else if ((mobile.Substring(0, 3) == "985") || (mobile.Substring(0, 3) == "984")
+                                        || (mobile.Substring(0, 3) == "986"))
                             {
-                                custsmsInfo = new CustActivityModel()
-                                {
-                                    UserName = fundtransfer.mobile,
-                                    RequestMerchant = transactionType,
-                                    DestinationNo = fundtransfer.da,
-                                    Amount = validTransactionData.Amount.ToString(),
-                                    SMSStatus = "Success",
-                                    SMSSenderReply = cSMS,
-                                    ErrorMessage = "",
-                                };
+                                //FOR NTC
+                                var content = client.DownloadString(
+                                    "http://smsvas.mos.com.np/PostSMS.ashx?QueueId=&TelecomId=1&KeywordId=3&Password=mnepal120&From=37878&To="
+                                    + "977" + mobile + "&message=" + messagereply + "");
                             }
 
                             statusCode = "200";

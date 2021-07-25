@@ -231,9 +231,15 @@ namespace CustApp.Controllers
                             responseCode = (int)httpResponse.StatusCode;
                             responsetext = await httpResponse.Content.ReadAsStringAsync();
                             message = httpResponse.Content.ReadAsStringAsync().Result;
+                            var jsonResult = JsonConvert.DeserializeObject<NeaBillResponse>(message);
+                            if (jsonResult.ResultCode == "200" || jsonResult.ResultCode!="200")
+                            {
+                                responseCode =Convert.ToInt32(jsonResult.ResultCode);
+                                responsetext = jsonResult.ResultDescription;
+                            }
                             string respmsg = "";
 
-                            return Json(new { responseCode = responseCode, responseText = respmsg },
+                            return Json(new { responseCode = responseCode, responseText = responsetext },
                             JsonRequestBehavior.AllowGet);
                         }
                         else

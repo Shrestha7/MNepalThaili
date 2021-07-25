@@ -426,10 +426,17 @@
                     },
                     async: true,
                     success: function (data) {
+                        debugger;
                         if (data.responseCode == "200") {
                             var url = '@Url.Action("Details", "NEA")';
                             window.location.href = url;
 
+                        }
+                        else if (data.responseCode == "999") {
+                            $("#ajaxResponse").html("");
+                            $("#message").html("");
+                            $("#message").append(data.responseText);
+                            $('#failureModal').modal("show");
                         }
                         else {
 

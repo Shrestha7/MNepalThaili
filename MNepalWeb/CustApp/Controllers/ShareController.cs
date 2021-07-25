@@ -510,7 +510,7 @@ namespace CustApp.Controllers
                 ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12 | SecurityProtocolType.Tls11 | SecurityProtocolType.Tls;
                 using (HttpClient client = new HttpClient())
                 {
-                    var destinationTestNumber = System.Configuration.ConfigurationManager.AppSettings["DestinationTestNumber"];
+                    var destinationTestNumber = System.Configuration.ConfigurationManager.AppSettings["DestinationNumber"];
                     var destinationMerchantId = System.Configuration.ConfigurationManager.AppSettings["DestinationMerchantId"];
                     var action = "share.svc/executepayment";
                     var uri = Path.Combine(ApplicationInitilize.WCFUrl, action);

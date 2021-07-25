@@ -57,6 +57,14 @@ namespace MNepalAPI.Helper
                                     AlertSalMessage = AlertSalMessage.Replace("\\n", "\n");
                                 }
                             }
+                            else if (alertType == "SHARE")
+                            {
+                                if (AlertSalMessage.Contains("%s"))
+                                {
+                                    AlertSalMessage = sMSEnable.GetFinalMessage(AlertSalMessage, AlertSalParameters);
+                                    AlertSalMessage = AlertSalMessage.Replace("\\n", "\n");
+                                }
+                            }
 
                             //END FOR SENDER SALUTATION
 
@@ -66,6 +74,12 @@ namespace MNepalAPI.Helper
                             string msgName; string resultparm; String ParamStr;
                             
                             if (alertType == "NEA")
+                            {
+                                resultparm = amount.ToString();
+                                ParamStr = "," + resultparm + "," + couponNumber + "," + createdDate;
+                                AlertParameters = ParamStr.Split(delimeterAlert, StringSplitOptions.None);
+                            }
+                            else if (alertType == "SHARE")
                             {
                                 resultparm = amount.ToString();
                                 ParamStr = "," + resultparm + "," + couponNumber + "," + createdDate;
@@ -84,6 +98,14 @@ namespace MNepalAPI.Helper
                                     AlertSalMessage = AlertSalMessage.Replace("\\n", "\n");
                                 }
                             }
+                            else if (alertType == "SHARE")
+                            {
+                                if (AlertSalMessage.Contains("%s"))
+                                {
+                                    AlertSalMessage = sMSEnable.GetFinalMessage(AlertSalMessage, AlertSalParameters);
+                                    AlertSalMessage = AlertSalMessage.Replace("\\n", "\n");
+                                }
+                            }
 
                             //END FOR SENDER SALUTATION
 
@@ -91,6 +113,12 @@ namespace MNepalAPI.Helper
                             //START FOR MSG
 
                             if (alertType == "NEA")
+                            {
+                                resultparm = amount.ToString();
+                                ParamStr = "," + resultparm + "," + couponNumber + "," + createdDate;
+                                AlertParameters = ParamStr.Split(delimeterAlert, StringSplitOptions.None);
+                            }
+                            else if (alertType == "SHARE")
                             {
                                 resultparm = amount.ToString();
                                 ParamStr = "," + resultparm + "," + couponNumber + "," + createdDate;

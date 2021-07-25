@@ -30,10 +30,6 @@
     @Html.AntiForgeryToken()
     @Html.ValidationSummary(true)
 
-    <div class="preload" style="display:none">
-        <img src="~/Content/image/loading.gif" class="img-responsive" />
-    </div>
-
     <div class="main-content">
         <div class="two-colbg">
             <div class="container">
@@ -242,8 +238,10 @@
 
                                 <select class="form-control selectpicker transaction-select from col-md-9" id="TransactionMedium" name="TransactionMedium" onmousedown="this.value='';">
                                     <option data-icon="thaili-icon-load-wallet" value="00">Wallet</option>
+                                    @*<option data-icon="thaili-icon-load-wallet" value="30">Wallet</option>*@
                                     @if (hasBankKYC.Equals("T"))
                                     {
+                                        @*<option data-icon="thaili-icon-bank" value="33">Bank</option>*@
                                         <option data-icon="thaili-icon-bank" value="10">Bank</option>
                                     }
                                 </select>
@@ -366,17 +364,6 @@
 
     <script type="text/javascript">
 
-        //add div on whole page:
-        var tempDiv = $("<div id='tempOverlayDiv'></div>");
-        tempDiv.css({
-            "background-color": "#000",
-            "opacity": "0.2",
-            "position": "absolute",
-            "left": 0,
-            "top": 0,
-            "width": $(document).width(),
-            "height": $(document).height()
-        });
 
 
         $(".btnShow1").mousedown(function () {
@@ -387,7 +374,6 @@
 });
 
          $(document).ready(function () {
-             tempDiv.remove();
 
             //If Total Due amount is equal to zero
             var amount = $("[name='amount']").val();
@@ -531,10 +517,7 @@
                         __RequestVerificationToken: token,
                         demat: dataToPost
                     },
-                    async: true,
-                    success: function (data) {
-                        $(".preload").show();
-                        tempDiv.remove();                       
+                    success: function (data) {                  
                         if (data.responseCode == "200") {
                             $("#ajaxResponse").html("");
                             var resp = JSON.parse(data.responseText);
@@ -566,8 +549,6 @@
                     },
                     //capture the request before it was sent to server
                     beforeSend: function (jqXHR, settings) {
-                        $(".preload").show();
-                        $("body").append(tempDiv);
                         //adding some Dummy data to the request
                         settings.data += "&dummyData=whatever";
                         //disable the button until we get the response
@@ -579,8 +560,6 @@
                     //}
 
                     complete: function (data) {
-                        $(".preload").hide();
-                        $(".overlay-wrapper").show();
                         if (data.responseJSON.responseText == "Invalid PIN ") {
                             $('#btnSubmit').attr("disabled", false);
                         }

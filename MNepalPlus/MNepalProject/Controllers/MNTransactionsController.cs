@@ -707,7 +707,8 @@ namespace MNepalProject.Controllers
                             {
                                 mnTransactionMaster.Description = mnTransactionMaster.Description.Substring(1, mnTransactionMaster.Description.Length - 1);
                             }
-                            Remark = mnTransactionMaster.Description + " - " + desc1;
+                            //Remark = mnTransactionMaster.Description + " - " + desc1;
+                            Remark = mnTransactionMaster.Description;
                             if (Remark.EndsWith("- "))
                             {
                                 Remark = Remark.Substring(0, Remark.Length - 2);
@@ -2026,7 +2027,8 @@ namespace MNepalProject.Controllers
                             {
                                 mnTransactionMaster.Description = mnTransactionMaster.Description.Substring(1, mnTransactionMaster.Description.Length - 1);
                             }
-                            Remark = mnTransactionMaster.Description + " - " + Desc1;
+                            //Remark = mnTransactionMaster.Description + " - " + Desc1;
+                            Remark = mnTransactionMaster.Description;
                             if (Remark.EndsWith("- "))
                             {
                                 Remark = Remark.Substring(0, Remark.Length - 2);
