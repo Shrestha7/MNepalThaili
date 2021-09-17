@@ -10,6 +10,7 @@ using System.IO;
 using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
+using System.Web;
 using System.Web.Mvc;
 using System.Web.Script.Serialization;
 
@@ -101,7 +102,7 @@ namespace CustApp.Controllers
         }
         #endregion
 
-
+             
 
         #region "POST: Wlink CheckPayment"
         [HttpPost]
@@ -244,7 +245,6 @@ namespace CustApp.Controllers
         #endregion
 
         #region "GET: Wlink Details"
-        [HttpGet]
         public ActionResult Details()
         {
             string userName = (string)Session["LOGGED_USERNAME"];
@@ -289,15 +289,15 @@ namespace CustApp.Controllers
                     regobj.NWBranchCode = dResponse.Rows[0]["serviceCode"].ToString();
                     regobj.payPointType = dResponse.Rows[0]["paypointType"].ToString();
                     regobj.description = dResponse.Rows[0]["description"].ToString();
+
                     if (dWlinkPayment != null && dWlinkPayment.Rows.Count > 0)
                     {
-                        //regobj.description = dResponse.Rows[0]["description"].ToString();
                         regobj.billDate = dWlinkPayment.Rows[0]["billDate"].ToString();
                         regobj.billAmount = dWlinkPayment.Rows[0]["billAmount"].ToString();
                         regobj.PackageRemainingDays = dWlinkPayment.Rows[0]["RemainingDays"].ToString();
 
-                        if (dWlinkPayment.Rows[0]["PackageAmount"].ToString() != null && dWlinkPayment.Rows[0]["PackageId"].ToString() != null &&
-                            dWlinkPayment.Rows[0]["Descriptions"].ToString() != null)
+                        if (dWlinkPayment.Rows[0]["PackageAmount"].ToString()!=null && dWlinkPayment.Rows[0]["PackageId"].ToString()!=null &&
+                            dWlinkPayment.Rows[0]["Descriptions"].ToString()!=null)
                         {
                             try
                             {
@@ -341,6 +341,7 @@ namespace CustApp.Controllers
 
 
                         ViewBag.ListDetails = ListDetails;
+
                     }
                     else
                     {

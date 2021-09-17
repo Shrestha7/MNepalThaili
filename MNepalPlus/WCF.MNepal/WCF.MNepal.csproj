@@ -139,6 +139,7 @@
     <Content Include="neareverse.svc" />
     <Content Include="share.svc" />
     <Content Include="topupAPI.svc" />
+    <Content Include="vianet.svc" />
     <Content Include="wlink.svc" />
     <Content Include="Connected Services\MerchantReference\WCF.MNepal.MerchantReference.ResponseData.datasource">
       <DependentUpon>Reference.svcmap</DependentUpon>
@@ -229,9 +230,12 @@
     <Compile Include="Helper\CashOutTransLimitCheck.cs" />
     <Compile Include="Helper\Constants.cs" />
     <Compile Include="Helper\CustomerSMS.cs" />
+    <Compile Include="Helper\EmailEnable.cs" />
     <Compile Include="Helper\FeeAmountCheck.cs" />
     <Compile Include="Helper\FundTransferLimitCheck.cs" />
     <Compile Include="Helper\HashAlgo.cs" />
+    <Compile Include="Helper\MerchantEmail.cs" />
+    <Compile Include="Helper\MerchantSMS.cs" />
     <Compile Include="Helper\SendSMS.cs" />
     <Compile Include="Helper\SMSEnable.cs" />
     <Compile Include="Helper\SQLHelperQuery.cs" />
@@ -258,6 +262,8 @@
     <Compile Include="Models\CustActivityModel.cs" />
     <Compile Include="Models\CustomerSupport.cs" />
     <Compile Include="Models\DematModel.cs" />
+    <Compile Include="Models\EmailMsg.cs" />
+    <Compile Include="Models\ErrorInfo.cs" />
     <Compile Include="Models\FundTransfer.cs" />
     <Compile Include="Models\FundTransferRemit.cs" />
     <Compile Include="Models\Khanepani.cs" />
@@ -340,6 +346,8 @@
     <Compile Include="UserModels\CreateMobileDetailUserModels.cs" />
     <Compile Include="UserModels\CustActivityUserModel.cs" />
     <Compile Include="UserModels\DematUserModel.cs" />
+    <Compile Include="UserModels\EmailUserModels.cs" />
+    <Compile Include="UserModels\ErrorUserModel.cs" />
     <Compile Include="UserModels\FeeAmountUserModel.cs" />
     <Compile Include="UserModels\LoginUserModels.cs" />
     <Compile Include="UserModels\MerchantUserModel.cs" />
@@ -366,6 +374,8 @@
     <Compile Include="Utilities\CustCheckUtils.cs" />
     <Compile Include="Utilities\CustomerUtils.cs" />
     <Compile Include="Utilities\DematUtils.cs" />
+    <Compile Include="Utilities\EmailUtils.cs" />
+    <Compile Include="Utilities\ErrorUtils.cs" />
     <Compile Include="Utilities\FeeAmtUtils.cs" />
     <Compile Include="Utilities\LoginUtils.cs" />
     <Compile Include="Utilities\MerchantUtils.cs" />
@@ -380,6 +390,9 @@
     <Compile Include="Utilities\TraceIdCheckUtils.cs" />
     <Compile Include="Utilities\TranIDUtils.cs" />
     <Compile Include="Utilities\WalletLimitUtils.cs" />
+    <Compile Include="vianet.svc.cs">
+      <DependentUpon>vianet.svc</DependentUpon>
+    </Compile>
     <Compile Include="wlink.svc.cs">
       <DependentUpon>wlink.svc</DependentUpon>
     </Compile>

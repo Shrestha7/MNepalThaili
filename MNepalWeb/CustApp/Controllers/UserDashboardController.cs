@@ -224,7 +224,7 @@ namespace CustApp.Controllers
 
             using (HttpClient client = new HttpClient())
             {
-
+                client.Timeout = TimeSpan.FromSeconds(30);
                 var action = "query.svc/balance?tid=" + tid + "&sc=22&mobile=" + mobile + "&sa=1&pin=" + pin + "&src=web";
                 var uri = Path.Combine(ApplicationInitilize.WCFUrl, action);
                 //var content = new FormUrlEncodedContent(new[]{

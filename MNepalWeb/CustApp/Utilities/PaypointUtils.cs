@@ -119,5 +119,21 @@ namespace CustApp.Utilities
         }
         #endregion
 
+        #region Vianet Details
+        public static DataSet GetVianetDetails(ISP KPObj)
+        {
+            var objUserModel = new PaypointUserModel();
+            var objUserInfo = new ISP
+            {
+                ClientCode = KPObj.ClientCode,
+                UserName = KPObj.UserName,
+                CustomerID = KPObj.CustomerID,
+                refStan = KPObj.refStan,
+                Mode = "Vianet" // GET Vianet Details
+            };
+            return objUserModel.GetVianetPaymentDetails(objUserInfo);
+        }
+        #endregion
+
     }
 }

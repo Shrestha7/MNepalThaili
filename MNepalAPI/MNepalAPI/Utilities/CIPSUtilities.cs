@@ -48,6 +48,7 @@ namespace MNepalAPI.Utilities
                 destBankCode = cIPSResponse.destBankCode,
                 destAccountNumber = cIPSResponse.destAccountNumber,
                 amount = cIPSResponse.amount,
+                feeAmount = cIPSResponse.feeAmount,
                 feeId = cIPSResponse.feeId,
                 traceNo = cIPSResponse.traceNo,
                 tranDate = cIPSResponse.tranDate,

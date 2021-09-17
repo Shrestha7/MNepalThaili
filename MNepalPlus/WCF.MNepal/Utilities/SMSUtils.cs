@@ -43,6 +43,5 @@ namespace WCF.MNepal.Utilities
             };
             return objModel.GetSMSEnableCheck(objUserInfo);
         }
-
     }
 }

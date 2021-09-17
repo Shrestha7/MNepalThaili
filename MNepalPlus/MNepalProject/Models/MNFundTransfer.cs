@@ -123,6 +123,55 @@ namespace MNepalProject.Models
             this.merchantType = merchantType;
             this.merchantName = merchantName;
         }
+
+        public MNFundTransfer(string tid, string sc, string mobile, string sa, string amount, string da, string note, string pin, string sourcechannel, string merchantType, string Desc1New, string Desc1RevNew, string RemarkRevNew, string Desc2New, string account, string special2)
+        {
+            this.tid = tid;
+            this.sc = sc;
+            this.mobile = mobile;
+            this.sa = sa;
+            this.amount = amount;
+            this.da = da;
+            this.note = note;
+            this.pin = pin;
+            this.sourcechannel = sourcechannel;
+            this.merchantType = merchantType;
+
+            this.Desc1New = Desc1New;
+            this.Desc1RevNew = Desc1RevNew;
+            this.RemarkRevNew = RemarkRevNew;
+
+
+            this.Desc2New = Desc2New;
+            this.account = account;
+            this.special2 = special2;
+        }
+
+
+        public MNFundTransfer(string tid, string sc, string mobile, string sa, string amount, string da, string note, string pin, string sourcechannel, string reverseStatus, string merchantType, string Desc1New, string Desc1RevNew, string RemarkRevNew, string Desc2New, string account, string special2)
+        {
+            this.tid = tid;
+            this.sc = sc;
+            this.mobile = mobile;
+            this.sa = sa;
+            this.amount = amount;
+            this.da = da;
+            this.note = note;
+            this.pin = pin;
+            this.sourcechannel = sourcechannel;
+            this.reverseStatus = reverseStatus;
+            this.merchantType = merchantType;
+            this.Desc1New = Desc1New;
+            this.Desc1RevNew = Desc1RevNew;
+            this.RemarkRevNew = RemarkRevNew;
+
+
+            this.Desc2New = Desc2New;
+            this.account = account;
+            this.special2 = special2;
+
+
+        }
         public MNFundTransfer()
         {
 
@@ -164,6 +213,8 @@ namespace MNepalProject.Models
         public string consumerId { get; set; }
         public string customerName { get; set; }
         public string merchantName { get; set; }
+        public string Desc2New { get; set; }
+        public string account { get; set; }
         public bool valid()
         {
             if (this.tid != "" && this.sc != "" && this.mobile != "" && this.amount != "")

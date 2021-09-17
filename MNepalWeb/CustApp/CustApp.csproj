@@ -184,6 +184,7 @@
     <Compile Include="Controllers\TermsAndConditionController.cs" />
     <Compile Include="Controllers\UserDashboardController.cs" />
     <Compile Include="Controllers\UtilityPayController.cs" />
+    <Compile Include="Controllers\VianetController.cs" />
     <Compile Include="Controllers\WlinkController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
@@ -7449,6 +7450,7 @@
     <Content Include="Images\nt_all.png" />
     <Content Include="Images\restaurant.png" />
     <Content Include="Images\school.png" />
+    <Content Include="Images\Vianet.png" />
     <Content Include="Rotativa\help-wkhtmltoimage.txt" />
     <Content Include="Rotativa\help-wkhtmltopdf.txt" />
     <Content Include="Rotativa\wkhtmltoimage.exe" />
@@ -8525,6 +8527,8 @@
     <Content Include="Views\CIPS\CIPSInvoice.cshtml" />
     <Content Include="Views\ShoppingMallLogin\Index.cshtml" />
     <Content Include="Views\ShoppingMallLogin\LoginMerchantDetails.cshtml" />
+    <Content Include="Views\Vianet\Details.cshtml" />
+    <Content Include="Views\Vianet\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="api\" />

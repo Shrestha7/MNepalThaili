@@ -1,4 +1,3 @@
-D:\Thaili\MNepalAPI\MNepalAPI\bin\roslyn\Microsoft.CodeAnalysis.dll
 D:\Thaili\MNepalAPI\MNepalAPI\bin\MNepalAPI.dll.config
 D:\Thaili\MNepalAPI\MNepalAPI\bin\MNepalAPI.xml
 D:\Thaili\MNepalAPI\MNepalAPI\bin\MNepalAPI.dll
@@ -12,6 +11,7 @@ D:\Thaili\MNepalAPI\MNepalAPI\bin\roslyn\csi.rsp
 D:\Thaili\MNepalAPI\MNepalAPI\bin\roslyn\Microsoft.Build.Tasks.CodeAnalysis.dll
 D:\Thaili\MNepalAPI\MNepalAPI\bin\roslyn\Microsoft.CodeAnalysis.CSharp.dll
 D:\Thaili\MNepalAPI\MNepalAPI\bin\roslyn\Microsoft.CodeAnalysis.CSharp.Scripting.dll
+D:\Thaili\MNepalAPI\MNepalAPI\bin\roslyn\Microsoft.CodeAnalysis.dll
 D:\Thaili\MNepalAPI\MNepalAPI\bin\roslyn\Microsoft.CodeAnalysis.Scripting.dll
 D:\Thaili\MNepalAPI\MNepalAPI\bin\roslyn\Microsoft.CodeAnalysis.VisualBasic.dll
 D:\Thaili\MNepalAPI\MNepalAPI\bin\roslyn\Microsoft.CSharp.Core.targets
@@ -197,4 +197,4 @@ D:\Thaili\MNepalAPI\MNepalAPI\obj\Debug\MNepalAPI.csproj.CoreCompileInputs.cache
 D:\Thaili\MNepalAPI\MNepalAPI\obj\Debug\MNepalAPI.csproj.CopyComplete
 D:\Thaili\MNepalAPI\MNepalAPI\obj\Debug\MNepalAPI.dll
 D:\Thaili\MNepalAPI\MNepalAPI\obj\Debug\MNepalAPI.pdb
-D:\Thaili\MNepalAPI\MNepalAPI\obj\Debug\MNepalAPI.csprojAssemblyReference.cache
+D:\Thaili\MNepalAPI\MNepalAPI\obj\Debug\MNepalAPI.csproj.AssemblyReference.cache

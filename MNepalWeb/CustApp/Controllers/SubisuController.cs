@@ -7,8 +7,10 @@ using System;
 using System.Collections.Generic;
 using System.Data;
 using System.IO;
+using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
+using System.Web;
 using System.Web.Mvc;
 using System.Web.Script.Serialization;
 
@@ -299,9 +301,9 @@ namespace CustApp.Controllers
                 {
                     return RedirectToAction("Index");
                 }
-
+                
                 ViewBag.NWBranchCode = regobj.NWBranchCode.ToString();
-                ViewBag.CustomerID = regobj.CustomerID;
+                ViewBag.CustomerID = regobj.CustomerID;               
                 ViewBag.TotalAmountDue = regobj.TotalAmountDue;
                 ViewBag.payPointType = regobj.payPointType;
                 ViewBag.description = regobj.description.ToString();
@@ -413,7 +415,7 @@ namespace CustApp.Controllers
                 ViewBag.PassportImage = userInfo.PassportImage;
             }
 
-            string S_MobileNumber = (string)Session["MobileNumber"];
+            string S_MobileNumber = (string)Session["MobileNumber"];              
             string S_CustomerID = (string)Session["CustomerID"];
 
             ISP NWObj = new ISP();
@@ -550,10 +552,10 @@ namespace CustApp.Controllers
         }
         #endregion
 
-        #region Get Nepal Water refStan From Response Table
+        #region Get Subisu refStan From Response Table
         public string getrefStan(ISP isp)
         {
-            string Query_refStan = "select refStan from MNPaypointResponse where account='" + isp.CustomerID + "' AND ClientCode='" + isp.ClientCode + "' AND UserName='" + isp.UserName + "'";
+            string Query_refStan = "select refStan from MNPaypointResponse where account='" + isp.CustomerID +  "' AND ClientCode='" + isp.ClientCode + "' AND UserName='" + isp.UserName + "'";
             DataTable dt = new DataTable();
             dt = objdal.MyMethod(Query_refStan);
             string refStan = string.Empty;
@@ -564,6 +566,5 @@ namespace CustApp.Controllers
             return refStan;
         }
         #endregion
-
     }
 }

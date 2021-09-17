@@ -520,7 +520,8 @@ namespace MNepalAPI.Controllers
                             }
                             cipsMNRequest.destBankCode = cipsTransactionDetailList.FirstOrDefault().creditorAgent;
                             cipsMNRequest.destAccountNumber = cipsTransactionDetailList.FirstOrDefault().creditorAccount;
-                            cipsMNRequest.amount = cipsbatchdetail.batchAmount + feeAmount;
+                            cipsMNRequest.amount = cipsbatchdetail.batchAmount;
+                            cipsMNRequest.feeAmount = feeAmount;
                             cipsMNRequest.feeId = "";
                             cipsMNRequest.traceNo = randomCodeGenerator.CreateRandomCode(6);
                             cipsMNRequest.tranDate = dateTime;
@@ -573,7 +574,8 @@ namespace MNepalAPI.Controllers
                                 }
                                 cipsMNResponse.destAccountNumber = cipsTransactionDetailList.FirstOrDefault().creditorAccount;
                                 cipsMNResponse.feeId = "";                               
-                                cipsMNResponse.amount = cipsbatchdetail.batchAmount + feeAmount;
+                                cipsMNResponse.amount = cipsbatchdetail.batchAmount;
+                                cipsMNResponse.feeAmount = feeAmount;
                                 cipsMNResponse.traceNo = cipsMNRequest.traceNo;
                                 cipsMNResponse.tranDate = dateTime;
                                 cipsMNResponse.tranTime = "";

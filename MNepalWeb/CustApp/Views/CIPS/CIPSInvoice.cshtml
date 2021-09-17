@@ -18,11 +18,12 @@
     <title>CIPS Transfer Receipt - Thaili Digital Paisa</title>
 </head>
 
-<body class="container">
+<body class="container" style="background-image: url('../../Content/assets/img/thaili-logo.png'); background-repeat:no-repeat">
+
     <div class="row" style="margin:600px 100px 200px 100px; font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif">
         <h1 style="text-align:center">ConnectIPS Transfer Receipt</h1><hr /><br />
         <div class="col-md-12"><span style="font-size:26px"><b>Sender Details</b></span> </div><hr />
-        <table cellspacing="5" style="font-size:20px; margin-right:55px;"  class="table-bordered table-striped table" align="center">
+        <table style="font-size:20px" ;>
             <tr>
                 <td>Account Name</td>
                 <td>@Model["SenderName"]</td>
@@ -38,7 +39,7 @@
 
         </table><br /><br />
         <div class="col-md-12"><span style="font-size:26px"><b>Receiver Details</b></span> </div><hr />
-        <table cellspacing="5" style="font-size:20px" class="table-bordered table-striped table" align="center">
+        <table style="font-size:20px" ;>
             <tr>
                 <td>Account Name</td>
                 <td>@Model["DestinationAccountName"]</td>
@@ -54,26 +55,26 @@
             </tr>
         </table><br /><br />
         <div class="col-md-12"><span style="font-size:26px"><b>Transaction Details</b></span> </div><hr />
-        <table cellspacing="5" style="font-size:20px; margin-left:140px;" class="table-bordered table-striped table" align="center">
+        <table style="font-size:20px" ;>
             <tr>
                 <td>Amount</td>
-                <td style="padding-left:40px">@Model["Amount"]</td>
+                <td>Rs. @Model["Amount"].00</td>
             </tr>
             <tr>
                 <td>Charge</td>
-                <td style="padding-left:40px">@Model["Charge"]</td>
+                <td>Rs. @Model["Charge"].00</td>
             </tr>
             <tr>
                 <td>Remarks</td>
-                <td style="padding-left:40px">@Model["Remarks"]</td>
+                <td>@Model["Remarks"]</td>
             </tr>
             <tr>
                 <td>Reference No.</td>
-                <td style="padding-left:40px">@Model["ReferenceNo"]</td>
+                <td>@Model["ReferenceNo"]</td>
             </tr>
             <tr>
                 <td>TimeStamp</td>
-                <td style="padding-left:40px">@Model["TimeStamp"]</td>
+                <td>@Model["TimeStamp"]</td>
             </tr>
         </table>
     </div>

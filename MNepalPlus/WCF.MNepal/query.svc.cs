@@ -23,6 +23,7 @@ using System.Web.Script.Serialization;
 using System.Text;
 using System.Linq;
 using System.Web.Services.Description;
+using System.Threading;
 
 namespace WCF.MNepal
 {
@@ -130,7 +131,7 @@ namespace WCF.MNepal
             ReplyMessage replyMessage = new ReplyMessage();
 
             ErrorMessage em = new ErrorMessage();
-            
+            Thread.Sleep(10000);
             if ((tid == null) || (sc == null) || (mobile == null) || (sa == null) || (pin == null) || (src == null))
             {
                 // throw ex

@@ -1,5 +1,4 @@
 D:\Thaili\MNepalPlus\WCF.MNepal\obj\Debug\WCF.MNepal.csproj.CoreCompileInputs.cache
-D:\Thaili\MNepalPlus\WCF.MNepal\obj\Debug\WCF.MNepal.csprojAssemblyReference.cache
 D:\Thaili\MNepalPlus\WCF.MNepal\bin\WCF.MNepal.dll.config
 D:\Thaili\MNepalPlus\WCF.MNepal\bin\WCF.MNepal.dll
 D:\Thaili\MNepalPlus\WCF.MNepal\bin\WCF.MNepal.pdb
@@ -108,3 +107,4 @@ D:\Thaili\MNepalPlus\WCF.MNepal\bin\System.Net.Http.Formatting.xml
 D:\Thaili\MNepalPlus\WCF.MNepal\obj\Debug\WCF.MNepal.csproj.CopyComplete
 D:\Thaili\MNepalPlus\WCF.MNepal\obj\Debug\WCF.MNepal.dll
 D:\Thaili\MNepalPlus\WCF.MNepal\obj\Debug\WCF.MNepal.pdb
+D:\Thaili\MNepalPlus\WCF.MNepal\obj\Debug\WCF.MNepal.csproj.AssemblyReference.cache

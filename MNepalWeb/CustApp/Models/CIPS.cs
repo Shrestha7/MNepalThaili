@@ -38,10 +38,10 @@ namespace CustApp.Models
         }
 
 
-        public class GetBankList
-        {
-            public BankList[] bankList { get; set; }
-        }
+        //public class GetBankList
+        //{
+        //    public BankList[] bankList { get; set; }
+        //}
 
         public class BankList
         {
@@ -50,10 +50,10 @@ namespace CustApp.Models
         }
 
 
-        public class GetBranchList
-        {
-            public BranchList[] Property1 { get; set; }
-        }
+        //public class GetBranchList
+        //{
+        //    public BranchList[] Property1 { get; set; }
+        //}
 
         public class BranchList
         {

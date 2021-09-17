@@ -19,7 +19,6 @@ using Newtonsoft.Json.Linq;
 using WCF.MNepal.ErrorMsg;
 using System.Threading;
 using System.Web.Services.Description;
-using MNepalAPI.Helper;
 using MNepalProject.Services;
 
 namespace WCF.MNepal

@@ -22,7 +22,7 @@
         position: relative;
         z-index: 2;
     }
- .show-tick{
+    .show-tick{
         margin-top:10px;
         height:45px;
         width:610px;
@@ -166,7 +166,7 @@
                                         <label>@ViewBag.NWBranchName</label>
                                     </div>
                                 </div>*@
-							<h5>@ViewBag.remainingDays</h5>
+                            <h5>@ViewBag.remainingDays</h5>
                             <div class="row">
                                 <div class="col-md-6">
                                     <label>Service Name:</label>
@@ -175,6 +175,7 @@
                                     <label>@ViewBag.paypointType</label>
                                 </div>
                             </div>
+
 
                             <div class="row">
                                 <div class="col-md-6">
@@ -196,7 +197,7 @@
                                 </div>
                             </div>
 
-						<div class="row">
+                            <div class="row">
                                 <div class="col-md-6">
                                     <label>Package Details:</label>
                                     @* @Html.DropDownList("Description", new SelectList(ViewBag.ListDetails, "Description", "Description"), new { @class = "show-tick", @id = "drpdwn", onChange = "updateNRs()" })*@
@@ -210,6 +211,8 @@
                                     </select>
                                 </div>
                             </div>
+
+
                             <br />
 
                             <div class="transfer-order clearfix">
@@ -361,8 +364,8 @@
          var url = '@Url.Action("Index", "LogOut")';
          window.location.href = url;
         };
-        
- 		function updateNRs()
+
+         function updateNRs()
        {
            debugger;
 
@@ -496,6 +499,7 @@
                     url: '@Url.Action("WlinkExecutePayment", "Wlink")',
                     type: "POST",
                     data: dataToPost,
+                    async: true,
                     success: function (data) {
 
                         if (data.responseCode == "200") {

@@ -870,7 +870,7 @@ namespace CustApp.Controllers
                 var responseContent = await httpResponse.Content.ReadAsStringAsync();
 
                 List<GetCharge> cipsChargeList = new List<GetCharge>();
-                if (httpResponse.Content != null)
+                if (httpResponse.StatusCode == HttpStatusCode.OK && httpResponse.Content != null)
                 {
                     GetCharge[] result = JsonConvert.DeserializeObject<GetCharge[]>(responseContent);
                     foreach (var item in result)
@@ -913,7 +913,7 @@ namespace CustApp.Controllers
                 var httpResponse = await httpClient.GetAsync(APIBaseURL + "ConnectIPS/GetCIPSBankList");
                 var responseContent = await httpResponse.Content.ReadAsStringAsync();
 
-                if (httpResponse.Content != null)
+                if (httpResponse.StatusCode == HttpStatusCode.OK && httpResponse.Content != null)
                 {
                     BankList[] result = JsonConvert.DeserializeObject<BankList[]>(responseContent);
                     foreach (var item in result)
@@ -954,7 +954,7 @@ namespace CustApp.Controllers
                 var httpResponse = await httpClient.GetAsync(APIBaseURL + "ConnectIPS/GetCIPSBranchList?bankId=" + bankId);
                 var responseContent = await httpResponse.Content.ReadAsStringAsync();
 
-                if (httpResponse.Content != null)
+                if (httpResponse.StatusCode== HttpStatusCode.OK && httpResponse.Content != null )
                 {
                     BranchList[] result = JsonConvert.DeserializeObject<BranchList[]>(responseContent);
                     foreach (var item in result)

@@ -54,16 +54,10 @@ namespace WCF.MNepal
         public string scn { get; set; }
         public string customerId { get; set; }
         public string customerName { get; set; }
-
-
-        /*
-        public bool valid()
-        {
-            if (fundtransfer.tid != "" && fundtransfer.sc != "" && fundtransfer.mobile != "" && fundtransfer.amount != "")
-                return true;
-            else
-                return false;
-        }*/
+       
+        public string special2 { get; set; }
+        public string Desc2New { get; set; }
+        public string account { get; set; }
 
     }
 }
