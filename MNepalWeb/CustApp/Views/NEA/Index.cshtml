@@ -427,7 +427,8 @@
                     async: true,
                     success: function (data) {
                         debugger;
-                        if (data.responseCode == "200") {
+                        if (data.responseCode == "200" || data.responseCode=="0") {
+                            debugger;
                             var url = '@Url.Action("Details", "NEA")';
                             window.location.href = url;
 

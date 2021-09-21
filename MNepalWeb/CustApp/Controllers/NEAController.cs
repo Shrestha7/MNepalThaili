@@ -232,7 +232,7 @@ namespace CustApp.Controllers
                             responsetext = await httpResponse.Content.ReadAsStringAsync();
                             message = httpResponse.Content.ReadAsStringAsync().Result;
                             var jsonResult = JsonConvert.DeserializeObject<NeaBillResponse>(message);
-                            if (jsonResult.ResultCode == "200" || jsonResult.ResultCode!="200")
+                            if (jsonResult.ResultCode == "200" || jsonResult.ResultCode!="200" || jsonResult.ResultCode=="999")
                             {
                                 responseCode =Convert.ToInt32(jsonResult.ResultCode);
                                 responsetext = jsonResult.ResultDescription;
