@@ -517,7 +517,7 @@ namespace CustApp.Controllers
                 // Wrap our JSON inside a StringContent which then can be used by the HttpClient class
                 var httpContent = new StringContent(stringPayload, Encoding.UTF8, "application/json");
 
-
+                string responsetext = string.Empty;
                 using (var httpClient = new HttpClient())
                 {
                     var UserName = ConfigurationManager.AppSettings["BasicAuthUserName"];
@@ -527,6 +527,8 @@ namespace CustApp.Controllers
                     var byteArray = Encoding.ASCII.GetBytes(UserName + ":" + UserPassword);
                     httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Basic", Convert.ToBase64String(byteArray));
                     var httpResponse = await httpClient.PostAsync(APIBaseURL + "NEA/NEABillPayment", httpContent);
+                  
+                   
 
                     NEABranchDetails neaBranch = new NEABranchDetails();
 
@@ -537,7 +539,7 @@ namespace CustApp.Controllers
                         string errorMessage = string.Empty;
                         int responseCode = 0;
                         string message = string.Empty;
-                        string responsetext = string.Empty;
+                      
                         bool result = false;
                         string ava = string.Empty;
                         string avatra = string.Empty;
@@ -561,11 +563,15 @@ namespace CustApp.Controllers
                                 {
 
                                     var responseMessage = JsonConvert.DeserializeObject(message);
-                                    
-                                    
+                                    var json1 = JsonConvert.DeserializeObject<JsonDetails>(responsetext);
+                                    if (json1.StatusMessage == "116")
+                                    {
+                                        respmsg = "Insufficient Balance";
+                                    }
+
                                 }
                                 //   return Json(new { responseCode = responseCode, responseText = respmsg },
-                                return Json(new { responseCode = responseCode, responseText = respmsg, blockMessage = BlockMessage },
+                                return Json(new { responseCode = responseCode, responseText = respmsg, blockMessage = BlockMessage},
 
                               JsonRequestBehavior.AllowGet);
                             }
@@ -608,7 +614,7 @@ namespace CustApp.Controllers
                     {
 
                         int responseCode = (int)httpResponse.StatusCode;
-                        string responsetext = await httpResponse.Content.ReadAsStringAsync();
+                        responsetext = await httpResponse.Content.ReadAsStringAsync();
                         var json = JsonConvert.DeserializeObject<JsonDetails>(responsetext);
 
 

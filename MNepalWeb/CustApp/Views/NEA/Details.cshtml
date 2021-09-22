@@ -560,18 +560,12 @@
                         nea: dataToPost
                     },
                     async: true,
-                    success: function (data)
-                    {
-                        if (data.responseCode == "200")
-                        {
+                    success: function (data) {
+                        if (data.responseCode == "200" && data.responseText == "Insufficient Balance") {
                             $("#ajaxResponse").html("");
-                            var resp = data.responseText;
-                            $('#successModal').modal("show");
-                            $("#TPin").val("");
-                            $("#Remarks").val("");
-                            $("#amount").val("");
-
-
+                            $("#message").html("");
+                            $("#message").append("Insufficient Balance");
+                            $('#failureModal').modal("show");
                         }
                         //display error message
                         else if (data.responseCode == "417") {
@@ -580,6 +574,17 @@
                             $("#pinMessage").append(data.responseText);
 
                             $('#pinFailureModal').modal("show");
+                        }
+
+                        else if (data.responseCode == "200") {
+                    $("#ajaxResponse").html("");
+                    var resp = data.responseText;
+                    $('#successModal').modal("show");
+                    $("#TPin").val("");
+                    $("#Remarks").val("");
+                    $("#amount").val("");
+
+
                         }
 
                         else {

@@ -373,7 +373,7 @@
                     error: function (jqXHR, textStatus, errorThrown) {
                         alert('Failed to retrieve.');
                         $("#message").html("");
-                        $("#message").append(jqXHR.responseText);
+                        $("#message").append("Could Not Fetch Details");
                         $('#failureModal').modal("show");
 
                     },

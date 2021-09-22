@@ -337,7 +337,13 @@ namespace WCF.MNepal
                     StatusCode = Convert.ToInt32(statusCode),
                     StatusMessage = failedmessage,
                     retrievalRef = resCPPaypointSubisuInfo.retrievalReferenceResCP,
-                    refStanCK = resCPPaypointSubisuInfo.refStanResCP
+                    refStanCK = resCPPaypointSubisuInfo.refStanResCP,
+                    billNumber = resCPPaypointSubisuInfo.billNumberResCP,
+                    amount = resCPPaypointSubisuInfo.amountResCP,
+                    exectransactionDate = resCPPaypointSubisuInfo.transactionDateResCP,
+                    customerName = resCPPaypointSubisuInfo.accountResCP,
+                    special1 = resCPPaypointSubisuInfo.special1ResCP
+
                 };
                 result = JsonConvert.SerializeObject(v);
             }
