@@ -149,23 +149,23 @@
                             }
 
                             @*<div class="transfer-order clearfix">
-                                    <h3 class="title">Pay from</h3>
+            <h3 class="title">Pay from</h3>
 
-                                    <select class="form-control selectpicker transaction-select from col-md-9" id="TransactionMedium" name="TransactionMedium" onmousedown="this.value='';">
-                                        <option data-icon="thaili-icon-load-wallet" value="00">Wallet</option>
-                                        @if (hasBankKYC.Equals("T"))
-                                        {
-                                            <option data-icon="thaili-icon-bank" value="10">Bank</option>
-                                        }
-                                    </select>
-                                </div>*@
+            <select class="form-control selectpicker transaction-select from col-md-9" id="TransactionMedium" name="TransactionMedium" onmousedown="this.value='';">
+                <option data-icon="thaili-icon-load-wallet" value="00">Wallet</option>
+                @if (hasBankKYC.Equals("T"))
+                {
+                    <option data-icon="thaili-icon-bank" value="10">Bank</option>
+                }
+            </select>
+        </div>*@
 
-
+                        <p style="text-align:center"><span class="font-weight-bold"> Note:</span> Username is Case-Sensitive</p>
                             <div class="row">
                                 <div class="col-md-12">
                                     <div class="form-group">
-                                        <label class="col-sm-12">Customer ID:<b style="color:red;">*</b></label>
-                                        <input type="text" class="form-control select2" id="CustomerID" name="txtCustomerID" placeholder="Example: TestSubisu" maxlength="20" oninput="checkValidation()" />
+                                        <label class="col-sm-12">Username:<b style="color:red;">*</b></label>
+                                        <input type="text" class="form-control select2" id="CustomerID" name="txtCustomerID" placeholder="Username" maxlength="20" oninput="checkValidation()" />
                                     </div>
                                     <div class="form-group" id="CustErr" style="color:red; margin-top:-11px;"></div>
                                 </div>
@@ -175,8 +175,8 @@
                             <div class="row">
                                 <div class="col-md-12">
                                     <div class="form-group">
-                                        <label class="col-sm-12">Mobile number:<b style="color:red;">*</b></label>
-                                        <input type="text" class="form-control select2" id="CustomerID" name="txtMobileNumber" placeholder="Example: 9779****" maxlength="13" oninput="checkValidation()" />
+                                        <label class="col-sm-12">Mobile Number:<b style="color:red;">*</b></label>
+                                        <input type="text" class="form-control select2" id="CustomerID" name="txtMobileNumber" placeholder="97798XXXXXXXX" maxlength="13" oninput="checkValidation()" />
                                     </div>
                                     <div class="form-group" id="CustErr1" style="color:red; margin-top:-11px;"></div>
                                 </div>
@@ -305,7 +305,7 @@
 
             if ((Cust.trim() == "")) {
                 $("#CustErr").html("");
-                $("#CustErr").append("<small>" + "Customer ID is required and cannot be empty" + "</small>");
+                $("#CustErr").append("<small>" + "Username is required and cannot be empty" + "</small>");
                 $("#CustErr").show();
             }
             else {
@@ -371,9 +371,8 @@
                         }
                     },
                     error: function (jqXHR, textStatus, errorThrown) {
-                        alert('Failed to retrieve.');
                         $("#message").html("");
-                        $("#message").append("Could Not Fetch Details");
+                        $("#message").append("Unable to Fetch Details");
                         $('#failureModal').modal("show");
 
                     },

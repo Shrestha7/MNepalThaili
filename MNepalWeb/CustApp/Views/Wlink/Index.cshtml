@@ -168,8 +168,8 @@
                             <div class="row">
                                 <div class="col-md-12">
                                     <div class="form-group">
-                                        <label class="col-sm-12">Customer Name:<b style="color:red;">*</b></label>
-                                        <input type="text" class="form-control select2" id="CustomerID" name="txtCustomerID" placeholder="Example: test" maxlength="20" oninput="checkValidation()" />
+                                        <label class="col-sm-12">Username:<b style="color:red;">*</b></label>
+                                        <input type="text" class="form-control select2" id="CustomerID" name="txtCustomerID" placeholder="Username" maxlength="20" oninput="checkValidation()" />
                                     </div>
                                     <div class="form-group" id="CustErr" style="color:red; margin-top:-11px;"></div>
                                 </div>
@@ -299,7 +299,7 @@
 
             if ((Cust.trim() == "")) {
                 $("#CustErr").html("");
-                $("#CustErr").append("<small>" + "Customer Name is required and cannot be empty" + "</small>");
+                $("#CustErr").append("<small>" + "Username is required and cannot be empty" + "</small>");
                 $("#CustErr").show();
             }
             else {
@@ -339,7 +339,14 @@
                             var url = '@Url.Action("Details", "Wlink")';
                             window.location.href = url;
                         }
+
                         //display error message
+                        else if (data.responseCode == "400") {
+                            $("#message").html("");
+                            $("#message").append("Unable to Fetch Details");
+                            $('#failureModal').modal("show");
+
+                        }
                         else {
                             $("#ajaxResponse").html("");
                             $("#message").html("");
@@ -354,9 +361,8 @@
                         }
                     },
                     error: function (jqXHR, textStatus, errorThrown) {
-                        alert('Failed to retrieve.');
                         $("#message").html("");
-                        $("#message").append(jqXHR.responseText);
+                        $("#message").append("Could Not Fetch Details");
                         $('#failureModal').modal("show");
 
                     },

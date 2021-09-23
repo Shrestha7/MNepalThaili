@@ -1105,7 +1105,14 @@ namespace WCF.MNepal
                                             compResultResp = xElemEPay.Attribute("Result").Value;
                                             keyExecRlt = xElemEPay.Attribute("Key").Value;
                                         }
-                                        resultMessageResEP = xElemEPay.Elements("ResultMessage").Where(x => x.Name == "ResultMessage").SingleOrDefault().Value;
+                                        if (compResultResp == "101")
+                                        {
+                                            resultMessageResEP = "Service Temporarily Unavailable. Please try again later";
+                                        }
+                                        else
+                                        {
+                                            resultMessageResEP = xElemEPay.Elements("ResultMessage").Where(x => x.Name == "ResultMessage").SingleOrDefault().Value;
+                                        }
 
 
 

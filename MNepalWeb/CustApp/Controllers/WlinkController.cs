@@ -148,7 +148,7 @@ namespace CustApp.Controllers
                 ViewBag.PassportImage = userInfo.PassportImage;
             }
 
-            Session["CustomerName"] = isp.CustomerName;
+            Session["CustomerName"] = isp.CustomerName.ToLower();
             //api call here
 
             HttpResponseMessage _res = new HttpResponseMessage();
@@ -169,7 +169,7 @@ namespace CustApp.Controllers
                         new KeyValuePair<string, string>("tokenID",tokenID),
                         new KeyValuePair<string, string>("companyCode", "597"),
                         new KeyValuePair<string, string>("serviceCode", "0"),
-                        new KeyValuePair<string, string>("account", isp.CustomerName),
+                        new KeyValuePair<string, string>("account", isp.CustomerName.ToLower()),
                         new KeyValuePair<string, string>("special1",""),
                         new KeyValuePair<string, string>("special2",""),
                         new KeyValuePair<string, string>("tid", tid),

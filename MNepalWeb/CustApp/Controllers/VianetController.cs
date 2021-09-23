@@ -145,7 +145,7 @@ namespace CustApp.Controllers
                 userInfo.PassportImage = dDoc.Rows[0]["PassportImage"].ToString();
                 ViewBag.PassportImage = userInfo.PassportImage;
             }
-            
+
 
 
             Session["CustomerID"] = iSP.CustomerID;
@@ -287,12 +287,12 @@ namespace CustApp.Controllers
                 if (dResponse != null && dResponse.Rows.Count > 0)
                 {
                     regobj.CustomerID = dResponse.Rows[0]["account"].ToString();
-                    regobj.TotalAmountDue = dResponse.Rows[0]["amount"].ToString();  
+                    regobj.TotalAmountDue = dResponse.Rows[0]["amount"].ToString();
                     regobj.NWBranchCode = dResponse.Rows[0]["serviceCode"].ToString();
                     regobj.payPointType = dResponse.Rows[0]["paypointType"].ToString();
                     if (dVianetPayment != null && dVianetPayment.Rows.Count > 0)
                     {
-                        regobj.description = dVianetPayment.Rows[0]["descriptions"].ToString(); 
+                        regobj.description = dVianetPayment.Rows[0]["descriptions"].ToString();
                         regobj.PackageAmount = dVianetPayment.Rows[0]["PackageAmount"].ToString();
                         regobj.PackageId = dVianetPayment.Rows[0]["PackageId"].ToString();
 
@@ -559,9 +559,6 @@ namespace CustApp.Controllers
                 {
                     if (_res.IsSuccessStatusCode)
                     {
-                        //Session value remove
-                        Session.Remove("CustomerID");
-
                         result = true;
                         responseCode = (int)_res.StatusCode;
                         responsetext = await _res.Content.ReadAsStringAsync();

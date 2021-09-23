@@ -187,7 +187,7 @@
                                     <label>Total Dues:</label>
                                 </div>
                                 <div class="col-md-6">
-                                    <label>RS.@ViewBag.TotalAmountDue</label>
+                                    <label>Rs. @ViewBag.TotalAmountDue</label>
                                 </div>
                             </div>
 
@@ -231,9 +231,9 @@
 
                                 <div class="col-md-6">
                                     <div class="form-group">
-                                        <label class="col-sm-12" for="@Html.NameFor(x=>x.TPin)"> Tpin (<span style="color:red">*</span>)</label>
+                                        <label class="col-sm-12" for="@Html.NameFor(x=>x.TPin)"> T-PIN (<span style="color:red">*</span>)</label>
 
-                                        @Html.PasswordFor(x => x.TPin, new { @class = "form-control pwd1", @title = "Please use T-Pin number", @placeholder = "T-Pin", @maxlength = "4", @onkeypress = "return isNumber(event)", @oninput = "checkValidation()", @autocomplete = "new-password", @onpaste = "return false" })
+                                        @Html.PasswordFor(x => x.TPin, new { @class = "form-control pwd1", @title = "Please use T-PIN number", @placeholder = "T-PIN", @maxlength = "4", @onkeypress = "return isNumber(event)", @oninput = "checkValidation()", @autocomplete = "new-password", @onpaste = "return false" })
                                         <span toggle="#password-field" class="fa fa-fw fa-eye field-icon toggle-password, btnShow1"></span>
                                     </div>
                                     <div class="form-group" id="PinErr" style="color:red; margin-top:-11px;"></div>
@@ -393,12 +393,12 @@
 
             if (pin.trim() == "") {
                 $("#PinErr").html("");
-                $("#PinErr").append("<small>" + "Please Enter the T-Pin" + "</small>");
+                $("#PinErr").append("<small>" + "Please Enter the T-PIN" + "</small>");
                 $("#PinErr").show();
             }
             else if (pin.length != 4) {
                 $("#PinErr").html("");
-                $("#PinErr").append("<small>" + "T-Pin must be 4 character long." + "</small>");
+                $("#PinErr").append("<small>" + "T-PIN must be 4 character long." + "</small>");
                 $("#PinErr").show();
             }
             else {
@@ -460,8 +460,13 @@
                     data: dataToPost,
                     async: true,
                     success: function (data) {
+                        if (data.responseCode == "200" && data.responseText == "Unable to perform transaction") {
+                            $("#message").html("");
+                            $("#message").append("Unable to perform transaction");
+                            $('#failureModal').modal("show");
+                        }
 
-                        if (data.responseCode == "200") {
+                        else if (data.responseCode == "200") {
                             debugger;
                             $("#ajaxResponse").html("");
                             var resp = JSON.parse(data.responseText);
@@ -487,9 +492,8 @@
                         }
                     },
                     error: function (jqXHR, textStatus, errorThrown) {
-                        alert('Failed to retrieve.');
                         $("#message").html("");
-                        $("#message").append(jqXHR.responseText);
+                        $("#message").append("Something went wrong. Please try again later");
                         $('#failureModal').modal("show");
 
                     },

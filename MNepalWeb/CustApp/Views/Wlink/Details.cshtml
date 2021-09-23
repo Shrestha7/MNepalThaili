@@ -98,7 +98,7 @@
                                     <!-- /item -->
                                     <div class="item top-up">
                                         <div class="item-inner">
-                                            <a href="@Url.Action("Index", "NEA" )">
+                                            <a href="@Url.Action("Index", "NEA")">
                                                 <div class="content-inner">
                                                     <i class="thaili-icon-electricity"></i>
                                                     <span>NEA</span>
@@ -109,7 +109,7 @@
                                     <!-- /item -->
                                     <div class="item top-up">
                                         <div class="item-inner">
-                                            <a href="@Url.Action("Index", "Khanepani" )">
+                                            <a href="@Url.Action("Index", "Khanepani")">
                                                 <div class="content-inner">
                                                     <i class="thaili-icon-khanepani"></i>
                                                     <span>Khanepani</span>
@@ -120,7 +120,7 @@
                                     <!-- /item -->
                                     <div class="item top-up">
                                         <div class="item-inner">
-                                            <a href="@Url.Action("Index", "NepalWater" )">
+                                            <a href="@Url.Action("Index", "NepalWater")">
                                                 <div class="content-inner">
                                                     <i class="thaili-icon-khanepani"></i>
                                                     <span>Nepal Water</span>
@@ -159,13 +159,13 @@
                                 <h2 class="title">Confirm Payment</h2>
                             </div>
                             @*<div class="row">
-                                    <div class="col-md-6">
-                                        <label>NepalWater Counter:</label>
-                                    </div>
-                                    <div class="col-md-6">
-                                        <label>@ViewBag.NWBranchName</label>
-                                    </div>
-                                </div>*@
+            <div class="col-md-6">
+                <label>NepalWater Counter:</label>
+            </div>
+            <div class="col-md-6">
+                <label>@ViewBag.NWBranchName</label>
+            </div>
+        </div>*@
                             <h5>@ViewBag.remainingDays</h5>
                             <div class="row">
                                 <div class="col-md-6">
@@ -193,25 +193,34 @@
                                     <label>Total Dues:</label>
                                 </div>
                                 <div class="col-md-6">
-                                    <label>RS.@ViewBag.TotalAmountDue</label>
+                                    <label>Rs. @ViewBag.TotalAmountDue</label>
                                 </div>
                             </div>
 
-                            <div class="row">
-                                <div class="col-md-6">
-                                    <label>Package Details:</label>
-                                    @* @Html.DropDownList("Description", new SelectList(ViewBag.ListDetails, "Description", "Description"), new { @class = "show-tick", @id = "drpdwn", onChange = "updateNRs()" })*@
-                                    <select id="drpdwn" onChange="updateNRs()" name="Description" class="show-tick">
-                                        @foreach (var package in ViewBag.ListDetails)
-                                        {
-                                            <option amount="@package.PackageAmount" id="@package.PackageId" name="getPackageId">@package.Description</option>
+                            @{
+                                var listDetails = (List<CustApp.Models.ISP>)ViewBag.ListDetails;
 
-                                        }
 
-                                    </select>
+                            }
+                            @if (listDetails.Count > 0)
+                            {
+
+
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <label>Package Details:</label>
+                                        @* @Html.DropDownList("Description", new SelectList(ViewBag.ListDetails, "Description", "Description"), new { @class = "show-tick", @id = "drpdwn", onChange = "updateNRs()" })*@
+                                        <select id="drpdwn" onChange="updateNRs()" name="Description" class="show-tick">
+                                            @foreach (var package in listDetails)
+                                            {
+                                                <option amount="@package.PackageAmount" id="@package.PackageId" name="getPackageId">@package.Description</option>
+
+                                            }
+
+                                        </select>
+                                    </div>
                                 </div>
-                            </div>
-
+                            }
 
                             <br />
 
@@ -253,9 +262,9 @@
 
                                 <div class="col-md-6">
                                     <div class="form-group">
-                                        <label class="col-sm-12" for="@Html.NameFor(x=>x.TPin)"> Tpin (<span style="color:red">*</span>)</label>
+                                        <label class="col-sm-12" for="@Html.NameFor(x=>x.TPin)"> T-PIN (<span style="color:red">*</span>)</label>
 
-                                        @Html.PasswordFor(x => x.TPin, new { @class = "form-control pwd1", @title = "Please use T-Pin number", @placeholder = "T-Pin", @maxlength = "4", @onkeypress = "return isNumber(event)", @oninput = "checkValidation()", @autocomplete = "new-password", @onpaste = "return false" })
+                                        @Html.PasswordFor(x => x.TPin, new { @class = "form-control pwd1", @title = "Please use T-PIN number", @placeholder = "T-PIN", @maxlength = "4", @onkeypress = "return isNumber(event)", @oninput = "checkValidation()", @autocomplete = "new-password", @onpaste = "return false" })
                                         <span toggle="#password-field" class="fa fa-fw fa-eye field-icon toggle-password, btnShow1"></span>
                                     </div>
                                     <div class="form-group" id="PinErr" style="color:red; margin-top:-11px;"></div>
@@ -434,12 +443,12 @@
 
             if (pin.trim() == "") {
                 $("#PinErr").html("");
-                $("#PinErr").append("<small>" + "Please Enter the T-Pin" + "</small>");
+                $("#PinErr").append("<small>" + "Please Enter the T-PIN" + "</small>");
                 $("#PinErr").show();
             }
             else if (pin.length != 4) {
                 $("#PinErr").html("");
-                $("#PinErr").append("<small>" + "T-Pin must be 4 character long." + "</small>");
+                $("#PinErr").append("<small>" + "T-PIN must be 4 character long." + "</small>");
                 $("#PinErr").show();
             }
             else {
@@ -527,11 +536,9 @@
                         }
                     },
                     error: function (jqXHR, textStatus, errorThrown) {
-                        alert('Failed to retrieve.');
                         $("#message").html("");
-                        $("#message").append(jqXHR.responseText);
+                        $("#message").append("Something went wrong. Please try again later");
                         $('#failureModal').modal("show");
-
                     },
                     //capture the request before it was sent to server
                     beforeSend: function (jqXHR, settings) {
