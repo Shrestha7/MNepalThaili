@@ -343,6 +343,11 @@
          window.location.href = url;
         };
 
+        document.getElementById("failureModal").onclick = function () {
+         var url = '@Url.Action("Index", "UserDashboard")';
+         window.location.href = url;
+        };
+
         function isNumber(evt) {
             evt = (evt) ? evt : window.event;
             var charCode = (evt.which) ? evt.which : evt.keyCode;
@@ -460,7 +465,8 @@
                     data: dataToPost,
                     async: true,
                     success: function (data) {
-                        if (data.responseCode == "200" && data.responseText == "Unable to perform transaction") {
+                        debugger;
+                        if (data.responseCode == "200" && data.responseText == "Service Unavailable") {
                             $("#message").html("");
                             $("#message").append("Unable to perform transaction");
                             $('#failureModal').modal("show");

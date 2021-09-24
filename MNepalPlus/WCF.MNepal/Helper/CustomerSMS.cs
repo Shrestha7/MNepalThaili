@@ -79,6 +79,14 @@ namespace WCF.MNepal.Helper
                                     AlertSalMessage = AlertSalMessage.Replace("\\n", "\n");
                                 }
                             }
+                            if (alertType == "SUBISUR")
+                            {
+                                if (AlertSalMessage.Contains("%s"))
+                                {
+                                    AlertSalMessage = sMSEnable.GetFinalMessage(AlertSalMessage, AlertSalParameters);
+                                    AlertSalMessage = AlertSalMessage.Replace("\\n", "\n");
+                                }
+                            }
                             if (alertType == "VIANET")
                             {
                                 if (AlertSalMessage.Contains("%s"))
@@ -87,7 +95,23 @@ namespace WCF.MNepal.Helper
                                     AlertSalMessage = AlertSalMessage.Replace("\\n", "\n");
                                 }
                             }
+                            if (alertType == "VIANETR")
+                            {
+                                if (AlertSalMessage.Contains("%s"))
+                                {
+                                    AlertSalMessage = sMSEnable.GetFinalMessage(AlertSalMessage, AlertSalParameters);
+                                    AlertSalMessage = AlertSalMessage.Replace("\\n", "\n");
+                                }
+                            }
                             if (alertType == "WLINK")
+                            {
+                                if (AlertSalMessage.Contains("%s"))
+                                {
+                                    AlertSalMessage = sMSEnable.GetFinalMessage(AlertSalMessage, AlertSalParameters);
+                                    AlertSalMessage = AlertSalMessage.Replace("\\n", "\n");
+                                }
+                            }
+                            if (alertType == "WLINKR")
                             {
                                 if (AlertSalMessage.Contains("%s"))
                                 {

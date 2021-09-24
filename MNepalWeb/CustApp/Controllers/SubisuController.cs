@@ -495,11 +495,7 @@ namespace CustApp.Controllers
                 try
                 {
                     if (_res.IsSuccessStatusCode)
-                    {
-                        //Session value removed
-                        Session.Remove("NWCounter");
-                        Session.Remove("CustomerID");
-
+                    {                      
                         result = true;
                         responseCode = (int)_res.StatusCode;
                         responsetext = await _res.Content.ReadAsStringAsync();

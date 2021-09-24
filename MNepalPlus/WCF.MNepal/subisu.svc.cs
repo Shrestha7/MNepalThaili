@@ -472,6 +472,7 @@ namespace WCF.MNepal
                 sourcechannel = src
             };
 
+            string compResultResp = "";
 
             if (sc == "00")
             {
@@ -989,7 +990,7 @@ namespace WCF.MNepal
                 //}
                 
             }
-            string compResultResp = "";
+            
             try
             {
 
@@ -1519,7 +1520,7 @@ namespace WCF.MNepal
 
             try
             {
-                #region REVERSE TRANSACTION OF NW
+                #region REVERSE TRANSACTION OF Subisu
 
 
                 //REverse Transaction 
@@ -1970,39 +1971,70 @@ namespace WCF.MNepal
                                             string messagereply = "";
                                             try
                                             {
-                                                messagereply = "Dear " + CustCheckUtils.GetName(mobile) + "," + "\n";
+                                                AlertType = "SUBISUR";
 
-                                                messagereply += " You have successfully reverse  NPR " + validTransactionData.Amount
-                                                                    + " to " +
-                                                                    //GetMerchantName 
-                                                                    "Demat Payment." + " on date " +
-                                                                    (validTransactionData.CreatedDate).ToString("dd/MM/yyyy")
-                                                                + "." + "\n";
-                                                messagereply += "Thank you. NIBL Thaili";
+                                                CustomerSMS customerSMS = new CustomerSMS();
+                                                string cSMS = customerSMS.CustSMSEnable(AlertType, mobile.Trim(), "", amount.ToString(), vid, "", (validTransactionData.CreatedDate).ToString("dd/MM/yyyy"));
+                                                if (cSMS == "false")
+                                                {
+                                                    custsmsInfo = new CustActivityModel()
+                                                    {
+                                                        UserName = mobile,
+                                                        RequestMerchant = transactionType,
+                                                        DestinationNo = fundtransfer.da,
+                                                        Amount = validTransactionData.Amount.ToString(),
+                                                        SMSStatus = "Failed",
+                                                        SMSSenderReply = message,
+                                                        ErrorMessage = failedmessage,
+                                                    };
+                                                }
+                                                else
+                                                {
+                                                    custsmsInfo = new CustActivityModel()
+                                                    {
+                                                        UserName = mobile,
+                                                        RequestMerchant = transactionType,
+                                                        DestinationNo = fundtransfer.da,
+                                                        Amount = validTransactionData.Amount.ToString(),
+                                                        SMSStatus = "Success",
+                                                        SMSSenderReply = cSMS,
+                                                        ErrorMessage = "",
+                                                    };
 
-                                                var client = new WebClient();
+                                                    try
+                                                    {
+                                                        int results = CustActivityUtils.RegisterCustActivityInfo(custsmsInfo);
+                                                        if (results > 0)
+                                                        {
+                                                            if (statusCode != "200")
+                                                            {
+                                                                result = message;
+                                                                message = result;
+                                                            }
+                                                            else
+                                                            {
+                                                                message = result;
+                                                            }
 
-                                                //SENDER
-                                                //if ((mobile.Substring(0, 3) == "980") || (mobile.Substring(0, 3) == "981")) //FOR NCELL
-                                                //{
-                                                //    //FOR NCELL
-                                                //    var content = client.DownloadString(
-                                                //        SMSNCELL + "977" + mobile + "&message=" + messagereply + "");
-                                                //}
-                                                //else if ((mobile.Substring(0, 3) == "985") || (mobile.Substring(0, 3) == "984")
-                                                //            || (mobile.Substring(0, 3) == "986"))
-                                                //{
-                                                //    //FOR NTC
-                                                //    var content = client.DownloadString(
-                                                //        SMSNTC + "977" + mobile + "&message=" + messagereply + "");
-                                                //}
+                                                        }
+                                                        else
+                                                        {
+                                                            message = result;
+                                                        }
+
+                                                    }
+                                                    catch (Exception ex)
+                                                    {
+                                                        string ss = ex.Message;
+                                                        message = result;
+                                                    }
+                                                }
 
                                                 statusCode = "200";
                                                 var v = new
                                                 {
                                                     StatusCode = Convert.ToInt32(statusCode),
-                                                    //StatusMessage = result
-                                                    StatusMessage = "Unable to perform transaction"
+                                                    StatusMessage = result
                                                 };
                                                 result = JsonConvert.SerializeObject(v);
 
@@ -2122,6 +2154,16 @@ namespace WCF.MNepal
                 result = result.ToString();
             }
             //else if (statusCode != "200")
+            else if (compResultResp == "101")
+            {
+                var v = new
+                {
+                    StatusCode = Convert.ToInt32(statusCode),
+                    StatusMessage = "Service Unavailable"
+                };
+                result = JsonConvert.SerializeObject(v);
+            }
+
             else if ((statusCode != "200") || (statusCodeBalance == "400"))
             {
                 if (message == "")
@@ -2132,12 +2174,16 @@ namespace WCF.MNepal
                     }
                     message = result;
                 }
-                var v = new
-                {
-                    StatusCode = Convert.ToInt32(statusCode),
-                    StatusMessage = failedmessage
-                };
-                result = JsonConvert.SerializeObject(v);
+                 var v = new
+                    {
+                        StatusCode = Convert.ToInt32(statusCode),
+                        StatusMessage = failedmessage
+                    };
+                    result = JsonConvert.SerializeObject(v);
+                
+               
+               
+                
             }
             return result;
         }
