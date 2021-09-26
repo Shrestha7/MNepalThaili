@@ -367,7 +367,10 @@
         $(".btnShow1").on("mouseleave", function () {
             $(".pwd1").attr("type", "password");
         });
-
+         document.getElementById("failureModal").onclick = function () {
+         var url = '@Url.Action("Index", "UserDashboard")';
+         window.location.href = url;
+        };
 
         document.getElementById("successModal").onclick = function () {
          var url = '@Url.Action("Index", "UserDashboard")';
@@ -378,8 +381,6 @@
          window.location.href = url;
         };
 
-
-        
        function updateNRs()
        {
            debugger;
@@ -399,9 +400,9 @@
            document.getElementById('amount').value = selectedOptionAmount;
         }
 
-        
 
-      
+
+
 
         function isNumber(evt) {
             evt = (evt) ? evt : window.event;
@@ -429,7 +430,7 @@
             return true;
         }
 
-        
+
         $(".show-tick").prepend("<option value='0' disabled selected>---Select Option---</option>");
 
         function checkValidation() {
@@ -504,7 +505,7 @@
             var amount = $("[name='amount']").val();
             var TPin = $("[name='TPin']").val();
             var Remarks = $("[name='Remarks']").val();
-            var servicecode = $("[name='TransactionMedium']").val();  
+            var servicecode = $("[name='TransactionMedium']").val();
             var getPackageId = window.getPackageId;  //getPackageId
             if ((amount != "") && (Remarks != "") && (TPin != "") && (TPin.length == 4)) {
 
@@ -523,8 +524,13 @@
                     data: dataToPost,
                     async: true,
                     success: function (data) {
+                        if (data.responseCode == "200" && data.responseText == "Service Unavailable") {
+                            $("#message").html("");
+                            $("#message").append("Unable to perform transaction");
+                            $('#failureModal').modal("show");
+                        }
 
-                        if (data.responseCode == "200") {
+                       else if (data.responseCode == "200") {
                             debugger;
                             $("#ajaxResponse").html("");
                             var resp = JSON.parse(data.responseText);

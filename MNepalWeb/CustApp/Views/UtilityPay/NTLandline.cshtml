@@ -115,16 +115,15 @@
                                     <div class="item-inner">
                                         <a href="@Url.Action("NTTopUp","UtilityPay")">
                                             <div class="content-inner">
+                                                <div class="col-md-2">
+                                                    <span class="centered1" style="font-size:12px">Flat 4% Discount</span>
+                                                </div>
                                                 <span class="icon-icon-gsm1"></span>
                                                 <div class="container1">
                                                     <span class="icon-icon-gsm2" alt="green" style="width:100%; margin-top: -30px;"></span>
                                                     <span class="centered1" style="margin-left:40px; font-size:10px;">GSM</span>
                                                 </div>
-                                                @*<i class="thaili-icon-load-wallet"></i><span>NTC Top up</span>
-                                                    <div class="img-holder">
-                                                    <img src="~/Content/assets/img/icons/icon-gsm1.svg" class="icon1" alt="" />
-                                                    <img src="~/Content/assets/img/icons/icon-gsm2.svg" class="icon2" alt="" />
-                                                     </div>*@
+
 
                                             </div>
                                         </a>
@@ -136,12 +135,11 @@
                                     <div class="item-inner">
                                         <a href="@Url.Action("NCELLTopUp", "UtilityPay" )">
                                             <div class="content-inner">
+                                                <div class="col-md-2">
+                                                    <span class="centered1" style="font-size:12px; margin-top:10px; margin-left:-10px">Flat 2% Discount</span>
+                                                </div>
                                                 <span class="icon-icon-ncell" style="margin-bottom:30px;"></span>
 
-                                                @*<i class="thaili-icon-transfer-funds"></i><span>NCell Top up</span>
-                                                    <div class="img-holder">
-                                                        <img src="~/Content/assets/img/icons/icon-ncell.svg" class="ncell_icon" alt="" />
-                                                    </div>*@
 
                                             </div>
                                         </a>
@@ -153,42 +151,21 @@
                                     <div class="item-inner">
                                         <a href="@Url.Action("ADSLTopUp", "UtilityPay" )">
                                             <div class="content-inner">
+                                                <div class="col-md-2">
+                                                    <span class="centered1" style="font-size:12px">Flat 4% Discount</span>
+                                                </div>
                                                 <span class="icon-icon-adsl1"></span>
                                                 <div class="container1">
                                                     <span class="icon-icon-adsl2" alt="green" style="width:100%;margin-top: -30px;"></span>
                                                     <span class="centered1" style="margin-left:40px; font-size:10px;">ADSL</span>
                                                 </div>
 
-                                                @*<i class="thaili-icon-top-up"></i><span>ADSL Top Up</span>
-                                                    <div class="img-holder">
-                                                        <img src="~/Content/assets/img/icons/icon-adsl1.svg" class="icon1" alt="" />
-                                                        <img src="~/Content/assets/img/icons/icon-adsl2.svg" class="icon2" alt="" />
-                                                    </div>*@
                                             </div>
                                         </a>
                                     </div>
                                 </div>
 
-                                @*<div class="item top-up">
-                                                    <div class="item-inner">
-                                                        <a href="@Url.Action("NTLandline", "UtilityPay" )">
-                                                            <div class="content-inner">
-                                                                <span class="icon-icon-landline1"></span>
-                                                                <div class="container1">
-                                                                    <span class="icon-icon-landline2" alt="green" style="width:100%;margin-top: -10px;"></span>
-                                                                    <span class="centered1" style="margin-left:40px; font-size:10px;">LANDLINE</span>
-                                                                </div>
-
-                                                                @*<i class="thaili-icon-recharge"></i><span>NTC Landline</span>
-                                    <div class="img-holder">
-                                        <img src="~/Content/assets/img/icons/icon-landline1.svg" class="icon1" alt="" />
-                                        <img src="~/Content/assets/img/icons/icon-landline2.svg" class="icon2" alt="" />
-                                    </div>*@
-
-                                @*</div>
-                                            </a>
-                                        </div>
-                                    </div>*@
+                              
                                 <!-- /item -->
 
                             </div>
@@ -236,7 +213,7 @@
                                         }
                                     }
 
-
+                                <p style="text-align:center"><span class="font-weight-bold"> Note:</span> Enjoy flat 4% on each topup </p>
                                     <div class="transfer-order clearfix">
                                         <h3 class="title">Pay from</h3>
 
@@ -264,25 +241,25 @@
                                         <div class="form-group">
                                             <label for="@Html.NameFor(x=>x.Amount)">Amount (<span style="color:red">*</span>)</label>
                                             @Html.DropDownListFor(model => model.Amount, new SelectList(Amount, "Value", "Text"), new { @class = "form-control", @required = "required", @style = "width: 100%;", @id = "Amount" })
-                                            
-                                            @*<select class="form-control" id="Amount" name="Amount" onmousedown="this.value='';">
-                                                <option value="100">NPR. 100</option>
-                                                <option value="200">NPR. 200</option>
-                                                <option value="300">NPR. 300</option>
-                                                <option value="500">NPR. 500</option>
-                                                <option value="1000">NPR. 1000</option>
-                                                <option value="1500">NPR. 1500</option>
-                                                <option value="2000">NPR. 2000</option>
-                                                <option value="2500">NPR. 2500</option>
-                                                <option value="3000">NPR. 3000</option>
-                                                <option value="4000">NPR. 4000</option>
-                                                <option value="5000">NPR. 5000</option>
 
-                                            </select>*@
+                                            @*<select class="form-control" id="Amount" name="Amount" onmousedown="this.value='';">
+                    <option value="100">NPR. 100</option>
+                    <option value="200">NPR. 200</option>
+                    <option value="300">NPR. 300</option>
+                    <option value="500">NPR. 500</option>
+                    <option value="1000">NPR. 1000</option>
+                    <option value="1500">NPR. 1500</option>
+                    <option value="2000">NPR. 2000</option>
+                    <option value="2500">NPR. 2500</option>
+                    <option value="3000">NPR. 3000</option>
+                    <option value="4000">NPR. 4000</option>
+                    <option value="5000">NPR. 5000</option>
+
+                </select>*@
 
                                             @*<input type="text" id="Amount" name="Amount" class="form-control" placeholder="Amount"
-                                     required title="Please use 2 digit amount" maxlength="5" onkeypress="return isNumber(event)" onchange="checkValidation()" />
-                            <div id="Amt" style="color:red;"></div>*@
+                         required title="Please use 2 digit amount" maxlength="5" onkeypress="return isNumber(event)" onchange="checkValidation()" />
+                <div id="Amt" style="color:red;"></div>*@
                                         </div>
 
                                         <div class="form-group">

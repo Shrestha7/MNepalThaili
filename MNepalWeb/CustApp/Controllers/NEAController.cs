@@ -207,7 +207,10 @@ namespace CustApp.Controllers
                         //response
                         var responseContent = await httpResponse.Content.ReadAsStringAsync();
                         var json = JsonConvert.DeserializeObject<NeaBillResponse>(responseContent);
-
+                        string[] additionalData = new string[1];
+                        additionalData = json.AdditionalData.ToString().Split('^');
+                        Session["customerName"] = additionalData[0];
+                        Session["amount"] = additionalData[1];
 
                     }
 
@@ -219,6 +222,7 @@ namespace CustApp.Controllers
                     int responseCode = 0;
                     string message = string.Empty;
                     string responsetext = string.Empty;
+                    string respmsg = "";
                     bool result = false;
                     string ava = string.Empty;
                     string avatra = string.Empty;
@@ -232,12 +236,22 @@ namespace CustApp.Controllers
                             responsetext = await httpResponse.Content.ReadAsStringAsync();
                             message = httpResponse.Content.ReadAsStringAsync().Result;
                             var jsonResult = JsonConvert.DeserializeObject<NeaBillResponse>(message);
-                            if (jsonResult.ResultCode == "200" || jsonResult.ResultCode!="200" || jsonResult.ResultCode=="999")
+                            
+                            if (Session["amount"].ToString() == "0")
+                            {
+                               respmsg = "No Pending Bill";
+
+                                return Json(new { responseCode = responseCode, responseMessage = respmsg },
+                                JsonRequestBehavior.AllowGet);
+
+                            }
+                            else if (jsonResult.ResultCode == "200" || jsonResult.ResultCode!="200" || jsonResult.ResultCode=="999")
                             {
                                 responseCode =Convert.ToInt32(jsonResult.ResultCode);
                                 responsetext = jsonResult.ResultDescription;
                             }
-                            string respmsg = "";
+                            
+                            
 
                             return Json(new { responseCode = responseCode, responseText = responsetext },
                             JsonRequestBehavior.AllowGet);
@@ -333,9 +347,18 @@ namespace CustApp.Controllers
                     regobj.SCNo = dResponse.Rows[0]["SCN"].ToString();
                     regobj.NEABranchCode = dResponse.Rows[0]["NEABranchCode"].ToString();
                     regobj.CustomerID = dResponse.Rows[0]["CustomerId"].ToString();
-                    string[] additionalData = dResponse.Rows[0]["AdditionalData"].ToString().Split('^');
-                    regobj.CustomerName = additionalData[0];
-                    regobj.amount = additionalData[1];
+                    string[] additionalData = new string[1];
+                    if (dResponse.Rows[0]["AdditionalData"].ToString() == "")
+                    {
+                        regobj.CustomerName = Session["customerName"].ToString();
+                        regobj.amount = Session["amount"].ToString();
+                    }
+                    else
+                    {
+                        additionalData = dResponse.Rows[0]["AdditionalData"].ToString().Split('^');
+                        regobj.CustomerName = additionalData[0];
+                        regobj.amount = additionalData[1];
+                    }                   
 
                     //regobj.TotalAmountDue = dResponse.Rows[0]["amount"].ToString();
 

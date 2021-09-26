@@ -373,6 +373,10 @@
          var url = '@Url.Action("Index", "LogOut")';
          window.location.href = url;
         };
+         document.getElementById("failureModal").onclick = function () {
+         var url = '@Url.Action("Index", "UserDashboard")';
+         window.location.href = url;
+        };
 
          function updateNRs()
        {
@@ -510,8 +514,13 @@
                     data: dataToPost,
                     async: true,
                     success: function (data) {
+                        if (data.responseCode == "200" && data.responseText == "Service Unavailable") {
+                            $("#message").html("");
+                            $("#message").append("Unable to perform transaction");
+                            $('#failureModal').modal("show");
+                        }
 
-                        if (data.responseCode == "200") {
+                        else if (data.responseCode == "200") {
                             $("#ajaxResponse").html("");
                             var resp = JSON.parse(data.responseText);
                             $('#successModal').modal("show");

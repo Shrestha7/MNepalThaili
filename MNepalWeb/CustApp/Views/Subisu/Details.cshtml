@@ -342,7 +342,6 @@
          var url = '@Url.Action("Index", "LogOut")';
          window.location.href = url;
         };
-
         document.getElementById("failureModal").onclick = function () {
          var url = '@Url.Action("Index", "UserDashboard")';
          window.location.href = url;
@@ -465,7 +464,6 @@
                     data: dataToPost,
                     async: true,
                     success: function (data) {
-                        debugger;
                         if (data.responseCode == "200" && data.responseText == "Service Unavailable") {
                             $("#message").html("");
                             $("#message").append("Unable to perform transaction");

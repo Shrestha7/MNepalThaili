@@ -222,7 +222,7 @@
                                     <label>Total Due Amount:</label>
                                 </div>
                                 <div class="col-md-6">
-                                    <label id="amount">RS.@ViewBag.TotalAmountDue</label>
+                                    <label id="amount">Rs. @ViewBag.TotalAmountDue</label>
                                 </div>
                             </div>
 
@@ -561,13 +561,14 @@
                     },
                     async: true,
                     success: function (data) {
+                        debugger;
                         if (data.responseCode == "200" && data.responseText == "Insufficient Balance") {
                             $("#ajaxResponse").html("");
                             $("#message").html("");
                             $("#message").append("Insufficient Balance");
                             $('#failureModal').modal("show");
                         }
-                        //display error message
+                       
                         else if (data.responseCode == "417") {
                             $("#ajaxResponse").html("");
                             $("#message").html("");

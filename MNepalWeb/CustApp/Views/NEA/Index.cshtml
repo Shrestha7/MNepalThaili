@@ -164,7 +164,7 @@
                                     </div>
                                 }
                             }
-                        <p style="text-align:center"><span class="font-weight-bold"> Note:</span> The service is available between 10:00 AM  (GMT +05:45)  to 12:00  midnight  (GMT +05:45) only. </p>
+                            <p style="text-align:center"><span class="font-weight-bold"> Note:</span> The service is available between 10:00 AM  to 12:00 AM midnight. </p>
 
                             <div class="row">
                                 <div class="col-md-12">
@@ -232,6 +232,23 @@
         </div>
     </div>
 
+    <!-- Success modal -->
+    <div class="modal fade common-modal" id="successModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-body text-center">
+                    <div class="success-icon">
+                        <img src="~/Content/assets/img/info.jpg" style="height:100px;width:100px" />
+                    </div>
+                    <p class="msg">@*Success!*@</p>
+                    <span style="color: green; font-size: 1.111rem; font-weight: 700;" id="message1"></span>
+                    <br /> <br />
+                    <button type="button" class="btn btn-blue" data-dismiss="modal" style="width:80%">OK</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <!-- Failure modal session expired -->
     <div class="modal fade common-modal" id="failureModalSessionExpired" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle">
         <div class="modal-dialog modal-dialog-centered" role="document">
@@ -264,7 +281,6 @@
         //START //TO RESET VALUES AFTER PRESSING BACK FROM BROWSER
 
         $(window).bind("pageshow", function () {
-            debugger;
             var NEABranchName = $("[name='NEA']").val();
             if ((NEABranchName != null))
             {
@@ -276,12 +292,17 @@
         });
         //ENDS
 
-        @*document.getElementById("successModal").onclick = function () {
-         var url = '@Url.Action("Details", "NEA")';
+        document.getElementById("successModal").onclick = function () {
+         var url = '@Url.Action("Index", "UserDashboard")';
          window.location.href = url;
-        };*@
+        };
+
+        document.getElementById("failureModal").onclick = function () {
+         var url = '@Url.Action("Index", "UserDashboard")';
+         window.location.href = url;
+        };
+
         document.getElementById("failureModalSessionExpired").onclick = function () {
-            debugger;
          var url = '@Url.Action("Index", "LogOut")';
          window.location.href = url;
         };
@@ -384,17 +405,16 @@
         $("#clearButton").click(function () {
             debugger;
             $("#SCNo").val("");
-            $("#CustomerID").val("");          
+            $("#CustomerID").val("");
             //reset selectedDrpdwn value
             $('select[name=txtNeaBranchDrpdwn]').val(0);
             $('.show-tick').selectpicker('refresh');
-         
+
         });
 
 
-        
+
         $('#btnSubmit').click(function (e) {
-            debugger;
             $('#btnSubmit').attr("disabled", true);
             e.preventDefault();
 
@@ -427,13 +447,18 @@
                     },
                     async: true,
                     success: function (data) {
-                        debugger;
-                        if (data.responseCode == "200" || data.responseCode=="0") {
-                            debugger;
+                        if (data.responseCode == "200" && data.responseMessage == "No Pending Bill") {
+                            $("#ajaxResponse").html("");
+                            $("#message").html("");
+                            $("#message1").append("No Pending Bill");
+                            $('#successModal').modal("show");
+                        }
+                        else if (data.responseCode == "200" || data.responseCode=="0") {
                             var url = '@Url.Action("Details", "NEA")';
                             window.location.href = url;
 
                         }
+
                         else if (data.responseCode == "999") {
                             $("#ajaxResponse").html("");
                             $("#message").html("");

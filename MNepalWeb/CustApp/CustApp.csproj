@@ -322,6 +322,7 @@
     <Content Include="Content\assets\img\icons\icon-top-up.svg" />
     <Content Include="Content\assets\img\icons\icon-transfer-funds.svg" />
     <Content Include="Content\assets\img\icons\icon-wallet.svg" />
+    <Content Include="Content\assets\img\info.jpg" />
     <Content Include="Content\assets\img\kyc-graphic.svg" />
     <Content Include="Content\assets\img\list-ellipse.png" />
     <Content Include="Content\assets\img\nibl-logo.png" />
