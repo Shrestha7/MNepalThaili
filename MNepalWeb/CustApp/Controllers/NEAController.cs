@@ -524,7 +524,7 @@ namespace CustApp.Controllers
                 ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12 | SecurityProtocolType.Tls11 | SecurityProtocolType.Tls;
 
                 nea.mobile = mobile;
-                nea.da = ConfigurationManager.AppSettings["DestinationNumber"];
+                nea.da = ConfigurationManager.AppSettings["NEADestinationNumber"];
                 nea.destBranchCode = NEAObj.NEABranchCode;
                 nea.tokenID = Session["TokenID"].ToString();
                 nea.tid = tid;

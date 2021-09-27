@@ -450,8 +450,8 @@
                         if (data.responseCode == "200" && data.responseMessage == "No Pending Bill") {
                             $("#ajaxResponse").html("");
                             $("#message").html("");
-                            $("#message1").append("No Pending Bill");
-                            $('#successModal').modal("show");
+                            $("#message").append("No Pending Bill");
+                            $('#failureModal').modal("show");
                         }
                         else if (data.responseCode == "200" || data.responseCode=="0") {
                             var url = '@Url.Action("Details", "NEA")';
