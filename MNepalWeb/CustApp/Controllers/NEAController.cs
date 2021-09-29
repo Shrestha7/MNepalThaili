@@ -202,15 +202,36 @@ namespace CustApp.Controllers
 
                     NEADetails neaBranch = new NEADetails();
 
+                    int responseCode = 0;
+                    string respmsg = "";
                     if (httpResponse.Content != null && httpResponse.StatusCode == HttpStatusCode.OK)
                     {
                         //response
                         var responseContent = await httpResponse.Content.ReadAsStringAsync();
                         var json = JsonConvert.DeserializeObject<NeaBillResponse>(responseContent);
                         string[] additionalData = new string[1];
-                        additionalData = json.AdditionalData.ToString().Split('^');
-                        Session["customerName"] = additionalData[0];
-                        Session["amount"] = additionalData[1];
+                        if(json.ResultCode=="000")
+                        {
+                            additionalData = json.AdditionalData.ToString().Split('^');
+                            Session["customerName"] = additionalData[0];
+                            Session["amount"] = additionalData[1];
+                        }
+
+                        else if(json.ResultCode=="999" && json.ResultDescription== "Consumer can not pay more than once on the same day.")
+                        {
+                            responseCode =Convert.ToInt32(json.ResultCode);
+                            respmsg = json.ResultDescription;
+                            return Json(new { responseCode = responseCode, responseMessage = respmsg },
+                              JsonRequestBehavior.AllowGet);
+                        }
+
+                        else if (json.ResultCode == "999" && json.ResultDescription == "Record Not Found. Please recheck the Consumer details and try again.")
+                        {
+                            responseCode = Convert.ToInt32(json.ResultCode);
+                            respmsg = json.ResultDescription;
+                            return Json(new { responseCode = responseCode, responseMessage = respmsg },
+                              JsonRequestBehavior.AllowGet);
+                        }
 
                     }
 
@@ -218,11 +239,9 @@ namespace CustApp.Controllers
 
                     //string responseBody = _res.StatusCode.ToString() + " ," + await _res.Content.ReadAsStringAsync();
                     //_res.ReasonPhrase = responseBody;
-                    string errorMessage = string.Empty;
-                    int responseCode = 0;
+                    string errorMessage = string.Empty;                    
                     string message = string.Empty;
-                    string responsetext = string.Empty;
-                    string respmsg = "";
+                    string responsetext = string.Empty;                   
                     bool result = false;
                     string ava = string.Empty;
                     string avatra = string.Empty;

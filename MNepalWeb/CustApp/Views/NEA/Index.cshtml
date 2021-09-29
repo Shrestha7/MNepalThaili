@@ -458,6 +458,18 @@
                             window.location.href = url;
 
                         }
+                        else if (data.responseCode == "999" && data.responseMessage == "Consumer can not pay more than once on the same day.") {
+                            $("#ajaxResponse").html("");
+                            $("#message").html("");
+                            $("#message").append("Consumer can not pay more than once on the same day.");
+                            $('#failureModal').modal("show");
+                        }
+                        else if (data.responseCode == "999" && data.responseMessage == "Record Not Found. Please recheck the Consumer details and try again.") {
+                            $("#ajaxResponse").html("");
+                            $("#message").html("");
+                            $("#message").append("Record Not Found. Please recheck the Consumer details and try again.");
+                            $('#failureModal').modal("show");
+                        }
 
                         else if (data.responseCode == "999") {
                             $("#ajaxResponse").html("");
