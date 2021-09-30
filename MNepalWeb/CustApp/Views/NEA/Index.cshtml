@@ -164,7 +164,9 @@
                                     </div>
                                 }
                             }
-                            <p style="text-align:center"><span class="font-weight-bold"> Note:</span> The service is available between 10:00 AM  to 12:00 AM midnight. </p>
+                        <p style="text-align:center">
+                            <span class="font-weight-bold"> Note:</span> The service is available between 10:00 AM  (GMT + 05:45)  to 12:00  midnight  (GMT + 05:45) only.
+                        </p>
 
                             <div class="row">
                                 <div class="col-md-12">
@@ -297,10 +299,10 @@
          window.location.href = url;
         };
 
-        document.getElementById("failureModal").onclick = function () {
+        @*document.getElementById("failureModal").onclick = function () {
          var url = '@Url.Action("Index", "UserDashboard")';
          window.location.href = url;
-        };
+        };*@
 
         document.getElementById("failureModalSessionExpired").onclick = function () {
          var url = '@Url.Action("Index", "LogOut")';

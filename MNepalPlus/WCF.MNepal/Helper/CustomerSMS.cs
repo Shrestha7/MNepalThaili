@@ -198,7 +198,7 @@ namespace WCF.MNepal.Helper
                             {
                                 msgName = amount.ToString();
                                 resultparm = createdDate;
-                                ParamStr = "," + msgName + "," + resultparm;
+                                ParamStr = "," + msgName + "," + couponNumber + "," + resultparm;
                                 AlertParameters = ParamStr.Split(delimeterAlert, StringSplitOptions.None);
                             }
                             else if ((alertType == "WWS") || (alertType == "WBS") || (alertType == "BWS") || (alertType == "BBS"))

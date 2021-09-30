@@ -326,6 +326,7 @@ namespace WCF.MNepal
                                         }
                                         /*** ***/
 
+                                        SMSEnable sMSEnable = new SMSEnable();
                                         OutgoingWebResponseContext response = WebOperationContext.Current.OutgoingResponse;
                                         if (response.StatusCode == HttpStatusCode.OK)
                                         {
@@ -405,7 +406,7 @@ namespace WCF.MNepal
                                                 #region FOR CUSTOMER SMS
 
                                                 CustomerSMS customerSMS = new CustomerSMS();
-                                                string cSMS = customerSMS.CustSMSEnable(AlertType, mobile, "", validTransactionData.Amount.ToString(), "", "", validTransactionData.CreatedDate.ToString());
+                                                string cSMS = customerSMS.CustSMSEnable(AlertType, mobile, "", validTransactionData.Amount.ToString(), "", scn, validTransactionData.CreatedDate.ToString());
                                                 if (cSMS == "false")
                                                 {
 

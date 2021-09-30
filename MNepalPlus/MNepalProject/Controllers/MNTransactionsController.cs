@@ -104,7 +104,7 @@ namespace MNepalProject.Controllers
             else if (transaction.merchantType == "nea")
             {
                 //description1 = "NEA".PadRight(37) + transaction.destBranchCode + "!" + transaction.scn + "!" + transaction.consumerId + "!" + transaction.customerName;
-                description1 = "NEA Bill Payment to  " + transaction.scn;
+                description1 = "NEA Bill Payment for  " + transaction.scn;
                 transaction.Description = ":" + "NEA".PadRight(40) + transaction.destBranchCode + "!" + transaction.scn + "!" + transaction.consumerId + "!" + transaction.customerName;
             }
 
@@ -707,8 +707,7 @@ namespace MNepalProject.Controllers
                             {
                                 mnTransactionMaster.Description = mnTransactionMaster.Description.Substring(1, mnTransactionMaster.Description.Length - 1);
                             }
-                            //Remark = mnTransactionMaster.Description + " - " + desc1;
-                            Remark = mnTransactionMaster.Description;
+                            Remark = desc1;
                             if (Remark.EndsWith("- "))
                             {
                                 Remark = Remark.Substring(0, Remark.Length - 2);
@@ -718,19 +717,12 @@ namespace MNepalProject.Controllers
                         else if (mnTransactionMaster.FeatureCode == "31")
                         {
                             //Utility Payment
-
-                            //Desc1 = getProductID[0];
-                            //desc1 = "Payment To " + getProductID[0]; //"Wallet To Merchant's Bank a/c (Bill Payment)";
                             desc1 = description1;
                             desc2 = getProductID[1]; //getProductID[1];
                             desc3 = descthree; //getProductID[0];
                             Remark = mnTransactionMaster.Description + " - " + desc1;
                         }
 
-                        //string Remark = mnTransactionMaster.Description + " - " + desc1;
-                        //string Desc3;
-                        //string OTraceNo;
-                        //string OTranDateTime;
                         string IsProcessed = "F";
                         string ReverseStatus = transaction.ReverseStatus;
                         //TraceIdGenerator traceid = new TraceIdGenerator();
@@ -742,12 +734,7 @@ namespace MNepalProject.Controllers
 
                         MNRequest mnRequest = new MNRequest(OriginID, OriginType, ServiceCode, SourceBankCode, SourceBranchCode, SourceAccountNo, DestBankCode, DestBranchCode, DestAccountNo,
                             Amount, FeeId, TraceNo, TranDate, RetrievalRef, desc1, desc2, desc3, IsProcessed, Remark, ReverseStatus);
-                        //OriginID[varchar(16)], OriginType[varchar(4)], ServiceCode[varchar(2)],
-                        //SourceBankCode[varchar(4)], SourceBranchCode[varchar(5)], SourceAccountNo[varchar(20)],
-                        //DestBankCode[varchar(4)], DestBranchCode[varchar(5)], DestAccountNo[varchar(20)],
-                        //Amount[float], FeeId[int],TraceNo[string], RetrivalRef[string], Desc1[string],Desc2[string],
-                        //OTranDateTime(string), IsProcessed(string)
-                        /*
+                       
                             /*END:MNREQUEST*/
 
                         if (InsertIntoPumoriIn(mnRequest))
@@ -837,32 +824,6 @@ namespace MNepalProject.Controllers
                                 }
 
                             } while (waitForReply == "");
-
-                            //UnSuccessful
-                            //if (waitForReply == "99" || waitForReply == "907" || waitForReply == "114" || waitForReply == "116" || waitForReply == "911")
-                            //{
-                            //    //if (waitForReply == "")
-                            //    //{
-                            //        mnTransactionMaster.StatusId = STATUS_PUMORI_HTTPREPLY_FAILED;
-
-                            //        /*INSERT TRANSACTION LOG*/
-                            //        //Send Into TransactionLog
-                            //        transactionlog.TransactionId = TransactionId;    /*To retrive the latest Inserted Data into TrasncationMaster*/
-                            //        transactionlog.UpdatedDate = DateTime.Now;
-                            //        transactionlog.StatusId = mnTransactionMaster.StatusId;
-                            //        transactionlog.Description = "Transaction Failed At Pumori";
-
-                            //        translog.InsertDataIntoTransactionLog(transactionlog);
-                            //        /*END:TRANSACTION LOG*/
-
-                            //        /*UPDATE TRANSACTION*/
-                            //        mnTransactionMasterRepository.UpdateintoTransactionMaster(mnTransactionMaster);
-                            //    /*END:TRANSACTION*/
-
-                            //        mnTransactionMaster.Response = waitForReply; //"Dear Sir/Mam, Request accepted. Will respond separately";
-                            //        mnTransactionMaster.ResponseStatus(HttpStatusCode.BadRequest, mnTransactionMaster.Response);
-                            //    //}
-                            //}
 
                         }
                         else
@@ -2015,20 +1976,15 @@ namespace MNepalProject.Controllers
 
                         else if (mnTransactionMaster.FeatureCode == "33")
                         {
-                            Desc1 = description1;
-                            // Merchant Payment Bank to Bank
-                            //const int MaxLength = 49;
-                            //var name = "456546/Rupendra kaji Bahadur Budhacharya";
-                            //if (name.Length > MaxLength)
-                            //    name = name.Substring(0, MaxLength);
-                            //Desc1 = name;//"BILL PAYMENT"; //"Payment To " + getProductID[0]; //"Bank to Merchant's Bank a/c";
+                            Desc1 = description1;                           
 
                             if (mnTransactionMaster.Description.StartsWith(":"))
                             {
                                 mnTransactionMaster.Description = mnTransactionMaster.Description.Substring(1, mnTransactionMaster.Description.Length - 1);
                             }
                             //Remark = mnTransactionMaster.Description + " - " + Desc1;
-                            Remark = mnTransactionMaster.Description;
+                            //Remark = mnTransactionMaster.Description;
+                            Remark = Desc1;
                             if (Remark.EndsWith("- "))
                             {
                                 Remark = Remark.Substring(0, Remark.Length - 2);
@@ -2051,21 +2007,12 @@ namespace MNepalProject.Controllers
                             Remark = desc + " - Bill#" + transaction.billNo + " Name:" + transaction.studName;
 
                         }
-                        //string Remark = desc + " - Bill#" + transaction.billNo + " Name:" + transaction.studName;
-                        //string Desc3;
-                        //string OTraceNo;
-                        //string OTranDateTime;
+                        
                         string IsProcessed = "F";
                         string ReverseStatus = transaction.ReverseStatus;
                         MNRequest mnRequest = new MNRequest(OriginID, OriginType, ServiceCode, SourceBankCode, SourceBranchCode, SourceAccountNo, DestBankCode, DestBranchCode, DestAccountNo,
                             Amount, FeeId, TraceNo, TranDate, RetrievalRef, Desc1, Desc2, Desc3, IsProcessed, Remark, ReverseStatus);
 
-                        //OriginID[varchar(16)], OriginType[varchar(4)], ServiceCode[varchar(2)],
-                        //SourceBankCode[varchar(4)], SourceBranchCode[varchar(5)], SourceAccountNo[varchar(20)],
-                        //DestBankCode[varchar(4)], DestBranchCode[varchar(5)], DestAccountNo[varchar(20)],
-                        //Amount[float], FeeId[int],TraceNo[string], RetrivalRef[string], Desc1[string],Desc2[string],
-                        //OTranDateTime(string), IsProcessed(string)
-                        /*
                             /*END:MNREQUEST*/
 
                         ThreadPool.QueueUserWorkItem(BackgroundTaskWithObject, mnRequest);
@@ -2153,29 +2100,6 @@ namespace MNepalProject.Controllers
 
                             }
 
-                            //} while (waitForReply == "");
-
-                            //if (waitForReply == "")
-                            //{
-                            //    mnTransactionMaster.StatusId = STATUS_PUMORI_HTTPREPLY_FAILED;
-
-                            //    /*INSERT TRANSACTION LOG*/
-                            //    //Send Into TransactionLog
-                            //    transactionlog.TransactionId = TransactionId;    /*To retrive the latest Inserted Data into TrasncationMaster*/
-                            //    transactionlog.UpdatedDate = DateTime.Now;
-                            //    transactionlog.StatusId = mnTransactionMaster.StatusId;
-                            //    transactionlog.Description = "Transaction Failed At Pumori";
-
-                            //    translog.InsertDataIntoTransactionLog(transactionlog);
-                            //    /*END:TRANSACTION LOG*/
-
-                            //    /*UPDATE TRANSACTION*/
-                            //    mnTransactionMasterRepository.UpdateintoTransactionMaster(mnTransactionMaster);
-                            //    /*END:TRANSACTION*/
-
-                            //    mnTransactionMaster.Response = "Request will be responded separately";
-                            //    mnTransactionMaster.ResponseStatus(HttpStatusCode.NoContent, "accepted. will respond separately");
-                            //}
                         }
                         else
                         {
