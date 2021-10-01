@@ -232,6 +232,14 @@ namespace CustApp.Controllers
                             return Json(new { responseCode = responseCode, responseMessage = respmsg },
                               JsonRequestBehavior.AllowGet);
                         }
+                        else if (json.ResultCode == "999" && json.ResultDescription == "NEA Services currently unavailable, please perform your transactions between 10 AM (+5:45 GMT) and 12 AM midnight.")
+                        {
+                            responseCode = Convert.ToInt32(json.ResultCode);
+                            respmsg = json.ResultDescription;
+                            return Json(new { responseCode = responseCode, responseMessage = respmsg },
+                              JsonRequestBehavior.AllowGet);
+                        }
+
 
                     }
 

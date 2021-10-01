@@ -479,6 +479,12 @@
                             $("#message").append(data.responseText);
                             $('#failureModal').modal("show");
                         }
+                        else if (data.responseCode == "999" && data.responseMessage == "NEA Services currently unavailable, please perform your transactions between 10 AM (+5:45 GMT) and 12 AM midnight.") {
+                            $("#ajaxResponse").html("");
+                            $("#message").html("");
+                            $("#message").append(data.responseText);
+                            $('#failureModal').modal("show");
+                        }
                         else {
 
                             $("#ajaxResponse").html("");
