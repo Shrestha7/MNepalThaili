@@ -217,28 +217,35 @@ namespace CustApp.Controllers
                             Session["amount"] = additionalData[1];
                         }
 
-                        else if(json.ResultCode=="999" && json.ResultDescription== "Consumer can not pay more than once on the same day.")
+                        else if(json.ResultCode=="999" && json.ResultDescription!="")
                         {
                             responseCode =Convert.ToInt32(json.ResultCode);
                             respmsg = json.ResultDescription;
                             return Json(new { responseCode = responseCode, responseMessage = respmsg },
                               JsonRequestBehavior.AllowGet);
                         }
+                        else if (json.ResultCode == "999")
+                        {
+                            responseCode = Convert.ToInt32(json.ResultCode);
+                            respmsg = json.ResultDescription;
+                            return Json(new { responseCode = responseCode, responseText = respmsg },
+                              JsonRequestBehavior.AllowGet);
+                        }
 
-                        else if (json.ResultCode == "999" && json.ResultDescription == "Record Not Found. Please recheck the Consumer details and try again.")
-                        {
-                            responseCode = Convert.ToInt32(json.ResultCode);
-                            respmsg = json.ResultDescription;
-                            return Json(new { responseCode = responseCode, responseMessage = respmsg },
-                              JsonRequestBehavior.AllowGet);
-                        }
-                        else if (json.ResultCode == "999" && json.ResultDescription == "NEA Services currently unavailable, please perform your transactions between 10 AM (+5:45 GMT) and 12 AM midnight.")
-                        {
-                            responseCode = Convert.ToInt32(json.ResultCode);
-                            respmsg = json.ResultDescription;
-                            return Json(new { responseCode = responseCode, responseMessage = respmsg },
-                              JsonRequestBehavior.AllowGet);
-                        }
+                        //else if (json.ResultCode == "999" && json.ResultDescription == "Record Not Found. Please recheck the Consumer details and try again.")
+                        //{
+                        //    responseCode = Convert.ToInt32(json.ResultCode);
+                        //    respmsg = json.ResultDescription;
+                        //    return Json(new { responseCode = responseCode, responseMessage = respmsg },
+                        //      JsonRequestBehavior.AllowGet);
+                        //}
+                        //else if (json.ResultCode == "999" && json.ResultDescription == "NEA Services currently unavailable, please perform your transactions between 10 AM (+5:45 GMT) and 12 AM midnight.")
+                        //{
+                        //    responseCode = Convert.ToInt32(json.ResultCode);
+                        //    respmsg = json.ResultDescription;
+                        //    return Json(new { responseCode = responseCode, responseMessage = respmsg },
+                        //      JsonRequestBehavior.AllowGet);
+                        //}
 
 
                     }

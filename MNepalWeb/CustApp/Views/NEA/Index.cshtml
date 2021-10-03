@@ -460,18 +460,13 @@
                             window.location.href = url;
 
                         }
-                        else if (data.responseCode == "999" && data.responseMessage == "Consumer can not pay more than once on the same day.") {
+                        else if (data.responseCode == "999" && data.responseMessage !=null) {
                             $("#ajaxResponse").html("");
                             $("#message").html("");
-                            $("#message").append("Consumer can not pay more than once on the same day.");
+                            $("#message").append(data.responseMessage);
                             $('#failureModal').modal("show");
                         }
-                        else if (data.responseCode == "999" && data.responseMessage == "Record Not Found. Please recheck the Consumer details and try again.") {
-                            $("#ajaxResponse").html("");
-                            $("#message").html("");
-                            $("#message").append("Record Not Found. Please recheck the Consumer details and try again.");
-                            $('#failureModal').modal("show");
-                        }
+                       
 
                         else if (data.responseCode == "999") {
                             $("#ajaxResponse").html("");
@@ -479,12 +474,7 @@
                             $("#message").append(data.responseText);
                             $('#failureModal').modal("show");
                         }
-                        else if (data.responseCode == "999" && data.responseMessage == "NEA Services currently unavailable, please perform your transactions between 10 AM (+5:45 GMT) and 12 AM midnight.") {
-                            $("#ajaxResponse").html("");
-                            $("#message").html("");
-                            $("#message").append(data.responseText);
-                            $('#failureModal').modal("show");
-                        }
+                       
                         else {
 
                             $("#ajaxResponse").html("");
