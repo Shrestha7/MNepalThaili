@@ -348,6 +348,8 @@ namespace WCF.MNepal
                     StatusMessage = failedmessage,
                     retrievalRef = resCPPaypointVianetInfo.retrievalReferenceResCP,
                     refStanCK = resCPPaypointVianetInfo.refStanResCP,
+                    billAmount = resCPPaypointVianetInfo.amountResCP,
+                    billNumber = resCPPaypointVianetInfo.billNumberResCP,
                     description = pkg
                 };
                 result = JsonConvert.SerializeObject(v);
@@ -416,7 +418,7 @@ namespace WCF.MNepal
                                                     // string serviceCode = qs["special1s"]; //"11";//
             string account = qs["account"]; //"1234567";//            
             string special1 = qs["special1"]; //
-            string special2 = ""; //
+            string special2 = account; //
             string transactionDate = DateTime.Now.ToString("yyyy-MM-ddTHH:mm:ss");//"2019-11-22T11:11:02";
             long millisecondstrandId = DateTimeOffset.Now.ToUnixTimeMilliseconds();
             string transactionId = millisecondstrandId.ToString(); //"120163339819";
@@ -478,7 +480,9 @@ namespace WCF.MNepal
                 amount = amount,
                 pin = pin,
                 note = note,
-                sourcechannel = src
+                sourcechannel = src,
+                customerId = account
+                
             };
             if (sc == "00")
             {
@@ -840,7 +844,7 @@ namespace WCF.MNepal
                                 //start:Com focus one log///
                                 MNFundTransfer mnft = new MNFundTransfer(tid, fundtransfer.sc, fundtransfer.mobile,
                                     fundtransfer.sa, fundtransfer.amount, fundtransfer.da, fundtransfer.note, fundtransfer.pin,
-                                    fundtransfer.sourcechannel);
+                                    fundtransfer.sourcechannel,"","Vianet","","","","","", special2);
                                 var comfocuslog = new MNComAndFocusOneLog(mnft, DateTime.Now);
                                 var mncomfocuslog = new MNComAndFocusOneLogsController();
                                 //mncomfocuslog.InsertIntoComFocusOne(comfocuslog);
@@ -880,6 +884,7 @@ namespace WCF.MNepal
                                     {
                                        
                                         var transactionpaypoint = new MNTransactionMaster(mnft);
+                                        transactionpaypoint.special2 = mnft.special2;
                                         var mntransactionpaypoint = new MNTransactionsController();
                                         validTransactionData = mntransactionpaypoint.Validatepaypoint(transactionpaypoint, mnft.pin);
                                         result = validTransactionData.Response;

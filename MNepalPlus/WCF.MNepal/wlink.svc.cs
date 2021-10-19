@@ -337,6 +337,8 @@ namespace WCF.MNepal
                     retrievalRef = resCPPaypointWlinkInfo.retrievalReferenceResCP,
                     refStanCK = resCPPaypointWlinkInfo.refStanResCP,
                     remainingDays = resCPPaypointWlinkInfo.customerName,
+                    billAmount = resCPPaypointWlinkInfo.amountResCP,
+                    billNumber = resCPPaypointWlinkInfo.billNumberResCP,
                     description = pkg
                 };
                 result = JsonConvert.SerializeObject(v);

@@ -198,6 +198,7 @@ namespace CustApp.Controllers
                         responsetext = await _res.Content.ReadAsStringAsync();
                         message = _res.Content.ReadAsStringAsync().Result;
                         string respmsg = "";
+                        string billAmount = "";
                         if (!string.IsNullOrEmpty(message))
                         {
                             JavaScriptSerializer ser = new JavaScriptSerializer();
@@ -206,7 +207,16 @@ namespace CustApp.Controllers
                             JsonParse myNames = ser.Deserialize<JsonParse>(json.d);
                             int code = Convert.ToInt32(myNames.StatusCode);
                             respmsg = myNames.StatusMessage;
-                            if (code != responseCode)
+                            billAmount = myNames.billAmount;
+
+                            if(billAmount == "0")
+                            {
+                                responseCode = code;
+                                respmsg = myNames.billAmount;
+                                return Json(new { responseCode = responseCode, responseText = respmsg },
+                       JsonRequestBehavior.AllowGet);
+                            }
+                            else if (code != responseCode)
                             {
                                 responseCode = code;
                             }

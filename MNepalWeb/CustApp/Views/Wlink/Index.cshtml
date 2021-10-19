@@ -341,9 +341,9 @@
                         }
 
                         //display error message
-                        else if (data.responseCode == "400") {
+                        else if (data.responseCode == "400" && data.responseText =="Subscriber is not found") {
                             $("#message").html("");
-                            $("#message").append("Unable to Fetch Details");
+                            $("#message").append("User Does Not Exists");
                             $('#failureModal').modal("show");
 
                         }

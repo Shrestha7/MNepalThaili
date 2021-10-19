@@ -53,6 +53,20 @@ namespace MNepalAPI.Controllers
         }
         #endregion
 
+        #region
+        [Route("api/EncryptDecrypt/DecryptPassword")]
+        [HttpPost]
+        public async Task<HttpResponseMessage> DecryptPassword(string password)
+        {
+            using (SHA512 sha512 = new SHA512Managed())
+            {
+                var pass = Encoding.UTF8.GetString(sha512.ComputeHash(Encoding.UTF8.GetBytes(password)));
+                return Request.CreateResponse(HttpStatusCode.OK, pass);
+            }
+        }
+
+        #endregion
+
 
 
     }

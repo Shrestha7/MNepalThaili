@@ -15,6 +15,7 @@ namespace CustApp.Models
 
         public string customer_nameKI { get; set; }
         public string timeStamp { get; set; }
+        public string billAmount { get; set; }
 
     }
 
