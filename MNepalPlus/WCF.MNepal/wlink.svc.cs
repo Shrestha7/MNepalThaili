@@ -177,10 +177,8 @@ namespace WCF.MNepal
                         utilityCode = xElem.Descendants().Elements("UtilityCode").Where(x => x.Name == "UtilityCode").SingleOrDefault().Value;
                         mask = xElem.Descendants().Elements("mask").Where(x => x.Name == "mask").SingleOrDefault().Value;
 
-                        Packages packages = new Packages();
                         if (mask == "0" || mask == "6")
                         {
-
                             var package = xElem.Descendants("packages").SingleOrDefault();
                             //var packageList = package.Descendants("package").ToList();
 
@@ -194,7 +192,11 @@ namespace WCF.MNepal
                             string stringBuilderPackageId = "";
                             foreach (XmlNode xmlNode in xmlNodeList)
                             {
+                                Packages packages = new Packages();
                                 packages.Description = xmlNode.OuterXml; /*xmlNode.InnerText;*/
+                                XDocument doc = XDocument.Parse(packages.Description);
+                                var getPackageDetails = from pack in doc.Descendants("package") select pack.Value;  // to get data inside package
+                                packages.Description = getPackageDetails.SingleOrDefault();
                                 packages.Amount = xmlNode.Attributes["amount"].Value;
                                 packages.PackageId = xmlNode.Attributes["id"].Value;
                                 pkg.Add(packages);
@@ -406,7 +408,7 @@ namespace WCF.MNepal
                                                     // string serviceCode = qs["special1s"]; //"11";//
             string account = qs["account"]; //"1234567";//            
             string special1 = ""; //
-            string special2 = ""; //
+            string special2 = account; //
             string transactionDate = DateTime.Now.ToString("yyyy-MM-ddTHH:mm:ss");//"2019-11-22T11:11:02";
             long millisecondstrandId = DateTimeOffset.Now.ToUnixTimeMilliseconds();
             string transactionId = millisecondstrandId.ToString(); //"120163339819";
@@ -839,7 +841,7 @@ namespace WCF.MNepal
                                 //start:Com focus one log///
                                 MNFundTransfer mnft = new MNFundTransfer(tid, fundtransfer.sc, fundtransfer.mobile,
                                     fundtransfer.sa, fundtransfer.amount, fundtransfer.da, fundtransfer.note, fundtransfer.pin,
-                                    fundtransfer.sourcechannel);
+                                    fundtransfer.sourcechannel,"","Worldlink","","","","","",special2);
                                 var comfocuslog = new MNComAndFocusOneLog(mnft, DateTime.Now);
                                 var mncomfocuslog = new MNComAndFocusOneLogsController();
                                 //mncomfocuslog.InsertIntoComFocusOne(comfocuslog);
@@ -879,6 +881,7 @@ namespace WCF.MNepal
                                     {
 
                                         var transactionpaypoint = new MNTransactionMaster(mnft);
+                                        transactionpaypoint.special2 = mnft.special2;
                                         var mntransactionpaypoint = new MNTransactionsController();
                                         validTransactionData = mntransactionpaypoint.Validatepaypoint(transactionpaypoint, mnft.pin);
                                         result = validTransactionData.Response;

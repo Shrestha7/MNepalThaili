@@ -209,14 +209,14 @@ namespace CustApp.Controllers
                             respmsg = myNames.StatusMessage;
                             billAmount = myNames.billAmount;
 
-                            if(billAmount == "0")
+                            if (billAmount == "0")
                             {
                                 responseCode = code;
                                 respmsg = myNames.billAmount;
                                 return Json(new { responseCode = responseCode, responseText = respmsg },
                        JsonRequestBehavior.AllowGet);
                             }
-                            else if (code != responseCode)
+                            if (code != responseCode)
                             {
                                 responseCode = code;
                             }

@@ -190,7 +190,6 @@ namespace WCF.MNepal
 
 
                        
-                        Packages packages = new Packages();
                         if (mask == "0" || mask == "6")
                         {
 
@@ -207,7 +206,11 @@ namespace WCF.MNepal
                             string stringBuilderPackageId = "";
                             foreach (XmlNode xmlNode in xmlNodeList)
                             {
+                                Packages packages = new Packages();
                                 packages.Description = xmlNode.OuterXml; /*xmlNode.InnerText;*/
+                                XDocument doc = XDocument.Parse(packages.Description);
+                                var getPackageDetails = from pack in doc.Descendants("package") select pack.Value;  // to get data inside package
+                                packages.Description = getPackageDetails.SingleOrDefault();
                                 packages.Amount = xmlNode.Attributes["amount"].Value; 
                                 packages.PackageId = xmlNode.Attributes["id"].Value;
                                 pkg.Add(packages);
