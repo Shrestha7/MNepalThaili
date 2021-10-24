@@ -393,7 +393,7 @@ namespace MNepalAPI.Controllers
                     };
 
                     //CIPS Request Database
-                    int resultsRequest = CIPSUtilities.ConnectIPSRequest(cipsObject, connectIPS.username, dateTime);
+                    //int resultsRequest = CIPSUtilities.ConnectIPSRequest(cipsObject, connectIPS.username, dateTime);
 
                     //CIPS Request Statement Database
                     int resultsRequestStatement = CIPSUtilities.ConnectIPSRequestStatement(cipsObject, connectIPS.username, dateTime);
@@ -574,7 +574,7 @@ namespace MNepalAPI.Controllers
                                 }
                                 cipsMNResponse.destAccountNumber = cipsTransactionDetailList.FirstOrDefault().creditorAccount;
                                 cipsMNResponse.feeId = "";                               
-                                cipsMNResponse.amount = cipsbatchdetail.batchAmount;
+                                cipsMNResponse.amount = cipsbatchdetail.batchAmount + feeAmount;
                                 cipsMNResponse.feeAmount = feeAmount;
                                 cipsMNResponse.traceNo = cipsMNRequest.traceNo;
                                 cipsMNResponse.tranDate = dateTime;
