@@ -605,7 +605,7 @@ namespace MNepalAPI.Controllers
                                         #region FOR CUSTOMER SMS
 
                                         CustomerSMS customerSMS = new CustomerSMS();
-                                        string cSMS = customerSMS.CustSMSEnable(AlertType, connectIPS.username.Trim(), "", cipsMNResponse.amount.ToString(), "", cipsMNResponse.destAccountNumber, dateTime.ToString("dd/MM/yyyy"));
+                                        string cSMS = customerSMS.CustSMSEnable(AlertType, connectIPS.username.Trim(), "", cipsbatchdetail.batchAmount.ToString(), "", cipsMNResponse.destAccountNumber, dateTime.ToString("dd/MM/yyyy"));
                                         if (cSMS == "false")
                                         {
 
@@ -662,7 +662,7 @@ namespace MNepalAPI.Controllers
             {
                 HelperStoreSqlLog.WriteError(ex, "BankToBank");
             }
-            return Request.CreateErrorResponse(HttpStatusCode.Unauthorized, "Unauthorized");
+            return Request.CreateErrorResponse(HttpStatusCode.Unauthorized, "Service Unavailable");
 
         }
         #endregion

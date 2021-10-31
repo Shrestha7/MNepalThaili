@@ -130,6 +130,7 @@ namespace CustApp.Models
         {
             public Cipsbatchresponse cipsBatchResponse { get; set; }
             public Cipstxnresponselist[] cipsTxnResponseList { get; set; }
+            public string Message { get; set; }
         }
 
         public class Cipsbatchresponse

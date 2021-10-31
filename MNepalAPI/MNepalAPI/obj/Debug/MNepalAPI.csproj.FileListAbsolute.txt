@@ -193,8 +193,8 @@ D:\Thaili\MNepalAPI\MNepalAPI\bin\pt-BR\Microsoft.Data.SqlClient.resources.dll
 D:\Thaili\MNepalAPI\MNepalAPI\bin\ru\Microsoft.Data.SqlClient.resources.dll
 D:\Thaili\MNepalAPI\MNepalAPI\bin\zh-Hans\Microsoft.Data.SqlClient.resources.dll
 D:\Thaili\MNepalAPI\MNepalAPI\bin\zh-Hant\Microsoft.Data.SqlClient.resources.dll
+D:\Thaili\MNepalAPI\MNepalAPI\obj\Debug\MNepalAPI.csproj.AssemblyReference.cache
 D:\Thaili\MNepalAPI\MNepalAPI\obj\Debug\MNepalAPI.csproj.CoreCompileInputs.cache
 D:\Thaili\MNepalAPI\MNepalAPI\obj\Debug\MNepalAPI.csproj.CopyComplete
 D:\Thaili\MNepalAPI\MNepalAPI\obj\Debug\MNepalAPI.dll
 D:\Thaili\MNepalAPI\MNepalAPI\obj\Debug\MNepalAPI.pdb
-D:\Thaili\MNepalAPI\MNepalAPI\obj\Debug\MNepalAPI.csproj.AssemblyReference.cache

@@ -753,11 +753,11 @@ namespace CustApp.Controllers
                             result = false;
                             responseCode = (int)_res.StatusCode;
                             responsetext = await _res.Content.ReadAsStringAsync();
-                            dynamic json = JValue.Parse(responsetext);
-                            message = json.d;
-                            if (message == null)
+                            var json = JsonConvert.DeserializeObject<ConnectIPSResponse>(responsetext);
+                            message = json.Message;
+                            if (message != null)
                             {
-                                return Json(new { responseCode = responseCode, responseText = responsetext },
+                                return Json(new { responseCode = responseCode, responseText = message },
                             JsonRequestBehavior.AllowGet);
                             }
                             else

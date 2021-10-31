@@ -738,12 +738,14 @@
 
                         }
                     },
-                    error: function (jqXHR, textStatus, errorThrown) {
-                        alert('Failed to retrieve.');
-                        $("#message").html("");
-                        $("#message").append(jqXHR.responseText);
-                        $('#failureModal').modal("show");
+                    error: function (data) {
+                        if (data.responseCode != "000" || data.responseCode != "999") {
+                            $("#message").html("");
+                            $("#message").append("An error occured");
+                            $('#failureModal').modal("show");
 
+                        }
+                       
                     },
                     //capture the request before it was sent to server
                     beforeSend: function (jqXHR, settings) {
@@ -839,12 +841,13 @@
 
                         }
                     },
-                    error: function (jqXHR, textStatus, errorThrown) {
-                        alert('Failed to retrieve.');
-                        $("#message").html("");
-                        $("#message").append(jqXHR.responseText);
-                        $('#failureModal').modal("show");
-
+                    error: function (data) {
+                        if (data.responseCode != "000" || data.responseCode != "999") {
+                            $("#message").html("");
+                            $("#message").append("An error occured");
+                            $('#failureModal').modal("show");
+                        }
+                        
                     },
                     //capture the request before it was sent to server
                     beforeSend: function (jqXHR, settings) {
