@@ -707,8 +707,8 @@ namespace MNepalProject.Controllers
                             {
                                 mnTransactionMaster.Description = mnTransactionMaster.Description.Substring(1, mnTransactionMaster.Description.Length - 1);
                             }
-                            //Remark = desc1;
-                            Remark = desc2;
+                            Remark = desc1;
+                            //Remark = desc2;
                             if (Remark.EndsWith("- "))
                             {
                                 Remark = Remark.Substring(0, Remark.Length - 2);
@@ -1985,7 +1985,6 @@ namespace MNepalProject.Controllers
                             }
                             //Remark = mnTransactionMaster.Description + " - " + Desc1;
                             //Remark = mnTransactionMaster.Description;
-                            //Remark = Desc1;
                             //Remark = Desc2;
                             if (Remark.EndsWith("- "))
                             {
@@ -1995,7 +1994,9 @@ namespace MNepalProject.Controllers
                             Desc2 = getProductID[1];
                             Desc3 = transaction.SourceMobile + " - " + transaction.DestinationMobile;
                             //Remark = desc + description1;
-                            Remark = Desc2;
+                            //Remark = Desc2;
+                            Remark = Desc1;
+
                         }
 
                         else if (mnTransactionMaster.FeatureCode == "34")
