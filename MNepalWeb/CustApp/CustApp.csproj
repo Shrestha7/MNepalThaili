@@ -8522,7 +8522,6 @@
     <Content Include="Scripts\umd\popper.min.js.map" />
     <Content Include="Views\LoadWallet\FundTransferTran1.cshtml" />
     <Content Include="Views\Shared\_Footer.cshtml" />
-    <Content Include="Views\CIPS\CIPSDetails.cshtml" />
     <Content Include="Views\CIPS\Index.cshtml" />
     <Content Include="Views\Error\Error500.cshtml" />
     <Content Include="Views\CIPS\CIPSInvoice.cshtml" />

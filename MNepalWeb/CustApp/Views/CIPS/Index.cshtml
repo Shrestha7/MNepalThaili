@@ -47,7 +47,7 @@
     /* .filter-option-inner-inner {
         margin-left: -22px;
     }*/
-    
+
 
 </style>
 
@@ -58,6 +58,9 @@
     <div id="ajaxResponse">
     </div>
     <form id="__AjaxAntiForgeryForm" action="#" method="post">
+        @Html.AntiForgeryToken()
+    </form>
+    <form id="__AjaxAntiForgeryForm1" action="#" method="post">
         @Html.AntiForgeryToken()
     </form>
 
@@ -76,50 +79,24 @@
                         </section>
                         <table cellpadding="1" cellspacing="10" class="table table-condensed table-bordered table-responsive-md">
                             <tr>
-                                <th style="text-align:center">MaxAmount</th>
-                                <th style="text-align:center">MaxCharge</th>
-                                <th style="text-align:center">MinCharge</th>
+                                <th style="text-align:center">Amount</th>
+                                <th style="text-align:center">Applicable Charge</th>
                             </tr>
 
-                            @*@foreach (var item in ViewBag.cipsCharges)
-                                {
-                                    <tr>
-                                        <td style="text-align:center">
-                                           @Convert.ToDouble(item.maxAmt)
-
-                                        </td>
-                                        <td style="margin-left:20px;text-align:center">
-                                            @item.minChargeAmt
-                                        </td>
-                                        <td style="margin-left:40px;text-align:center">
-                                            @item.maxChargeAmt
-                                        </td>
-                                    </tr>
-                                }*@
                             <tr>
                                 <td style="text-align:center">Up to 500</td>
-                                <td style="text-align:center">2</td>
                                 <td style="text-align:center">2</td>
                             </tr>
 
                             <tr>
                                 <td style="text-align:center">Above 500 to 5,000</td>
-                                <td style="text-align:center">5</td>
-                                <td style="text-align:center">5</td>
+                                <td style="text-align:center">4</td>
                             </tr>
 
                             <tr>
-                                <td style="text-align:center">Above 5,000 to 50,000</td>
-                                <td style="text-align:center">10</td>
-                                <td style="text-align:center">10</td>
+                                <td style="text-align:center">Above 5000</td>
+                                <td style="text-align:center">8</td>
                             </tr>
-
-                            <tr>
-                                <td style="text-align:center">Above 50,000</td>
-                                <td style="text-align:center">15</td>
-                                <td style="text-align:center">15</td>
-                            </tr>
-
 
                         </table>
 
@@ -233,7 +210,7 @@
                                 <div class="col-md-12">
                                     <div class="form-group">
                                         <label class="col-sm-12">Bank Name (<span style="color:red">*</span>)</label>
-                                        <select id="bankDrpdwn" onload="getBankId()" name="txtBankName" class="show-tick"  style="width: 465px;height: 43px;" oninput="checkBank()">
+                                        <select id="bankDrpdwn" onload="getBankId()" name="txtBankName" class="show-tick" style="width: 465px;height: 43px;" oninput="checkBank()">
                                             @foreach (var bank in ViewBag.getBankList)
                                             {
                                                 <option bankId="@bank.Value" name="bankList">@bank.Text</option>
@@ -248,22 +225,11 @@
 
                             </div>
 
-                            @*<div class="row">
-                                    <div class="col-md-12">
-                                        <div class="form-group">
-                                            <label class="col-sm-12">Branch Name (<span style="color:red">*</span>)</label>
-                                            <select id="branchDrpdwn" name="branchName" class="show-tick" style="width:465px; height:43px; font-size:18px"></select>
-                                        </div>
-                                        <div class="form-group" id="branchNameErr" style="color:red; margin-top:-11px;"></div>
-                                    </div>
-
-                                </div>*@
-
                             <div class="row" id="Remark">
                                 <div class="col-md-12">
                                     <div class="form-group">
                                         <label>Remarks (<span style="color:red">*</span>)</label>
-                                        <input type="text" class="form-control select2" id="transactionDetail" name="txtTransactionDetail" placeholder="Remarks" maxlength="15" oninput="checkRemarks()" @*onpaste="return false"*@></input>
+                                        <input type="text" class="form-control select2" id="transactionDetail" name="txtTransactionDetail" onkeypress="return noSpecial()" placeholder="Remarks" maxlength="15" oninput="checkRemarks()" @*onpaste="return false"*@>
                                     </div>
                                     <div class="form-group" id="transactionDetailErr" style="color:red; margin-top:-11px;"></div>
                                 </div>
@@ -284,8 +250,14 @@
                                 </div>
 
                             </div>
+                            <div class="row" id="ApplicableCharge">
+                                <div class="col-md-8">
+                                    <div class="form-group">
+                                        <label>Applicable Charge: </label>
+                                    </div>
+                                </div>
 
-
+                            </div>
                             <div class="row" id="T-PIN">
                                 <div class="col-md-12">
                                     <div class="form-group">
@@ -306,7 +278,7 @@
 
                             <div class="box-footer">
                                 <input type="button" style="margin-left:150px" class="btn btn-blue btn-big col-md-5" name="btnCommand" value="Validate" id="btnValidate" />
-                                <input type="submit" style="margin-left:150px" class="btn btn-blue btn-big col-md-5" name="btnCommand" value="Submit" id="btnSubmit" />
+                                <input type="submit" style="margin-left:150px" class="btn btn-blue btn-big col-md-5" name="btnCommand" value="Pay" id="btnSubmit" />
                                 @*<input type="button" value="Clear" class="btn btn-default btn-big col-md-5" id="clearButton" />*@
                             </div>
 
@@ -385,6 +357,32 @@
             </div>
         </div>
     </div>
+
+    <!-- Success modal -->
+    <div class="modal fade common-modal" id="successModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-body text-center">
+                    <div class="success-icon">
+                        <img src="~/Content/assets/img/success-tick.svg" alt="success-tick">
+                    </div>
+                    <p class="msg"></p>
+                    <span class="msg">Your payment has been confirmed.</span>
+                    <br /> <br />
+                    <div class="row">
+                        <div class="col-md-6">
+                            <a class="btn btn-blue" href="@Url.Action("CIPSPaymentInvoice", "CIPS")" target="_blank" id="btnPDF">Download PDF</a>
+                        </div>
+                        <div class="col-md-6">
+                            <button type="button" class="btn btn-info" data-dismiss="modal" style="width:80%">OK</button>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
 }
 
 @section scripts{
@@ -403,9 +401,9 @@
          window.location.href = url;
         };
 
-        document.getElementById("failureModal").onclick = function () {
-            window.location.reload(true);
-        };
+        //document.getElementById("failureModal").onclick = function () {
+        //    window.location.reload(false);
+        //};
 
         document.getElementById("failureModalLogOut").onclick = function () {
          var url = '@Url.Action("Index", "LogOut")';
@@ -416,6 +414,17 @@
          var url = '@Url.Action("Index", "LogOut")';
          window.location.href = url;
         };
+
+         document.getElementById("successModal").onclick = function () {
+         var url = '@Url.Action("Index", "UserDashboard")';
+         window.location.href = url;
+        };
+
+        $("#btnPDF").on("click", function () {
+            win = window.open("CIPSPaymentInvoice", "_blank");
+            win.document.body.innerHTML = htmlData;
+
+        });
 
         function isNumber(evt) {
             evt = (evt) ? evt : window.event;
@@ -434,6 +443,17 @@
             }
             return true;
         }
+
+        function noSpecial(evt) {
+            evt = (evt) ? evt : window.event;
+            var charCode = (evt.which) ? evt.which : evt.keyCode;
+            if ((event.charCode != 8 && event.charCode == 0 || (event.charCode >= 65 && event.charCode <= 90) || (event.charCode >= 97 && event.charCode <= 122) || (event.charCode >= 48 && event.charCode <= 57) || event.charCode == 32)) {
+                return true
+            }
+            return false;
+
+        }
+
         ///for amount input number and dot only
         function NumberDot(evt) {
             var charCode = (evt.which) ? evt.which : event.keyCode
@@ -449,6 +469,7 @@
             $("#AccountValidate").hide();
             $("#AccountValidateErr").hide();
             $("#btnSubmit").hide();
+            $("#ApplicableCharge").hide();
 
             $.ajax({
                 cache: false,
@@ -534,7 +555,16 @@
         }
 
         function checkRemarks() {
+            debugger;
             var transactionDetail = $("[name='txtTransactionDetail']").val();
+            if ((transactionDetail.trim() == "")) {
+                $("#transactionDetailErr").html("");
+                $("#transactionDetailErr").append("<small>" + "No Special Character Allowed" + "</small>");
+                $("#transactionDetailErr").show();
+            }
+
+
+
             if ((transactionDetail.trim() == "")) {
                 $("#transactionDetailErr").html("");
                 $("#transactionDetailErr").append("<small>" + "Transaction Detail is required and cannot be empty" + "</small>");
@@ -680,6 +710,7 @@
             var branchName = window.branchName;
             var transactionDetail = $("[name='txtTransactionDetail']").val();
             var token = $('input[name="__AjaxAntiForgeryForm"]').val();
+            var charge = "";
 
             if ((senderAccountNumber != "") && (amount != "") && (beneficiaryAccountNumber != "") && (beneficiaryAccountName != "") && (bankName != undefined)
                 /*&& (branchName != undefined)*/ && (transactionDetail != "") ) {
@@ -698,6 +729,16 @@
                     transactionDetail: transactionDetail
 
                 };
+
+                if (amount <= 500) {
+                    charge = "2";
+                }
+                if (amount > 500 && amount <= 5000) {
+                    charge = "4";
+                }
+                if (amount > 5000) {
+                    charge = "8";
+                }
 
                 e.preventDefault(); //prevent the default action
                 $.ajax({
@@ -722,6 +763,9 @@
                             $("#T-PIN").show();
                             $("#Remark").show();
                             $("#btnSubmit").show();
+                            $("#ApplicableCharge").append("NPR. " + charge);
+                            $("#ApplicableCharge").show();
+
                         }
                         //display error message
                         else {
@@ -745,7 +789,7 @@
                             $('#failureModal').modal("show");
 
                         }
-                       
+
                     },
                     //capture the request before it was sent to server
                     beforeSend: function (jqXHR, settings) {
@@ -773,6 +817,7 @@
 
         $('#btnSubmit').click(function (e) {
             e.preventDefault();
+            debugger;
             var senderAccountName = $("[name='txtSenderAccountName']").val();
             var senderAccountNumber = $("[name='txtSenderAccountNumber']").val();
             var amount = $("[name='txtAmount']").val();
@@ -785,7 +830,7 @@
             var branchName = window.branchName;
             var transactionDetail = $("[name='txtTransactionDetail']").val();
             var pin = $("[name='txtPin']").val();
-            var token = $('input[name="__RequestVerificationToken"]').val();
+            var token = $('input[name="__AjaxAntiForgeryForm1"]').val();
 
             if ((senderAccountNumber != "") && (amount != "") && (beneficiaryAccountNumber != "") && (beneficiaryAccountName != "") && (bankName != undefined)
                 /*&& (branchName != undefined)*/ && (transactionDetail != "") && (pin != "")) {
@@ -817,8 +862,65 @@
                     async: true,
                     success: function (data) {
                         if (data.responseCode == "200") {
-                            var url = '@Url.Action("CIPSDetails", "CIPS")';
-                            window.location.href = url;
+                            $.ajax({
+                                url: '@Url.Action("CIPSExecutePayment", "CIPS")',
+                                type: "POST",
+                                data:
+                                {
+                                    __RequestVerificationToken: token,
+                                    connectIPS: dataToPost
+                                },
+                                async: true,
+                                success: function (data) {
+                                    debugger;
+                                    if (data.responseCode == "200" || data.responseCode == "0") {
+                                        $("#ajaxResponse").html("");
+                                        //var resp = JSON.parse(data.responseText);
+                                        var resp = data.responseText;
+                                        $('#successModal').modal("show");
+
+                                        $("#TPin").val("");
+                                        $("#Remarks").val("");
+                                        $("#amount").val("");
+
+                                    }
+                                    //display error message
+                                    else {
+                                        $("#ajaxResponse").html("");
+                                        $("#message").html("");
+                                        $("#message").append(data.responseText);
+                                        if (data.responseText == "Session expired. Please login again") {
+                                            $('#failureModalSessionExpired').modal("show");
+                                        }
+                                        else {
+                                            $('#failureModal').modal("show");
+                                        }
+
+                                    }
+                                },
+                                error: function (data) {
+                                    if (data.responseCode != "200" || data.responseCode != "0") {
+                                        $("#message").html("");
+                                        $("#message").append("An error occured");
+                                        $('#failureModal').modal("show");
+                                    }
+
+
+                                },
+                                //capture the request before it was sent to server
+                                beforeSend: function (jqXHR, settings) {
+                                    //adding some Dummy data to the request
+                                    $("#cancelButton").attr("disabled", "disabled");
+                                    settings.data += "&dummyData=whatever";
+                                    //disable the button until we get the response
+                                    $('#btnSubmit').attr("disabled", true);
+                                },
+                                complete: function (jqXHR, textStatus) {
+                                    //enable the button
+                                    $('#btnSubmit').attr("disabled", false);
+                                }
+                            });
+
                         }
                         else if (data.responseCode == "401") {
                             $("#ajaxResponse").html("");
@@ -847,7 +949,7 @@
                             $("#message").append("An error occured");
                             $('#failureModal').modal("show");
                         }
-                        
+
                     },
                     //capture the request before it was sent to server
                     beforeSend: function (jqXHR, settings) {

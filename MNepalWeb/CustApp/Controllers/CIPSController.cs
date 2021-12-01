@@ -459,107 +459,6 @@ namespace CustApp.Controllers
         }
         #endregion
 
-        #region "GET: CIPS Details"
-        public ActionResult CIPSDetails()
-        {
-            var sessionUserDetails = SessionUserDetails();
-            TempData["userType"] = sessionUserDetails.userType;
-
-            if (TempData["userType"] != null)
-            {
-                this.ViewData["userType"] = this.TempData["userType"];
-                ViewBag.UserType = this.TempData["userType"];
-                ViewBag.Name = sessionUserDetails.name;
-
-                ViewBag.SenderMobileNo = sessionUserDetails.userName;
-                ViewBag.AccountName = Session["debtorName"];
-                ViewBag.AccountNumber = Session["debtorAccount"];
-                ViewBag.TransactionAmount = Session["batchAmount"];
-                ViewBag.BeneficiaryAccountNumber = Session["creditorAccount"];
-                ViewBag.BeneficiaryAccountName = Session["creditorName"];
-                ViewBag.BankName = Session["bankName"];
-                ViewBag.BranchName = Session["branchName"];
-                ViewBag.Remarks = Session["transactionDetail"];
-
-
-
-
-
-                //applicable charge
-                if (ViewBag.TransactionAmount <= 500)
-                {
-                    ViewBag.Charge = 2;
-                }
-                if (ViewBag.TransactionAmount > 500 && ViewBag.TransactionAmount <= 5000)
-                {
-                    ViewBag.Charge = 5;
-                }
-                if (ViewBag.TransactionAmount > 5000 && ViewBag.TransactionAmount <= 50000)
-                {
-                    ViewBag.Charge = 10;
-                }
-                if (ViewBag.TransactionAmount > 50000)
-                {
-                    ViewBag.Charge = 15;
-                }
-                Session["cipsCharge"] = ViewBag.Charge;
-                //applicable charge ends
-
-                int id = TraceIdGenerator.GetID() + 1;
-                string stringid = (id).ToString();//this.GetID() + 1
-                string traceID = stringid.PadLeft(11, '0') + 'W';
-                ViewBag.TraceID = traceID;
-
-                UserInfo userInfo = new UserInfo();
-                MNBalance availBaln = new MNBalance();
-                DataTable dtableUser1 = AvailBalnUtils.GetAvailBaln(sessionUserDetails.clientCode);
-                if (dtableUser1 != null && dtableUser1.Rows.Count > 0)
-                {
-                    availBaln.amount = dtableUser1.Rows[0]["AvailBaln"].ToString();
-                    ViewBag.AvailBalnAmount = availBaln.amount;
-                }
-
-                //Check KYC
-                DataTable dtableUserCheckKYC = ProfileUtils.CheckKYC(sessionUserDetails.userName);
-                if (dtableUserCheckKYC != null && dtableUserCheckKYC.Rows.Count > 0)
-                {
-                    userInfo.hasKYC = dtableUserCheckKYC.Rows[0]["hasKYC"].ToString();
-                    userInfo.IsRejected = dtableUserCheckKYC.Rows[0]["IsRejected"].ToString();
-                    ViewBag.IsRejected = userInfo.IsRejected;
-                    ViewBag.hasKYC = userInfo.hasKYC;
-                }
-
-                //Check Link Bank Account
-                DataTable dtableUserCheckLinkBankAcc = ProfileUtils.CheckLinkBankAcc(sessionUserDetails.userName);
-                if (dtableUserCheckLinkBankAcc != null && dtableUserCheckLinkBankAcc.Rows.Count > 0)
-                {
-                    userInfo.BankAccountNumber = dtableUserCheckLinkBankAcc.Rows[0]["HasBankKYC"].ToString();
-                    ViewBag.HasBankKYC = userInfo.BankAccountNumber;
-                }
-
-                //For Profile Picture
-                DataSet DSet = ProfileUtils.GetCusDetailProfileInfoDS(sessionUserDetails.clientCode);
-                DataTable dKYC = DSet.Tables["dtKycDetail"];
-                DataTable dDoc = DSet.Tables["dtKycDoc"];
-                if (dKYC != null && dKYC.Rows.Count > 0)
-                {
-                    userInfo.CustStatus = dKYC.Rows[0]["CustStatus"].ToString();
-                    ViewBag.CustStatus = userInfo.CustStatus;
-                }
-                if (dDoc != null && dDoc.Rows.Count > 0)
-                {
-                    userInfo.PassportImage = dDoc.Rows[0]["PassportImage"].ToString();
-                    ViewBag.PassportImage = userInfo.PassportImage;
-                }
-
-                return View();
-            }
-            else
-            {
-                return RedirectToAction("Index", "Login");
-            }
-        }
-        #endregion
 
         #region "POST: CIPS ExecutePayment"
         [HttpPost]
@@ -1027,6 +926,26 @@ namespace CustApp.Controllers
         #region ConvertToPDF
         public ActionResult CIPSPaymentInvoice()
         {
+            var amount = int.Parse(Session["batchAmount"].ToString());
+            int charge = 0;
+
+
+            //applicable charge
+            if (amount <= 500)
+            {
+                charge = 2;
+            }
+            if (amount > 500 && amount <= 5000)
+            {
+                charge = 4;
+            }
+            if (amount > 5000)
+            {
+                charge = 8;
+            }
+            //Session["cipsCharge"] = ViewBag.Charge;
+            //applicable charge ends
+
             var dic = new Dictionary<string, string>();
             dic.Add("SenderName", (string)Session["debtorName"]);
             dic.Add("SenderAccountNumber", (string)Session["debtorAccount"]);
@@ -1035,7 +954,7 @@ namespace CustApp.Controllers
             dic.Add("DestinationBank", (string)Session["bankName"]);
             dic.Add("Remarks", (string)Session["endToEndId"]);
             dic.Add("Amount", Session["amount"].ToString());
-            dic.Add("Charge", Session["cipsCharge"].ToString());
+            dic.Add("Charge", charge.ToString());
             dic.Add("ReferenceNo", Session["BatchId"].ToString());
             dic.Add("TimeStamp", Session["TimeStamp"].ToString());
 

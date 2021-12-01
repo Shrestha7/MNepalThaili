@@ -18,7 +18,7 @@
     <title>CIPS Transfer Receipt - Thaili Digital Paisa</title>
 </head>
 
-<body class="container" style="background-image: url('../../Content/assets/img/thaili-logo.png'); background-repeat:no-repeat">
+<body class="container">
 
     <div class="row" style="margin:600px 100px 200px 100px; font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif">
         <h1 style="text-align:center">ConnectIPS Transfer Receipt</h1><hr /><br />
@@ -55,26 +55,26 @@
             </tr>
         </table><br /><br />
         <div class="col-md-12"><span style="font-size:26px"><b>Transaction Details</b></span> </div><hr />
-        <table style="font-size:20px" ;>
+        <table style="font-size:20px;";>
             <tr>
                 <td>Amount</td>
-                <td>Rs. @Model["Amount"].00</td>
+                <td style="padding-left:40px">Rs. @Model["Amount"].00</td>
             </tr>
             <tr>
                 <td>Charge</td>
-                <td>Rs. @Model["Charge"].00</td>
+                <td style="padding-left:40px">Rs. @Model["Charge"].00</td>
             </tr>
             <tr>
                 <td>Remarks</td>
-                <td>@Model["Remarks"]</td>
+                <td style="padding-left:40px">@Model["Remarks"]</td>
             </tr>
             <tr>
                 <td>Reference No.</td>
-                <td>@Model["ReferenceNo"]</td>
+                <td style="padding-left:40px">@Model["ReferenceNo"]</td>
             </tr>
             <tr>
                 <td>TimeStamp</td>
-                <td>@Model["TimeStamp"]</td>
+                <td style="padding-left:40px">@Model["TimeStamp"]</td>
             </tr>
         </table>
 

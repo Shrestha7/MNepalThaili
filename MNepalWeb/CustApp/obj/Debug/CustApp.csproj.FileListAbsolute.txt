@@ -350,4 +350,3 @@ D:\Thaili\MNepalWeb\CustApp\obj\Debug\CustApp.csproj.CoreCompileInputs.cache
 D:\Thaili\MNepalWeb\CustApp\obj\Debug\CustApp.csproj.CopyComplete
 D:\Thaili\MNepalWeb\CustApp\obj\Debug\CustApp.dll
 D:\Thaili\MNepalWeb\CustApp\obj\Debug\CustApp.pdb
-D:\Thaili\MNepalWeb\CustApp\obj\Debug\CustApp.csproj.AssemblyReference.cache
