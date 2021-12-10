@@ -256,6 +256,10 @@ namespace CustApp.Controllers
                                 var json = ser.Deserialize<ValidateCreditorBankAccount>(responsetext);
                                 code = Convert.ToInt32(json.responseCode);
                                 respmsg = json.responseMessage;
+                                if(respmsg == "Some difference in beneficiary account name observed. Transaction once sent is irreversible, please reconfirm the beneficiary account number.")
+                                {
+                                    respmsg = "Some difference in beneficiary account name observed. Transaction once sent is irreversible, please reconfirm the beneficiary account details.";
+                                }
                             }
                             return Json(new { responseCode = code, responseText = respmsg },
                             JsonRequestBehavior.AllowGet);

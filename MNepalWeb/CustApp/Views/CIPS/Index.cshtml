@@ -187,29 +187,7 @@
                             <div class="row">
                                 <div class="col-md-12">
                                     <div class="form-group">
-                                        <label class="col-sm-12">Account Number (<span style="color:red">*</span>)</label>
-                                        <input type="text" class="form-control select2" id="accountNumber" onkeypress="return (event.charCode >= 48 && event.charCode <= 57) || (event.charCode >= 65 && event.charCode <= 90) || (event.charCode >= 97 && event.charCode <= 122)" name="txtBeneficiaryAccountNumber" placeholder="Account Number" maxlength="20" oninput="checkBeneficiaryAccountNumber()" @*onpaste="return false"*@ />
-                                    </div>
-                                    <div class="form-group" id="beneficiaryAccountNumberErr" style="color:red; margin-top:-11px;"></div>
-                                </div>
-
-                            </div>
-
-                            <div class="row">
-                                <div class="col-md-12">
-                                    <div class="form-group">
-                                        <label class="col-sm-12">Account Name (<span style="color:red">*</span>)</label>
-                                        <input type="text" class="form-control select2" id="beneficiaryAccountName" @*onkeypress="return (event.charCode >= 65 && event.charCode <= 90) || (event.charCode >= 97 && event.charCode <= 122) || event.charCode ==32"*@ name="txtBeneficiaryAccountName" placeholder="Account Name" maxlength="80" oninput="checkBeneficiaryAccountName()" @*onpaste="return false"*@ />
-                                    </div>
-                                    <div class="form-group" id="beneficiaryAccountNameErr" style="color:red; margin-top:-11px;"></div>
-                                </div>
-
-                            </div>
-
-                            <div class="row">
-                                <div class="col-md-12">
-                                    <div class="form-group">
-                                        <label class="col-sm-12">Bank Name (<span style="color:red">*</span>)</label>
+                                        <label class="col-sm-12">Beneficiary Bank (<span style="color:red">*</span>)</label>
                                         <select id="bankDrpdwn" onload="getBankId()" name="txtBankName" class="show-tick" style="width: 465px;height: 43px;" oninput="checkBank()">
                                             @foreach (var bank in ViewBag.getBankList)
                                             {
@@ -225,6 +203,30 @@
 
                             </div>
 
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div class="form-group">
+                                        <label class="col-sm-12">Beneficiary Account Number (<span style="color:red">*</span>)</label>
+                                        <input type="text" class="form-control select2" id="accountNumber" onkeypress="return (event.charCode >= 48 && event.charCode <= 57) || (event.charCode >= 65 && event.charCode <= 90) || (event.charCode >= 97 && event.charCode <= 122)" name="txtBeneficiaryAccountNumber" placeholder="Account Number" maxlength="20" oninput="checkBeneficiaryAccountNumber()" @*onpaste="return false"*@ />
+                                    </div>
+                                    <div class="form-group" id="beneficiaryAccountNumberErr" style="color:red; margin-top:-11px;"></div>
+                                </div>
+
+                            </div>
+
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div class="form-group">
+                                        <label class="col-sm-12">Beneficiary Account Holder's Name (<span style="color:red">*</span>)</label>
+                                        <input type="text" class="form-control select2" id="beneficiaryAccountName" @*onkeypress="return (event.charCode >= 65 && event.charCode <= 90) || (event.charCode >= 97 && event.charCode <= 122) || event.charCode ==32"*@ name="txtBeneficiaryAccountName" placeholder="Account Name" maxlength="80" oninput="checkBeneficiaryAccountName()" @*onpaste="return false"*@ />
+                                    </div>
+                                    <div class="form-group" id="beneficiaryAccountNameErr" style="color:red; margin-top:-11px;"></div>
+                                </div>
+
+                            </div>
+
+
+
                             <div class="row" id="Remark">
                                 <div class="col-md-12">
                                     <div class="form-group">
@@ -235,6 +237,7 @@
                                 </div>
 
                             </div>
+
 
                             <div class="row" id="AccountValidate">
                                 <div class="col-md-12">
@@ -247,6 +250,14 @@
                             <div class="row" id="AccountValidateErr">
                                 <div class="col-md-12">
                                     <h6 style="color:red">Account Validation Failed</h6>
+                                </div>
+
+                            </div>
+                            <div class="row" id="TransactionMatch">
+                                <div class="col-md-12">
+                                    <div class="form-group">
+                                    </div>
+                                    <div class="form-group" id="transactionDetailMatchErr" style="color:red; margin-top:-11px;"></div>
                                 </div>
 
                             </div>
@@ -273,12 +284,13 @@
 
 
 
+
                             <br />
                             <br />
 
                             <div class="box-footer">
-                                <input type="button" style="margin-left:150px" class="btn btn-blue btn-big col-md-5" name="btnCommand" value="Validate" id="btnValidate" />
-                                <input type="submit" style="margin-left:150px" class="btn btn-blue btn-big col-md-5" name="btnCommand" value="Pay" id="btnSubmit" />
+                                <input type="button" style="margin-left:150px" class="btn btn-blue btn-big col-md-5" name="btnCommand" value="Validate Account" id="btnValidate" />
+                                <input type="submit" style="margin-left:150px" class="btn btn-blue btn-big col-md-5" name="btnCommand" value="Confirm Transfer" id="btnSubmit" />
                                 @*<input type="button" value="Clear" class="btn btn-default btn-big col-md-5" id="clearButton" />*@
                             </div>
 
@@ -555,7 +567,6 @@
         }
 
         function checkRemarks() {
-            debugger;
             var transactionDetail = $("[name='txtTransactionDetail']").val();
             if ((transactionDetail.trim() == "")) {
                 $("#transactionDetailErr").html("");
@@ -650,7 +661,6 @@
                 data: dataToPost,
                 async: true,
                 success: function (data) {
-                    debugger;
                     var select = $("#branchDrpdwn");
                     select.empty();
                     select.append($('<option/>', {
@@ -765,8 +775,15 @@
                             $("#btnSubmit").show();
                             $("#ApplicableCharge").append("NPR. " + charge);
                             $("#ApplicableCharge").show();
+                            $("#transactionDetailMatchErr").append("Note: " + data.responseText);
+                            $("#transactionDetailMatchErr").show()
+                            if (data.responseCode == "000") {
+                                $("#transactionDetailMatchErr").hide()
+                            }
+                           
 
                         }
+
                         //display error message
                         else {
                             //$("#ajaxResponse").html("");
@@ -817,7 +834,6 @@
 
         $('#btnSubmit').click(function (e) {
             e.preventDefault();
-            debugger;
             var senderAccountName = $("[name='txtSenderAccountName']").val();
             var senderAccountNumber = $("[name='txtSenderAccountNumber']").val();
             var amount = $("[name='txtAmount']").val();
@@ -872,7 +888,6 @@
                                 },
                                 async: true,
                                 success: function (data) {
-                                    debugger;
                                     if (data.responseCode == "200" || data.responseCode == "0") {
                                         $("#ajaxResponse").html("");
                                         //var resp = JSON.parse(data.responseText);
