@@ -60,6 +60,15 @@ namespace MNepalAPI.Helper
                                 }
                             }
 
+                            if (alertType == "KUKL")
+                            {
+                                if (AlertSalMessage.Contains("%s"))
+                                {
+                                    AlertSalMessage = sMSEnable.GetFinalMessage(AlertSalMessage, AlertSalParameters);
+                                    AlertSalMessage = AlertSalMessage.Replace("\\n", "\n");
+                                }
+                            }
+
                             //END FOR SENDER SALUTATION
 
 
@@ -74,10 +83,17 @@ namespace MNepalAPI.Helper
                                 AlertParameters = ParamStr.Split(delimeterAlert, StringSplitOptions.None);
                             }
 
+                            if (alertType == "KUKL")
+                            {
+                                resultparm = amount.ToString();
+                                ParamStr = "," + resultparm + "," + couponNumber + "," + createdDate;
+                                AlertParameters = ParamStr.Split(delimeterAlert, StringSplitOptions.None);
+                            }
+
                             //END FOR MSG
 
                             //START FOR SMS MESSAGE
-                            
+
                             if (AlertMessage.Contains("%s"))
                             {
                                 AlertMessage = sMSEnable.GetFinalMessage(AlertMessage, AlertParameters);

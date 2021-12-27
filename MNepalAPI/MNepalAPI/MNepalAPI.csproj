@@ -345,6 +345,7 @@
     <Compile Include="Controllers\DashboardImageController.cs" />
     <Compile Include="Controllers\EncryptDecryptController.cs" />
     <Compile Include="Controllers\KhanepaniController.cs" />
+    <Compile Include="Controllers\KUKLController.cs" />
     <Compile Include="Controllers\NEAController.cs" />
     <Compile Include="Controllers\PushNotificationController.cs" />
     <Compile Include="Controllers\SendBulkSMSController.cs" />
@@ -368,6 +369,7 @@
     <Compile Include="Models\ConnectIPSToken.cs" />
     <Compile Include="Models\EncryptDecrypt.cs" />
     <Compile Include="Models\Khanepani.cs" />
+    <Compile Include="Models\KUKL.cs" />
     <Compile Include="Models\NEA.cs" />
     <Compile Include="Models\Notifications.cs" />
     <Compile Include="Models\ShoppingMall.cs" />

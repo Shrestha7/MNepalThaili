@@ -591,7 +591,7 @@ namespace MNepalAPI.Controllers
 
                                 int resultsMNResponse = CIPSUtilities.cipsMNResponse(cipsMNResponse);
 
-                                ///SMS
+                                //SMS
                                 string messagereply = "";
                                 try
                                 {
