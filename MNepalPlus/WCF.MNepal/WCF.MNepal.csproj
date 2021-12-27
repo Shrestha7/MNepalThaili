@@ -134,8 +134,8 @@
     <None Include="Connected Services\MerchantReference\commoninterface.disco" />
     <Content Include="Content\Upload\9841675081_CustomerFeedback_photo_5195.jpg" />
     <Content Include="ft.svc" />
-    <Content Include="merchantList.svc" />
     <Content Include="kukl.svc" />
+    <Content Include="merchantList.svc" />
     <Content Include="nea.svc" />
     <Content Include="neareverse.svc" />
     <Content Include="share.svc" />
@@ -237,6 +237,7 @@
     <Compile Include="Helper\HashAlgo.cs" />
     <Compile Include="Helper\MerchantEmail.cs" />
     <Compile Include="Helper\MerchantSMS.cs" />
+    <Compile Include="Helper\RandomCodeGenerator.cs" />
     <Compile Include="Helper\SendSMS.cs" />
     <Compile Include="Helper\SMSEnable.cs" />
     <Compile Include="Helper\SQLHelperQuery.cs" />
@@ -247,6 +248,9 @@
     <Compile Include="Helper\UserNameCheck.cs" />
     <Compile Include="IVR.svc.cs">
       <DependentUpon>IVR.svc</DependentUpon>
+    </Compile>
+    <Compile Include="kukl.svc.cs">
+      <DependentUpon>kukl.svc</DependentUpon>
     </Compile>
     <Compile Include="merchant.svc.cs">
       <DependentUpon>merchant.svc</DependentUpon>
@@ -268,6 +272,7 @@
     <Compile Include="Models\FundTransfer.cs" />
     <Compile Include="Models\FundTransferRemit.cs" />
     <Compile Include="Models\Khanepani.cs" />
+    <Compile Include="Models\KUKL.cs" />
     <Compile Include="Models\LinkBankAccount.cs" />
     <Compile Include="Models\Login.cs" />
     <Compile Include="Models\LoginAuth.cs" />
@@ -292,9 +297,6 @@
     <Compile Include="Models\TopupTransfer.cs" />
     <Compile Include="Models\UserInfo.cs" />
     <Compile Include="Models\UserValidate.cs" />
-    <Compile Include="kukl.svc.cs">
-      <DependentUpon>kukl.svc</DependentUpon>
-    </Compile>
     <Compile Include="nea.svc.cs">
       <DependentUpon>nea.svc</DependentUpon>
     </Compile>

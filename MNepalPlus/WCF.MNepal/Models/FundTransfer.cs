@@ -58,6 +58,7 @@ namespace WCF.MNepal
         public string special2 { get; set; }
         public string Desc2New { get; set; }
         public string account { get; set; }
+        public string module { get; set; }
 
     }
 }

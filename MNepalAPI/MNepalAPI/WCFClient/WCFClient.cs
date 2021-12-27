@@ -30,5 +30,20 @@ namespace MNepalAPI
                 return responseBody;
             }
         }
+
+        public async Task<string> KUKLSendRequest(FormUrlEncodedContent content)
+        {
+            HttpResponseMessage _res = new HttpResponseMessage();
+            ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12 | SecurityProtocolType.Tls11 | SecurityProtocolType.Tls;
+            ServicePointManager.ServerCertificateValidationCallback += (sender, certificate, chain, sslPolicyErrors) => true;
+            using (HttpClient client = new HttpClient())
+            {
+                var action = "kukl.svc/executepayment";
+                var uri = Path.Combine(ConfigurationManager.AppSettings["WCFService"], action);
+                _res = await client.PostAsync(new Uri(uri), content);
+                string responseBody = await _res.Content.ReadAsStringAsync();
+                return responseBody;
+            }
+        }
     }
 }

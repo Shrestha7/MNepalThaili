@@ -42,6 +42,14 @@ namespace MNepalAPI.Models
         public string txnDate { get; set; }
         public string branchcode { get; set; }
         public string module { get; set; }
+        public string tId { get; set; }
+        public string sc { get; set; }
+        public string mobile { get; set; }
+        public string da { get; set; }
+        public string pin { get; set; }
+      
+        public string tokenId { get; set; }
+        public string merchantType { get; set; }
     }
 
 

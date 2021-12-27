@@ -1,1 +1,1 @@
-﻿<%@ ServiceHost Language="C#" Debug="true" Service="WCF.MNepal.nea" CodeBehind="kukl.svc.cs" %>
+﻿<%@ ServiceHost Language="C#" Debug="true" Service="WCF.MNepal.kukl" CodeBehind="kukl.svc.cs" %>

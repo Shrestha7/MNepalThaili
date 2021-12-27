@@ -86,7 +86,8 @@ namespace MNepalAPI.Controllers
         [Route("api/KUKL/KUKLBillPayment")]
         [HttpPost]
         public async Task<HttpResponseMessage> KUKLBillPayment(KUKLBillRequest bill)
-        {
+        {           
+
             RandomCodeGenerator randomCodeGenerator = new RandomCodeGenerator();
             try
             {
@@ -125,50 +126,10 @@ namespace MNepalAPI.Controllers
                     //response
                     var responseContent = await httpResponse.Content.ReadAsStringAsync();
 
-                    if (httpResponse.StatusCode == HttpStatusCode.OK && responseContent!="{}")
+                    if (httpResponse.StatusCode == HttpStatusCode.OK && responseContent != "{}")
                     {
                         var json = JsonConvert.DeserializeObject<KUKLPaymentTxnResponse>(responseContent);
                         int result = ResponseKUKLInfo(json);
-
-                        //SMS
-                        string messagereply = "";
-                        try
-                        {
-                            //FOR CUSTOMER
-                            try
-                            {
-                                //Alert Dynamic
-                                string AlertType = "KUKL";
-
-                                //FOR CUSTOMER SMS                                     
-                                #region FOR CUSTOMER SMS
-
-                                CustomerSMS customerSMS = new CustomerSMS();
-                                string cSMS = customerSMS.CustSMSEnable(AlertType, kuklObject.username.Trim(), "", kuklObject.txnAmount.ToString(), "", "", kuklObject.txnDate.ToString());
-                                if (cSMS == "false")
-                                {
-
-                                }
-                                else
-                                {
-
-                                }
-
-                                #endregion
-
-                            }
-                            catch (Exception ex)
-                            {
-                                throw ex;
-                            }
-
-                        }
-                        catch (Exception ex)
-                        {
-                            // throw ex
-                            string statusCode = "400";
-                            string message = ex.Message;
-                        }
 
                         return Request.CreateResponse(HttpStatusCode.OK, json);
                     }

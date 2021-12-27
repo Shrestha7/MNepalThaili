@@ -107,3 +107,4 @@ D:\Thaili\MNepalPlus\WCF.MNepal\bin\System.Net.Http.Formatting.xml
 D:\Thaili\MNepalPlus\WCF.MNepal\obj\Debug\WCF.MNepal.csproj.CopyComplete
 D:\Thaili\MNepalPlus\WCF.MNepal\obj\Debug\WCF.MNepal.dll
 D:\Thaili\MNepalPlus\WCF.MNepal\obj\Debug\WCF.MNepal.pdb
+D:\Thaili\MNepalPlus\WCF.MNepal\obj\Debug\WCF.MNepal.csproj.AssemblyReference.cache
