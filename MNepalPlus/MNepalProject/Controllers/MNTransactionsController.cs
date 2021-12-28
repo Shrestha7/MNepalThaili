@@ -4087,7 +4087,7 @@ namespace MNepalProject.Controllers
                 if (Balance == "0.00")
                 {
 
-                    string msgConstruct = "Amount was successfully transferred from " + desc + " 977" + dest + " with NPR" + Convert.ToDecimal(tamount).ToString("#,##0.00") + ".";
+                    string msgConstruct = "Amount was successfully transferred from " + desc + " 977" + dest + " with NPR " + Convert.ToDecimal(tamount).ToString("#,##0.00") + ".";
                     var v = new { AmounttransferredBalance = Convert.ToDecimal(tamount).ToString("#,##0.00"), availableBalance = Balance, message = msgConstruct };
                     json = JsonConvert.SerializeObject(v);
                     break;
@@ -4131,7 +4131,7 @@ namespace MNepalProject.Controllers
                     if ((Balance != "99") || (Balance != "114") || (Balance != "116") ||
                         (Balance != "902") || (Balance != "904") || (Balance != "906") || (Balance != "907") || (Balance != "909") || (Balance != "911") || (Balance != "913"))
                     {
-                        string msgConstruct = "Amount was successfully transferred from " + desc + " 977" + dest + " with NPR" + Convert.ToDecimal(tamount).ToString("#,##0.00") + ".";
+                        string msgConstruct = "Amount was successfully transferred to " + dest + " with NPR " + Convert.ToDecimal(tamount).ToString("#,##0.00") + ".";
                         var v = new { AmounttransferredBalance = Convert.ToDecimal(tamount).ToString("#,##0.00"), availableBalance = Balance, message = msgConstruct };
                         json = JsonConvert.SerializeObject(v);
                         break;
@@ -4151,7 +4151,7 @@ namespace MNepalProject.Controllers
                 if (Balance == "0.00")
                 {
 
-                    string msgConstruct = "Amount was successfully transferred from " + desc + " with NPR" + Convert.ToDecimal(tamount).ToString("#,##0.00") + "."; //+ " 977" + dest
+                    string msgConstruct = "Amount was successfully transferred from " + desc + " with NPR " + Convert.ToDecimal(tamount).ToString("#,##0.00") + "."; //+ " 977" + dest
                     var v = new { AmounttransferredBalance = Convert.ToDecimal(tamount).ToString("#,##0.00"), availableBalance = Balance, message = msgConstruct };
                     json = JsonConvert.SerializeObject(v);
                     break;
@@ -4195,7 +4195,7 @@ namespace MNepalProject.Controllers
                     if ((Balance != "99") || (Balance != "114") || (Balance != "116") ||
                         (Balance != "902") || (Balance != "904") || (Balance != "906") || (Balance != "907") || (Balance != "909") || (Balance != "911") || (Balance != "913"))
                     {
-                        string msgConstruct = "Amount was successfully transferred from " + desc + " with NPR" + Convert.ToDecimal(tamount).ToString("#,##0.00") + ".";
+                        string msgConstruct = "Amount was successfully transferred from " + desc + " with NPR " + Convert.ToDecimal(tamount).ToString("#,##0.00") + ".";
                         var v = new { AmounttransferredBalance = Convert.ToDecimal(tamount).ToString("#,##0.00"), availableBalance = Balance, message = msgConstruct };
                         json = JsonConvert.SerializeObject(v);
                         break;

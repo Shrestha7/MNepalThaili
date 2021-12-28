@@ -120,6 +120,24 @@ namespace WCF.MNepal.Helper
                                 }
                             }
 
+                            if (alertType == "KUKL")
+                            {
+                                if (AlertSalMessage.Contains("%s"))
+                                {
+                                    AlertSalMessage = sMSEnable.GetFinalMessage(AlertSalMessage, AlertSalParameters);
+                                    AlertSalMessage = AlertSalMessage.Replace("\\n", "\n");
+                                }
+                            }
+
+                            if (alertType == "KUKLR")
+                            {
+                                if (AlertSalMessage.Contains("%s"))
+                                {
+                                    AlertSalMessage = sMSEnable.GetFinalMessage(AlertSalMessage, AlertSalParameters);
+                                    AlertSalMessage = AlertSalMessage.Replace("\\n", "\n");
+                                }
+                            }
+
                             //END FOR SENDER SALUTATION
 
                             //START FOR SENDER SALUTATION
@@ -307,7 +325,18 @@ namespace WCF.MNepal.Helper
                                 AlertParameters = ParamStr.Split(delimeterAlert, StringSplitOptions.None);
                             }
 
-
+                            else if (alertType == "KUKL")
+                            {
+                                resultparm = amount.ToString();
+                                ParamStr = "," + resultparm + "," + couponNumber + "," + createdDate;
+                                AlertParameters = ParamStr.Split(delimeterAlert, StringSplitOptions.None);
+                            }
+                            else if (alertType == "KUKLR")
+                            {
+                                resultparm = amount.ToString();
+                                ParamStr = "," + resultparm + "," + couponNumber + "," + createdDate;
+                                AlertParameters = ParamStr.Split(delimeterAlert, StringSplitOptions.None);
+                            }
 
                             //END FOR MSG
 
@@ -346,6 +375,15 @@ namespace WCF.MNepal.Helper
                     }
                 }
                 else if ((alertType == "WLINK") || (alertType == "WLINKR"))
+                {
+                    if (ForSender == "T")
+                    {
+                        messagereply = AlertSalMessage;
+                        messagereply += AlertMessage + createdDate + Environment.NewLine;
+                        messagereply += AlertRegMessage;
+                    }
+                }
+                else if ((alertType == "KUKL") || (alertType == "KUKLR"))
                 {
                     if (ForSender == "T")
                     {

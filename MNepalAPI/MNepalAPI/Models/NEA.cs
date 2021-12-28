@@ -70,7 +70,7 @@ namespace MNepalAPI.Models
 
     public class JsonResult
     {
-        public string d { get; set;}
+        public string d { get; set; }
     }
 
     public class JsonDetails
@@ -78,6 +78,9 @@ namespace MNepalAPI.Models
         public int StatusCode { get; set; }
         public string StatusMessage { get; set; }
     }
+
+
+   
 
 
 

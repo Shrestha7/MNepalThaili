@@ -81,6 +81,12 @@ namespace MNepalAPI.Models
         public string recdate { get; set; }
     }
 
+    public class KUKLResponse
+    {
+        public string AmounttransferredBalance { get; set; }
+        public string availableBalance { get; set; }
+        public string message { get; set; }
+    }
 
 
 

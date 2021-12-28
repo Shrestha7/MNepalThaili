@@ -1,4 +1,5 @@
-﻿using MNepalProject.Controllers;
+﻿using MNepalProject.Connection;
+using MNepalProject.Controllers;
 using MNepalProject.Helper;
 using MNepalProject.Models;
 using MNepalProject.Services;
@@ -8,6 +9,8 @@ using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Configuration;
+using System.Data;
+using System.Data.SqlClient;
 using System.IO;
 using System.Linq;
 using System.Net;
@@ -38,7 +41,11 @@ namespace WCF.MNepal
     [AspNetCompatibilityRequirements(RequirementsMode = AspNetCompatibilityRequirementsMode.Allowed)]
     public class kukl
     {
-        #region"execute Paypoint"
+        int result = 0;
+        HttpResponseMessage httpResponse;
+        string responseContent;
+
+        #region"execute KUKL"
         [OperationContract]
         [WebInvoke(Method = "POST",
                   ResponseFormat = WebMessageFormat.Json)]
@@ -59,16 +66,17 @@ namespace WCF.MNepal
             MNTransactionMaster validTransactionData = new MNTransactionMaster();
             CustActivityModel custsmsInfo = new CustActivityModel();
 
+            RandomCodeGenerator randomCodeGenerator = new RandomCodeGenerator();
 
             string vid = WebConfigurationManager.AppSettings["KUKLMerchant"];
-            string tid = qs["tid"];
+            string tid = randomCodeGenerator.CreateRandomCode(6);
             string sc = qs["sc"];
             string mobile = qs["mobile"];
-            string amount = qs["txnAmount"];
+            string amount = qs["amount"];
             string da = qs["da"];
             string pin = qs["pin"];
             pin = HashAlgo.Hash(pin);
-            string destBranchCode = qs["branchCode"];
+            string destBranchCode = qs["destBranchCode"];
             string src = "http";
             string customerId = qs["connectionNo"];
             string account = customerId;
@@ -80,34 +88,12 @@ namespace WCF.MNepal
             string result = "";
             string sessionID = qs["tokenID"];
 
-
             string resultMessageResCP = "";
-
-
             string userId = KUKLAuthUsername;
             string userPassword = KUKLAuthPassword;
             string salePointType = "6";
             string transactionType = string.Empty;
 
-
-
-
-
-            string paypointType = "3";
-
-
-
-
-
-            PaypointModel reqEPPaypointNepalWaterInfo = new PaypointModel();
-            PaypointModel resEPPaypointNepalWaterInfo = new PaypointModel();
-
-            PaypointModel reqGTPaypointNepalWaterInfo = new PaypointModel();
-            PaypointModel resGTPaypointNepalWaterInfo = new PaypointModel();
-
-            //START EGTP
-            PaypointModel resGTAllPaypointNepalWaterInfo = new PaypointModel();
-            //END EGTP
             string totalAmount = string.Empty;
             string totalCount = string.Empty;
             string totalBAmount = string.Empty;
@@ -120,9 +106,6 @@ namespace WCF.MNepal
             string statusCodeBalance = string.Empty;
 
             string customerNo = string.Empty;
-
-
-
             FundTransfer fundtransfer = new FundTransfer
             {
                 tid = tid,
@@ -147,9 +130,7 @@ namespace WCF.MNepal
                 try
                 {
 
-
                     ThreadPool.QueueUserWorkItem(BackgroundTaskWithObject, fundtransfer);
-
 
                     if ((tid == null) || (sc == null) || (mobile == null) || (da == null) || (amount == null) || (pin == null) ||
                     (src == null) || (double.Parse(amount) <= 0) || (vid == null))
@@ -163,18 +144,18 @@ namespace WCF.MNepal
                     {
                         // throw ex
                         statusCode = "400";
-                        message = "Parameters Missing/Invalid PayPoint";
+                        message = "Parameters Missing/Invalid";
                         failedmessage = message;
                     }
                     else
                     {
                         if (sc == "00")
                         {
-                            transactionType = "PayPoint Txfr to W2W";
+                            transactionType = "KUKL Txfr to W2W";
                         }
                         else if (sc == "10")
                         {
-                            transactionType = "PayPoint Txfr to B2W"; //B2W
+                            transactionType = "KUKL Txfr to B2W"; //B2W
                         }
 
                         Pin p = new Pin();
@@ -275,9 +256,9 @@ namespace WCF.MNepal
                                     //start:insert into transaction master//
                                     if (mnft.valid())
                                     {
-                                        var transactionpaypoint = new MNTransactionMaster(mnft, account);
-                                        var mntransactionpaypoint = new MNTransactionsController();
-                                        validTransactionData = mntransactionpaypoint.Validate(transactionpaypoint, mnft.pin);
+                                        var transactionKUKL = new MNTransactionMaster(mnft, account);
+                                        var mntransactionKUKL = new MNTransactionsController();
+                                        validTransactionData = mntransactionKUKL.Validate(transactionKUKL, mnft.pin);
 
                                         result = validTransactionData.Response;
                                         /*** ***/
@@ -622,10 +603,8 @@ namespace WCF.MNepal
             }
             else if (sc == "10")//for bank payment in nepal water
             {
-
                 try
                 {
-
                     ThreadPool.QueueUserWorkItem(BackgroundTaskWithObject, fundtransfer);
 
                     if ((tid == null) || (sc == null) || (mobile == null) || (da == null) || (amount == null) || (pin == null) ||
@@ -640,18 +619,18 @@ namespace WCF.MNepal
                     {
                         // throw ex
                         statusCode = "400";
-                        message = "Parameters Missing/Invalid PayPoint";
+                        message = "Parameters Missing/Invalid";
                         failedmessage = message;
                     }
                     else
                     {
                         if (sc == "00")
                         {
-                            transactionType = "PayPoint Txfr to W2W";
+                            transactionType = "KUKL Txfr to W2W";
                         }
                         else if (sc == "10")
                         {
-                            transactionType = "PayPoint Txfr to B2W"; //B2W
+                            transactionType = "KUKL Txfr to B2W"; //B2W
                         }
 
 
@@ -754,9 +733,9 @@ namespace WCF.MNepal
                                     //start:insert into transaction master//
                                     if (mnft.valid())
                                     {
-                                        var transactionpaypoint = new MNTransactionMaster(mnft, account);
-                                        var mntransactionpaypoint = new MNTransactionsController();
-                                        validTransactionData = mntransactionpaypoint.Validatepaypoint(transactionpaypoint, mnft.pin);
+                                        var transactionKUKL = new MNTransactionMaster(mnft, account);
+                                        var mntransactionKUKL = new MNTransactionsController();
+                                        validTransactionData = mntransactionKUKL.Validate(transactionKUKL, mnft.pin);
                                         result = validTransactionData.Response;
                                         /*** ***/
                                         ErrorMessage em = new ErrorMessage();
@@ -1109,14 +1088,6 @@ namespace WCF.MNepal
                 {
                     try
                     {
-
-
-
-
-
-
-                        string keyExecRlt = "";
-                        string resultMessageResEP = "";
                         do
                         {
                             if ((account == null) ||
@@ -1129,14 +1100,14 @@ namespace WCF.MNepal
                             }
                             else
                             {
-                                RandomCodeGenerator randomCodeGenerator = new RandomCodeGenerator();
+
 
                                 var kuklObject = new KUKLBillRequest
                                 {
                                     username = mobile,
                                     connectionNo = customerId,
                                     merchantId = ConfigurationManager.AppSettings["KUKLMerchantId"],
-                                    txnReferenceNo = randomCodeGenerator.CreateRandomCodeWithString(30),
+                                    txnReferenceNo = randomCodeGenerator.CreateRandomCodeWithString(12),
                                     txnAmount = int.Parse(amount),
                                     bankId = ConfigurationManager.AppSettings["KUKLBankId"],
                                     txnDate = DateTime.Now.ToString("yyyy-MM-dd"),
@@ -1145,6 +1116,47 @@ namespace WCF.MNepal
                                 };
 
 
+                                #region RequestData
+                                SqlConnection sqlCon = null;
+                                int ret;
+                                try
+                                {
+                                    using (sqlCon = new SqlConnection(DatabaseConnection.ConnectionString()))
+                                    {
+                                        sqlCon.Open();
+                                        using (SqlCommand sqlCmd = new SqlCommand("[s_MNKUKLRequest]", sqlCon))
+                                        {
+                                            sqlCmd.CommandType = CommandType.StoredProcedure;
+
+                                            sqlCmd.Parameters.AddWithValue("@username", kuklObject.username);
+                                            sqlCmd.Parameters.AddWithValue("@connectionNo", kuklObject.connectionNo);
+                                            sqlCmd.Parameters.AddWithValue("@merchantId", kuklObject.merchantId.ToString());
+                                            //sqlCmd.Parameters.AddWithValue("@txnReferenceNo", kuklObject.txnReferenceNo);
+                                            sqlCmd.Parameters.AddWithValue("@txnReferenceNo", tid);
+                                            sqlCmd.Parameters.AddWithValue("@txnAmount", kuklObject.txnAmount);
+                                            sqlCmd.Parameters.AddWithValue("@bankId", kuklObject.bankId);
+                                            sqlCmd.Parameters.AddWithValue("@txnDate", kuklObject.txnDate);
+                                            sqlCmd.Parameters.AddWithValue("@branchcode", kuklObject.branchcode);
+                                            sqlCmd.Parameters.AddWithValue("@module", kuklObject.module);
+
+                                            ret = sqlCmd.ExecuteNonQuery();
+                                        }
+
+                                    }
+                                }
+                                catch (Exception ex)
+                                {
+
+                                    throw ex;
+                                }
+                                finally
+                                {
+                                    if (sqlCon != null)
+                                    {
+                                        sqlCon.Close();
+                                    }
+                                }
+                                #endregion
 
 
                                 // Serialize our concrete class into a JSON String
@@ -1168,384 +1180,61 @@ namespace WCF.MNepal
                                     {
                                         var json = JsonConvert.DeserializeObject<KUKLPaymentTxnResponse>(responseContent);
 
+                                        //Response save to db
+                                        #region KUKLResponseData                                        
+                                        try
+                                        {
+                                            using (sqlCon = new SqlConnection(DatabaseConnection.ConnectionString()))
+                                            {
+                                                sqlCon.Open();
+                                                using (SqlCommand sqlCmd = new SqlCommand("[s_MNKUKLResponse]", sqlCon))
+                                                {
+                                                    sqlCmd.CommandType = CommandType.StoredProcedure;
+
+                                                    sqlCmd.Parameters.AddWithValue("@result", json.result);
+                                                    sqlCmd.Parameters.AddWithValue("@amount", json.amount);
+                                                    sqlCmd.Parameters.AddWithValue("@txnReferenceNo", tid);
+                                                    sqlCmd.Parameters.AddWithValue("@recNo", json.recNo);
+                                                    sqlCmd.Parameters.AddWithValue("@connectionNo", json.connectionNo);
+                                                    sqlCmd.Parameters.AddWithValue("@recdate", json.recdate);
+
+                                                    ret = sqlCmd.ExecuteNonQuery();
+                                                }
+
+                                            }
+                                        }
+                                        catch (Exception ex)
+                                        {
+
+                                            throw ex;
+                                        }
+                                        finally
+                                        {
+                                            if (sqlCon != null)
+                                            {
+                                                sqlCon.Close();
+                                            }
+                                        }
 
 
                                     }
 
 
 
+
                                 }
 
 
-                                //for executepayment request insert in database for nepalwater
-                                reqEPPaypointNepalWaterInfo = new PaypointModel()
-                                {
-
-                                    accountReqEP = account,
 
 
 
-
-                                    userIdReqEP = userId,
-                                    userPasswordReqEP = userPassword,
-                                    salePointTypeReqEP = salePointType,
-
-
-                                    amountReqEP = amount,
-
-                                    remarkReqEP = "Execute Payment",
-                                    UserName = mobile,
-
-                                    paypointType = paypointType,
-
-                                };
-
-                                using (WebClient wcExecPay = new WebClient())
-                                {
-
-
-
-                                    //for Response Execute Payment
-                                    resEPPaypointNepalWaterInfo = new PaypointModel()
-                                    {
-
-                                        accountResEP = account,
-
-
-                                        userIdResEP = userId,
-
-                                        userPasswordResEP = userPassword,
-                                        salePointTypeResEP = salePointType,
-
-
-                                        amountResEP = amount,
-
-                                        responseCodeResEP = compResultResp,
-                                        descriptionResEP = "Execute Payment" + keyExecRlt,
-                                        UserName = mobile,
-
-                                        paypointType = paypointType,
-                                        resultMessageResEP = resultMessageResEP,
-
-                                    };
-                                }
                             }
 
                         } while ((compResultResp == "011") || (compResultResp == "012"));
 
-                        ///for  Inserting EP PayPoint Data for nepalwater
 
-                        try
-                        {
-                            int resultsReqEP = PaypointUtils.RequestEPPaypointInfo(reqEPPaypointNepalWaterInfo);
-                            int resultsResEP = PaypointUtils.ResponseEPPaypointInfo(resEPPaypointNepalWaterInfo);
 
-                            if ((resultsReqEP > 0) && (resultsResEP > 0))
-                            {
-                                message = result;
-                            }
-                            else
-                            {
-                                message = result;
-                            }
 
-                        }
-                        catch (Exception ex)
-                        {
-                            string ss = ex.Message;
-                            message = result;
-                        }
-
-                        if (compResultResp == "000")
-
-                        {
-                            if ((userId == null) || (userPassword == null) || (salePointType == null))
-                            {
-                                // throw ex
-                                statusCode = "400";
-                                message = "Parameters Missing/Invalid";
-                                failedmessage = message;
-                            }
-                            else if (compResultResp != "")
-                            {
-                                string statusResGTP = "1";
-                                do
-                                {
-                                    string key = "";
-                                    string gtBillNumber = "";
-                                    // string URIGetTran = "https://test.paypoint.md:4445/PayPointWS/PayPointMSOperations.asmx/GetTransaction";//for GT paypoint transactionlink
-
-                                    //For get transactionpaypoint link in webconfig
-                                    string URIGetTran = System.Web.Configuration.WebConfigurationManager.AppSettings["GTPPaypointUrl"];
-
-                                    string GetTranParameters = "userLogin=" + userId + "&userPassword=" + userPassword + "&stan=" + "-1";
-
-                                    //for get transaction payment request insert in database
-                                    reqGTPaypointNepalWaterInfo = new PaypointModel()
-                                    {
-
-                                        accountReqGTP = account,
-
-
-                                        userIdReqGTP = userId,
-                                        userPasswordReqGTP = userPassword,
-                                        salePointTypeReqGTP = salePointType,
-
-
-                                        amountReqGTP = amount,
-                                        billNumberReqGTP = gtBillNumber,
-                                        // retrievalReferenceReqGTP = fundtransfer.tid,
-                                        //retrievalReferenceReqGTP = tid,
-
-                                        remarkReqGTP = "Get Transaction Payment",
-                                        UserName = mobile,
-
-                                        paypointType = paypointType,
-                                        //remarkReqGTP = "Get Transaction Payment"+keyExecRlt,
-
-                                    };
-
-
-
-                                    string getTranResultResp = "";
-                                    string keyGetTrancRlt = "";
-                                    string resultMessageResGTP = "";
-                                    string billNumberResGTP = "";
-                                    using (WebClient wcGetTran = new WebClient())
-                                    {
-                                        wcGetTran.Headers[HttpRequestHeader.ContentType] = "application/x-www-form-urlencoded";
-                                        string HtmlResultGetTran = wcGetTran.UploadString(URIGetTran, GetTranParameters);
-
-                                        XmlDocument xmlEDoc = new XmlDocument();
-                                        xmlEDoc.LoadXml(HtmlResultGetTran);
-
-                                        XmlNodeList nodeEPay = xmlEDoc.GetElementsByTagName("*");
-                                        string resultEPay = nodeEPay[0].InnerText;
-                                        string HtmlEPayResult = resultEPay;
-
-                                        //for determing excutepayment key and result
-                                        var readerEPay = new StringReader(HtmlEPayResult);
-                                        var xdocEPay = XDocument.Load(readerEPay);
-
-                                        XDocument docEPay = XDocument.Parse(xdocEPay.ToString());
-                                        var xElemGPay = XElement.Parse(docEPay.ToString());
-                                        if (xElemGPay.Attribute("Result").Value == "000")
-                                        {
-                                            getTranResultResp = xElemGPay.Attribute("Result").Value;
-                                            keyGetTrancRlt = xElemGPay.Attribute("Key").Value;
-                                            resultMessageResGTP = xElemGPay.Elements("ResultMessage").Where(x => x.Name == "ResultMessage").SingleOrDefault().Value;
-
-
-                                            //START EGTP
-                                            //FOR  gt res all
-                                            string ResultResGTPAll = getTranResultResp;
-                                            string ResponseKeyResGTPAll = keyGetTrancRlt;
-                                            string RequestKeyResGTPAll = xElemGPay.Descendants().Elements("RequestKey").Where(x => x.Name == "RequestKey").SingleOrDefault().Value;
-                                            string StanResGTPAll = xElemGPay.Descendants().Elements("Stan").Where(x => x.Name == "Stan").SingleOrDefault().Value;
-                                            string RefStanResGTPAll = xElemGPay.Descendants().Elements("RefStan").Where(x => x.Name == "RefStan").SingleOrDefault().Value;
-
-
-                                            string ExternalStanResGTPAll = xElemGPay.Descendants().Elements("ExternalStan").Where(x => x.Name == "ExternalStan").SingleOrDefault().Value;
-                                            string CompanyIDResGTPAll = xElemGPay.Descendants().Elements("Company").Where(x => x.Name == "Company").SingleOrDefault().Value;
-                                            string CompanyNameResGTPAll = xElemGPay.Descendants().Elements("Name").Where(x => x.Name == "Name").SingleOrDefault().Value;
-                                            string ServiceCodeResGTPAll = xElemGPay.Descendants().Elements("ServiceCode").Where(x => x.Name == "ServiceCode").SingleOrDefault().Value;
-                                            string ServiceNameResGTPAll = xElemGPay.Descendants().Elements("ServiceName").Where(x => x.Name == "ServiceName").SingleOrDefault().Value;
-
-                                            string AccountResGTPAll = xElemGPay.Descendants().Elements("Account").Where(x => x.Name == "Account").SingleOrDefault().Value;
-                                            string CurrencyResGTPAll = xElemGPay.Descendants().Elements("Currency").Where(x => x.Name == "Currency").SingleOrDefault().Value;
-                                            string CurrencyCodeResGTPAll = xElemGPay.Descendants().Elements("CurrencyCode").Where(x => x.Name == "CurrencyCode").SingleOrDefault().Value;
-                                            string AmountResGTPAll = xElemGPay.Descendants().Elements("Amount").Where(x => x.Name == "Amount").SingleOrDefault().Value;
-                                            string CommissionAmountResGTPAll = xElemGPay.Descendants().Elements("CommissionAmount").Where(x => x.Name == "CommissionAmount").SingleOrDefault().Value;
-
-                                            string BillNumberResGTPAll = xElemGPay.Descendants().Elements("BillNumber").Where(x => x.Name == "BillNumber").SingleOrDefault().Value;
-                                            string UserLoginResGTPAll = xElemGPay.Descendants().Elements("UserLogin").Where(x => x.Name == "UserLogin").SingleOrDefault().Value;
-                                            string SalesPointTypeResGTPAll = xElemGPay.Descendants().Elements("SalesPointType").Where(x => x.Name == "SalesPointType").SingleOrDefault().Value;
-                                            string StatusResGTPAll = xElemGPay.Descendants().Elements("Status").Where(x => x.Name == "Status").SingleOrDefault().Value;
-                                            string RegDateResGTPAll = xElemGPay.Descendants().Elements("RegDate").Where(x => x.Name == "RegDate").SingleOrDefault().Value;
-
-                                            string PaymentIdResGTPAll = xElemGPay.Descendants().Elements("PaymentId").Where(x => x.Name == "PaymentId").SingleOrDefault().Value;
-                                            string DealerIdResGTPAll = xElemGPay.Descendants().Elements("DealerId").Where(x => x.Name == "DealerId").SingleOrDefault().Value;
-                                            string DealerNameResGTPAll = xElemGPay.Descendants().Elements("DealerName").Where(x => x.Name == "DealerName").SingleOrDefault().Value;
-                                            string ResponseCodeResGTPAll = xElemGPay.Descendants().Elements("ResponseCode").Where(x => x.Name == "ResponseCode").SingleOrDefault().Value;
-                                            string PaySourceTypeResGTPAll = xElemGPay.Descendants().Elements("PaySourceType").Where(x => x.Name == "PaySourceType").SingleOrDefault().Value;
-
-                                            string CityResGTPAll = xElemGPay.Descendants().Elements("City").Where(x => x.Name == "City").SingleOrDefault().Value;
-                                            string AddressResGTPAll = xElemGPay.Descendants().Elements("Address").Where(x => x.Name == "Address").SingleOrDefault().Value;
-                                            string CloseDateResGTPAll = xElemGPay.Descendants().Elements("CloseDate").Where(x => x.Name == "CloseDate").SingleOrDefault().Value;
-                                            string ProblemResGTPAll = xElemGPay.Descendants().Elements("Problem").Where(x => x.Name == "Problem").SingleOrDefault().Value;
-
-
-
-                                            ////for get transaction payment response all insert in database
-                                            resGTAllPaypointNepalWaterInfo = new PaypointModel()
-                                            {
-
-
-                                                ResultResGTPAll = ResultResGTPAll,
-                                                ResponseKeyResGTPAll = ResponseKeyResGTPAll,
-                                                RequestKeyResGTPAll = RequestKeyResGTPAll,
-                                                StanResGTPAll = StanResGTPAll,
-                                                RefStanResGTPAll = RefStanResGTPAll,
-
-                                                ExternalStanResGTPAll = ExternalStanResGTPAll,
-                                                CompanyIDResGTPAll = CompanyIDResGTPAll,
-                                                CompanyNameResGTPAll = CompanyNameResGTPAll,
-                                                ServiceCodeResGTPAll = ServiceCodeResGTPAll,
-                                                ServiceNameResGTPAll = ServiceNameResGTPAll,
-
-                                                AccountResGTPAll = AccountResGTPAll,
-                                                CurrencyResGTPAll = CurrencyResGTPAll,
-                                                CurrencyCodeResGTPAll = CurrencyCodeResGTPAll,
-                                                AmountResGTPAll = AmountResGTPAll,
-                                                CommissionAmountResGTPAll = CommissionAmountResGTPAll,
-
-                                                BillNumberResGTPAll = BillNumberResGTPAll,
-                                                UserLoginResGTPAll = UserLoginResGTPAll,
-                                                SalesPointTypeResGTPAll = SalesPointTypeResGTPAll,
-                                                StatusResGTPAll = StatusResGTPAll,
-                                                RegDateResGTPAll = RegDateResGTPAll,
-
-                                                PaymentIdResGTPAll = PaymentIdResGTPAll,
-                                                DealerIdResGTPAll = DealerIdResGTPAll,
-                                                DealerNameResGTPAll = DealerNameResGTPAll,
-                                                ResponseCodeResGTPAll = ResponseCodeResGTPAll,
-                                                PaySourceTypeResGTPAll = PaySourceTypeResGTPAll,
-
-                                                CityResGTPAll = CityResGTPAll,
-                                                AddressResGTPAll = AddressResGTPAll,
-                                                CloseDateResGTPAll = CloseDateResGTPAll,
-                                                ProblemResGTPAll = ProblemResGTPAll,
-                                                UserName = mobile,
-
-
-
-                                                Mode = "NWGTRes",
-                                            };
-
-
-
-
-                                            //END EGTP
-
-
-
-                                            if (!(resultMessageResGTP == "No data"))
-                                            {
-                                                billNumberResGTP = xElemGPay.Descendants().Elements("BillNumber").Where(x => x.Name == "BillNumber").SingleOrDefault().Value;
-                                                statusResGTP = xElemGPay.Descendants().Elements("Status").Where(x => x.Name == "Status").SingleOrDefault().Value;
-
-                                                //for get transaction payment status validation
-                                                if (!(statusResGTP == "1" || statusResGTP == "5" || statusResGTP == "11" || statusResGTP == "13"))
-                                                {
-                                                    if (statusResGTP == "4" || statusResGTP == "6" || statusResGTP == "14" || statusResGTP == "16")
-                                                    {
-                                                        // mnft.ResponseStatus(HttpStatusCode.BadRequest, result); //200 - OK
-                                                        statusCode = "400";
-                                                        //message = result;
-                                                        message = "Failed";
-                                                        failedmessage = message;
-                                                        resultMessageResGTP = "failed";
-                                                    }
-
-                                                }
-                                                else
-                                                {
-                                                    statusCode = "200";
-                                                    resultMessageResGTP = "sucess";
-                                                }
-                                            }
-                                            else
-                                            {
-                                                //mnft.ResponseStatus(HttpStatusCode.BadRequest, result); //200 - OK
-                                                statusCode = "400";
-                                                //message = result;
-                                                message = "Failed";
-                                                failedmessage = message;
-                                                resultMessageResGTP = "failed";
-                                            }
-                                        }
-                                        else
-                                        {
-                                            resultMessageResGTP = xElemGPay.Descendants().Elements("ResultMessage").Where(x => x.Name == "ResultMessage").SingleOrDefault().Value;
-
-                                        }
-
-
-                                        //end get transaction payment status validation
-
-                                        ////for get transaction payment response insert in database
-                                        resGTPaypointNepalWaterInfo = new PaypointModel()
-                                        {
-
-                                            accountResGTP = account,
-
-
-
-                                            userIdResGTP = userId,
-                                            userPasswordResGTP = userPassword,
-                                            salePointTypeResGTP = salePointType,
-
-
-                                            amountResGTP = amount, //amountpay,
-                                            billNumberResGTP = billNumberResGTP,
-                                            //retrievalReferenceResGTP = fundtransfer.tid,
-                                            //retrievalReferenceResGTP = tid,
-
-                                            responseCodeResGTP = getTranResultResp,
-                                            descriptionResGTP = "Get Transaction Payment " + keyGetTrancRlt,
-                                            UserName = mobile,
-
-                                            paypointType = paypointType,
-                                            resultMessageResGTP = resultMessageResGTP,
-
-                                        };
-
-
-                                    }
-                                } while (statusResGTP == "10" || statusResGTP == "15" || statusResGTP == "20" || statusResGTP == "21" || statusResGTP == "99" || statusResGTP == "12" || statusResGTP == "2" || statusResGTP == "0");
-
-                                ///for  Inserting GT PayPoint Data
-
-                                try
-                                {
-
-                                    int resultsReqGTP = PaypointUtils.RequestGTPaypointInfo(reqGTPaypointNepalWaterInfo);
-                                    int resultsResGTP = PaypointUtils.ResponseGTPaypointInfo(resGTPaypointNepalWaterInfo);
-
-
-                                    //START EGTP
-                                    int resultsResGTPAll = PaypointUtils.ResponseGTAllPaypointInfo(resGTAllPaypointNepalWaterInfo);
-                                    //EGTP 
-                                    if ((resultsReqGTP > 0) && (resultsResGTP > 0))
-                                    {
-                                        message = result;
-                                    }
-                                    else
-                                    {
-                                        message = result;
-                                    }
-
-                                }
-                                catch (Exception ex)
-                                {
-                                    string ss = ex.Message;
-                                    message = result;
-                                }
-
-                            }
-
-                        }
-
-                        else //ELSE FOR (rltCheckPaymt == "000")I.E Error  in result of CP
-                        {
-                            //mnft.ResponseStatus(HttpStatusCode.BadRequest, result); //200 - OK
-                            statusCode = "400";
-                            // message = result;
-                            message = resultMessageResCP;
-
-                            failedmessage = message;
-                        }
-                        //end excute dekhi get ko sabai comment gareko
                     }
                     catch (Exception ex)
                     {
@@ -1556,92 +1245,47 @@ namespace WCF.MNepal
                     }
                 }
 
-                // DelayForSec(8000);
                 //for sending sms  if success  
-                if (compResultResp == "000")
+                if (responseContent != "{}")
                 {
-                    OutgoingWebResponseContext response2 = WebOperationContext.Current.OutgoingResponse;
-                    if (response2.StatusCode == HttpStatusCode.OK)
+                    //SMS
+                    string messagereply = "";
+                    try
                     {
-                        string messagereply = "";
+                        //FOR CUSTOMER
                         try
                         {
-                            messagereply = "Dear " + CustCheckUtils.GetName(mobile) + "," + "\n";
+                            //Alert Dynamic
+                            string AlertType = "KUKL";
 
-                            messagereply += " You have successfully paid NPR " + validTransactionData.Amount
-                                            + " to " +
-                                            //GetMerchantName 
-                                            "Utility payment for Nepal Water." + " on date " +
-                                                (validTransactionData.CreatedDate).ToString("dd/MM/yyyy")
-                                            + "." + "\n";
-                            messagereply += "Thank you. NIBL Thaili";
+                            //FOR CUSTOMER SMS                                     
+                            #region FOR CUSTOMER SMS
 
-                            var client = new WebClient();
-
-                            //SENDER
-                            if ((mobile.Substring(0, 3) == "980") || (mobile.Substring(0, 3) == "981")) //FOR NCELL
+                            CustomerSMS customerSMS = new CustomerSMS();
+                            string cSMS = customerSMS.CustSMSEnable(AlertType, mobile, "", amount.ToString(), "", "", DateTime.Now.ToString("dd/MM/yyyy"));
+                            if (cSMS == "false")
                             {
-                                //FOR NCELL
-                                //var content = client.DownloadString(
-                                //    "http://smsvas.mos.com.np/PostSMS.ashx?QueueId=&TelecomId=2&KeywordId=3&Password=mnepal120&From=37878&To="
-                                //    + "977" + mobile + "&message=" + messagereply + "");
-                                var content = client.DownloadString(
-                                               SMSNCELL + "977" + mobile + "&message=" + messagereply + "");
+
                             }
-                            else if ((mobile.Substring(0, 3) == "985") || (mobile.Substring(0, 3) == "984")
-                                        || (mobile.Substring(0, 3) == "986"))
+                            else
                             {
-                                //FOR NTC
-                                //var content = client.DownloadString(
-                                //    "http://smsvas.mos.com.np/PostSMS.ashx?QueueId=&TelecomId=1&KeywordId=3&Password=mnepal120&From=37878&To="
-                                //    + "977" + mobile + "&message=" + messagereply + "");
-                                var content = client.DownloadString(
-                                               SMSNTC + "977" + mobile + "&message=" + messagereply + "");
+
                             }
 
-                            statusCode = "200";
-                            var v = new
-                            {
-                                StatusCode = Convert.ToInt32(statusCode),
-                                StatusMessage = result
-                            };
-                            result = JsonConvert.SerializeObject(v);
+                            #endregion
 
                         }
                         catch (Exception ex)
                         {
-                            // throw ex
-                            statusCode = "400";
-                            message = ex.Message;
+                            throw ex;
                         }
 
-
-                        custsmsInfo = new CustActivityModel()
-                        {
-                            UserName = fundtransfer.mobile,
-                            RequestMerchant = transactionType,
-                            DestinationNo = fundtransfer.da,
-                            Amount = validTransactionData.Amount.ToString(),
-                            SMSStatus = "Success",
-                            SMSSenderReply = messagereply,
-                            ErrorMessage = "",
-                        };
-
-
                     }
-                    else if ((response2.StatusCode == HttpStatusCode.BadRequest) || (response2.StatusCode == HttpStatusCode.InternalServerError) || (statusCode != "200"))
+                    catch (Exception ex)
                     {
-                        custsmsInfo = new CustActivityModel()
-                        {
-                            UserName = mobile,
-                            RequestMerchant = transactionType,
-                            DestinationNo = fundtransfer.da,
-                            Amount = validTransactionData.Amount.ToString(),
-                            SMSStatus = "Failed",
-                            SMSSenderReply = message,
-                            ErrorMessage = failedmessage,
-                        };
-
+                        // throw ex
+                        statusCode = "400";
+                        message = ex.Message;
                     }
                 }
 
@@ -1652,7 +1296,7 @@ namespace WCF.MNepal
                     (statusCode != "188") && (statusCode != "189") && (statusCode != "190") && (statusCode != "800") && (statusCode != "902") &&
                     (statusCode != "904") && (statusCode != "906") && (statusCode != "907") && (statusCode != "909") && (statusCode != "911") &&
                     (statusCode != "913") && (statusCode != "90") && (statusCode != "91") && (statusCode != "94") && (statusCode != "95") &&
-                    (statusCode != "98") && (statusCode != "99") && (statusCodeBalance != "400") && (compResultResp != "000") && (statusCodeBalance != "400") && (statusCode != "200")
+                    (statusCode != "98") && (statusCode != "99") && (statusCodeBalance != "400") && (statusCodeBalance != "400") && (statusCode != "200")
                     )
                 {
                     //TraceIdGenerator traceRevid = new TraceIdGenerator();
@@ -1660,12 +1304,12 @@ namespace WCF.MNepal
 
                     if (sc == "00")
                     {
-                        transactionType = "PayPoint Txfr to W2W";
+                        transactionType = "KUKL Txfr to W2W";
                     }
                     else
                     {
                         sc = "01";
-                        transactionType = "PayPoint Txfr to W2B"; //B2W
+                        transactionType = "KUKL Txfr to W2B"; //B2W
                     }
                     FundTransfer fundtransferRev = new FundTransfer
                     {
@@ -1692,7 +1336,7 @@ namespace WCF.MNepal
                     {
                         // throw ex
                         statusCode = "400";
-                        message = "Parameters Missing/Invalid PayPoint";
+                        message = "Parameters Missing/Invalid";
                         failedmessage = message;
                     }
                     else
@@ -1763,7 +1407,7 @@ namespace WCF.MNepal
                                 //start:Com focus one log///
                                 MNFundTransfer mnft = new MNFundTransfer(tid, fundtransferRev.sc, fundtransferRev.mobile,
                                        fundtransferRev.sa, fundtransferRev.amount, fundtransferRev.da, fundtransferRev.note, fundtransferRev.pin,
-                                       fundtransferRev.sourcechannel, "T", "PayPoint");
+                                       fundtransferRev.sourcechannel, "T", "KUKL");
                                 var comfocuslog = new MNComAndFocusOneLog(mnft, DateTime.Now);
                                 var mncomfocuslog = new MNComAndFocusOneLogsController();
                                 //mncomfocuslog.InsertIntoComFocusOne(comfocuslog);
@@ -1804,7 +1448,7 @@ namespace WCF.MNepal
                                         var transaction = new MNTransactionMaster(mnft);
                                         var mntransaction = new MNTransactionsController();
                                         //validTransactionData = mntransaction.Validate(transaction, mnft.pin);
-                                        validTransactionData = mntransaction.Validatepaypoint(transaction, mnft.pin);
+                                        validTransactionData = mntransaction.Validate(transaction, mnft.pin);
                                         result = validTransactionData.Response;
 
                                         /*** ***/
@@ -2083,173 +1727,44 @@ namespace WCF.MNepal
                                         /*** ***/
                                         //for reverse aagadi success sms pathaune
 
-                                        OutgoingWebResponseContext response2 = WebOperationContext.Current.OutgoingResponse;
-                                        if (response2.StatusCode == HttpStatusCode.OK)
+                                        //SMS
+                                        string messagereply = "";
+                                        try
                                         {
-                                            string messagereply = "";
+                                            //FOR CUSTOMER
                                             try
                                             {
-                                                messagereply = "Dear " + CustCheckUtils.GetName(mobile) + "," + "\n";
+                                                //Alert Dynamic
+                                                string AlertType = "KUKLR";
 
-                                                messagereply += " You have successfully paid NPR " + validTransactionData.Amount
-                                                                + " to " +
-                                                                //GetMerchantName 
-                                                                "Utility payment for Nepal Water." + " on date " +
-                                                                    (validTransactionData.CreatedDate).ToString("dd/MM/yyyy")
-                                                                + "." + "\n";
-                                                messagereply += "Thank you. NIBL Thaili";
+                                                //FOR CUSTOMER SMS                                     
+                                                #region FOR CUSTOMER SMS
 
-                                                var client = new WebClient();
-
-                                                //SENDER
-                                                if ((mobile.Substring(0, 3) == "980") || (mobile.Substring(0, 3) == "981")) //FOR NCELL
+                                                CustomerSMS customerSMS = new CustomerSMS();
+                                                string cSMS = customerSMS.CustSMSEnable(AlertType, mobile, "", amount.ToString(), "", "", DateTime.Now.ToString("dd/MM/yyyy"));
+                                                if (cSMS == "false")
                                                 {
-                                                    //FOR NCELL
-                                                    //var content = client.DownloadString(
-                                                    //    "http://smsvas.mos.com.np/PostSMS.ashx?QueueId=&TelecomId=2&KeywordId=3&Password=mnepal120&From=37878&To="
-                                                    //    + "977" + mobile + "&message=" + messagereply + "");
-                                                    var content = client.DownloadString(
-                                                        SMSNCELL + "977" + mobile + "&message=" + messagereply + "");
+
                                                 }
-                                                else if ((mobile.Substring(0, 3) == "985") || (mobile.Substring(0, 3) == "984")
-                                                            || (mobile.Substring(0, 3) == "986"))
+                                                else
                                                 {
-                                                    //FOR NTC
-                                                    //var content = client.DownloadString(
-                                                    //    "http://smsvas.mos.com.np/PostSMS.ashx?QueueId=&TelecomId=1&KeywordId=3&Password=mnepal120&From=37878&To="
-                                                    //    + "977" + mobile + "&message=" + messagereply + "");
-                                                    var content = client.DownloadString(
-                                                        SMSNTC + "977" + mobile + "&message=" + messagereply + "");
+
                                                 }
 
-                                                statusCode = "200";
-                                                var v = new
-                                                {
-                                                    StatusCode = Convert.ToInt32(statusCode),
-                                                    StatusMessage = result
-                                                };
-                                                result = JsonConvert.SerializeObject(v);
+                                                #endregion
 
                                             }
                                             catch (Exception ex)
                                             {
-                                                // throw ex
-                                                statusCode = "400";
-                                                message = ex.Message;
+                                                throw ex;
                                             }
 
-
-                                            custsmsInfo = new CustActivityModel()
-                                            {
-                                                UserName = fundtransfer.mobile,
-                                                RequestMerchant = transactionType,
-                                                DestinationNo = fundtransfer.da,
-                                                Amount = validTransactionData.Amount.ToString(),
-                                                SMSStatus = "Success",
-                                                SMSSenderReply = messagereply,
-                                                ErrorMessage = "",
-                                            };
-
-
                                         }
-                                        else if ((response2.StatusCode == HttpStatusCode.BadRequest) || (response2.StatusCode == HttpStatusCode.InternalServerError) || (statusCode != "200"))
+                                        catch (Exception ex)
                                         {
-                                            custsmsInfo = new CustActivityModel()
-                                            {
-                                                UserName = mobile,
-                                                RequestMerchant = transactionType,
-                                                DestinationNo = fundtransfer.da,
-                                                Amount = validTransactionData.Amount.ToString(),
-                                                SMSStatus = "Failed",
-                                                SMSSenderReply = message,
-                                                ErrorMessage = failedmessage,
-                                            };
-
-                                        }
-
-
-                                        OutgoingWebResponseContext response1 = WebOperationContext.Current.OutgoingResponse;
-                                        if (response1.StatusCode == HttpStatusCode.OK)
-                                        {
-                                            string messagereply = "";
-                                            try
-                                            {
-                                                messagereply = "Dear " + CustCheckUtils.GetName(mobile) + "," + "\n";
-
-                                                messagereply += " You have successfully reverse  NPR " + validTransactionData.Amount
-                                                                    + " to " +
-                                                                    //GetMerchantName 
-                                                                    "Utility payment for Nepal Water." + " on date " +
-                                                                    (validTransactionData.CreatedDate).ToString("dd/MM/yyyy")
-                                                                + "." + "\n";
-                                                messagereply += "Thank you. NIBL Thaili";
-
-                                                var client = new WebClient();
-
-                                                //SENDER
-                                                if ((mobile.Substring(0, 3) == "980") || (mobile.Substring(0, 3) == "981")) //FOR NCELL
-                                                {
-                                                    //FOR NCELL
-                                                    //var content = client.DownloadString(
-                                                    //    "http://smsvas.mos.com.np/PostSMS.ashx?QueueId=&TelecomId=2&KeywordId=3&Password=mnepal120&From=37878&To="
-                                                    //    + "977" + mobile + "&message=" + messagereply + "");
-                                                    var content = client.DownloadString(
-                                                        SMSNCELL + "977" + mobile + "&message=" + messagereply + "");
-                                                }
-                                                else if ((mobile.Substring(0, 3) == "985") || (mobile.Substring(0, 3) == "984")
-                                                            || (mobile.Substring(0, 3) == "986"))
-                                                {
-                                                    //FOR NTC
-                                                    //var content = client.DownloadString(
-                                                    //    "http://smsvas.mos.com.np/PostSMS.ashx?QueueId=&TelecomId=1&KeywordId=3&Password=mnepal120&From=37878&To="
-                                                    //    + "977" + mobile + "&message=" + messagereply + "");
-                                                    var content = client.DownloadString(
-                                                        SMSNTC + "977" + mobile + "&message=" + messagereply + "");
-                                                }
-
-                                                statusCode = "200";
-                                                var v = new
-                                                {
-                                                    StatusCode = Convert.ToInt32(statusCode),
-                                                    StatusMessage = result
-                                                };
-                                                result = JsonConvert.SerializeObject(v);
-
-                                            }
-                                            catch (Exception ex)
-                                            {
-                                                // throw ex
-                                                statusCode = "400";
-                                                message = ex.Message;
-                                            }
-
-
-                                            custsmsInfo = new CustActivityModel()
-                                            {
-                                                UserName = fundtransfer.mobile,
-                                                RequestMerchant = transactionType,
-                                                DestinationNo = fundtransfer.da,
-                                                Amount = validTransactionData.Amount.ToString(),
-                                                SMSStatus = "Success",
-                                                SMSSenderReply = messagereply,
-                                                ErrorMessage = "",
-                                            };
-
-
-                                        }
-                                        else if ((response1.StatusCode == HttpStatusCode.BadRequest) || (response1.StatusCode == HttpStatusCode.InternalServerError) || (statusCode != "200"))
-                                        {
-                                            custsmsInfo = new CustActivityModel()
-                                            {
-                                                UserName = mobile,
-                                                RequestMerchant = transactionType,
-                                                DestinationNo = fundtransfer.da,
-                                                Amount = validTransactionData.Amount.ToString(),
-                                                SMSStatus = "Failed",
-                                                SMSSenderReply = message,
-                                                ErrorMessage = failedmessage,
-                                            };
-
+                                            // throw ex
+                                            statusCode = "400";
+                                            message = ex.Message;
                                         }
                                         //end:insert into transaction master//
 
@@ -2302,12 +1817,8 @@ namespace WCF.MNepal
 
                         } //END IsValidMerchant
 
-                        //} //END Destination mobile No check
-
                     }
                 }
-                //} //tokengenerator ko closing bracket
-
 
             }
             catch (Exception ex)
@@ -2349,6 +1860,9 @@ namespace WCF.MNepal
         #endregion
 
 
+
+
+
         static void BackgroundTaskWithObject(Object stateInfo)
         {
             FundTransfer data = (FundTransfer)stateInfo;
@@ -2367,6 +1881,8 @@ namespace WCF.MNepal
             t.Wait();
 
         }
+        #endregion
+
     }
 
 }

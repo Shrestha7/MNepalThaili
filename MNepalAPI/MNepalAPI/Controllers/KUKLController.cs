@@ -86,57 +86,28 @@ namespace MNepalAPI.Controllers
         [Route("api/KUKL/KUKLBillPayment")]
         [HttpPost]
         public async Task<HttpResponseMessage> KUKLBillPayment(KUKLBillRequest bill)
-        {           
-
-            RandomCodeGenerator randomCodeGenerator = new RandomCodeGenerator();
+        {
             try
             {
-                var kuklObject = new KUKLBillRequest
-                {
-                    username = bill.username,
-                    connectionNo = bill.connectionNo,
-                    merchantId = ConfigurationManager.AppSettings["KUKLMerchantId"],
-                    txnReferenceNo = randomCodeGenerator.CreateRandomCodeWithString(30),
-                    txnAmount = bill.txnAmount,
-                    bankId = ConfigurationManager.AppSettings["KUKLBankId"],
-                    txnDate = DateTime.Now.ToString("yyyy-MM-dd"),
-                    branchcode = bill.branchcode,
-                    module = bill.module
-                };
+                string transactionType = string.Empty;
+                var content = new FormUrlEncodedContent(new[]{
+       
+                        new KeyValuePair<string,string>("sc",bill.sc),
+                        new KeyValuePair<string, string>("mobile",bill.mobile),
+                        new KeyValuePair<string, string>("amount", bill.txnAmount.ToString()),
+                        new KeyValuePair<string,string>("da",bill.da),
+                        new KeyValuePair<string,string>("pin",bill.pin),
+                        new KeyValuePair<string,string>("destBranchCode", bill.branchcode),
+                        new KeyValuePair<string,string>("connectionNo", bill.connectionNo),
+                        new KeyValuePair<string,string>("tokenID",bill.tokenId),
+                        new KeyValuePair<string,string>("module",bill.module)
+                    });
 
+                var response = await new WCFClient().KUKLSendRequest(content);
+                var result = JsonConvert.DeserializeObject<JsonResult>(response);
 
-                //request
-                int request = RequestKUKLInfo(kuklObject);
-
-                // Serialize our concrete class into a JSON String
-                var stringPayload = await Task.Run(() => JsonConvert.SerializeObject(kuklObject));
-                // Wrap our JSON inside a StringContent which then can be used by the HttpClient class
-                var httpContent = new StringContent(stringPayload, Encoding.UTF8, "application/json");
-
-                using (var httpClient = new HttpClient())
-                {
-                    var KUKLBaseURL = ConfigurationManager.AppSettings["KUKLBaseURL"];
-                    var KUKLPaymentUserName = ConfigurationManager.AppSettings["KUKLPaymentUserName"];
-                    var KUKLPaymentPassword = ConfigurationManager.AppSettings["KUKLPaymentPassword"];
-                    var byteArray = Encoding.ASCII.GetBytes(KUKLPaymentUserName + ":" + KUKLPaymentPassword);
-                    httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Basic", Convert.ToBase64String(byteArray));
-                    ServicePointManager.ServerCertificateValidationCallback = delegate (object sender, X509Certificate certificate, X509Chain chain, SslPolicyErrors sslPolicyErrors) { return true; }; //to remove ssl error
-
-                    var httpResponse = await httpClient.PostAsync(KUKLBaseURL + "KUKL/PostOnlinePaymentDataByConnNum", httpContent);
-                    //response
-                    var responseContent = await httpResponse.Content.ReadAsStringAsync();
-
-                    if (httpResponse.StatusCode == HttpStatusCode.OK && responseContent != "{}")
-                    {
-                        var json = JsonConvert.DeserializeObject<KUKLPaymentTxnResponse>(responseContent);
-                        int result = ResponseKUKLInfo(json);
-
-                        return Request.CreateResponse(HttpStatusCode.OK, json);
-                    }
-                    return Request.CreateErrorResponse(HttpStatusCode.BadRequest, "Invalid Details");
-
-
-                }
+                var jsonResult = JsonConvert.DeserializeObject<KUKLResponse>(result.d);
+                return Request.CreateResponse(HttpStatusCode.OK, jsonResult);
             }
             catch (Exception)
             {
@@ -255,12 +226,12 @@ namespace MNepalAPI.Controllers
                     {
                         sqlCmd.CommandType = CommandType.StoredProcedure;
 
-                        sqlCmd.Parameters.AddWithValue("@address", objreqKUKL.address= (objreqKUKL.address==null?"":objreqKUKL.address));
+                        sqlCmd.Parameters.AddWithValue("@address", objreqKUKL.address = (objreqKUKL.address == null ? "" : objreqKUKL.address));
                         sqlCmd.Parameters.AddWithValue("@penalty", objreqKUKL.penalty);
                         sqlCmd.Parameters.AddWithValue("@name", objreqKUKL.name);
                         sqlCmd.Parameters.AddWithValue("@connectionNo", objreqKUKL.connection_no);
                         sqlCmd.Parameters.AddWithValue("@netAmount", objreqKUKL.net_amount);
-                        
+
 
                         ret = sqlCmd.ExecuteNonQuery();
                     }
@@ -374,7 +345,7 @@ namespace MNepalAPI.Controllers
 
 
 
-        
+
 
 
     }
