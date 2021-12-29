@@ -1,0 +1,588 @@
+﻿@model CustApp.Models.KUKL
+
+@{
+    ViewBag.Title = "KUKL";
+}
+
+<!-- Main content -->
+<link href="~/Content/NewIcon/style.css" rel="stylesheet" />
+<link href="~/Content/ThaliStyle.css" rel="stylesheet" />
+<style>
+    .image_icon {
+        width: 100px;
+    }
+
+    .field-icon {
+        float: right;
+        margin-left: -25px;
+        margin-top: -32px;
+        margin-right: 13px;
+        position: relative;
+        z-index: 2;
+    }
+
+    .bootstrap-select {
+        width: 465px !important;
+        background-color: #fff;
+        color: #fff;
+        border: solid 1px #000;
+    }
+
+    .btn-light {
+        color: #000;
+        background-color: #fff;
+        border-color: #fff;
+        font-size: 18px;
+        margin-left: 0px;
+        border: solid 1px #fff;
+        max-height: 43px;
+    }
+</style>
+
+
+@using (Html.BeginForm("KUKLPayment", "KUKL", FormMethod.Post, new { @id = "KUKLPayment", @name = "KUKLPayment", @class = "form-horizontal", enctype = "multipart/form-data" }))
+{
+    @Html.AntiForgeryToken()
+    @Html.ValidationSummary(true)
+
+    <div class="main-content">
+        <div class="two-colbg">
+            <div class="container">
+                <div class="row">
+
+                    <div class="col-lg-6">
+                        <section class="internet-payment pad-50">
+                            <div class="top-section">
+                                <h2 class="title" style="text-align:center">Kathmandu Upatyaka Khanepani Limited (KUKL)</h2>
+                                <p>Please provide the required field details for KUKL Bill Payment.</p>
+                            </div>
+                            <div class="instant-transactions">
+                                <h3 class="title">Other Merchant Payment</h3>
+                                <div class="transactions-grid clearfix">
+                                    <div class="item load-wallet">
+                                        <div class="item-inner">
+                                            <a href="@Url.Action("MerchantRestaurant", "MerchantPayment")">
+                                                <div class="content-inner">
+                                                    <i class="thaili-icon-restaurant"></i>
+                                                    <span>Restaurant</span>
+                                                </div>
+                                            </a>
+                                        </div>
+                                    </div>
+                                    <!-- /item -->
+
+                                    <div class="item transfer-fund">
+                                        <div class="item-inner">
+                                            <a href="@Url.Action("MerchantCollege", "MerchantPayment")">
+                                                <div class="content-inner">
+                                                    <i class="thaili-icon-college"></i>
+                                                    <span>College</span>
+                                                </div>
+                                            </a>
+                                        </div>
+                                    </div>
+                                    <!-- /item -->
+
+                                    <div class="item top-up">
+                                        <div class="item-inner">
+                                            <a href="@Url.Action("MerchantSchool", "MerchantPayment")">
+                                                <div class="content-inner">
+                                                    <i class="thaili-icon-school"></i>
+                                                    <span>School</span>
+                                                </div>
+                                            </a>
+                                        </div>
+                                    </div>
+                                    <!-- /item -->
+
+                                    <div class="item top-up">
+                                        <div class="item-inner">
+                                            <a href="@Url.Action("MerchantInsurance", "MerchantPayment")">
+                                                <div class="content-inner">
+                                                    <i class="thaili-icon-school"></i>
+                                                    <span>Insurance</span>
+                                                </div>
+                                            </a>
+                                        </div>
+                                    </div>
+                                    <!-- /item -->
+                                    <div class="item top-up">
+                                        <div class="item-inner">
+                                            <a href="@Url.Action("Index", "NEA" )">
+                                                <div class="content-inner">
+                                                    <i class="thaili-icon-electricity"></i>
+                                                    <span>NEA</span>
+                                                </div>
+                                            </a>
+                                        </div>
+                                    </div>
+                                    <!-- /item -->
+                                    <div class="item top-up">
+                                        <div class="item-inner">
+                                            <a href="@Url.Action("Index", "Khanepani" )">
+                                                <div class="content-inner">
+                                                    <i class="thaili-icon-khanepani"></i>
+                                                    <span>Khanepani</span>
+                                                </div>
+                                            </a>
+                                        </div>
+                                    </div>
+                                    <!-- /item -->
+                                    <div class="item top-up">
+                                        <div class="item-inner">
+                                            <a href="@Url.Action("Index", "NepalWater" )">
+                                                <div class="content-inner">
+                                                    <i class="thaili-icon-khanepani"></i>
+                                                    <span>Nepal Water</span>
+                                                </div>
+                                            </a>
+                                        </div>
+                                    </div>
+                                    <!-- /item -->
+                                </div>
+                            </div>
+                        </section>
+
+                    </div>
+
+                    <div class="col-lg-6 right-form">
+                        <section class="content-inner pad-50">
+                            @if (this.ViewData["KUKL_messsage"] != null)
+                            {
+                                if (this.ViewData["message_class"].ToString() == "success_info")
+                                {
+                                    <div class="alert alert-success">
+                                        <button type="button" class="close" data-dismiss="alert">&times;</button>
+                                        <h4>Success</h4> @this.ViewData["KUKL_messsage"]
+                                    </div>
+                                }
+                                else
+                                {
+                                    <div class="alert alert-danger">
+                                        <button type="button" class="close" data-dismiss="alert">&times;</button>
+                                        <h4>Error</h4> @this.ViewData["KUKL_messsage"]
+                                    </div>
+                                }
+                            }
+
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div class="form-group">
+                                        <label>Payment Mode:<b style="color:red;">*</b></label>
+                                        <select id="kuklPaymentModeDrpdwn" name="txtKUKLPaymentModeDrpdwn" class="show-tick" style="width: 465px;height: 43px;">
+                                            @foreach (var kuklPaymentMode in ViewBag.getKUKLPaymentModule)
+                                            {
+                                                <option paymentCode="@kuklPaymentMode.paymentCode" name="kuklBranchList">@kuklPaymentMode.billPaymentMode</option>
+                                            }
+                                        </select>
+
+                                    </div>
+                                    <div class="form-group" id="KUKLPaymentModeErr" style="color:red; margin-top:-11px;"></div>
+                                </div>
+                            </div>
+
+                            <div class="row" id="KUKLLocation">
+                                <div class="col-md-12">
+                                    <div class="form-group">
+                                        <label>KUKL Locations:<b style="color:red;">*</b></label>
+                                        <select id="kuklBranchDrpdwn" name="txtKUKLBranchDrpdwn" class="show-tick" style="width: 465px;height: 43px;">
+                                            @foreach (var kuklBranch in ViewBag.getKUKLBranch)
+                                            {
+                                                <option code="@kuklBranch.branchcode" name="kuklBranchList">@kuklBranch.branch</option>
+                                            }
+                                        </select>
+
+                                    </div>
+                                    <div class="form-group" id="KUKLBranchDrpdwnErr" style="color:red; margin-top:-11px;"></div>
+                                </div>
+                            </div>
+
+                            <div class="row" id="KUKLConnectionNO">
+                                <div class="col-md-12">
+                                    <div class="form-group">
+                                        <label class="col-sm-12">Connection No:<b style="color:red;">*</b></label>
+                                        <input type="text" class="form-control select2" id="ConnectionNo" name="txtConnectionNo" placeholder="1234C" maxlength="6" />
+                                        @*placeholder="Example: 123.45.678"*@
+                                    </div>
+                                    <div class="form-group" id="ConnectionNoErr" style="color:red; margin-top:-11px;"></div>
+                                </div>
+                            </div>
+
+                            <div class="row" id="KUKLApplicationId">
+                                <div class="col-md-12">
+                                    <div class="form-group">
+                                        <label class="col-sm-12">Application Id:<b style="color:red;">*</b></label>
+                                        <input type="text" class="form-control select2" id="ApplicationId" name="txtApplicationId" placeholder="123456" maxlength="20" />
+                                        @*placeholder="Example: 123.45.678"*@
+                                    </div>
+                                    <div class="form-group" id="ApplicationIdErr" style="color:red; margin-top:-11px;"></div>
+                                </div>
+                            </div>
+
+                            <br />
+                            <div class="box-footer">
+                                <input type="submit" class="btn btn-blue btn-big col-md-5" name="btnCommand" value="Confirm" id="btnSubmit" />
+                                <input type="button" value="Clear" class="btn btn-default btn-big col-md-5" id="clearButton" />
+                            </div>
+
+
+                        </section>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Failure modal -->
+    <div class="modal fade common-modal" id="failureModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-body text-center">
+                    <div class="success-icon">
+                        <img src="~/Content/assets/img/denied-cross.svg" alt="denied-cross">
+                    </div>
+                    <p style="color: #E31837; font-size: 1.111rem; font-weight: 700;">@*Error!*@</p>
+                    <span style="color: #E31837; font-size: 1.111rem; font-weight: 700;" id="message"></span>
+                    <br /> <br />
+                    <button type="button" class="btn btn-blue" data-dismiss="modal" style="width:80%">OK</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Success modal -->
+    <div class="modal fade common-modal" id="successModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-body text-center">
+                    <div class="success-icon">
+                        <img src="~/Content/assets/img/info.jpg" style="height:100px;width:100px" />
+                    </div>
+                    <p class="msg">@*Success!*@</p>
+                    <span style="color: green; font-size: 1.111rem; font-weight: 700;" id="message1"></span>
+                    <br /> <br />
+                    <button type="button" class="btn btn-blue" data-dismiss="modal" style="width:80%">OK</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Failure modal session expired -->
+    <div class="modal fade common-modal" id="failureModalSessionExpired" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-body text-center">
+                    <div class="success-icon">
+                        <img src="~/Content/assets/img/denied-cross.svg" alt="denied-cross">
+                    </div>
+                    <p style="color: #E31837; font-size: 1.111rem; font-weight: 700;">@*Error!*@</p>
+                    <span style="color: #E31837; font-size: 1.111rem; font-weight: 700;">Session expired. Please login again</span>
+                    <br /> <br />
+                    <button type="button" class="btn btn-blue" data-dismiss="modal" style="width:80%">OK</button>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+@section scripts{
+
+    <script type="text/javascript">
+
+        $(".btnShow1").mousedown(function () {
+            $(".pwd1").attr("type", "text");
+        });
+        $(".btnShow1").on("mouseleave", function () {
+            $(".pwd1").attr("type", "password");
+        });
+
+        //START //TO RESET VALUES AFTER PRESSING BACK FROM BROWSER
+
+        $(window).bind("pageshow", function () {
+            var KUKLBranchName = $("[name='txtKUKLBranchDrpdwn']").val();
+            if ((KUKLBranchName != null))
+            {
+                $('#kuklBranchDrpdwn').selectpicker('val', KUKLBranchName);
+            }
+
+        });
+
+        $(window).bind("pageshow", function () {
+            var KUKLPaymentMode = $("[name='txtKUKLPaymentModeDrpdwn']").val();
+            if ((KUKLPaymentMode != null))
+            {
+                $('#kuklPaymentModeDrpdwn').selectpicker('val', KUKLPaymentMode);
+            }
+
+        });
+
+        $(document).ready(function () {
+            $("#KUKLApplicationId").hide();
+            $("#KUKLConnectionNO").hide();
+            $("#KUKLLocation").hide();
+
+        });
+        //ENDS
+
+        document.getElementById("successModal").onclick = function () {
+         var url = '@Url.Action("Index", "UserDashboard")';
+         window.location.href = url;
+        };
+
+        @*document.getElementById("failureModal").onclick = function () {
+         var url = '@Url.Action("Index", "UserDashboard")';
+         window.location.href = url;
+        };*@
+
+        document.getElementById("failureModalSessionExpired").onclick = function () {
+         var url = '@Url.Action("Index", "LogOut")';
+         window.location.href = url;
+        };
+
+        function isNumber(evt) {
+            evt = (evt) ? evt : window.event;
+            var charCode = (evt.which) ? evt.which : evt.keyCode;
+            if (charCode > 31 && (charCode < 48 || charCode > 57)) {
+                return false;
+            }
+            return true;
+        }
+        function noCharacter(evt) {
+            evt = (evt) ? evt : window.event;
+            var charCode = (evt.which) ? evt.which : evt.keyCode;
+            if ((charCode > 32 && charCode < 48) || (charCode > 57 && charCode < 65) || (charCode > 90 && charCode < 97) || (charCode > 122 && charCode < 127)) {
+                return false;
+            }
+            return true;
+        }
+        ///for amount input number and dot only
+        function NumberDot(evt) {
+            var charCode = (evt.which) ? evt.which : event.keyCode
+            if (charCode != 46 && charCode > 31 && (charCode < 48 || charCode > 57))
+                return false;
+
+            return true;
+        }
+
+         //get banklist
+        $('#kuklBranchDrpdwn').change(function (e) {
+            debugger;
+            e.preventDefault();
+            var dropdown = document.getElementById('kuklBranchDrpdwn');
+            var selectedOption = dropdown.options[dropdown.selectedIndex];
+            var selectedKUKLBranchId = selectedOption.getAttribute('code');
+            var selectedKUKLBranchName = dropdown.options[dropdown.selectedIndex].text;
+
+            window.kuklBranchId = selectedKUKLBranchId;
+            window.kuklBranchName = selectedKUKLBranchName;
+
+            if (kuklBranchId != '0') {
+                $("#KUKLBranchDrpdwnErr").hide();
+            }
+        });
+
+        //get payment mode
+        $('#kuklPaymentModeDrpdwn').change(function (e) {
+            debugger;
+            e.preventDefault();
+            var dropdown = document.getElementById('kuklPaymentModeDrpdwn');
+            var selectedOption = dropdown.options[dropdown.selectedIndex];
+            var selectedKUKLPaymentModeId = selectedOption.getAttribute('paymentCode');
+            var selectedKUKLPaymentModeName = dropdown.options[dropdown.selectedIndex].text;
+
+            window.kuklPaymentModeId = selectedKUKLPaymentModeId;
+            window.kuklPaymentModeName = selectedKUKLPaymentModeName;
+
+            if (selectedKUKLPaymentModeId != '0') {
+                $("#KUKLPaymentModeErr").hide();
+            }
+
+            if (selectedKUKLPaymentModeId == '1') {
+                $("#KUKLApplicationId").hide();
+                $("#KUKLConnectionNO").show();
+                $("#KUKLLocation").show();
+
+            }
+            if (selectedKUKLPaymentModeId == '2') {
+                $("#KUKLApplicationId").show();
+                $("#KUKLConnectionNO").hide();
+                $("#KUKLLocation").hide();
+            }
+
+        });
+
+        $(".show-tick").prepend("<option value='0' disabled selected>---Select Option---</option>");
+        $('.show-tick').selectpicker({
+            liveSearch: true,
+            showSubtext: true
+        });
+
+        function checkConnectionNo() {
+            var ConnectionNo = $("[name='txtConnectionNo']").val();
+            if ((ConnectionNo.trim() == "")) {
+                $("#ConnectionNoErr").html("");
+                $("#ConnectionNoErr").append("<small>" + "Connection Number is required and cannot be empty" + "</small>");
+                $("#ConnectionNoErr").show();
+            }
+            else {
+                $("#ConnectionNoErr").hide();
+            }
+        }
+
+
+
+        function checkKUKLBranchDrpDwn() {
+            var KUKLBN = $("[name='txtKUKLBranchDrpdwn']").val();
+            if ((KUKLBN == null) || (KUKLBN == undefined)) {
+                $("#KUKLBranchDrpdwnErr").html("");
+                $("#KUKLBranchDrpdwnErr").append("<small>" + "KUKL Location is required and cannot be empty" + "</small>");
+                $("#KUKLBranchDrpdwnErr").show();
+            }
+            else {
+                $("#KUKLBranchDrpdwnErr").hide();
+            }
+
+        }
+
+        function checkKUKLPaymentModeDrpDwn() {
+            var KUKLPM = $("[name='txtKUKLPaymentModeDrpdwn']").val();
+            if ((KUKLPM == null) || (KUKLPM == undefined)) {
+                $("#KUKLPaymentModeErr").html("");
+                $("#KUKLPaymentModeErr").append("<small>" + "KUKL Payment Mode is required and cannot be empty" + "</small>");
+                $("#KUKLPaymentModeErr").show();
+            }
+            else {
+                $("#KUKLPaymentModeErr").hide();
+            }
+
+        }
+
+        function checkKUKLApplicaitonId() {
+            var KUKLPM = $("[name='txtApplicationId']").val();
+            if ((KUKLPM == null) || (KUKLPM == undefined)) {
+                $("#ApplicationIdErr").html("");
+                $("#ApplicationIdErr").append("<small>" + "Application Id is required and cannot be empty" + "</small>");
+                $("#ApplicationIdErr").show();
+            }
+            else {
+                $("#ApplicationIdErr").hide();
+            }
+
+        }
+
+
+        function checkValidation() {
+            checkConnectionNo();
+            checkKUKLBranchDrpDwn();
+            checkKUKLPaymentModeDrpDwn();
+            checkKUKLApplicaitonId();
+        }
+
+
+
+        $("#clearButton").click(function () {
+            debugger;
+            $("#ConnectionNo").val("");
+            $("#ApplicationId").val("");
+            //reset selectedDrpdwn value
+            $('select[name=txtKUKLBranchDrpdwn]').val(0);
+            $('select[name=txtKUKLPaymentModeDrpdwn]').val(0);
+            $('.show-tick').selectpicker('refresh');
+
+        });
+
+
+
+        $('#btnSubmit').click(function (e) {
+            debugger;
+            $('#btnSubmit').attr("disabled", true);
+            e.preventDefault();
+
+            var ConnectionNo = $("[name='txtConnectionNo']").val();
+            var KUKLBranchName = window.kuklBranchName;
+            var KUKLBranchCode = window.kuklBranchId;
+            var BillPaymentMode = kuklPaymentModeName;
+            var ApplicationId = $("[name='txtApplicationId']").val();
+
+
+            var token = $('input[name="__RequestVerificationToken"]').val();
+
+            if (((ConnectionNo != "") && (KUKLBranchName != null) && (BillPaymentMode != null)) || ((ApplicationId != "") && (BillPaymentMode !=null))) {
+
+                var dataToPost = {
+                    connectionNo: ConnectionNo,
+                    kuklBranchName: KUKLBranchName,
+                    branchcode: KUKLBranchCode,
+                    module: BillPaymentMode,
+                    applicationId: ApplicationId,
+                    TokenUnique: token
+                };
+                debugger;
+                e.preventDefault(); //prevent the default action
+                $.ajax({
+                    url: '@Url.Action("KUKLPayment", "KUKL")',
+                    type: "POST",
+                    //data: dataToPost,
+                    data: {
+                        __RequestVerificationToken: token,
+                        _kukl: dataToPost
+                    },
+                    async: true,
+                    success: function (data) {
+
+                        if (data.responseCode == "200" || data.responseCode=="0") {
+                            var url = '@Url.Action("Details", "KUKL")';
+                            window.location.href = url;
+                        }
+
+                        else {
+
+                            $("#ajaxResponse").html("");
+                            $("#message").html("");
+                            $("#message").append(data.responseText);
+                            if (data.responseText == "Session expired. Please login again") {
+                                $('#failureModalSessionExpired').modal("show");
+                            }
+                            else {
+                                $('#failureModal').modal("show");
+                            }
+                       }
+                    },
+                    error: function (jqXHR, textStatus, errorThrown) {
+                        $("#message").html("");
+                        $("#message").append("Could Not Fetch Details");
+                        $('#failureModal').modal("show");
+
+                            },
+                    //capture the request before it was sent to server
+                    beforeSend: function (jqXHR, settings) {
+                        //adding some Dummy data to the request
+                        settings.data += "&dummyData=whatever";
+                        //disable the button until we get the response
+                             },
+                    complete: function (data) {
+                        if (data.responseJSON.responseCode != "200") {
+                            $('#btnSubmit').attr("disabled", false); //enable button if responsecode not equal to 200
+
+                        }
+                    }
+                });
+
+            }
+            else {
+                checkValidation();
+
+                $("#message").html("");
+                $("#message").append("Please Enter the required fields.");
+                $('#failureModal').modal("show");
+                 $('#btnSubmit').attr("disabled", false);
+            }
+        });
+
+    </script>
+
+}
+
+
+

@@ -11,6 +11,8 @@ namespace MNepalAPI.Models
         public string connectionNo { get; set; }
         public string branchcode { get; set; }
         public string module { get; set; }
+        public string applicationId { get; set; }
+        
     }
 
 
@@ -21,6 +23,7 @@ namespace MNepalAPI.Models
         public string name { get; set; }
         public string connection_no { get; set; }
         public float net_amount { get; set; }
+        public string applicationId { get; set; }
     }
 
 
@@ -88,6 +91,10 @@ namespace MNepalAPI.Models
         public string message { get; set; }
     }
 
-
+    public class BillPaymentMode
+    {
+        public string billPaymentMode { get; set; }
+        public string paymentCode { get; set; }
+    }
 
 }

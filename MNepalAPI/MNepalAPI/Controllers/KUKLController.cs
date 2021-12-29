@@ -61,11 +61,12 @@ namespace MNepalAPI.Controllers
                 }
 
             }
-            catch (Exception)
+            catch (Exception ex)
             {
 
-                throw;
+                HelperStoreSqlLog.WriteError(ex, "KUKLBillDetails");
             }
+            return Request.CreateErrorResponse(HttpStatusCode.BadRequest, "An error occured");
         }
         #endregion
 
@@ -91,7 +92,7 @@ namespace MNepalAPI.Controllers
             {
                 string transactionType = string.Empty;
                 var content = new FormUrlEncodedContent(new[]{
-       
+
                         new KeyValuePair<string,string>("sc",bill.sc),
                         new KeyValuePair<string, string>("mobile",bill.mobile),
                         new KeyValuePair<string, string>("amount", bill.txnAmount.ToString()),
@@ -109,11 +110,11 @@ namespace MNepalAPI.Controllers
                 var jsonResult = JsonConvert.DeserializeObject<KUKLResponse>(result.d);
                 return Request.CreateResponse(HttpStatusCode.OK, jsonResult);
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-
-                throw;
+                HelperStoreSqlLog.WriteError(ex, "KUKLBillPayment");
             }
+            return Request.CreateErrorResponse(HttpStatusCode.BadRequest, "An error occured");
         }
         #endregion
 
@@ -158,11 +159,37 @@ namespace MNepalAPI.Controllers
                 }
 
             }
-            catch (Exception)
+            catch (Exception ex)
             {
 
-                throw;
+                HelperStoreSqlLog.WriteError(ex, "KUKLPaymentTxnStatus");
             }
+            return Request.CreateErrorResponse(HttpStatusCode.BadRequest, "An error occured");
+        }
+        #endregion
+
+        #region
+        [Route("api/KUKL/KUKLPaymentMode")]
+        [HttpGet]
+        public async Task<HttpResponseMessage> KUKLPaymentMode()
+        {
+            try
+            {
+                List<BillPaymentMode> billPaymentModes = new List<BillPaymentMode>
+                {
+        new BillPaymentMode { paymentCode = "1", billPaymentMode="Bill Payment"},
+        //new BillPaymentMode { paymentCode = "2", billPaymentMode="Miscellaneous Payment"}
+        new BillPaymentMode { paymentCode = "2", billPaymentMode="Miscallenous Payment"}
+                    };
+
+                return Request.CreateResponse(HttpStatusCode.OK, billPaymentModes);
+            }
+            catch (Exception ex)
+            {
+
+                HelperStoreSqlLog.WriteError(ex, "KUKLBillPayment");
+            }
+            return Request.CreateErrorResponse(HttpStatusCode.BadRequest, "An error occured");
         }
         #endregion
 
@@ -231,6 +258,12 @@ namespace MNepalAPI.Controllers
                         sqlCmd.Parameters.AddWithValue("@name", objreqKUKL.name);
                         sqlCmd.Parameters.AddWithValue("@connectionNo", objreqKUKL.connection_no);
                         sqlCmd.Parameters.AddWithValue("@netAmount", objreqKUKL.net_amount);
+                        sqlCmd.Parameters.AddWithValue("@applicationId", objreqKUKL.applicationId);
+
+
+                        sqlCmd.Parameters["@applicationId"].IsNullable = true;
+                        sqlCmd.Parameters["@connectionNo"].IsNullable = true;
+
 
 
                         ret = sqlCmd.ExecuteNonQuery();
