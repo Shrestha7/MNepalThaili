@@ -73,7 +73,7 @@ namespace WCF.MNepal
             string sc = qs["sc"];
             string mobile = qs["mobile"];
             string amount = qs["amount"];
-            string da = qs["da"];
+            string da = WebConfigurationManager.AppSettings["MerchantDestinationMobileNumber"]; 
             string pin = qs["pin"];
             pin = HashAlgo.Hash(pin);
             string destBranchCode = qs["destBranchCode"];
@@ -84,7 +84,7 @@ namespace WCF.MNepal
             string merchantType = "kukl";
             string module = qs["module"];
 
-            string note = "KUKL Bill Payment to " + qs["customerId"];
+            string note = "KUKL Bill Payment to " + qs["connectionNo"];
             string result = "";
             string sessionID = qs["tokenID"];
 
@@ -258,7 +258,7 @@ namespace WCF.MNepal
                                     {
                                         var transactionKUKL = new MNTransactionMaster(mnft, account);
                                         var mntransactionKUKL = new MNTransactionsController();
-                                        validTransactionData = mntransactionKUKL.Validate(transactionKUKL, mnft.pin);
+                                        validTransactionData = mntransactionKUKL.ValidateKUKL(transactionKUKL, mnft.pin);
 
                                         result = validTransactionData.Response;
                                         /*** ***/
@@ -735,7 +735,7 @@ namespace WCF.MNepal
                                     {
                                         var transactionKUKL = new MNTransactionMaster(mnft, account);
                                         var mntransactionKUKL = new MNTransactionsController();
-                                        validTransactionData = mntransactionKUKL.Validate(transactionKUKL, mnft.pin);
+                                        validTransactionData = mntransactionKUKL.ValidateKUKL(transactionKUKL, mnft.pin);
                                         result = validTransactionData.Response;
                                         /*** ***/
                                         ErrorMessage em = new ErrorMessage();
@@ -1448,7 +1448,7 @@ namespace WCF.MNepal
                                         var transaction = new MNTransactionMaster(mnft);
                                         var mntransaction = new MNTransactionsController();
                                         //validTransactionData = mntransaction.Validate(transaction, mnft.pin);
-                                        validTransactionData = mntransaction.Validate(transaction, mnft.pin);
+                                        validTransactionData = mntransaction.ValidateKUKL(transaction, mnft.pin);
                                         result = validTransactionData.Response;
 
                                         /*** ***/

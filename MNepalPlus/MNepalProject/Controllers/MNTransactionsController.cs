@@ -191,6 +191,7 @@ namespace MNepalProject.Controllers
             //For Wallet to Wallet 
             if (transaction.FeatureCode == "00")
             {
+                //Remark1 = "FT (W to W) from " + transaction.SourceMobile + " to " + transaction.DestinationMobile;
                 Remark1 = "FT (W to W) from " + transaction.SourceMobile + " to " + transaction.DestinationMobile;
             }
             ////For Bank to Wallet (Load Wallet)
@@ -7850,6 +7851,3315 @@ namespace MNepalProject.Controllers
         }
 
 
+        #endregion
+
+        #region KUKL
+        public MNTransactionMaster ValidateKUKL(MNTransactionMaster transaction, string PIN)
+        {
+            var mnTransactionMaster = new MNTransactionMaster();//for returning
+            string Remark1 = string.Empty;
+
+            //string SourceBankName = string.Empty;
+            //string DestinationBankName = string.Empty;
+
+            //if (transaction.SourceBIN == "0004")
+            //{
+            //    SourceBankName = "Nepal Investment Bank LTD";
+            //    DestinationBankName = "Nepal Investment Bank LTD";
+            //}
+            //if (transaction.SourceBIN == "0000")
+            //{
+            //    SourceBankName = "Pumori Bank";
+            //    DestinationBankName = "Pumori Bank";
+            //}
+
+            //START FOR DESCRIPTION 1 :ISO Field 125
+            string description1 = "";
+            string dessc2 = "";
+            const int MaxLength = 49;
+
+            if ((transaction.merchantType == "school") || (transaction.merchantType == "college"))
+            {
+                description1 = "Bill#" + transaction.billNo + " Name:" + transaction.studName;
+                if (description1.Length > MaxLength)
+                    description1 = description1.Substring(0, MaxLength);
+            }
+            else if (transaction.merchantType == "insurance")
+            {
+                description1 = "PolicyNo#" + transaction.billNo + " InsuredName:" + transaction.studName;
+                if (description1.Length > MaxLength)
+                    description1 = description1.Substring(0, MaxLength);
+            }
+
+            else if (transaction.merchantType == "nea")
+            {
+                //description1 = "NEA".PadRight(37) + transaction.destBranchCode + "!" + transaction.scn + "!" + transaction.consumerId + "!" + transaction.customerName;
+                description1 = "NEA Bill Payment for  " + transaction.scn;
+                transaction.Description = ":" + "NEA".PadRight(40) + transaction.destBranchCode + "!" + transaction.scn + "!" + transaction.consumerId + "!" + transaction.customerName;
+            }
+
+            else
+            {
+                description1 = "BILL PAYMENT"; //"Payment To " + getProductID[0]; //"Bank to Merchant's Bank a/c";
+            }
+
+            //FOR W2B
+            if (transaction.FeatureCode == "01")
+            {
+                //old
+                //description1 = "Thaili to bank transfer";
+
+                description1 = "Thaili withdraw to bank from " + transaction.SourceMobile + " to " + transaction.DestinationMobile;
+            }
+            //FOR B2W (Mobile Banking)
+            if (transaction.FeatureCode == "10")
+            {
+                //old
+                //description1 = "Thaili cash load(" + transaction.DestinationMobile + ")";
+
+                //description1 = "Thaili load from bank from " + transaction.SourceMobile + " to " + transaction.DestinationMobile;
+                description1 = transaction.Description;
+            }
+            //FOR CASH OUT
+            if (transaction.FeatureCode == "51")
+            {
+                description1 = "Thaili cash load(" + transaction.DestinationMobile + ")";
+            }
+            //FOR TOPUP
+            if (transaction.FeatureCode == "31" || transaction.FeatureCode == "34")
+            {
+                if (transaction.vid == "2") //NTTOPUP
+                {
+                    string des = transaction.Description;
+                    string[] getProductID = des.Split('-');
+                    //description1 = "Thaili NT TopUp(" + getProductID[1] + ")";
+                    description1 = "Thaili NT TopUp " + transaction.SourceMobile + " to " + getProductID[1];
+                }
+                if (transaction.vid == "10") //NCELL
+                {
+                    string des = transaction.Description;
+                    string[] getProductID = des.Split('-');
+                    //description1 = "Thaili Ncell Topup(" + getProductID[1] + ")";
+                    description1 = "Thaili Ncell Topup " + transaction.SourceMobile + " to " + getProductID[1];
+                }
+                if (transaction.vid == "7") //NT LANDLINE
+                {
+                    string des = transaction.Description;
+                    string[] getProductID = des.Split('-');
+                    //description1 = "Thaili NT LandLineADSL TopUp(" + getProductID[1] + ")";
+                    description1 = "Thaili NT LandLine ADSL TopUp " + transaction.SourceMobile + " to " + getProductID[1];
+                }
+                if (transaction.vid == "1") //NT ADSL
+                {
+                    string des = transaction.Description;
+                    string[] getProductID = des.Split('-');
+                    //description1 = "Thaili NT ADSL TopUp(" + getProductID[1] + ")";
+                    description1 = "Thaili NT ADSL TopUp " + transaction.SourceMobile + " to " + getProductID[1];
+                }
+
+            }
+            //FOR RECHARGE
+            if (transaction.FeatureCode == "32" || transaction.FeatureCode == "35")
+            {
+                if (transaction.vid == "11") //NT GSM RECHARGE
+                {
+                    string des = transaction.Description;
+                    string[] getProductID = des.Split('-');
+                    description1 = "Thaili NT Recharge card";
+                }
+                if (transaction.vid == "12") //NT CDMA RECHARGE
+                {
+                    string des = transaction.Description;
+                    string[] getProductID = des.Split('-');
+                    description1 = "Thaili NT CDMA Recharge card";
+                }
+            }
+            //END DESCRIPTION 1 :ISO Field 125
+
+
+            //START FOR DETAIL IN STATEMENT (Remark column)
+
+            //For Wallet to Wallet 
+            if (transaction.FeatureCode == "00")
+            {
+                //Remark1 = "FT (W to W) from " + transaction.SourceMobile + " to " + transaction.DestinationMobile;
+                Remark1 = transaction.Description;
+            }
+            ////For Bank to Wallet (Load Wallet)
+            //if (transaction.FeatureCode == "10")
+            //{
+            //    Remark1 = "Load Wallet (Mobile Banking) from " + SourceBankName + " to " + transaction.DestinationMobile; //transaction.SourceMobile
+            //}
+            ////For Wallet to Bank (ank Transfer)
+            //if (transaction.FeatureCode == "01")
+            //{
+            //Remark1 = "Bank Transfer from " + transaction.SourceMobile + " to " + mnTransactionMaster.DestinationAccount;
+            //    Remark1 = "Bank Transfer to " + transaction.DestinationMobile + (DestinationBankName);
+            //}
+            ////For Bank to Bank
+            //if (transaction.FeatureCode == "11")
+            //{
+            //    Remark1 = "FT (B to B) from " + transaction.SourceMobile + (SourceBankName) + " to " + transaction.DestinationMobile + (DestinationBankName);
+            //}
+
+            //For TOPUP 
+            //Goto topup.svc Line 177 
+
+            //For RECHARGE 
+            //Goto coupon.svc Line 189 
+
+            //For Merchant 
+            //if (transaction.FeatureCode == )
+            //{
+            //    Remark1 = "Bill payment for" + transaction.M + " to " + transaction.DestinationMobile;
+            //}
+
+            //For Cash Out
+            if (transaction.FeatureCode == "51")
+            {
+                Remark1 = "Cash Out through Agent - " + transaction.DestinationMobile;
+            }
+
+            //For Cash In
+            if (transaction.FeatureCode == "50")
+            {
+                Remark1 = "Cash In to Wallet from " + transaction.SourceMobile + " to " + transaction.DestinationMobile;
+            }
+
+            //END FOR DETAIL IN STATEMENT (Remark column)
+
+
+
+
+            //if (!mnTransactionMasterRepository.IsTraceIDUnique(transaction.TraceId))
+            //{
+            //    mnTransactionMaster.Response = "Trace ID Repeated";
+            //    mnTransactionMaster.ResponseStatus(HttpStatusCode.BadRequest, "parameters missing/invalid");
+            //    return LogReply(mnTransactionMaster); //log our error reply/success reply before sending to focus one.
+            //}
+            //else
+            //{
+
+            mnTransactionMaster.TraceId = transaction.TraceId;
+            mnTransactionMaster.StatusId = STATUS_VERIFICATION_SUCCESS_AT_ECOMM; //validating at EComm Side.
+            mnTransactionMaster.RequestChannel = transaction.RequestChannel;
+            mnTransactionMaster.Amount = transaction.Amount;
+            if (mnTransactionMaster.Amount > 100000)
+            {
+                mnTransactionMaster.Response = "Limit Exceed";
+                mnTransactionMaster.ResponseStatus(HttpStatusCode.BadRequest, "parameters invalid");
+                return mnTransactionMaster;
+            }
+            mnTransactionMaster.CreatedDate = transaction.CreatedDate;
+            mnTransactionMaster.Description = transaction.Description;
+            //}
+
+            Pin p = new Pin();
+            if (PIN == "" && transaction.SourceMobile == "9841003066" && transaction.DestinationMobile == "9818713681")
+            {
+                //Start IVR Call if PIN is blank  ::
+                DateTime dateTime = DateTime.Now;
+                string isprocessed = "F";
+                InsertDataForIVR insert = new InsertDataForIVR();
+                bool getreply = insert.InsertData(transaction.TraceId, transaction.SourceMobile, isprocessed, dateTime);
+                if (getreply == true)
+                {
+                    mnTransactionMaster.Response = "Transaction Successful :IVR";
+                    mnTransactionMaster.ResponseStatus(HttpStatusCode.OK, "Success");
+                }
+                else
+                {
+
+                }
+
+            }
+            else
+            {
+                if (transaction.FeatureCode == "41")
+                {
+
+                }
+                else
+                {
+                    if (transaction.FeatureCode == "51")
+                    {
+                        if (!p.validPIN(transaction.DestinationMobile, PIN))
+                        {
+                            mnTransactionMaster.Response = "Invalid PIN";
+                            mnTransactionMaster.ResponseCode = HttpStatusCode.BadRequest.ToString();
+                            mnTransactionMaster.ResponseStatus(HttpStatusCode.BadRequest, "parameters invalid");
+                            return LogReply(mnTransactionMaster); //log our error reply/success reply before sending to focus one.
+                        }
+                    }
+                    else
+                    {
+                        if (transaction.ReverseStatus == "T")
+                        {
+                            description1 = "Reverse (" + transaction.DestinationMobile + ")";
+                            Remark1 = transaction.merchantType;// "Reverse for " + transaction.DestinationMobile;
+                        }
+                        else
+                        {
+                            if (!p.validPIN(transaction.SourceMobile, PIN))
+                            {
+                                mnTransactionMaster.Response = "Invalid PIN";
+                                mnTransactionMaster.ResponseCode = HttpStatusCode.BadRequest.ToString();
+                                mnTransactionMaster.ResponseStatus(HttpStatusCode.BadRequest, "parameters invalid");
+                                return LogReply(mnTransactionMaster); //log our error reply/success reply before sending to focus one.
+                            }
+                        }
+
+                    }
+
+
+                }
+            }
+
+            //Transaction Code
+            switch (transaction.FeatureCode)
+            {
+                case "00":
+                case "50":
+                case "51":
+                    //00: Wallet to Wallet Type
+                    //50: Cash In
+                    //51: Cash out
+                    {
+                        mnTransactionMaster.FeatureCode = transaction.FeatureCode;
+                        //services for ww
+                        /*SOURCE*/
+                        if (!LoadStationDetails("sw", ref mnTransactionMaster, transaction.SourceMobile))
+                        {
+
+                            mnTransactionMaster.Response = "Invalid Source User";
+                            mnTransactionMaster.ResponseCode = HttpStatusCode.BadRequest.ToString();
+                            mnTransactionMaster.ResponseStatus(HttpStatusCode.BadRequest, "Invalid Source User");
+                            break;
+                        }
+                        /*END:SOURCE*/
+
+                        /*DESTINATION*/
+                        if (!LoadStationDetails("dw", ref mnTransactionMaster, transaction.DestinationMobile))
+                        {
+                            mnTransactionMaster.Response = "Invalid Destination User";
+                            mnTransactionMaster.ResponseCode = HttpStatusCode.BadRequest.ToString();
+                            mnTransactionMaster.ResponseStatus(HttpStatusCode.BadRequest, "Invalid Destination User");
+                            break;
+                        }
+                        /*END:DESTINATION*/
+
+
+                        /*FEATURE DETAILS*/
+                        if (!LoadFeatureDetails(ref mnTransactionMaster))
+                        {
+                            mnTransactionMaster.Response = "Invalid Product Request";
+                            mnTransactionMaster.ResponseCode = HttpStatusCode.BadRequest.ToString();
+                            mnTransactionMaster.ResponseStatus(HttpStatusCode.BadRequest, "Invalid Product Request");
+                            break;
+                        }
+                        /*END:FEATURE DETAILS*/
+
+
+
+                        /*TRANSACTION*/
+                        int TransactionId = mnTransactionMasterRepository.InsertintoTransactionMaster(mnTransactionMaster);
+                        /*END:TRANSACTION*/
+
+                        /*TRANSACTION LOG*/
+
+                        //MNTransactionLog transactionlog = new MNTransactionLog();
+                        transactionlog.TransactionId = TransactionId;    /*To retrive the latest Inserted Data into TrasncationMaster*/
+                        transactionlog.UpdatedDate = DateTime.Now;
+                        transactionlog.StatusId = mnTransactionMaster.StatusId;
+                        transactionlog.Description = "Message Validated At Ecomm";
+
+                        //MNTransactionLogController translog = new MNTransactionLogController();
+                        translog.InsertDataIntoTransactionLog(transactionlog);
+                        /*END:TRANSACTION LOG*/
+
+
+
+                        /*MNREQUEST*/
+                        //string OriginID = "123456789101112";
+                        string OriginID = mnTransactionMaster.SourceMobile;
+                        string OriginType = "6011";
+
+                        string ServiceCode = mnTransactionMaster.FeatureCode;
+
+                        //source details
+                        string SourceBankCode = mnTransactionMaster.SourceBIN;
+                        string SourceBranchCode = mnTransactionMaster.SourceBranchCode;
+                        string SourceAccountNo = mnTransactionMaster.SourceAccount;
+
+                        //destination details
+                        string DestBankCode = mnTransactionMaster.DestinationBIN;
+                        string DestBranchCode = mnTransactionMaster.DestinationBranchCode;
+                        string DestAccountNo = mnTransactionMaster.DestinationAccount;
+
+
+                        float Amount = mnTransactionMaster.Amount;
+                        string FeeId = mnTransactionMaster.FeeId;
+                        string TraceNo = mnTransactionMaster.TraceId.ToString();
+                        DateTime TranDate = DateTime.Now;
+                        string RetrievalRef = mnTransactionMaster.TraceId.ToString();
+                        string Desc1 = string.Empty;
+                        string desc3 = string.Empty;
+                        string Remark = string.Empty;
+                        if (mnTransactionMaster.FeatureCode == "00")
+                        {
+                            Desc1 = "Transfer To Wallet "; //Wallet To Wallet
+                            desc3 = transaction.SourceMobile + " - " + transaction.DestinationMobile;
+                            Remark = Remark1;
+                        }
+                        else if (mnTransactionMaster.FeatureCode == "50")
+                        {
+                            Desc1 = "Cash In ";
+                            desc3 = transaction.SourceMobile + " - " + transaction.DestinationMobile;
+                            Remark = Remark1;
+                        }
+                        else if (mnTransactionMaster.FeatureCode == "51")
+                        {
+                            Desc1 = "Cash Out ";
+                            //Desc1 = description1;
+                            desc3 = transaction.SourceMobile + " - " + transaction.DestinationMobile;
+                            Remark = Remark1;
+                        }
+
+                        string desc2 = transaction.DestinationMobile;
+
+                        string stringTokenNo = TraceIdGenerator.GetReqTokenCode() + 1; ;
+                        //string Remark = mnTransactionMaster.Description; //"SecretTokenNo:" + stringTokenNo ; //
+                        //string Desc3;
+                        //string OTraceNo;
+                        //string OTranDateTime;
+                        string IsProcessed = "F";
+                        string ReverseStatus = transaction.ReverseStatus;
+                        MNRequest mnRequest = new MNRequest(OriginID, OriginType, ServiceCode, SourceBankCode, SourceBranchCode, SourceAccountNo, DestBankCode, DestBranchCode, DestAccountNo, Amount, FeeId, TraceNo, TranDate, RetrievalRef, Desc1, desc2, desc3, IsProcessed, Remark, ReverseStatus);
+
+                        //OriginID[varchar(16)], OriginType[varchar(4)], ServiceCode[varchar(2)],
+                        //SourceBankCode[varchar(4)], SourceBranchCode[varchar(5)], SourceAccountNo[varchar(20)],
+                        //DestBankCode[varchar(4)], DestBranchCode[varchar(5)], DestAccountNo[varchar(20)],
+                        //Amount[float], FeeId[int],TraceNo[string], RetrivalRef[string], Desc1[string],Desc2[string],
+                        //OTranDateTime(string), IsProcessed(string)
+                        /*
+                        /*END:MNREQUEST*/
+
+                        ThreadPool.QueueUserWorkItem(BackgroundTaskWithObject, mnRequest); //added c
+
+                        //string test = "please try again test"; //added c
+                        //    test = InsertIntoPumoriInTest(mnRequest); //added c
+                        //if (test=="true")
+                        if (InsertIntoPumoriIn(mnRequest))
+                        {
+                            mnTransactionMaster.StatusId = STATUS_WAITING_FOR_PUMORI_HTTPREPLY;
+
+                            /*INSERT TRANSACTION LOG*/
+                            //Send Into TransactionLog
+                            transactionlog.TransactionId = TransactionId;    /*To retrive the latest Inserted Data into TrasncationMaster*/
+                            transactionlog.UpdatedDate = DateTime.Now;
+                            transactionlog.StatusId = mnTransactionMaster.StatusId;
+                            transactionlog.Description = "Validated Message Sent to Pumori Request";
+
+                            translog.InsertDataIntoTransactionLog(transactionlog);
+                            /*END:TRANSACTION LOG*/
+
+                            string waitForReply = "";
+                            do
+                            {
+                                for (int i = 0; i < 99999; i++)
+                                {
+                                    waitForReply = ConstructResponse(mnRequest.RetrievalRef, mnRequest.Amount, mnTransactionMaster.DestinationMobile, mnRequest.Desc1);
+
+                                    if (waitForReply != "")
+                                    {
+                                        /*UnSuccessful*/
+                                        if ((waitForReply == "111") || (waitForReply == "114") || (waitForReply == "115") || (waitForReply == "116") || (waitForReply == "119") ||
+                                            (waitForReply == "121") || (waitForReply == "163") || (waitForReply == "180") || (waitForReply == "181") || (waitForReply == "182") ||
+                                            (waitForReply == "183") || (waitForReply == "184") || (waitForReply == "185") || (waitForReply == "186") || (waitForReply == "187") ||
+                                            (waitForReply == "188") || (waitForReply == "189") || (waitForReply == "190") || (waitForReply == "800") ||
+                                            (waitForReply == "90") || (waitForReply == "91") || (waitForReply == "92") || (waitForReply == "94") || (waitForReply == "95") ||
+                                            (waitForReply == "98") || (waitForReply == "99") ||
+                                            (waitForReply == "902") || (waitForReply == "904") || (waitForReply == "906") || (waitForReply == "907") || (waitForReply == "909") ||
+                                            (waitForReply == "911") || (waitForReply == "913"))
+                                        {
+                                            mnTransactionMaster.StatusId = STATUS_PUMORI_HTTPREPLY_FAILED;
+
+                                            /*INSERT TRANSACTION LOG*/
+                                            //Send Into TransactionLog
+                                            transactionlog.TransactionId = TransactionId;    /*To retrive the latest Inserted Data into TrasncationMaster*/
+                                            transactionlog.UpdatedDate = DateTime.Now;
+                                            transactionlog.StatusId = mnTransactionMaster.StatusId;
+                                            transactionlog.Description = "Transaction Failed At Pumori";
+
+                                            translog.InsertDataIntoTransactionLog(transactionlog);
+                                            /*END:TRANSACTION LOG*/
+
+                                            /*UPDATE TRANSACTION*/
+                                            mnTransactionMasterRepository.UpdateintoTransactionMaster(mnTransactionMaster);
+                                            /*END:TRANSACTION*/
+
+
+                                            mnTransactionMaster.Response = waitForReply; //"Request will be responded separately";
+                                            mnTransactionMaster.ResponseCode = HttpStatusCode.BadRequest.ToString();
+                                            mnTransactionMaster.ResponseStatus(HttpStatusCode.BadRequest, "accepted. will respond separately");
+                                            break;
+                                        }
+                                        /*Successful*/
+                                        else
+                                        {
+                                            mnTransactionMaster.StatusId = STATUS_PUMORI_HTTPREPLY_SUCCESS;
+                                            /*INSERT TRANSACTION LOG*/
+                                            //Send Into TransactionLog
+                                            transactionlog.TransactionId = TransactionId;    /*To retrive the latest Inserted Data into TrasncationMaster*/
+                                            transactionlog.UpdatedDate = DateTime.Now;
+                                            transactionlog.StatusId = mnTransactionMaster.StatusId;
+                                            transactionlog.Description = "Transaction Successful";
+
+                                            translog.InsertDataIntoTransactionLog(transactionlog);
+                                            /*END:TRANSACTION LOG*/
+
+                                            /*UPDATE TRANSACTION*/
+                                            mnTransactionMasterRepository.UpdateintoTransactionMaster(mnTransactionMaster);
+                                            /*END:TRANSACTION*/
+
+                                            mnTransactionMaster.Response = waitForReply;
+                                            mnTransactionMaster.ResponseCode = Convert.ToString(HttpStatusCode.OK);
+                                            mnTransactionMaster.ResponseStatus(HttpStatusCode.OK, "Success");
+                                            break;
+                                        }
+                                    }
+
+                                }
+
+                            } while (waitForReply == "");
+
+                            //if (waitForReply == "")
+                            //{
+                            //    mnTransactionMaster.StatusId = STATUS_PUMORI_HTTPREPLY_FAILED;
+
+                            //    /*INSERT TRANSACTION LOG*/
+                            //    //Send Into TransactionLog
+                            //    transactionlog.TransactionId = TransactionId;    /*To retrive the latest Inserted Data into TrasncationMaster*/
+                            //    transactionlog.UpdatedDate = DateTime.Now;
+                            //    transactionlog.StatusId = mnTransactionMaster.StatusId;
+                            //    transactionlog.Description = "Transaction Failed At Pumori";
+
+                            //    translog.InsertDataIntoTransactionLog(transactionlog);
+                            //    /*END:TRANSACTION LOG*/
+
+                            //    /*UPDATE TRANSACTION*/
+                            //    mnTransactionMasterRepository.UpdateintoTransactionMaster(mnTransactionMaster);
+                            //    /*END:TRANSACTION*/
+
+
+                            //    mnTransactionMaster.Response = "Request will be responded separately";
+                            //    mnTransactionMaster.ResponseCode = HttpStatusCode.NoContent.ToString();
+                            //    mnTransactionMaster.ResponseStatus(HttpStatusCode.NoContent, "accepted. will respond separately");
+                            //}
+                        } //InsertIntoPumoriInTest(mnRequest) //testing
+                        else
+                        {
+                            mnTransactionMaster.Response = "Please try again"; //Request could not be processed
+                            mnTransactionMaster.ResponseCode = HttpStatusCode.InternalServerError.ToString();
+                            mnTransactionMaster.ResponseStatus(HttpStatusCode.InternalServerError, "Could not be processed");
+                        }
+                    }
+                    break;
+
+                case "01":
+                case "30":
+                    //01: Wallet to bank
+                    //30: Merchant Payment Wallet to Bank.
+                    {
+                        //01: Wallet to bank
+                        //30: Merchant Payment Wallet to Bank.
+                        mnTransactionMaster.FeatureCode = transaction.FeatureCode;
+                        //services for ww
+                        /*SOURCE*/
+                        if (!LoadStationDetails("sw", ref mnTransactionMaster, transaction.SourceMobile))
+                        {
+                            mnTransactionMaster.Response = "Invalid Source User";
+                            mnTransactionMaster.ResponseCode = HttpStatusCode.BadRequest.ToString();
+                            mnTransactionMaster.ResponseStatus(HttpStatusCode.BadRequest, "Invalid Source User");
+                            break;
+                        }
+                        /*END:SOURCE*/
+
+                        /*DESTINATION*/
+                        if (!LoadStationDetails("db", ref mnTransactionMaster, transaction.DestinationMobile))
+                        {
+                            mnTransactionMaster.Response = "Invalid Destination User";
+                            mnTransactionMaster.ResponseCode = HttpStatusCode.BadRequest.ToString();
+                            mnTransactionMaster.ResponseStatus(HttpStatusCode.BadRequest, "Invalid Destination User");
+                            break;
+                        }
+                        /*END:DESTINATION*/
+
+
+                        /*FEATURE DETAILS*/
+                        if (!LoadFeatureDetails(ref mnTransactionMaster))
+                        {
+                            mnTransactionMaster.Response = "Invalid Product Request";
+                            mnTransactionMaster.ResponseCode = HttpStatusCode.BadRequest.ToString();
+                            mnTransactionMaster.ResponseStatus(HttpStatusCode.BadRequest, "Invalid Product Request");
+                            break;
+                        }
+                        /*END:FEATURE DETAILS*/
+
+
+
+                        /*TRANSACTION*/
+                        int TransactionId = mnTransactionMasterRepository.InsertintoTransactionMaster(mnTransactionMaster);
+                        /*END:TRANSACTION*/
+
+                        /*TRANSACTION LOG*/
+
+                        MNTransactionLog transactionlog = new MNTransactionLog();
+                        transactionlog.TransactionId = TransactionId;    /*To retrive the latest Inserted Data into TrasncationMaster*/
+                        transactionlog.UpdatedDate = DateTime.Now;
+                        transactionlog.StatusId = mnTransactionMaster.StatusId;
+                        transactionlog.Description = "Message Validated At Ecomm";
+
+                        MNTransactionLogController translog = new MNTransactionLogController();
+                        translog.InsertDataIntoTransactionLog(transactionlog);
+
+                        /*END:TRANSACTION LOG*/
+
+
+                        /*MNREQUEST*/
+                        string OriginID = mnTransactionMaster.SourceMobile;
+                        string OriginType = "6011";
+
+                        string ServiceCode = mnTransactionMaster.FeatureCode;
+
+                        //source details
+                        string SourceBankCode = mnTransactionMaster.SourceBIN;
+                        string SourceBranchCode = mnTransactionMaster.SourceBranchCode;
+                        string SourceAccountNo = mnTransactionMaster.SourceAccount;
+
+                        //destination details
+                        string DestBankCode = mnTransactionMaster.DestinationBIN;
+                        string DestBranchCode = mnTransactionMaster.DestinationBranchCode;
+                        string DestAccountNo = mnTransactionMaster.DestinationAccount;
+
+
+                        float Amount = mnTransactionMaster.Amount;
+                        string FeeId = mnTransactionMaster.FeeId;
+                        string TraceNo = mnTransactionMaster.TraceId.ToString();
+                        DateTime TranDate = DateTime.Now;
+                        string RetrievalRef = mnTransactionMaster.TraceId.ToString();
+
+                        string descthree = transaction.SourceMobile + " - " + transaction.DestinationMobile;
+                        string desc1 = "";
+                        string desc2 = transaction.DestinationMobile;
+                        string desc3 = "";
+                        string desc = transaction.Description;
+                        string[] getProductID = desc.Split(':');
+                        string Remark = "";
+
+                        if (mnTransactionMaster.FeatureCode == "01")
+                        {
+                            string SourceBankName = string.Empty;
+                            string DestinationBankName = string.Empty;
+
+                            if (mnTransactionMaster.SourceBIN == "0004")
+                            {
+                                SourceBankName = "Nepal Investment Bank LTD";
+                            }
+                            if (mnTransactionMaster.SourceBIN == "0000")
+                            {
+                                SourceBankName = "Pumori Bank";
+                            }
+
+                            if (mnTransactionMaster.DestinationBIN == "0004")
+                            {
+                                DestinationBankName = "Nepal Investment Bank LTD";
+                            }
+                            if (mnTransactionMaster.DestinationBIN == "0000")
+                            {
+                                DestinationBankName = "Pumori Bank";
+                            }
+
+                            Remark1 = "Bank Transfer to " + transaction.DestinationMobile + " (" + DestinationBankName + ")";
+
+                            //desc1 = "Transfer To Bank " + getProductID[0];//"Wallet To Bank";
+                            desc1 = "";
+                            desc2 = desc2;
+                            desc3 = descthree;
+                            Remark = Remark1; //"Bank Transfer from " + transaction.SourceMobile + " to " + mnTransactionMaster.DestinationAccount;
+                        }
+                        else if (mnTransactionMaster.FeatureCode == "30")
+                        {
+                            desc1 = description1;
+                            //desc1 = "BILL PAYMENT"; // "Payment To " + getProductID[0];//"Wallet To Merchant's Bank a/c";
+                            desc2 = getProductID[1];
+                            //desc2 = dessc2;
+                            desc3 = descthree;
+                            if (mnTransactionMaster.Description.StartsWith(":"))
+                            {
+                                mnTransactionMaster.Description = mnTransactionMaster.Description.Substring(1, mnTransactionMaster.Description.Length - 1);
+                            }
+                            Remark = desc1;
+                            //Remark = desc2;
+                            if (Remark.EndsWith("- "))
+                            {
+                                Remark = Remark.Substring(0, Remark.Length - 2);
+                            }
+
+                        }
+                        else if (mnTransactionMaster.FeatureCode == "31")
+                        {
+                            //Utility Payment
+                            desc1 = description1;
+                            desc2 = getProductID[1]; //getProductID[1];
+                            desc3 = descthree; //getProductID[0];
+                            Remark = mnTransactionMaster.Description + " - " + desc1;
+                        }
+
+                        string IsProcessed = "F";
+                        string ReverseStatus = transaction.ReverseStatus;
+                        //TraceIdGenerator traceid = new TraceIdGenerator();
+                        //RetrievalRef = traceid.GenerateUniqueTraceID();
+
+                        //int len = RetrievalRef.Length;
+                        //string lastPart = RetrievalRef.Substring(len - 6, 6);
+
+
+                        MNRequest mnRequest = new MNRequest(OriginID, OriginType, ServiceCode, SourceBankCode, SourceBranchCode, SourceAccountNo, DestBankCode, DestBranchCode, DestAccountNo,
+                            Amount, FeeId, TraceNo, TranDate, RetrievalRef, desc1, desc2, desc3, IsProcessed, Remark, ReverseStatus);
+
+                        /*END:MNREQUEST*/
+
+                        if (InsertIntoPumoriIn(mnRequest))
+                        {
+                            mnTransactionMaster.StatusId = STATUS_WAITING_FOR_PUMORI_HTTPREPLY;
+
+                            /*INSERT TRANSACTION LOG*/
+                            //Send Into TransactionLog
+                            transactionlog.TransactionId = TransactionId;    /*To retrive the latest Inserted Data into TrasncationMaster*/
+                            transactionlog.UpdatedDate = DateTime.Now;
+                            transactionlog.StatusId = mnTransactionMaster.StatusId;
+                            transactionlog.Description = "Validated Message is Sent to Pumori Request";
+
+                            translog.InsertDataIntoTransactionLog(transactionlog);
+                            /*END:TRANSACTION LOG*/
+
+                            string waitForReply = "";
+                            do
+                            {
+                                for (int i = 0; i < 99999; i++)
+                                {
+                                    //waitForReply = LookINTOResponseTable(mnRequest.RetrievalRef);
+                                    waitForReply = ConstructResponse(mnRequest.RetrievalRef, mnRequest.Amount, mnTransactionMaster.DestinationMobile, mnRequest.Desc1);
+
+                                    if (waitForReply != "")
+                                    {
+                                        /*UnSuccessful*/
+                                        if ((waitForReply == "111") || (waitForReply == "114") || (waitForReply == "115") || (waitForReply == "116") || (waitForReply == "119") ||
+                                            (waitForReply == "121") || (waitForReply == "163") || (waitForReply == "180") || (waitForReply == "181") || (waitForReply == "182") ||
+                                            (waitForReply == "183") || (waitForReply == "184") || (waitForReply == "185") || (waitForReply == "186") || (waitForReply == "187") ||
+                                            (waitForReply == "188") || (waitForReply == "189") || (waitForReply == "190") || (waitForReply == "800") ||
+                                            (waitForReply == "90") || (waitForReply == "91") || (waitForReply == "92") || (waitForReply == "94") || (waitForReply == "95") ||
+                                            (waitForReply == "98") || (waitForReply == "99") ||
+                                            (waitForReply == "902") || (waitForReply == "904") || (waitForReply == "906") || (waitForReply == "907") || (waitForReply == "909") ||
+                                            (waitForReply == "911") || (waitForReply == "913"))
+                                        {
+                                            mnTransactionMaster.StatusId = STATUS_PUMORI_HTTPREPLY_FAILED;
+
+                                            /*INSERT TRANSACTION LOG*/
+                                            //Send Into TransactionLog
+                                            transactionlog.TransactionId = TransactionId;    /*To retrive the latest Inserted Data into TrasncationMaster*/
+                                            transactionlog.UpdatedDate = DateTime.Now;
+                                            transactionlog.StatusId = mnTransactionMaster.StatusId;
+                                            transactionlog.Description = "Transaction Failed At Pumori";
+
+                                            translog.InsertDataIntoTransactionLog(transactionlog);
+                                            /*END:TRANSACTION LOG*/
+
+                                            /*UPDATE TRANSACTION*/
+                                            mnTransactionMasterRepository.UpdateintoTransactionMaster(mnTransactionMaster);
+                                            /*END:TRANSACTION*/
+
+                                            mnTransactionMaster.Response = waitForReply; /*"Dear Sir/Mam, Request accepted. Will respond separately";*/
+                                            mnTransactionMaster.ResponseCode = HttpStatusCode.BadRequest.ToString();
+                                            mnTransactionMaster.ResponseStatus(HttpStatusCode.BadRequest, mnTransactionMaster.Response);
+                                            break;
+
+                                        }
+                                        /*Successful*/
+                                        else //if (waitForReply != "907" || waitForReply != "99" || waitForReply != "114" || waitForReply != "116" || waitForReply != "911")
+                                        {
+                                            if (waitForReply != "")
+                                            {
+                                                mnTransactionMaster.StatusId = STATUS_PUMORI_HTTPREPLY_SUCCESS;
+                                                /*INSERT TRANSACTION LOG*/
+                                                //Send Into TransactionLog
+                                                transactionlog.TransactionId = TransactionId;    /*To retrive the latest Inserted Data into TrasncationMaster*/
+                                                transactionlog.UpdatedDate = DateTime.Now;
+                                                transactionlog.StatusId = mnTransactionMaster.StatusId;
+                                                transactionlog.Description = "Transaction Successful";
+
+                                                translog.InsertDataIntoTransactionLog(transactionlog);
+                                                /*END:TRANSACTION LOG*/
+
+                                                /*UPDATE TRANSACTION*/
+                                                mnTransactionMasterRepository.UpdateintoTransactionMaster(mnTransactionMaster);
+                                                /*END:TRANSACTION*/
+
+                                                mnTransactionMaster.Response = waitForReply;
+                                                mnTransactionMaster.ResponseCode = HttpStatusCode.OK.ToString();
+                                                mnTransactionMaster.ResponseStatus(HttpStatusCode.OK, "Success");
+                                                break;
+                                            }
+                                        }
+                                    }
+
+                                }
+
+                            } while (waitForReply == "");
+
+                        }
+                        else
+                        {
+                            mnTransactionMaster.Response = "Please try again";//Request could not be processed
+                            mnTransactionMaster.ResponseCode = HttpStatusCode.InternalServerError.ToString();
+                            mnTransactionMaster.ResponseStatus(HttpStatusCode.InternalServerError, "Request Could not be processed");
+                        }
+                    }
+                    break;
+
+                case "31":
+                    //31: Utility Payment Wallet to Bank.
+                    {
+                        mnTransactionMaster.FeatureCode = transaction.FeatureCode;
+                        //services for ww
+                        /*SOURCE*/
+                        if (!LoadStationDetails("sw", ref mnTransactionMaster, transaction.SourceMobile))
+                        {
+                            mnTransactionMaster.Response = "Invalid Source User";
+                            mnTransactionMaster.ResponseCode = HttpStatusCode.BadRequest.ToString();
+                            mnTransactionMaster.ResponseStatus(HttpStatusCode.BadRequest, "Invalid Source User");
+                            break;
+                        }
+                        /*END:SOURCE*/
+
+                        /*DESTINATION*/
+                        if (!LoadStationDetails("db", ref mnTransactionMaster, transaction.DestinationMobile))
+                        {
+                            mnTransactionMaster.Response = "Invalid Destination User";
+                            mnTransactionMaster.ResponseCode = HttpStatusCode.BadRequest.ToString();
+                            mnTransactionMaster.ResponseStatus(HttpStatusCode.BadRequest, "Invalid Destination User");
+                            break;
+                        }
+                        /*END:DESTINATION*/
+
+
+                        /*FEATURE DETAILS*/
+                        if (!LoadFeatureDetails(ref mnTransactionMaster))
+                        {
+                            mnTransactionMaster.Response = "Invalid Product Request";
+                            mnTransactionMaster.ResponseCode = HttpStatusCode.BadRequest.ToString();
+                            mnTransactionMaster.ResponseStatus(HttpStatusCode.BadRequest, "Invalid Product Request");
+                            break;
+                        }
+                        /*END:FEATURE DETAILS*/
+
+
+
+                        /*TRANSACTION*/
+                        int TransactionId = mnTransactionMasterRepository.InsertintoTransactionMaster(mnTransactionMaster);
+                        /*END:TRANSACTION*/
+
+                        /*TRANSACTION LOG*/
+
+                        MNTransactionLog transactionlog = new MNTransactionLog();
+                        transactionlog.TransactionId = TransactionId;    /*To retrive the latest Inserted Data into TrasncationMaster*/
+                        transactionlog.UpdatedDate = DateTime.Now;
+                        transactionlog.StatusId = mnTransactionMaster.StatusId;
+                        transactionlog.Description = "Message Validated At Ecomm";
+
+                        MNTransactionLogController translog = new MNTransactionLogController();
+                        translog.InsertDataIntoTransactionLog(transactionlog);
+
+                        /*END:TRANSACTION LOG*/
+
+
+                        /*MNREQUEST*/
+                        string OriginID = mnTransactionMaster.SourceMobile;
+                        string OriginType = "6011";
+
+                        string ServiceCode = mnTransactionMaster.FeatureCode;
+
+                        //source details
+                        string SourceBankCode = mnTransactionMaster.SourceBIN;
+                        string SourceBranchCode = mnTransactionMaster.SourceBranchCode;
+                        string SourceAccountNo = mnTransactionMaster.SourceAccount;
+
+                        //destination details
+                        string DestBankCode = mnTransactionMaster.DestinationBIN;
+                        string DestBranchCode = mnTransactionMaster.DestinationBranchCode;
+                        string DestAccountNo = mnTransactionMaster.DestinationAccount;
+
+
+                        float Amount = mnTransactionMaster.Amount;
+                        //string FeeId = "F005"; // mnTransactionMaster.FeeId; //"F002"; //
+                        string merchantType = transaction.vid;
+                        string FeeId = GetFeatureCode(merchantType);
+                        string TraceNo = mnTransactionMaster.TraceId.ToString();
+                        DateTime TranDate = DateTime.Now;
+                        string RetrievalRef = mnTransactionMaster.TraceId.ToString();
+                        string ReverseStatus = transaction.ReverseStatus;
+
+
+                        string descthree = transaction.SourceMobile + " - " + transaction.DestinationMobile;
+                        string desc1 = "";
+                        string desc2 = transaction.DestinationMobile;
+                        string desc3 = "";
+                        string desc = transaction.Description;
+                        string[] getProductID = desc.Split('-');
+
+                        if (mnTransactionMaster.FeatureCode == "01")
+                        {
+                            desc1 = "Transfer To Bank " + getProductID[0];//"Wallet To Bank";
+                            desc2 = desc2;
+                            desc3 = descthree;
+                        }
+                        else if (mnTransactionMaster.FeatureCode == "30")
+                        {
+                            desc1 = "Payment To " + getProductID[0];//"Wallet To Merchant's Bank a/c";
+                            desc2 = getProductID[1];
+                            desc3 = descthree;
+                        }
+                        else if (mnTransactionMaster.FeatureCode == "31")
+                        {
+                            //Utility Payment
+
+                            //Desc1 = getProductID[0];
+                            //desc1 = "Payment To " + getProductID[0]; //"Wallet To Merchant's Bank a/c (Bill Payment)";
+                            desc1 = description1;
+                            desc2 = getProductID[1]; //getProductID[1];
+                            desc3 = descthree; //getProductID[0];
+                        }
+                        //desc1 = "MPOS TOP UP";
+                        string Remark = mnTransactionMaster.Description;
+                        //string Desc3;
+                        //string OTraceNo;
+                        //string OTranDateTime;
+                        string IsProcessed = "F";
+
+                        MNRequest mnRequest = new MNRequest(OriginID, OriginType, ServiceCode, SourceBankCode, SourceBranchCode, SourceAccountNo, DestBankCode, DestBranchCode, DestAccountNo,
+                            Amount, FeeId, TraceNo, TranDate, RetrievalRef, desc1, desc2, desc3, IsProcessed, Remark, ReverseStatus);
+
+                        //OriginID[varchar(16)], OriginType[varchar(4)], ServiceCode[varchar(2)],
+                        //SourceBankCode[varchar(4)], SourceBranchCode[varchar(5)], SourceAccountNo[varchar(20)],
+                        //DestBankCode[varchar(4)], DestBranchCode[varchar(5)], DestAccountNo[varchar(20)],
+                        //Amount[float], FeeId[int],TraceNo[string], RetrivalRef[string], Desc1[string],Desc2[string],
+                        //OTranDateTime(string), IsProcessed(string)
+                        /*
+                            /*END:MNREQUEST*/
+
+                        ThreadPool.QueueUserWorkItem(BackgroundTaskWithObject, mnRequest);
+
+                        if (InsertIntoPumoriIn(mnRequest)) //added for testing -InsertIntoPumoriIn(mnRequest)-
+                        {
+                            mnTransactionMaster.StatusId = STATUS_WAITING_FOR_PUMORI_HTTPREPLY;
+
+                            /*INSERT TRANSACTION LOG*/
+                            //Send Into TransactionLog
+                            transactionlog.TransactionId = TransactionId;    /*To retrive the latest Inserted Data into TrasncationMaster*/
+                            transactionlog.UpdatedDate = DateTime.Now;
+                            transactionlog.StatusId = mnTransactionMaster.StatusId;
+                            transactionlog.Description = "Validated Message is Sent to Pumori Request";
+
+                            translog.InsertDataIntoTransactionLog(transactionlog);
+                            /*END:TRANSACTION LOG*/
+
+                            string waitForReply = "";
+                            do
+                            {
+                                for (int i = 0; i < 99999; i++)
+                                {
+                                    //waitForReply = LookINTOResponseTable(mnRequest.RetrievalRef);
+                                    waitForReply = ConstructResponseForTopUp(mnRequest.RetrievalRef, mnRequest.Amount, mnTransactionMaster.DestinationMobile, mnRequest.Desc1);
+
+                                    if (waitForReply != "")
+                                    {
+                                        /*UnSuccessful*/
+                                        if ((waitForReply == "111") || (waitForReply == "114") || (waitForReply == "115") || (waitForReply == "116") || (waitForReply == "119") ||
+                                            (waitForReply == "121") || (waitForReply == "163") || (waitForReply == "180") || (waitForReply == "181") || (waitForReply == "182") ||
+                                            (waitForReply == "183") || (waitForReply == "184") || (waitForReply == "185") || (waitForReply == "186") || (waitForReply == "187") ||
+                                            (waitForReply == "188") || (waitForReply == "189") || (waitForReply == "190") || (waitForReply == "800") ||
+                                            (waitForReply == "90") || (waitForReply == "91") || (waitForReply == "92") || (waitForReply == "94") || (waitForReply == "95") ||
+                                            (waitForReply == "98") || (waitForReply == "99") ||
+                                            (waitForReply == "902") || (waitForReply == "904") || (waitForReply == "906") || (waitForReply == "907") || (waitForReply == "909") ||
+                                            (waitForReply == "911") || (waitForReply == "913"))
+                                        {
+                                            mnTransactionMaster.StatusId = STATUS_PUMORI_HTTPREPLY_FAILED;
+
+                                            /*INSERT TRANSACTION LOG*/
+                                            //Send Into TransactionLog
+                                            transactionlog.TransactionId = TransactionId;    /*To retrive the latest Inserted Data into TrasncationMaster*/
+                                            transactionlog.UpdatedDate = DateTime.Now;
+                                            transactionlog.StatusId = mnTransactionMaster.StatusId;
+                                            transactionlog.Description = "Transaction Failed At Pumori";
+
+                                            translog.InsertDataIntoTransactionLog(transactionlog);
+                                            /*END:TRANSACTION LOG*/
+
+                                            /*UPDATE TRANSACTION*/
+                                            mnTransactionMasterRepository.UpdateintoTransactionMaster(mnTransactionMaster);
+                                            /*END:TRANSACTION*/
+
+                                            mnTransactionMaster.Response = waitForReply; /*"Dear Sir/Mam, Request accepted. Will respond separately";*/
+                                            mnTransactionMaster.ResponseCode = HttpStatusCode.BadRequest.ToString();
+                                            mnTransactionMaster.ResponseStatus(HttpStatusCode.BadRequest, mnTransactionMaster.Response);
+                                            break;
+
+                                        }
+                                        /*Successful*/
+                                        else //if (waitForReply != "907" || waitForReply != "99" || waitForReply != "114" || waitForReply != "116" || waitForReply != "911")
+                                        {
+                                            if (waitForReply != "")
+                                            {
+                                                mnTransactionMaster.StatusId = STATUS_PUMORI_HTTPREPLY_SUCCESS;
+                                                mnTransactionMaster.createdTimeDate = GetTimeStampFromAccountName(mnRequest.RetrievalRef);
+                                                /*INSERT TRANSACTION LOG*/
+                                                //Send Into TransactionLog
+                                                transactionlog.TransactionId = TransactionId;    /*To retrive the latest Inserted Data into TrasncationMaster*/
+                                                transactionlog.UpdatedDate = DateTime.Now;
+                                                transactionlog.StatusId = mnTransactionMaster.StatusId;
+                                                transactionlog.Description = "Transaction Successful";
+
+                                                translog.InsertDataIntoTransactionLog(transactionlog);
+                                                /*END:TRANSACTION LOG*/
+
+                                                /*UPDATE TRANSACTION*/
+                                                mnTransactionMasterRepository.UpdateintoTransactionMaster(mnTransactionMaster);
+                                                /*END:TRANSACTION*/
+
+                                                mnTransactionMaster.Response = waitForReply;
+                                                mnTransactionMaster.ResponseCode = HttpStatusCode.OK.ToString();
+                                                mnTransactionMaster.ResponseStatus(HttpStatusCode.OK, "Success");
+                                                break;
+                                            }
+                                        }
+                                    }
+
+                                }
+
+                            } while (waitForReply == "");
+
+                            //UnSuccessful
+                            //if (waitForReply == "99" || waitForReply == "907" || waitForReply == "114" || waitForReply == "116" || waitForReply == "911")
+                            //{
+                            //    //if (waitForReply == "")
+                            //    //{
+                            //        mnTransactionMaster.StatusId = STATUS_PUMORI_HTTPREPLY_FAILED;
+
+                            //        /*INSERT TRANSACTION LOG*/
+                            //        //Send Into TransactionLog
+                            //        transactionlog.TransactionId = TransactionId;    /*To retrive the latest Inserted Data into TrasncationMaster*/
+                            //        transactionlog.UpdatedDate = DateTime.Now;
+                            //        transactionlog.StatusId = mnTransactionMaster.StatusId;
+                            //        transactionlog.Description = "Transaction Failed At Pumori";
+
+                            //        translog.InsertDataIntoTransactionLog(transactionlog);
+                            //        /*END:TRANSACTION LOG*/
+
+                            //        /*UPDATE TRANSACTION*/
+                            //        mnTransactionMasterRepository.UpdateintoTransactionMaster(mnTransactionMaster);
+                            //    /*END:TRANSACTION*/
+
+                            //        mnTransactionMaster.Response = waitForReply; //"Dear Sir/Mam, Request accepted. Will respond separately";
+                            //        mnTransactionMaster.ResponseStatus(HttpStatusCode.BadRequest, mnTransactionMaster.Response);
+                            //    //}
+                            //}
+
+                        }
+                        else
+                        {
+                            mnTransactionMaster.Response = "Please try again!!";//Request could not be processed Please try again!!
+                            mnTransactionMaster.ResponseCode = HttpStatusCode.InternalServerError.ToString();
+                            mnTransactionMaster.ResponseStatus(HttpStatusCode.InternalServerError, "Request Could not be processed");
+                        }
+                    }
+                    break;
+
+                case "32":
+                    //32: Coupon Payment Wallet to Bank MOBILE RECHARGE
+                    {
+                        mnTransactionMaster.FeatureCode = transaction.FeatureCode;
+                        //services for ww
+                        /*SOURCE*/
+                        if (!LoadStationDetails("sw", ref mnTransactionMaster, transaction.SourceMobile))
+                        {
+                            mnTransactionMaster.Response = "Invalid Source User";
+                            mnTransactionMaster.ResponseCode = HttpStatusCode.BadRequest.ToString();
+                            mnTransactionMaster.ResponseStatus(HttpStatusCode.BadRequest, "Invalid Source User");
+                            break;
+                        }
+                        /*END:SOURCE*/
+
+                        /*DESTINATION*/
+                        string separateString = transaction.DestinationMobile;
+                        string[] getDestinationDetails = separateString.Split(',');
+
+                        if (!LoadStationDetails("db", ref mnTransactionMaster, getDestinationDetails[0]))
+                        {
+                            mnTransactionMaster.Response = "Invalid Destination User";
+                            mnTransactionMaster.ResponseCode = HttpStatusCode.BadRequest.ToString();
+                            mnTransactionMaster.ResponseStatus(HttpStatusCode.BadRequest, "Invalid Destination User");
+                            break;
+                        }
+                        /*END:DESTINATION*/
+
+
+                        /*FEATURE DETAILS*/
+                        if (!LoadFeatureDetails(ref mnTransactionMaster))
+                        {
+                            mnTransactionMaster.Response = "Invalid Product Request";
+                            mnTransactionMaster.ResponseCode = HttpStatusCode.BadRequest.ToString();
+                            mnTransactionMaster.ResponseStatus(HttpStatusCode.BadRequest, "Invalid Product Request");
+                            break;
+                        }
+                        /*END:FEATURE DETAILS*/
+
+
+
+                        /*TRANSACTION*/
+                        int TransactionId = mnTransactionMasterRepository.InsertintoTransactionMaster(mnTransactionMaster);
+                        /*END:TRANSACTION*/
+
+                        /*TRANSACTION LOG*/
+
+                        MNTransactionLog transactionlog = new MNTransactionLog();
+                        transactionlog.TransactionId = TransactionId;    /*To retrive the latest Inserted Data into TrasncationMaster*/
+                        transactionlog.UpdatedDate = DateTime.Now;
+                        transactionlog.StatusId = mnTransactionMaster.StatusId;
+                        transactionlog.Description = "Message Validated At Ecomm";
+
+                        MNTransactionLogController translog = new MNTransactionLogController();
+                        translog.InsertDataIntoTransactionLog(transactionlog);
+                        /*END:TRANSACTION LOG*/
+
+
+
+                        /*MNREQUEST*/
+                        string OriginID = mnTransactionMaster.SourceMobile;
+                        string OriginType = "6011";
+
+                        string ServiceCode = mnTransactionMaster.FeatureCode;
+
+                        //source details
+                        string SourceBankCode = mnTransactionMaster.SourceBIN;
+                        string SourceBranchCode = mnTransactionMaster.SourceBranchCode;
+                        string SourceAccountNo = mnTransactionMaster.SourceAccount;
+
+                        //destination details
+                        string DestBankCode = mnTransactionMaster.DestinationBIN;
+                        string DestBranchCode = mnTransactionMaster.DestinationBranchCode;
+                        string DestAccountNo = mnTransactionMaster.DestinationAccount;
+
+                        float Amount = mnTransactionMaster.Amount;
+                        //string FeeId = mnTransactionMaster.FeeId;
+                        string FeeId = " ";
+                        string TraceNo = mnTransactionMaster.TraceId.ToString();
+                        DateTime TranDate = DateTime.Now;
+                        string RetrievalRef = mnTransactionMaster.TraceId.ToString();
+                        string Desc1 = "";
+
+                        string desc = mnTransactionMaster.Description;
+                        string[] getQtyAndDesc = desc.Split(':');
+                        //Desc1 = getDestinationDetails[1] + getDestinationDetails[2];
+
+                        //Desc1 = getDestinationDetails[1];
+                        //Desc1 = getDestinationDetails[1];
+                        Desc1 = ""; //"Payment To " + getQtyAndDesc[0];/
+                        string merchantID = GetMerchantIDFromDestNumber(mnTransactionMaster.DestinationMobile);
+                        if (merchantID == "13")
+                        { //Check if Merchant is DishHome
+                            Desc1 = "^^RcHg^^DISH HOME";
+                        }
+                        if (merchantID == "14")
+                        { //Check if Merchant is DishHome
+                            Desc1 = "^^RcHg^^BROADLINK";
+                        }
+                        if (merchantID == "11")
+                        { //Check if Merchant is DishHome
+                            Desc1 = "NTC MOBILE RECHARGE";
+                            //Desc1 = description1;
+                        }
+                        if (merchantID == "12")
+                        { //Check if Merchant is DishHome
+                            Desc1 = "CDMA MOBILE RECHARGE";
+                            //Desc1 = description1;
+                        }
+                        //string Remark = getQtyAndDesc[1];
+                        //string Remark = getQtyAndDesc[0] + " " + getQtyAndDesc[1];
+                        //string Desc2 = getQtyAndDesc[2];
+
+                        string Remark = desc;
+                        string Desc2 = desc;
+                        string Desc3 = transaction.SourceMobile + " - " + transaction.DestinationMobile;//getQtyAndDesc[1];
+
+
+                        //string Desc3;
+                        //string OTraceNo;
+                        //string OTranDateTime;
+                        string IsProcessed = "F";
+                        string ReverseStatus = transaction.ReverseStatus;
+                        MNRequest mnRequest = new MNRequest(OriginID, OriginType, ServiceCode, SourceBankCode, SourceBranchCode, SourceAccountNo, DestBankCode, DestBranchCode, DestAccountNo,
+                            Amount, FeeId, TraceNo, TranDate, RetrievalRef, Desc1, Desc2, Desc3, IsProcessed, Remark, ReverseStatus);
+
+                        //OriginID[varchar(16)], OriginType[varchar(4)], ServiceCode[varchar(2)],
+                        //SourceBankCode[varchar(4)], SourceBranchCode[varchar(5)], SourceAccountNo[varchar(20)],
+                        //DestBankCode[varchar(4)], DestBranchCode[varchar(5)], DestAccountNo[varchar(20)],
+                        //Amount[float], FeeId[int],TraceNo[string], RetrivalRef[string], Desc1[string],Desc2[string],
+                        //OTranDateTime(string), IsProcessed(string)
+                        /*
+                            /*END:MNREQUEST*/
+
+                        ThreadPool.QueueUserWorkItem(BackgroundTaskWithObject, mnRequest);
+
+                        if (InsertIntoPumoriIn(mnRequest))
+                        {
+                            mnTransactionMaster.StatusId = STATUS_WAITING_FOR_PUMORI_HTTPREPLY;
+
+                            /*INSERT TRANSACTION LOG*/
+                            //Send Into TransactionLog
+                            transactionlog.TransactionId = TransactionId;    /*To retrive the latest Inserted Data into TrasncationMaster*/
+                            transactionlog.UpdatedDate = DateTime.Now;
+                            transactionlog.StatusId = mnTransactionMaster.StatusId;
+                            transactionlog.Description = "Message Validated and Sent to Pumori In";
+
+                            translog.InsertDataIntoTransactionLog(transactionlog);
+                            /*END:TRANSACTION LOG*/
+
+                            string waitForReply = "";
+                            do
+                            {
+                                for (int i = 0; i < 99999; i++)
+                                {
+                                    //waitForReply = LookINTOResponseTableForCoupon(mnRequest.RetrievalRef);
+                                    waitForReply = ConstructResponseForCoupon(mnRequest.RetrievalRef, mnRequest.Amount, mnTransactionMaster.DestinationMobile, mnRequest.Desc1, mnRequest.Desc2, mnRequest.Desc3);
+                                    if (waitForReply != "")
+                                    {
+                                        /*UnSuccess*/
+                                        if ((waitForReply == "111") || (waitForReply == "114") || (waitForReply == "115") || (waitForReply == "116") || (waitForReply == "119") ||
+                                            (waitForReply == "121") || (waitForReply == "163") || (waitForReply == "180") || (waitForReply == "181") || (waitForReply == "182") ||
+                                            (waitForReply == "183") || (waitForReply == "184") || (waitForReply == "185") || (waitForReply == "186") || (waitForReply == "187") ||
+                                            (waitForReply == "188") || (waitForReply == "189") || (waitForReply == "190") || (waitForReply == "800") ||
+                                            (waitForReply == "90") || (waitForReply == "91") || (waitForReply == "92") || (waitForReply == "94") || (waitForReply == "95") ||
+                                            (waitForReply == "98") || (waitForReply == "99") ||
+                                            (waitForReply == "902") || (waitForReply == "904") || (waitForReply == "906") || (waitForReply == "907") || (waitForReply == "909") ||
+                                            (waitForReply == "911") || (waitForReply == "913"))
+                                        {
+                                            mnTransactionMaster.StatusId = STATUS_PUMORI_HTTPREPLY_FAILED;
+
+                                            /*INSERT TRANSACTION LOG*/
+                                            //Send Into TransactionLog
+                                            transactionlog.TransactionId = TransactionId;    /*To retrive the latest Inserted Data into TrasncationMaster*/
+                                            transactionlog.UpdatedDate = DateTime.Now;
+                                            transactionlog.StatusId = mnTransactionMaster.StatusId;
+                                            transactionlog.Description = "Transaction Failed At Pumori";
+
+                                            translog.InsertDataIntoTransactionLog(transactionlog);
+                                            /*END:TRANSACTION LOG*/
+
+                                            /*UPDATE TRANSACTION*/
+                                            mnTransactionMasterRepository.UpdateintoTransactionMaster(mnTransactionMaster);
+                                            /*END:TRANSACTION*/
+
+                                            mnTransactionMaster.Response = waitForReply; //"Request will be responded separately";
+                                            mnTransactionMaster.ResponseCode = HttpStatusCode.BadRequest.ToString();
+                                            mnTransactionMaster.ResponseStatus(HttpStatusCode.BadRequest, "accepted. will respond separately");
+                                            break;
+                                        }
+                                        /*Success*/
+                                        else
+                                        {
+
+                                            mnTransactionMaster.StatusId = STATUS_PUMORI_HTTPREPLY_SUCCESS;
+
+                                            /*INSERT TRANSACTION LOG*/
+                                            //Send Into TransactionLog
+                                            transactionlog.TransactionId = TransactionId;    /*To retrive the latest Inserted Data into TrasncationMaster*/
+                                            transactionlog.UpdatedDate = DateTime.Now;
+                                            transactionlog.StatusId = mnTransactionMaster.StatusId;
+                                            transactionlog.Description = "Transaction Successful";
+
+                                            translog.InsertDataIntoTransactionLog(transactionlog);
+                                            /*END:TRANSACTION LOG*/
+
+                                            /*UPDATE TRANSACTION*/
+                                            mnTransactionMasterRepository.UpdateintoTransactionMaster(mnTransactionMaster);
+                                            /*END:TRANSACTION*/
+
+                                            mnTransactionMaster.Response = waitForReply;
+                                            mnTransactionMaster.ResponseCode = HttpStatusCode.OK.ToString();
+                                            mnTransactionMaster.ResponseStatus(HttpStatusCode.OK, "Success");
+                                            break;
+                                        }
+
+                                    }
+                                }
+
+                            } while (waitForReply == "");
+
+                            //if (waitForReply == "")
+                            //{
+                            //    mnTransactionMaster.StatusId = STATUS_PUMORI_HTTPREPLY_FAILED;
+
+                            //    /*INSERT TRANSACTION LOG*/
+                            //    //Send Into TransactionLog
+                            //    transactionlog.TransactionId = TransactionId;    /*To retrive the latest Inserted Data into TrasncationMaster*/
+                            //    transactionlog.UpdatedDate = DateTime.Now;
+                            //    transactionlog.StatusId = mnTransactionMaster.StatusId;
+                            //    transactionlog.Description = "Transaction Failed";
+
+                            //    translog.InsertDataIntoTransactionLog(transactionlog);
+                            //    /*END:TRANSACTION LOG*/
+
+                            //    /*UPDATE TRANSACTION*/
+                            //    mnTransactionMasterRepository.UpdateintoTransactionMaster(mnTransactionMaster);
+                            //    /*END:TRANSACTION*/
+
+                            //    mnTransactionMaster.Response = "Dear Sir/Mam, Request accepted. Will respond separately";
+                            //    mnTransactionMaster.ResponseStatus(HttpStatusCode.NoContent, mnTransactionMaster.Response);
+                            //}
+                        }
+                        else
+                        {
+                            mnTransactionMaster.Response = "Please try again";//Request could not be processed
+                            mnTransactionMaster.ResponseCode = HttpStatusCode.InternalServerError.ToString();
+                            mnTransactionMaster.ResponseStatus(HttpStatusCode.InternalServerError, "Request Could not be processed");
+                        }
+                    }
+                    break;
+
+                case "35":
+                    //35: Coupon Payment Bank to Bank MOBILE RECHARGE
+                    {
+                        mnTransactionMaster.FeatureCode = transaction.FeatureCode;
+                        //services for ww
+                        /*SOURCE*/
+                        if (!LoadStationDetails("sb", ref mnTransactionMaster, transaction.SourceMobile))
+                        {
+                            mnTransactionMaster.Response = "Invalid Source User";
+                            mnTransactionMaster.ResponseCode = HttpStatusCode.BadRequest.ToString();
+                            mnTransactionMaster.ResponseStatus(HttpStatusCode.BadRequest, "Invalid Source User");
+                            break;
+                        }
+                        /*END:SOURCE*/
+
+                        /*DESTINATION*/
+                        string separateString = transaction.DestinationMobile;
+                        string[] getDestinationDetails = separateString.Split(',');
+
+                        if (!LoadStationDetails("db", ref mnTransactionMaster, getDestinationDetails[0]))
+                        {
+                            mnTransactionMaster.Response = "Invalid Destination User";
+                            mnTransactionMaster.ResponseCode = HttpStatusCode.BadRequest.ToString();
+                            mnTransactionMaster.ResponseStatus(HttpStatusCode.BadRequest, "Invalid Destination User");
+                            break;
+                        }
+                        /*END:DESTINATION*/
+
+
+                        /*FEATURE DETAILS*/
+                        if (!LoadFeatureDetails(ref mnTransactionMaster))
+                        {
+                            mnTransactionMaster.Response = "Invalid Product Request";
+                            mnTransactionMaster.ResponseCode = HttpStatusCode.BadRequest.ToString();
+                            mnTransactionMaster.ResponseStatus(HttpStatusCode.BadRequest, "Invalid Product Request");
+                            break;
+                        }
+                        /*END:FEATURE DETAILS*/
+
+
+
+                        /*TRANSACTION*/
+                        int TransactionId = mnTransactionMasterRepository.InsertintoTransactionMaster(mnTransactionMaster);
+                        /*END:TRANSACTION*/
+
+                        /*TRANSACTION LOG*/
+
+                        MNTransactionLog transactionlog = new MNTransactionLog();
+                        transactionlog.TransactionId = TransactionId;    /*To retrive the latest Inserted Data into TrasncationMaster*/
+                        transactionlog.UpdatedDate = DateTime.Now;
+                        transactionlog.StatusId = mnTransactionMaster.StatusId;
+                        transactionlog.Description = "Message Validated At Ecomm";
+
+                        MNTransactionLogController translog = new MNTransactionLogController();
+                        translog.InsertDataIntoTransactionLog(transactionlog);
+                        /*END:TRANSACTION LOG*/
+
+
+
+                        /*MNREQUEST*/
+                        string OriginID = mnTransactionMaster.SourceMobile;
+                        string OriginType = "6011";
+
+                        string ServiceCode = mnTransactionMaster.FeatureCode;
+
+                        //source details
+                        string SourceBankCode = mnTransactionMaster.SourceBIN;
+                        string SourceBranchCode = mnTransactionMaster.SourceBranchCode;
+                        string SourceAccountNo = mnTransactionMaster.SourceAccount;
+
+                        //destination details
+                        string DestBankCode = mnTransactionMaster.DestinationBIN;
+                        string DestBranchCode = mnTransactionMaster.DestinationBranchCode;
+                        string DestAccountNo = mnTransactionMaster.DestinationAccount;
+
+
+                        float Amount = mnTransactionMaster.Amount;
+                        //string FeeId = mnTransactionMaster.FeeId;
+                        string FeeId = " ";
+                        string TraceNo = mnTransactionMaster.TraceId.ToString();
+                        DateTime TranDate = DateTime.Now;
+                        string RetrievalRef = mnTransactionMaster.TraceId.ToString();
+                        string Desc1 = "";
+
+                        string desc = mnTransactionMaster.Description;
+                        string[] getQtyAndDesc = desc.Split(',');
+                        //Desc1 = getDestinationDetails[1] + getDestinationDetails[2];
+                        string[] getDesc = desc.Split(':');
+
+                        //Desc1 = getDestinationDetails[1];
+                        Desc1 = ""; //"Payment To " + getQtyAndDesc[0];/
+                        string merchantID = GetMerchantIDFromDestNumber(mnTransactionMaster.DestinationMobile);
+                        if (merchantID == "13")
+                        { //Check if Merchant is DishHome
+                            Desc1 = "^^RcHg^^DISH HOME";
+                        }
+                        if (merchantID == "14")
+                        { //Check if Merchant is DishHome
+                            Desc1 = "^^RcHg^^BROADLINK";
+                        }
+                        if (merchantID == "11")
+                        { //Check if Merchant is DishHome
+                            Desc1 = "NTC MOBILE RECHARGE";
+                            //Desc1 = description1;
+                        }
+                        if (merchantID == "12")
+                        { //Check if Merchant is DishHome
+                            Desc1 = "CDMA MOBILE RECHARGE";
+                            //Desc1 = description1;
+                        }
+                        /*string Desc2 = getDesc[2];*/ //getQtyAndDesc[0];
+                        string Desc2 = desc;
+                        string Desc3 = transaction.SourceMobile + " - " + transaction.DestinationMobile;
+                        //string Remark = getDesc[1];
+                        string Remark = desc;
+
+                        //string Desc3;
+                        //string OTraceNo;
+                        //string OTranDateTime;
+                        string IsProcessed = "F";
+                        string ReverseStatus = transaction.ReverseStatus;
+                        MNRequest mnRequest = new MNRequest(OriginID, OriginType, ServiceCode, SourceBankCode, SourceBranchCode, SourceAccountNo, DestBankCode, DestBranchCode, DestAccountNo,
+                            Amount, FeeId, TraceNo, TranDate, RetrievalRef, Desc1, Desc2, Desc3, IsProcessed, Remark, ReverseStatus);
+
+                        //OriginID[varchar(16)], OriginType[varchar(4)], ServiceCode[varchar(2)],
+                        //SourceBankCode[varchar(4)], SourceBranchCode[varchar(5)], SourceAccountNo[varchar(20)],
+                        //DestBankCode[varchar(4)], DestBranchCode[varchar(5)], DestAccountNo[varchar(20)],
+                        //Amount[float], FeeId[int],TraceNo[string], RetrivalRef[string], Desc1[string],Desc2[string],
+                        //OTranDateTime(string), IsProcessed(string)
+                        /*
+                            /*END:MNREQUEST*/
+
+                        ThreadPool.QueueUserWorkItem(BackgroundTaskWithObject, mnRequest);
+
+                        if (InsertIntoPumoriIn(mnRequest))
+                        {
+                            mnTransactionMaster.StatusId = STATUS_WAITING_FOR_PUMORI_HTTPREPLY;
+
+                            /*INSERT TRANSACTION LOG*/
+                            //Send Into TransactionLog
+                            transactionlog.TransactionId = TransactionId;    /*To retrive the latest Inserted Data into TrasncationMaster*/
+                            transactionlog.UpdatedDate = DateTime.Now;
+                            transactionlog.StatusId = mnTransactionMaster.StatusId;
+                            transactionlog.Description = "Message Validated and Sent to Pumori In";
+
+                            translog.InsertDataIntoTransactionLog(transactionlog);
+                            /*END:TRANSACTION LOG*/
+
+                            string waitForReply = "";
+                            do
+                            {
+                                for (int i = 0; i < 99999; i++)
+                                {
+                                    //waitForReply = LookINTOResponseTableForCoupon(mnRequest.RetrievalRef);
+                                    waitForReply = ConstructResponseForCoupon(mnRequest.RetrievalRef, mnRequest.Amount, mnTransactionMaster.DestinationMobile, mnRequest.Desc1, mnRequest.Desc2, mnRequest.Desc3);
+                                    if (waitForReply != "")
+                                    {
+                                        //UnSuccess
+                                        if ((waitForReply == "111") || (waitForReply == "114") || (waitForReply == "115") || (waitForReply == "116") || (waitForReply == "119") ||
+                                            (waitForReply == "121") || (waitForReply == "163") || (waitForReply == "180") || (waitForReply == "181") || (waitForReply == "182") ||
+                                            (waitForReply == "183") || (waitForReply == "184") || (waitForReply == "185") || (waitForReply == "186") || (waitForReply == "187") ||
+                                            (waitForReply == "188") || (waitForReply == "189") || (waitForReply == "190") || (waitForReply == "800") ||
+                                            (waitForReply == "90") || (waitForReply == "91") || (waitForReply == "92") || (waitForReply == "94") || (waitForReply == "95") ||
+                                            (waitForReply == "98") || (waitForReply == "99") ||
+                                            (waitForReply == "902") || (waitForReply == "904") || (waitForReply == "906") || (waitForReply == "907") || (waitForReply == "909") ||
+                                            (waitForReply == "911") || (waitForReply == "913"))
+                                        {
+                                            mnTransactionMaster.StatusId = STATUS_PUMORI_HTTPREPLY_FAILED;
+
+                                            /*INSERT TRANSACTION LOG*/
+                                            //Send Into TransactionLog
+                                            transactionlog.TransactionId = TransactionId;    /*To retrive the latest Inserted Data into TrasncationMaster*/
+                                            transactionlog.UpdatedDate = DateTime.Now;
+                                            transactionlog.StatusId = mnTransactionMaster.StatusId;
+                                            transactionlog.Description = "Transaction Failed At Pumori";
+
+                                            translog.InsertDataIntoTransactionLog(transactionlog);
+                                            /*END:TRANSACTION LOG*/
+
+                                            /*UPDATE TRANSACTION*/
+                                            mnTransactionMasterRepository.UpdateintoTransactionMaster(mnTransactionMaster);
+                                            /*END:TRANSACTION*/
+
+                                            mnTransactionMaster.Response = waitForReply; //"Request will be responded separately";
+                                            mnTransactionMaster.ResponseCode = HttpStatusCode.BadRequest.ToString();
+                                            mnTransactionMaster.ResponseStatus(HttpStatusCode.BadRequest, "accepted. will respond separately");
+                                            break;
+                                        }
+                                        //Success
+                                        else
+                                        {
+                                            mnTransactionMaster.StatusId = STATUS_PUMORI_HTTPREPLY_SUCCESS;
+
+                                            /*INSERT TRANSACTION LOG*/
+                                            //Send Into TransactionLog
+                                            transactionlog.TransactionId = TransactionId;    /*To retrive the latest Inserted Data into TrasncationMaster*/
+                                            transactionlog.UpdatedDate = DateTime.Now;
+                                            transactionlog.StatusId = mnTransactionMaster.StatusId;
+                                            transactionlog.Description = "Transaction Successful";
+
+                                            translog.InsertDataIntoTransactionLog(transactionlog);
+                                            /*END:TRANSACTION LOG*/
+
+                                            /*UPDATE TRANSACTION*/
+                                            mnTransactionMasterRepository.UpdateintoTransactionMaster(mnTransactionMaster);
+                                            /*END:TRANSACTION*/
+
+                                            mnTransactionMaster.Response = waitForReply;
+                                            mnTransactionMaster.ResponseCode = HttpStatusCode.OK.ToString();
+                                            mnTransactionMaster.ResponseStatus(HttpStatusCode.OK, "Success");
+                                            break;
+                                        }
+
+                                    }
+                                }
+                            } while (waitForReply == "");
+
+                            //if (waitForReply == "")
+                            //{
+                            //    mnTransactionMaster.StatusId = STATUS_PUMORI_HTTPREPLY_FAILED;
+
+                            //    /*INSERT TRANSACTION LOG*/
+                            //    //Send Into TransactionLog
+                            //    transactionlog.TransactionId = TransactionId;    /*To retrive the latest Inserted Data into TrasncationMaster*/
+                            //    transactionlog.UpdatedDate = DateTime.Now;
+                            //    transactionlog.StatusId = mnTransactionMaster.StatusId;
+                            //    transactionlog.Description = "Transaction Failed";
+
+                            //    translog.InsertDataIntoTransactionLog(transactionlog);
+                            //    /*END:TRANSACTION LOG*/
+
+                            //    /*UPDATE TRANSACTION*/
+                            //    mnTransactionMasterRepository.UpdateintoTransactionMaster(mnTransactionMaster);
+                            //    /*END:TRANSACTION*/
+
+                            //    mnTransactionMaster.Response = "Dear Sir/Mam, Request accepted. Will respond separately";
+                            //    mnTransactionMaster.ResponseStatus(HttpStatusCode.NoContent, mnTransactionMaster.Response);
+                            //}
+
+                        }
+                        else
+                        {
+                            mnTransactionMaster.Response = "Please try again";//Request could not be processed
+                            mnTransactionMaster.ResponseCode = HttpStatusCode.InternalServerError.ToString();
+                            mnTransactionMaster.ResponseStatus(HttpStatusCode.InternalServerError, "Request Could not be processed");
+                        }
+                    }
+                    break;
+
+
+                case "10":
+                    //10: Bank to Wallet
+                    {
+                        mnTransactionMaster.FeatureCode = transaction.FeatureCode;
+                        //services for ww
+                        /*SOURCE*/
+                        if (!LoadStationDetails("sb", ref mnTransactionMaster, transaction.SourceMobile))
+                        {
+                            mnTransactionMaster.Response = "Invalid Source User";
+                            mnTransactionMaster.ResponseCode = HttpStatusCode.BadRequest.ToString();
+                            mnTransactionMaster.ResponseStatus(HttpStatusCode.BadRequest, "Invalid Source User");
+                            break;
+                        }
+                        /*END:SOURCE*/
+
+                        /*DESTINATION*/
+                        if (!LoadStationDetails("dw", ref mnTransactionMaster, transaction.DestinationMobile))
+                        {
+                            mnTransactionMaster.Response = "Invalid Destination User";
+                            mnTransactionMaster.ResponseCode = HttpStatusCode.BadRequest.ToString();
+                            mnTransactionMaster.ResponseStatus(HttpStatusCode.BadRequest, "Invalid Destination User");
+                            break;
+                        }
+                        /*END:DESTINATION*/
+
+
+                        /*FEATURE DETAILS*/
+                        if (!LoadFeatureDetails(ref mnTransactionMaster))
+                        {
+                            mnTransactionMaster.Response = "Invalid Product Request";
+                            mnTransactionMaster.ResponseCode = HttpStatusCode.BadRequest.ToString();
+                            mnTransactionMaster.ResponseStatus(HttpStatusCode.BadRequest, "Invalid Product Request");
+                            break;
+                        }
+                        /*END:FEATURE DETAILS*/
+
+
+
+                        /*TRANSACTION*/
+                        int TransactionId = mnTransactionMasterRepository.InsertintoTransactionMaster(mnTransactionMaster);
+                        /*END:TRANSACTION*/
+
+                        /*TRANSACTION LOG*/
+
+                        MNTransactionLog transactionlog = new MNTransactionLog();
+                        transactionlog.TransactionId = TransactionId;    /*To retrive the latest Inserted Data into TrasncationMaster*/
+                        transactionlog.UpdatedDate = DateTime.Now;
+                        transactionlog.StatusId = mnTransactionMaster.StatusId;
+                        transactionlog.Description = "Message Validated At Ecomm";
+
+                        MNTransactionLogController translog = new MNTransactionLogController();
+                        translog.InsertDataIntoTransactionLog(transactionlog);
+                        /*END:TRANSACTION LOG*/
+
+
+
+                        /*MNREQUEST*/
+                        string OriginID = mnTransactionMaster.SourceMobile;
+                        string OriginType = "6011";
+
+                        string ServiceCode = mnTransactionMaster.FeatureCode;
+
+                        //source details
+                        string SourceBankCode = mnTransactionMaster.SourceBIN;
+                        string SourceBranchCode = mnTransactionMaster.SourceBranchCode;
+                        string SourceAccountNo = mnTransactionMaster.SourceAccount;
+
+                        //destination details
+                        string DestBankCode = mnTransactionMaster.DestinationBIN;
+                        string DestBranchCode = mnTransactionMaster.DestinationBranchCode;
+                        string DestAccountNo = mnTransactionMaster.DestinationAccount;
+
+                        string SourceBankName = string.Empty;
+                        string DestinationBankName = string.Empty;
+
+                        if (mnTransactionMaster.SourceBIN == "0004")
+                        {
+                            SourceBankName = "Nepal Investment Bank LTD";
+                        }
+                        if (mnTransactionMaster.SourceBIN == "0000")
+                        {
+                            SourceBankName = "Pumori Bank";
+                        }
+
+                        if (mnTransactionMaster.DestinationBIN == "0004")
+                        {
+                            DestinationBankName = "Nepal Investment Bank LTD";
+                        }
+                        if (mnTransactionMaster.DestinationBIN == "0000")
+                        {
+                            DestinationBankName = "Pumori Bank";
+                        }
+
+                        mnTransactionMaster.ReverseStatus = transaction.ReverseStatus;
+                        string description3 = string.Empty;
+                        if (transaction.ReverseStatus == "T")
+                        {
+                            Remark1 = Remark1;
+                            description3 = mnTransactionMaster.Description.Substring(8, 12);
+                        }
+                        else
+                        {
+                            //Remark1 = "Load Wallet(Mobile Banking) from " + SourceBankName + " to " + transaction.DestinationMobile;
+                            Remark1 = transaction.Description;
+                        }
+
+                        float Amount = mnTransactionMaster.Amount;
+                        string FeeId = mnTransactionMaster.FeeId;
+                        string TraceNo = mnTransactionMaster.TraceId.ToString();
+                        DateTime TranDate = DateTime.Now;
+                        string RetrievalRef = mnTransactionMaster.TraceId.ToString();
+                        //string Desc1 = "Transfer To Wallet";//Bank To Wallet
+                        string Desc1 = description1;
+                        string Desc2 = mnTransactionMaster.Description;
+                        string Desc3 = description3; //transaction.SourceMobile + " - " + transaction.DestinationMobile;
+                        //string Remark = "";
+                        string Remark = Remark1;
+                        //string Desc3;
+                        //string OTraceNo;
+                        //string OTranDateTime;
+                        string IsProcessed = "F";
+                        string ReverseStatus = transaction.ReverseStatus;
+
+                        MNRequest mnRequest = new MNRequest(OriginID, OriginType, ServiceCode, SourceBankCode, SourceBranchCode, SourceAccountNo, DestBankCode, DestBranchCode, DestAccountNo,
+                            Amount, FeeId, TraceNo, TranDate, RetrievalRef, Desc1, Desc2, Desc3, IsProcessed, Remark, ReverseStatus);
+
+                        //OriginID[varchar(16)], OriginType[varchar(4)], ServiceCode[varchar(2)],
+                        //SourceBankCode[varchar(4)], SourceBranchCode[varchar(5)], SourceAccountNo[varchar(20)],
+                        //DestBankCode[varchar(4)], DestBranchCode[varchar(5)], DestAccountNo[varchar(20)],
+                        //Amount[float], FeeId[int],TraceNo[string], RetrivalRef[string], Desc1[string],Desc2[string],
+                        //OTranDateTime(string), IsProcessed(string)
+                        /*
+                            /*END:MNREQUEST*/
+
+                        ThreadPool.QueueUserWorkItem(BackgroundTaskWithObject, mnRequest);
+
+                        if (InsertIntoPumoriIn(mnRequest))
+                        {
+                            mnTransactionMaster.StatusId = STATUS_WAITING_FOR_PUMORI_HTTPREPLY;
+
+                            /*INSERT TRANSACTION LOG*/
+                            //Send Into TransactionLog
+                            transactionlog.TransactionId = TransactionId;    /*To retrive the latest Inserted Data into TrasncationMaster*/
+                            transactionlog.UpdatedDate = DateTime.Now;
+                            transactionlog.StatusId = mnTransactionMaster.StatusId;
+                            transactionlog.Description = "Validated Message is Sent to Pumori Request";
+
+                            translog.InsertDataIntoTransactionLog(transactionlog);
+                            /*END:TRANSACTION LOG*/
+
+                            string waitForReply = "";
+                            do
+                            {
+                                for (int i = 0; i < 99999; i++)
+                                {
+                                    //waitForReply = LookINTOResponseTable(mnRequest.RetrievalRef);
+                                    waitForReply = ConstructResponse(mnRequest.RetrievalRef, mnRequest.Amount, mnTransactionMaster.DestinationMobile, mnRequest.Desc1);
+                                    if (waitForReply != "")
+                                    {
+                                        /*UnSuccess*/
+                                        if ((waitForReply == "111") || (waitForReply == "114") || (waitForReply == "115") || (waitForReply == "116") || (waitForReply == "119") ||
+                                            (waitForReply == "121") || (waitForReply == "163") || (waitForReply == "180") || (waitForReply == "181") || (waitForReply == "182") ||
+                                            (waitForReply == "183") || (waitForReply == "184") || (waitForReply == "185") || (waitForReply == "186") || (waitForReply == "187") ||
+                                            (waitForReply == "188") || (waitForReply == "189") || (waitForReply == "190") || (waitForReply == "800") ||
+                                            (waitForReply == "90") || (waitForReply == "91") || (waitForReply == "92") || (waitForReply == "94") || (waitForReply == "95") ||
+                                            (waitForReply == "98") || (waitForReply == "99") ||
+                                            (waitForReply == "902") || (waitForReply == "904") || (waitForReply == "906") || (waitForReply == "907") || (waitForReply == "909") ||
+                                            (waitForReply == "911") || (waitForReply == "913"))
+                                        {
+                                            mnTransactionMaster.StatusId = STATUS_PUMORI_HTTPREPLY_FAILED;
+
+                                            /*INSERT TRANSACTION LOG*/
+                                            //Send Into TransactionLog
+                                            transactionlog.TransactionId = TransactionId;    /*To retrive the latest Inserted Data into TrasncationMaster*/
+                                            transactionlog.UpdatedDate = DateTime.Now;
+                                            transactionlog.StatusId = mnTransactionMaster.StatusId;
+                                            transactionlog.Description = "Transaction Failed At Pumori";
+
+                                            translog.InsertDataIntoTransactionLog(transactionlog);
+                                            /*END:TRANSACTION LOG*/
+
+                                            /*UPDATE TRANSACTION*/
+                                            mnTransactionMasterRepository.UpdateintoTransactionMaster(mnTransactionMaster);
+                                            /*END:TRANSACTION*/
+
+                                            mnTransactionMaster.Response = waitForReply; //"Request will be responded separately";
+                                            mnTransactionMaster.ResponseCode = HttpStatusCode.BadRequest.ToString();
+                                            mnTransactionMaster.ResponseStatus(HttpStatusCode.BadRequest, "accepted. will respond separately");
+                                            break;
+                                        }
+                                        /*Success*/
+                                        else
+                                        {
+                                            mnTransactionMaster.StatusId = STATUS_PUMORI_HTTPREPLY_SUCCESS;
+                                            /*INSERT TRANSACTION LOG*/
+                                            //Send Into TransactionLog
+                                            transactionlog.TransactionId = TransactionId;    /*To retrive the latest Inserted Data into TrasncationMaster*/
+                                            transactionlog.UpdatedDate = DateTime.Now;
+                                            transactionlog.StatusId = mnTransactionMaster.StatusId;
+                                            transactionlog.Description = "Transaction Successful";
+
+                                            translog.InsertDataIntoTransactionLog(transactionlog);
+                                            /*END:TRANSACTION LOG*/
+
+                                            /*UPDATE TRANSACTION*/
+                                            mnTransactionMasterRepository.UpdateintoTransactionMaster(mnTransactionMaster);
+                                            /*END:TRANSACTION*/
+
+                                            mnTransactionMaster.Response = waitForReply;
+                                            mnTransactionMaster.ResponseCode = HttpStatusCode.OK.ToString();
+                                            mnTransactionMaster.ResponseStatus(HttpStatusCode.OK, "Success");
+                                            break;
+                                        }
+                                    }
+
+                                }
+
+                            } while (waitForReply == "");
+
+                            //if (waitForReply == "")
+                            //{
+                            //    mnTransactionMaster.StatusId = STATUS_PUMORI_HTTPREPLY_FAILED;
+
+                            //    /*INSERT TRANSACTION LOG*/
+                            //    //Send Into TransactionLog
+                            //    transactionlog.TransactionId = TransactionId;    /*To retrive the latest Inserted Data into TrasncationMaster*/
+                            //    transactionlog.UpdatedDate = DateTime.Now;
+                            //    transactionlog.StatusId = mnTransactionMaster.StatusId;
+                            //    transactionlog.Description = "Transaction Failed At Pumori";
+
+                            //    translog.InsertDataIntoTransactionLog(transactionlog);
+                            //    /*END:TRANSACTION LOG*/
+
+                            //    /*UPDATE TRANSACTION*/
+                            //    mnTransactionMasterRepository.UpdateintoTransactionMaster(mnTransactionMaster);
+                            //    /*END:TRANSACTION*/
+
+                            //    mnTransactionMaster.Response = "Request will be respond separately";
+                            //    mnTransactionMaster.ResponseStatus(HttpStatusCode.NoContent, "accepted. will respond separately");
+                            //}
+
+                        }
+                        else
+                        {
+                            mnTransactionMaster.Response = "Please try again"; //Request could not be processed
+                            mnTransactionMaster.ResponseCode = HttpStatusCode.InternalServerError.ToString();
+                            mnTransactionMaster.ResponseStatus(HttpStatusCode.InternalServerError, "Could not be processed");
+                        }
+                    }
+                    break;
+
+                case "11":
+                case "33":
+                    //11: Bank to Bank
+                    //33: Merchant Payment Bank to Bank.
+                    {
+                        mnTransactionMaster.FeatureCode = transaction.FeatureCode;
+                        //services for ww
+                        /*SOURCE*/
+                        if (!LoadStationDetails("sb", ref mnTransactionMaster, transaction.SourceMobile))
+                        {
+                            mnTransactionMaster.Response = "Invalid Source User";
+                            mnTransactionMaster.ResponseCode = HttpStatusCode.BadRequest.ToString();
+                            mnTransactionMaster.ResponseStatus(HttpStatusCode.BadRequest, "Invalid Source User");
+                            break;
+                        }
+                        /*END:SOURCE*/
+
+                        /*DESTINATION*/
+                        if (!LoadStationDetails("db", ref mnTransactionMaster, transaction.DestinationMobile))
+                        {
+                            mnTransactionMaster.Response = "Invalid Destination User";
+                            mnTransactionMaster.ResponseCode = HttpStatusCode.BadRequest.ToString();
+                            mnTransactionMaster.ResponseStatus(HttpStatusCode.BadRequest, "Invalid Destination User");
+                            break;
+                        }
+                        /*END:DESTINATION*/
+
+
+                        /*FEATURE DETAILS*/
+                        if (!LoadFeatureDetails(ref mnTransactionMaster))
+                        {
+                            mnTransactionMaster.Response = "Invalid Product Request";
+                            mnTransactionMaster.ResponseCode = HttpStatusCode.BadRequest.ToString();
+                            mnTransactionMaster.ResponseStatus(HttpStatusCode.BadRequest, "Invalid Product Request");
+                            break;
+                        }
+                        /*END:FEATURE DETAILS*/
+
+
+
+                        /*TRANSACTION*/
+                        int TransactionId = mnTransactionMasterRepository.InsertintoTransactionMaster(mnTransactionMaster);
+                        /*END:TRANSACTION*/
+
+                        /*TRANSACTION LOG*/
+
+                        MNTransactionLog transactionlog = new MNTransactionLog();
+                        transactionlog.TransactionId = TransactionId;    /*To retrive the latest Inserted Data into TrasncationMaster*/
+                        transactionlog.UpdatedDate = DateTime.Now;
+                        transactionlog.StatusId = mnTransactionMaster.StatusId;
+                        transactionlog.Description = "Message Validated At Ecomm";
+
+                        MNTransactionLogController translog = new MNTransactionLogController();
+                        translog.InsertDataIntoTransactionLog(transactionlog);
+                        /*END:TRANSACTION LOG*/
+
+
+
+                        /*MNREQUEST*/
+                        string OriginID = mnTransactionMaster.SourceMobile;
+                        string OriginType = "6011";
+
+                        string ServiceCode = mnTransactionMaster.FeatureCode;
+
+                        //source details
+                        string SourceBankCode = mnTransactionMaster.SourceBIN;
+                        string SourceBranchCode = mnTransactionMaster.SourceBranchCode;
+                        string SourceAccountNo = mnTransactionMaster.SourceAccount;
+
+                        //destination details
+                        string DestBankCode = mnTransactionMaster.DestinationBIN;
+                        string DestBranchCode = mnTransactionMaster.DestinationBranchCode;
+                        string DestAccountNo = mnTransactionMaster.DestinationAccount;
+
+
+                        float Amount = mnTransactionMaster.Amount;
+                        string FeeId = mnTransactionMaster.FeeId;
+                        string TraceNo = mnTransactionMaster.TraceId.ToString();
+                        DateTime TranDate = DateTime.Now;
+                        string RetrievalRef = mnTransactionMaster.TraceId.ToString();
+                        //string Desc1 = "Bank To Bank";
+                        //string Desc2 = mnTransactionMaster.Description;
+
+                        string Desc1 = "";
+                        string Desc2 = "";
+                        string Desc3 = "";
+                        string Remark = "";
+                        string desc = mnTransactionMaster.Description;
+                        string[] getProductID = desc.Split(':');
+
+                        if (mnTransactionMaster.FeatureCode == "11")
+                        {
+                            string SourceBankName = string.Empty;
+                            string DestinationBankName = string.Empty;
+
+                            if (mnTransactionMaster.SourceBIN == "0004")
+                            {
+                                SourceBankName = "Nepal Investment Bank LTD";
+                            }
+                            if (mnTransactionMaster.SourceBIN == "0000")
+                            {
+                                SourceBankName = "Pumori Bank";
+                            }
+
+                            if (mnTransactionMaster.DestinationBIN == "0004")
+                            {
+                                DestinationBankName = "Nepal Investment Bank LTD";
+                            }
+                            if (mnTransactionMaster.DestinationBIN == "0000")
+                            {
+                                DestinationBankName = "Pumori Bank";
+                            }
+
+                            if (transaction.ReverseStatus == "T")
+                            {
+                                Remark1 = Remark1;
+                            }
+                            else
+                            {
+                                Remark1 = "FT (B to B) from " + transaction.SourceMobile + " (" + SourceBankName + ")" + " to " + transaction.DestinationMobile + " (" + DestinationBankName + ")";
+                            }
+                            //Remark1 = "FT (B to B) from " + transaction.SourceMobile + " (" + SourceBankName + ")" + " to " + transaction.DestinationMobile + " (" + DestinationBankName + ")";
+
+                            //Desc1 = "Transfer To Bank "; //Bank To Bank
+                            Desc1 = "Thaili bank to bank transfer from " + transaction.SourceMobile + " to " + transaction.DestinationMobile; //Bank To Bank
+                            Desc2 = transaction.DestinationMobile; //desc;
+                            Desc3 = transaction.SourceMobile + " - " + transaction.DestinationMobile;
+                            Remark = Remark1;
+                        }
+
+                        else if (mnTransactionMaster.FeatureCode == "33")
+                        {
+                            Desc1 = description1;
+
+                            if (mnTransactionMaster.Description.StartsWith(":"))
+                            {
+                                mnTransactionMaster.Description = mnTransactionMaster.Description.Substring(1, mnTransactionMaster.Description.Length - 1);
+                            }
+                            //Remark = mnTransactionMaster.Description + " - " + Desc1;
+                            //Remark = mnTransactionMaster.Description;
+                            //Remark = Desc2;
+                            if (Remark.EndsWith("- "))
+                            {
+                                Remark = Remark.Substring(0, Remark.Length - 2);
+                            }
+                            //Desc2 = transaction.DestinationMobile; //desc;
+                            Desc2 = getProductID[1];
+                            Desc3 = transaction.SourceMobile + " - " + transaction.DestinationMobile;
+                            //Remark = desc + description1;
+                            //Remark = Desc2;
+                            Remark = Desc1;
+
+                        }
+
+                        else if (mnTransactionMaster.FeatureCode == "34")
+                        {
+                            //Utility Payment Bank to Bank
+
+                            //Desc1 = getProductID[0];
+                            //Desc1 = "BILL PAYMENT";//"Payment To " + getProductID[0]; //"Bank to Merchant's Bank a/c (Bill Payment)";
+                            Desc1 = description1;
+                            Desc2 = getProductID[1]; //transaction.DestinationMobile; //desc;
+                            Desc3 = transaction.SourceMobile + " - " + transaction.DestinationMobile; //getProductID[0];
+                            Remark = desc + " - Bill#" + transaction.billNo + " Name:" + transaction.studName;
+
+                        }
+
+                        string IsProcessed = "F";
+                        string ReverseStatus = transaction.ReverseStatus;
+                        MNRequest mnRequest = new MNRequest(OriginID, OriginType, ServiceCode, SourceBankCode, SourceBranchCode, SourceAccountNo, DestBankCode, DestBranchCode, DestAccountNo,
+                            Amount, FeeId, TraceNo, TranDate, RetrievalRef, Desc1, Desc2, Desc3, IsProcessed, Remark, ReverseStatus);
+
+                        /*END:MNREQUEST*/
+
+                        ThreadPool.QueueUserWorkItem(BackgroundTaskWithObject, mnRequest);
+
+                        if (InsertIntoPumoriIn(mnRequest))
+                        {
+                            mnTransactionMaster.StatusId = STATUS_WAITING_FOR_PUMORI_HTTPREPLY;
+
+                            /*INSERT TRANSACTION LOG*/
+                            //Send Into TransactionLog
+                            transactionlog.TransactionId = TransactionId;    /*To retrive the latest Inserted Data into TrasncationMaster*/
+                            transactionlog.UpdatedDate = DateTime.Now;
+                            transactionlog.StatusId = mnTransactionMaster.StatusId;
+                            transactionlog.Description = "Validated Message is Sent to Pumori Request";
+
+                            translog.InsertDataIntoTransactionLog(transactionlog);
+                            /*END:TRANSACTION LOG*/
+
+                            string waitForReply = "";
+                            //do
+                            //{
+                            for (int i = 0; i < 99999; i++)
+                            {
+                                //waitForReply = LookINTOResponseTable(mnRequest.RetrievalRef);
+                                waitForReply = ConstructResponse(mnRequest.RetrievalRef, mnRequest.Amount, mnTransactionMaster.DestinationMobile, mnRequest.Desc1);
+
+                                if (waitForReply != "")
+                                {
+                                    /*UnSuccess*/
+                                    if ((waitForReply == "111") || (waitForReply == "114") || (waitForReply == "115") || (waitForReply == "116") || (waitForReply == "119") ||
+                                        (waitForReply == "121") || (waitForReply == "163") || (waitForReply == "180") || (waitForReply == "181") || (waitForReply == "182") ||
+                                        (waitForReply == "183") || (waitForReply == "184") || (waitForReply == "185") || (waitForReply == "186") || (waitForReply == "187") ||
+                                        (waitForReply == "188") || (waitForReply == "189") || (waitForReply == "190") || (waitForReply == "800") ||
+                                        (waitForReply == "90") || (waitForReply == "91") || (waitForReply == "92") || (waitForReply == "94") || (waitForReply == "95") ||
+                                        (waitForReply == "98") || (waitForReply == "99") ||
+                                        (waitForReply == "902") || (waitForReply == "904") || (waitForReply == "906") || (waitForReply == "907") || (waitForReply == "909") ||
+                                        (waitForReply == "911") || (waitForReply == "913"))
+                                    {
+                                        mnTransactionMaster.StatusId = STATUS_PUMORI_HTTPREPLY_FAILED;
+
+                                        /*INSERT TRANSACTION LOG*/
+                                        //Send Into TransactionLog
+                                        transactionlog.TransactionId = TransactionId;    /*To retrive the latest Inserted Data into TrasncationMaster*/
+                                        transactionlog.UpdatedDate = DateTime.Now;
+                                        transactionlog.StatusId = mnTransactionMaster.StatusId;
+                                        transactionlog.Description = "Transaction Failed At Pumori";
+
+                                        translog.InsertDataIntoTransactionLog(transactionlog);
+                                        /*END:TRANSACTION LOG*/
+
+                                        /*UPDATE TRANSACTION*/
+                                        mnTransactionMasterRepository.UpdateintoTransactionMaster(mnTransactionMaster);
+                                        /*END:TRANSACTION*/
+
+                                        mnTransactionMaster.Response = waitForReply; //"Request will be responded separately";
+                                        mnTransactionMaster.ResponseCode = HttpStatusCode.BadRequest.ToString();
+                                        mnTransactionMaster.ResponseStatus(HttpStatusCode.BadRequest, "accepted. will respond separately");
+                                        break;
+                                    }
+                                    /*Success*/
+                                    else
+                                    {
+
+                                        mnTransactionMaster.StatusId = STATUS_PUMORI_HTTPREPLY_SUCCESS;
+                                        /*INSERT TRANSACTION LOG*/
+                                        //Send Into TransactionLog
+                                        transactionlog.TransactionId = TransactionId;    /*To retrive the latest Inserted Data into TrasncationMaster*/
+                                        transactionlog.UpdatedDate = DateTime.Now;
+                                        transactionlog.StatusId = mnTransactionMaster.StatusId;
+                                        transactionlog.Description = "Transaction Successful";
+
+                                        translog.InsertDataIntoTransactionLog(transactionlog);
+                                        /*END:TRANSACTION LOG*/
+
+                                        /*UPDATE TRANSACTION*/
+                                        mnTransactionMasterRepository.UpdateintoTransactionMaster(mnTransactionMaster);
+                                        /*END:TRANSACTION*/
+
+                                        mnTransactionMaster.Response = waitForReply;
+                                        mnTransactionMaster.ResponseCode = HttpStatusCode.OK.ToString();
+                                        mnTransactionMaster.ResponseStatus(HttpStatusCode.OK, "Success");
+                                        break;
+                                    }
+                                }
+
+                            }
+
+                        }
+                        else
+                        {
+                            mnTransactionMaster.Response = "Please try again";
+                            mnTransactionMaster.ResponseCode = HttpStatusCode.InternalServerError.ToString();
+                            mnTransactionMaster.ResponseStatus(HttpStatusCode.InternalServerError, "Could not be processed");
+                        }
+                    }
+                    break;
+
+                case "34":
+                    //34: Utility Payment Bank to Bank.
+                    {
+                        mnTransactionMaster.FeatureCode = transaction.FeatureCode;
+                        //services for ww
+                        /*SOURCE*/
+                        if (!LoadStationDetails("sb", ref mnTransactionMaster, transaction.SourceMobile))
+                        {
+                            mnTransactionMaster.Response = "Invalid Source User";
+                            mnTransactionMaster.ResponseCode = HttpStatusCode.BadRequest.ToString();
+                            mnTransactionMaster.ResponseStatus(HttpStatusCode.BadRequest, "Invalid Source User");
+                            break;
+                        }
+                        /*END:SOURCE*/
+
+                        /*DESTINATION*/
+                        if (!LoadStationDetails("db", ref mnTransactionMaster, transaction.DestinationMobile))
+                        {
+                            mnTransactionMaster.Response = "Invalid Destination User";
+                            mnTransactionMaster.ResponseCode = HttpStatusCode.BadRequest.ToString();
+                            mnTransactionMaster.ResponseStatus(HttpStatusCode.BadRequest, "Invalid Destination User");
+                            break;
+                        }
+                        /*END:DESTINATION*/
+
+
+                        /*FEATURE DETAILS*/
+                        if (!LoadFeatureDetails(ref mnTransactionMaster))
+                        {
+                            mnTransactionMaster.Response = "Invalid Product Request";
+                            mnTransactionMaster.ResponseCode = HttpStatusCode.BadRequest.ToString();
+                            mnTransactionMaster.ResponseStatus(HttpStatusCode.BadRequest, "Invalid Product Request");
+                            break;
+                        }
+                        /*END:FEATURE DETAILS*/
+
+
+
+                        /*TRANSACTION*/
+                        int TransactionId = mnTransactionMasterRepository.InsertintoTransactionMaster(mnTransactionMaster);
+                        /*END:TRANSACTION*/
+
+                        /*TRANSACTION LOG*/
+
+                        MNTransactionLog transactionlog = new MNTransactionLog();
+                        transactionlog.TransactionId = TransactionId;    /*To retrive the latest Inserted Data into TrasncationMaster*/
+                        transactionlog.UpdatedDate = DateTime.Now;
+                        transactionlog.StatusId = mnTransactionMaster.StatusId;
+                        transactionlog.Description = "Message Validated At Ecomm";
+
+                        MNTransactionLogController translog = new MNTransactionLogController();
+                        translog.InsertDataIntoTransactionLog(transactionlog);
+                        /*END:TRANSACTION LOG*/
+
+
+
+                        /*MNREQUEST*/
+                        string OriginID = mnTransactionMaster.SourceMobile;
+                        string OriginType = "6011";
+
+                        string ServiceCode = mnTransactionMaster.FeatureCode;
+
+                        //source details
+                        string SourceBankCode = mnTransactionMaster.SourceBIN;
+                        string SourceBranchCode = mnTransactionMaster.SourceBranchCode;
+                        string SourceAccountNo = mnTransactionMaster.SourceAccount;
+
+                        //destination details
+                        string DestBankCode = mnTransactionMaster.DestinationBIN;
+                        string DestBranchCode = mnTransactionMaster.DestinationBranchCode;
+                        string DestAccountNo = mnTransactionMaster.DestinationAccount;
+
+
+                        float Amount = mnTransactionMaster.Amount;
+                        //string FeeId = "F005";//mnTransactionMaster.FeeId;
+                        string merchantType = transaction.vid;
+                        string FeeId = GetFeatureCode(merchantType);
+                        string TraceNo = mnTransactionMaster.TraceId.ToString();
+                        DateTime TranDate = DateTime.Now;
+                        string RetrievalRef = mnTransactionMaster.TraceId.ToString();
+                        //string Desc1 = "Bank To Bank";
+                        //string Desc2 = mnTransactionMaster.Description;
+
+                        string Desc1 = "";
+                        string Desc2 = "";
+                        string Desc3 = "";
+                        string desc = mnTransactionMaster.Description;
+                        string[] getProductID = desc.Split('-');
+
+                        if (mnTransactionMaster.FeatureCode == "11")
+                        {
+                            Desc1 = "Transfer To Bank "; //Bank To Bank
+                            Desc2 = transaction.DestinationMobile; //desc;
+                            Desc3 = transaction.SourceMobile + " - " + transaction.DestinationMobile;
+                        }
+
+                        else if (mnTransactionMaster.FeatureCode == "33")
+                        {
+                            // Merchant Payment Bank to Bank
+                            Desc1 = "Payment To " + getProductID[0]; //"Bank to Merchant's Bank a/c";
+                            Desc2 = transaction.DestinationMobile; //desc;
+                            Desc3 = transaction.SourceMobile + " - " + transaction.DestinationMobile;
+                        }
+
+                        else if (mnTransactionMaster.FeatureCode == "34")
+                        {
+                            //Utility Payment Bank to Bank
+
+                            //Desc1 = getProductID[0];
+                            //Desc1 = "Payment To " + getProductID[0]; //"Bank to Merchant's Bank a/c (Bill Payment)";
+                            Desc1 = description1;
+                            Desc2 = getProductID[1]; //transaction.DestinationMobile; //desc;
+                            Desc3 = transaction.SourceMobile + " - " + transaction.DestinationMobile; //getProductID[0];
+
+                        }
+                        string Remark = desc;
+                        //string Desc3;
+                        //string OTraceNo;
+                        //string OTranDateTime;
+                        string IsProcessed = "F";
+                        string ReverseStatus = transaction.ReverseStatus;
+
+                        MNRequest mnRequest = new MNRequest(OriginID, OriginType, ServiceCode, SourceBankCode, SourceBranchCode, SourceAccountNo, DestBankCode, DestBranchCode, DestAccountNo,
+                            Amount, FeeId, TraceNo, TranDate, RetrievalRef, Desc1, Desc2, Desc3, IsProcessed, Remark, ReverseStatus);
+
+                        //OriginID[varchar(16)], OriginType[varchar(4)], ServiceCode[varchar(2)],
+                        //SourceBankCode[varchar(4)], SourceBranchCode[varchar(5)], SourceAccountNo[varchar(20)],
+                        //DestBankCode[varchar(4)], DestBranchCode[varchar(5)], DestAccountNo[varchar(20)],
+                        //Amount[float], FeeId[int],TraceNo[string], RetrivalRef[string], Desc1[string],Desc2[string],
+                        //OTranDateTime(string), IsProcessed(string)
+                        /*
+                            /*END:MNREQUEST*/
+
+                        ThreadPool.QueueUserWorkItem(BackgroundTaskWithObject, mnRequest);
+
+                        if (InsertIntoPumoriIn(mnRequest))
+                        {
+                            mnTransactionMaster.StatusId = STATUS_WAITING_FOR_PUMORI_HTTPREPLY;
+
+                            /*INSERT TRANSACTION LOG*/
+                            //Send Into TransactionLog
+                            transactionlog.TransactionId = TransactionId;    /*To retrive the latest Inserted Data into TrasncationMaster*/
+                            transactionlog.UpdatedDate = DateTime.Now;
+                            transactionlog.StatusId = mnTransactionMaster.StatusId;
+                            transactionlog.Description = "Validated Message is Sent to Pumori Request";
+
+                            translog.InsertDataIntoTransactionLog(transactionlog);
+                            /*END:TRANSACTION LOG*/
+
+                            string waitForReply = "";
+                            //do
+                            //{
+                            for (int i = 0; i < 99999; i++)
+                            {
+                                //waitForReply = LookINTOResponseTable(mnRequest.RetrievalRef);
+                                waitForReply = ConstructResponseForTopUp(mnRequest.RetrievalRef, mnRequest.Amount, mnTransactionMaster.DestinationMobile, mnRequest.Desc1);
+
+                                if (waitForReply != "")
+                                {
+                                    /*UnSuccess*/
+                                    if ((waitForReply == "111") || (waitForReply == "114") || (waitForReply == "115") || (waitForReply == "116") || (waitForReply == "119") ||
+                                        (waitForReply == "121") || (waitForReply == "163") || (waitForReply == "180") || (waitForReply == "181") || (waitForReply == "182") ||
+                                        (waitForReply == "183") || (waitForReply == "184") || (waitForReply == "185") || (waitForReply == "186") || (waitForReply == "187") ||
+                                        (waitForReply == "188") || (waitForReply == "189") || (waitForReply == "190") || (waitForReply == "800") ||
+                                        (waitForReply == "90") || (waitForReply == "91") || (waitForReply == "92") || (waitForReply == "94") || (waitForReply == "95") ||
+                                        (waitForReply == "98") || (waitForReply == "99") ||
+                                        (waitForReply == "902") || (waitForReply == "904") || (waitForReply == "906") || (waitForReply == "907") || (waitForReply == "909") ||
+                                        (waitForReply == "911") || (waitForReply == "913"))
+                                    {
+                                        mnTransactionMaster.StatusId = STATUS_PUMORI_HTTPREPLY_FAILED;
+
+                                        /*INSERT TRANSACTION LOG*/
+                                        //Send Into TransactionLog
+                                        transactionlog.TransactionId = TransactionId;    /*To retrive the latest Inserted Data into TrasncationMaster*/
+                                        transactionlog.UpdatedDate = DateTime.Now;
+                                        transactionlog.StatusId = mnTransactionMaster.StatusId;
+                                        transactionlog.Description = "Transaction Failed At Pumori";
+
+                                        translog.InsertDataIntoTransactionLog(transactionlog);
+                                        /*END:TRANSACTION LOG*/
+
+                                        /*UPDATE TRANSACTION*/
+                                        mnTransactionMasterRepository.UpdateintoTransactionMaster(mnTransactionMaster);
+                                        /*END:TRANSACTION*/
+
+                                        mnTransactionMaster.Response = waitForReply; //"Request will be responded separately";
+                                        mnTransactionMaster.ResponseCode = HttpStatusCode.BadRequest.ToString();
+                                        mnTransactionMaster.ResponseStatus(HttpStatusCode.BadRequest, "accepted. will respond separately");
+                                        break;
+                                    }
+                                    /*Success*/
+                                    else
+                                    {
+
+                                        mnTransactionMaster.StatusId = STATUS_PUMORI_HTTPREPLY_SUCCESS;
+                                        mnTransactionMaster.createdTimeDate = GetTimeStampFromAccountName(mnRequest.RetrievalRef);
+                                        /*INSERT TRANSACTION LOG*/
+                                        //Send Into TransactionLog
+                                        transactionlog.TransactionId = TransactionId;    /*To retrive the latest Inserted Data into TrasncationMaster*/
+                                        transactionlog.UpdatedDate = DateTime.Now;
+                                        transactionlog.StatusId = mnTransactionMaster.StatusId;
+                                        transactionlog.Description = "Transaction Successful";
+
+                                        translog.InsertDataIntoTransactionLog(transactionlog);
+                                        /*END:TRANSACTION LOG*/
+
+                                        /*UPDATE TRANSACTION*/
+                                        mnTransactionMasterRepository.UpdateintoTransactionMaster(mnTransactionMaster);
+                                        /*END:TRANSACTION*/
+
+                                        mnTransactionMaster.Response = waitForReply;
+                                        mnTransactionMaster.ResponseCode = HttpStatusCode.OK.ToString();
+                                        mnTransactionMaster.ResponseStatus(HttpStatusCode.OK, "Success");
+                                        break;
+                                    }
+                                }
+
+                            }
+
+                            //} while (waitForReply == "");
+
+                            //if (waitForReply == "")
+                            //{
+                            //    mnTransactionMaster.StatusId = STATUS_PUMORI_HTTPREPLY_FAILED;
+
+                            //    /*INSERT TRANSACTION LOG*/
+                            //    //Send Into TransactionLog
+                            //    transactionlog.TransactionId = TransactionId;    /*To retrive the latest Inserted Data into TrasncationMaster*/
+                            //    transactionlog.UpdatedDate = DateTime.Now;
+                            //    transactionlog.StatusId = mnTransactionMaster.StatusId;
+                            //    transactionlog.Description = "Transaction Failed At Pumori";
+
+                            //    translog.InsertDataIntoTransactionLog(transactionlog);
+                            //    /*END:TRANSACTION LOG*/
+
+                            //    /*UPDATE TRANSACTION*/
+                            //    mnTransactionMasterRepository.UpdateintoTransactionMaster(mnTransactionMaster);
+                            //    /*END:TRANSACTION*/
+
+                            //    mnTransactionMaster.Response = "Request will be responded separately";
+                            //    mnTransactionMaster.ResponseStatus(HttpStatusCode.NoContent, "accepted. will respond separately");
+                            //}
+                        }
+                        else
+                        {
+                            mnTransactionMaster.Response = "Please try again";
+                            mnTransactionMaster.ResponseCode = HttpStatusCode.InternalServerError.ToString();
+                            mnTransactionMaster.ResponseStatus(HttpStatusCode.InternalServerError, "Could not be processed");
+                        }
+                    }
+                    break;
+                case "20":
+                    //20: Balance Query Wallet
+                    {
+                        mnTransactionMaster.FeatureCode = transaction.FeatureCode;
+                        //services for ww
+                        /*SOURCE*/
+                        if (!LoadStationDetails("sw", ref mnTransactionMaster, transaction.SourceMobile))
+                        {
+                            mnTransactionMaster.Response = "Invalid Source User";
+                            mnTransactionMaster.ResponseCode = HttpStatusCode.BadRequest.ToString();
+                            mnTransactionMaster.ResponseStatus(HttpStatusCode.BadRequest, "Invalid Source User");
+                            break;
+                        }
+                        /*END:SOURCE*/
+
+                        //source bin and destination bin same for bq
+                        mnTransactionMaster.DestinationBIN = mnTransactionMaster.SourceBIN;
+                        /*FEATURE DETAILS*/
+                        if (!LoadFeatureDetails(ref mnTransactionMaster))
+                        {
+                            mnTransactionMaster.Response = "Invalid Product Request";
+                            mnTransactionMaster.ResponseCode = HttpStatusCode.BadRequest.ToString();
+                            mnTransactionMaster.ResponseStatus(HttpStatusCode.BadRequest, "Invalid Product Request");
+                            break;
+                        }
+                        /*END:FEATURE DETAILS*/
+
+
+
+                        /*TRANSACTION*/
+                        int TransactionId = mnTransactionMasterRepository.InsertintoTransactionMaster(mnTransactionMaster);
+                        /*END:TRANSACTION*/
+
+                        /*TRANSACTION LOG*/
+
+                        MNTransactionLog transactionlog = new MNTransactionLog();
+                        transactionlog.TransactionId = TransactionId;    /*To retrive the latest Inserted Data into TrasncationMaster*/
+                        transactionlog.UpdatedDate = DateTime.Now;
+                        transactionlog.StatusId = mnTransactionMaster.StatusId;
+                        transactionlog.Description = "Message Validated At Ecomm";
+
+                        MNTransactionLogController translog = new MNTransactionLogController();
+                        translog.InsertDataIntoTransactionLog(transactionlog);
+
+                        /*END:TRANSACTION LOG*/
+
+
+
+                        /*MNREQUEST*/
+                        string OriginID = mnTransactionMaster.SourceMobile;
+                        string OriginType = "6011";
+
+                        string ServiceCode = mnTransactionMaster.FeatureCode;
+
+                        //source details
+                        string SourceBankCode = mnTransactionMaster.SourceBIN;
+                        string SourceBranchCode = mnTransactionMaster.SourceBranchCode;
+                        string SourceAccountNo = mnTransactionMaster.SourceAccount;
+
+                        //destination details
+                        string DestBankCode = mnTransactionMaster.DestinationBIN;
+                        string DestBranchCode = mnTransactionMaster.DestinationBranchCode;
+                        string DestAccountNo = mnTransactionMaster.DestinationAccount;
+
+
+                        float Amount = mnTransactionMaster.Amount;
+                        string FeeId = mnTransactionMaster.FeeId;
+                        string TraceNo = mnTransactionMaster.TraceId.ToString();
+                        DateTime TranDate = DateTime.Now;
+                        string RetrievalRef = mnTransactionMaster.TraceId.ToString();
+                        string Desc1 = "Balance Inquery For Wallet Account";
+                        string Desc2 = mnTransactionMaster.Description;
+                        //string Desc3;
+                        //string OTraceNo;
+                        //string OTranDateTime;
+                        string IsProcessed = "F";
+
+                        MNRequest mnRequest = new MNRequest(OriginID, OriginType, ServiceCode, SourceBankCode, SourceBranchCode, SourceAccountNo, DestBankCode, DestBranchCode, DestAccountNo,
+                            Amount, FeeId, TraceNo, TranDate, RetrievalRef, Desc1, Desc2, IsProcessed);
+
+                        //OriginID[varchar(16)], OriginType[varchar(4)], ServiceCode[varchar(2)],
+                        //SourceBankCode[varchar(4)], SourceBranchCode[varchar(5)], SourceAccountNo[varchar(20)],
+                        //DestBankCode[varchar(4)], DestBranchCode[varchar(5)], DestAccountNo[varchar(20)],
+                        //Amount[float], FeeId[int],TraceNo[string], RetrivalRef[string], Desc1[string],Desc2[string],
+                        //OTranDateTime(string), IsProcessed(string)
+                        /*
+                            /*END:MNREQUEST*/
+
+                        ThreadPool.QueueUserWorkItem(BackgroundTaskWithObject, mnRequest);
+
+                        if (InsertIntoPumoriIn(mnRequest))
+                        {
+                            mnTransactionMaster.StatusId = STATUS_WAITING_FOR_PUMORI_HTTPREPLY;
+
+                            /*INSERT TRANSACTION LOG*/
+                            //Send Into TransactionLog
+                            transactionlog.TransactionId = TransactionId;    /*To retrive the latest Inserted Data into TrasncationMaster*/
+                            transactionlog.UpdatedDate = DateTime.Now;
+                            transactionlog.StatusId = mnTransactionMaster.StatusId;
+                            transactionlog.Description = "Validated Message is Sent to Pumori Request";
+
+                            translog.InsertDataIntoTransactionLog(transactionlog);
+                            /*END:TRANSACTION LOG*/
+
+
+                            string waitForReply = "";
+                            do
+                            {
+                                for (int i = 0; i < 99999; i++)
+                                {
+                                    waitForReply = LookINTOResponseTable(mnRequest.RetrievalRef);
+                                    if (waitForReply != "")
+                                    {
+                                        /*UnSuccess*/
+                                        if ((waitForReply == "111") || (waitForReply == "114") || (waitForReply == "115") || (waitForReply == "116") || (waitForReply == "119") ||
+                                            (waitForReply == "121") || (waitForReply == "163") || (waitForReply == "180") || (waitForReply == "181") || (waitForReply == "182") ||
+                                            (waitForReply == "183") || (waitForReply == "184") || (waitForReply == "185") || (waitForReply == "186") || (waitForReply == "187") ||
+                                            (waitForReply == "188") || (waitForReply == "189") || (waitForReply == "190") || (waitForReply == "800") ||
+                                            (waitForReply == "90") || (waitForReply == "91") || (waitForReply == "92") || (waitForReply == "94") || (waitForReply == "95") ||
+                                            (waitForReply == "98") || (waitForReply == "99") ||
+                                            (waitForReply == "902") || (waitForReply == "904") || (waitForReply == "906") || (waitForReply == "907") || (waitForReply == "909") ||
+                                            (waitForReply == "911") || (waitForReply == "913"))
+                                        {
+                                            mnTransactionMaster.StatusId = STATUS_PUMORI_HTTPREPLY_FAILED;
+
+                                            /*INSERT TRANSACTION LOG*/
+                                            //Send Into TransactionLog
+                                            transactionlog.TransactionId = TransactionId;    /*To retrive the latest Inserted Data into TrasncationMaster*/
+                                            transactionlog.UpdatedDate = DateTime.Now;
+                                            transactionlog.StatusId = mnTransactionMaster.StatusId;
+                                            transactionlog.Description = "Transaction Failed At Pumori";
+
+                                            translog.InsertDataIntoTransactionLog(transactionlog);
+                                            /*END:TRANSACTION LOG*/
+
+                                            /*UPDATE TRANSACTION*/
+                                            mnTransactionMasterRepository.UpdateintoTransactionMaster(mnTransactionMaster);
+                                            /*END:TRANSACTION*/
+
+                                            mnTransactionMaster.Response = waitForReply; //"Request will be responded separately";
+                                            mnTransactionMaster.ResponseCode = HttpStatusCode.NoContent.ToString();
+                                            mnTransactionMaster.ResponseStatus(HttpStatusCode.NoContent, "accepted. will respond separately");
+                                            break;
+                                        }
+                                        /*Success*/
+                                        else
+                                        {
+
+                                            mnTransactionMaster.StatusId = STATUS_PUMORI_HTTPREPLY_SUCCESS;
+                                            /*INSERT TRANSACTION LOG*/
+                                            //Send Into TransactionLog
+                                            transactionlog.TransactionId = TransactionId;    /*To retrive the latest Inserted Data into TrasncationMaster*/
+                                            transactionlog.UpdatedDate = DateTime.Now;
+                                            transactionlog.StatusId = mnTransactionMaster.StatusId;
+                                            transactionlog.Description = "Transaction Successful";
+
+                                            translog.InsertDataIntoTransactionLog(transactionlog);
+                                            /*END:TRANSACTION LOG*/
+
+                                            /*UPDATE TRANSACTION*/
+                                            mnTransactionMasterRepository.UpdateintoTransactionMaster(mnTransactionMaster);
+                                            /*END:TRANSACTION*/
+
+                                            mnTransactionMaster.Response = waitForReply;
+                                            mnTransactionMaster.ResponseCode = HttpStatusCode.OK.ToString();
+                                            mnTransactionMaster.ResponseStatus(HttpStatusCode.OK, mnTransactionMaster.Response);
+                                            break;
+                                        }
+                                    }
+                                }
+                            } while (waitForReply == "");
+
+                            //if (waitForReply == "")
+                            //{
+                            //    mnTransactionMaster.StatusId = STATUS_PUMORI_HTTPREPLY_FAILED;
+
+                            //    /*INSERT TRANSACTION LOG*/
+                            //    //Send Into TransactionLog
+                            //    transactionlog.TransactionId = TransactionId;    /*To retrive the latest Inserted Data into TrasncationMaster*/
+                            //    transactionlog.UpdatedDate = DateTime.Now;
+                            //    transactionlog.StatusId = mnTransactionMaster.StatusId;
+                            //    transactionlog.Description = "Transaction Failed At Pumori";
+
+                            //    translog.InsertDataIntoTransactionLog(transactionlog);
+                            //    /*END:TRANSACTION LOG*/
+
+                            //    /*UPDATE TRANSACTION*/
+                            //    mnTransactionMasterRepository.UpdateintoTransactionMaster(mnTransactionMaster);
+                            //    /*END:TRANSACTION*/
+
+                            //    mnTransactionMaster.Response = "Request will be responded separately";
+                            //    mnTransactionMaster.ResponseStatus(HttpStatusCode.NoContent, "accepted. will respond separately");
+                            //}
+                        }
+                        else
+                        {
+                            mnTransactionMaster.Response = "Please try again";//Request could not be processed
+                            mnTransactionMaster.ResponseCode = HttpStatusCode.InternalServerError.ToString();
+                            mnTransactionMaster.ResponseStatus(HttpStatusCode.InternalServerError, "Could not be processed");
+                        }
+                    }
+                    break;
+                case "22":
+                    //balance query bank
+                    {
+                        mnTransactionMaster.FeatureCode = transaction.FeatureCode;
+                        //services for ww
+                        /*SOURCE*/
+                        if (!LoadStationDetails("sb", ref mnTransactionMaster, transaction.SourceMobile))
+                        {
+                            mnTransactionMaster.Response = "Invalid Source User";
+                            mnTransactionMaster.ResponseCode = HttpStatusCode.InternalServerError.ToString();
+                            mnTransactionMaster.ResponseStatus(HttpStatusCode.BadRequest, "Invalid Source User");
+                            break;
+                        }
+                        /*END:SOURCE*/
+
+                        //source bin and destination bin same for bq
+                        mnTransactionMaster.DestinationBIN = mnTransactionMaster.SourceBIN;
+                        /*FEATURE DETAILS*/
+                        if (!LoadFeatureDetails(ref mnTransactionMaster))
+                        {
+                            mnTransactionMaster.Response = "Invalid Product Request";
+                            mnTransactionMaster.ResponseCode = HttpStatusCode.BadRequest.ToString();
+                            mnTransactionMaster.ResponseStatus(HttpStatusCode.BadRequest, "Invalid Product Request");
+                            break;
+                        }
+                        /*END:FEATURE DETAILS*/
+
+
+
+                        /*TRANSACTION*/
+                        int TransactionId = mnTransactionMasterRepository.InsertintoTransactionMaster(mnTransactionMaster);
+                        /*END:TRANSACTION*/
+
+                        /*TRANSACTION LOG*/
+
+                        MNTransactionLog transactionlog = new MNTransactionLog();
+                        transactionlog.TransactionId = TransactionId;    /*To retrive the latest Inserted Data into TrasncationMaster*/
+                        transactionlog.UpdatedDate = DateTime.Now;
+                        transactionlog.StatusId = mnTransactionMaster.StatusId;
+                        transactionlog.Description = "Message Validated At Ecomm";
+
+                        MNTransactionLogController translog = new MNTransactionLogController();
+                        translog.InsertDataIntoTransactionLog(transactionlog);
+
+                        /*END:TRANSACTION LOG*/
+
+
+
+                        /*MNREQUEST*/
+                        string OriginID = mnTransactionMaster.SourceMobile;
+                        string OriginType = "6011";
+
+                        string ServiceCode = mnTransactionMaster.FeatureCode;
+
+                        //source details
+                        string SourceBankCode = mnTransactionMaster.SourceBIN;
+                        string SourceBranchCode = mnTransactionMaster.SourceBranchCode;
+                        string SourceAccountNo = mnTransactionMaster.SourceAccount;
+
+                        //destination details
+                        string DestBankCode = mnTransactionMaster.DestinationBIN;
+                        string DestBranchCode = mnTransactionMaster.DestinationBranchCode;
+                        string DestAccountNo = mnTransactionMaster.DestinationAccount;
+
+
+                        float Amount = mnTransactionMaster.Amount;
+                        string FeeId = mnTransactionMaster.FeeId;
+                        string TraceNo = mnTransactionMaster.TraceId.ToString();
+                        DateTime TranDate = DateTime.Now;
+                        string RetrievalRef = mnTransactionMaster.TraceId.ToString();
+                        string Desc1 = "Balance Inquery For Bank Account";
+                        string Desc2 = mnTransactionMaster.Description;
+                        //string Desc3;
+                        //string OTraceNo;
+                        //string OTranDateTime;
+                        string IsProcessed = "F";
+                        MNRequest mnRequest = new MNRequest(OriginID, OriginType, ServiceCode, SourceBankCode, SourceBranchCode, SourceAccountNo, DestBankCode, DestBranchCode, DestAccountNo,
+                            Amount, FeeId, TraceNo, TranDate, RetrievalRef, Desc1, Desc2, IsProcessed);
+
+                        //OriginID[varchar(16)], OriginType[varchar(4)], ServiceCode[varchar(2)],
+                        //SourceBankCode[varchar(4)], SourceBranchCode[varchar(5)], SourceAccountNo[varchar(20)],
+                        //DestBankCode[varchar(4)], DestBranchCode[varchar(5)], DestAccountNo[varchar(20)],
+                        //Amount[float], FeeId[int],TraceNo[string], RetrivalRef[string], Desc1[string],Desc2[string],
+                        //OTranDateTime(string), IsProcessed(string)
+                        /*
+                            /*END:MNREQUEST*/
+
+                        ThreadPool.QueueUserWorkItem(BackgroundTaskWithObject, mnRequest);
+
+                        if (InsertIntoPumoriIn(mnRequest))
+                        {
+                            mnTransactionMaster.StatusId = STATUS_WAITING_FOR_PUMORI_HTTPREPLY;
+
+                            /*INSERT TRANSACTION LOG*/
+                            //Send Into TransactionLog
+                            transactionlog.TransactionId = TransactionId;    /*To retrive the latest Inserted Data into TrasncationMaster*/
+                            transactionlog.UpdatedDate = DateTime.Now;
+                            transactionlog.StatusId = mnTransactionMaster.StatusId;
+                            transactionlog.Description = "Validated Message is Sent to Pumori Request";
+
+                            translog.InsertDataIntoTransactionLog(transactionlog);
+                            /*END:TRANSACTION LOG*/
+
+                            string waitForReply = "";
+                            do
+                            {
+                                for (int i = 0; i < 99999; i++)
+                                {
+                                    waitForReply = LookINTOResponseTable(mnRequest.RetrievalRef);
+                                    if (waitForReply != "")
+                                    {
+                                        /*UnSuccess*/
+                                        if ((waitForReply == "111") || (waitForReply == "114") || (waitForReply == "115") || (waitForReply == "116") || (waitForReply == "119") ||
+                                            (waitForReply == "121") || (waitForReply == "163") || (waitForReply == "180") || (waitForReply == "181") || (waitForReply == "182") ||
+                                            (waitForReply == "183") || (waitForReply == "184") || (waitForReply == "185") || (waitForReply == "186") || (waitForReply == "187") ||
+                                            (waitForReply == "188") || (waitForReply == "189") || (waitForReply == "190") || (waitForReply == "800") ||
+                                            (waitForReply == "90") || (waitForReply == "91") || (waitForReply == "92") || (waitForReply == "94") || (waitForReply == "95") ||
+                                            (waitForReply == "98") || (waitForReply == "99") ||
+                                            (waitForReply == "902") || (waitForReply == "904") || (waitForReply == "906") || (waitForReply == "907") || (waitForReply == "909") ||
+                                            (waitForReply == "911") || (waitForReply == "913"))
+                                        {
+                                            mnTransactionMaster.StatusId = STATUS_PUMORI_HTTPREPLY_FAILED;
+
+                                            /*INSERT TRANSACTION LOG*/
+                                            //Send Into TransactionLog
+                                            transactionlog.TransactionId = TransactionId;    /*To retrive the latest Inserted Data into TrasncationMaster*/
+                                            transactionlog.UpdatedDate = DateTime.Now;
+                                            transactionlog.StatusId = mnTransactionMaster.StatusId;
+                                            transactionlog.Description = "Transaction Failed At Pumori";
+
+                                            translog.InsertDataIntoTransactionLog(transactionlog);
+                                            /*END:TRANSACTION LOG*/
+
+                                            /*UPDATE TRANSACTION*/
+                                            mnTransactionMasterRepository.UpdateintoTransactionMaster(mnTransactionMaster);
+                                            /*END:TRANSACTION*/
+
+                                            mnTransactionMaster.Response = waitForReply; //"Request will be responded separately";
+                                            mnTransactionMaster.ResponseCode = HttpStatusCode.BadRequest.ToString();
+                                            mnTransactionMaster.ResponseStatus(HttpStatusCode.BadRequest, "accepted. will respond separately");
+                                            break;
+                                        }
+                                        /*Success*/
+                                        else
+                                        {
+                                            mnTransactionMaster.StatusId = STATUS_PUMORI_HTTPREPLY_SUCCESS;
+                                            /*INSERT TRANSACTION LOG*/
+                                            //Send Into TransactionLog
+                                            transactionlog.TransactionId = TransactionId;    /*To retrive the latest Inserted Data into TrasncationMaster*/
+                                            transactionlog.UpdatedDate = DateTime.Now;
+                                            transactionlog.StatusId = mnTransactionMaster.StatusId;
+                                            transactionlog.Description = "Transaction Successful";
+
+                                            translog.InsertDataIntoTransactionLog(transactionlog);
+                                            /*END:TRANSACTION LOG*/
+
+                                            /*UPDATE TRANSACTION*/
+                                            mnTransactionMasterRepository.UpdateintoTransactionMaster(mnTransactionMaster);
+                                            /*END:TRANSACTION*/
+
+                                            mnTransactionMaster.Response = waitForReply;
+                                            mnTransactionMaster.ResponseCode = HttpStatusCode.OK.ToString();
+                                            mnTransactionMaster.ResponseStatus(HttpStatusCode.OK, mnTransactionMaster.Response);
+                                            break;
+                                        }
+                                    }
+                                }
+
+                            } while (waitForReply == "");
+
+                            //if (waitForReply == "")
+                            //{
+                            //    mnTransactionMaster.StatusId = STATUS_PUMORI_HTTPREPLY_FAILED;
+
+                            //    /*INSERT TRANSACTION LOG*/
+                            //    //Send Into TransactionLog
+                            //    transactionlog.TransactionId = TransactionId;    /*To retrive the latest Inserted Data into TrasncationMaster*/
+                            //    transactionlog.UpdatedDate = DateTime.Now;
+                            //    transactionlog.StatusId = mnTransactionMaster.StatusId;
+                            //    transactionlog.Description = "Transaction Failed At Pumori";
+
+                            //    translog.InsertDataIntoTransactionLog(transactionlog);
+                            //    /*END:TRANSACTION LOG*/
+
+                            //    /*UPDATE TRANSACTION*/
+                            //    mnTransactionMasterRepository.UpdateintoTransactionMaster(mnTransactionMaster);
+                            //    /*END:TRANSACTION*/
+
+                            //    mnTransactionMaster.Response = "Request will be responded separately";
+                            //    mnTransactionMaster.ResponseStatus(HttpStatusCode.NoContent, "accepted. will respond separately");
+                            //}
+
+                        }
+                        else
+                        {
+                            mnTransactionMaster.Response = "Please try again";
+                            mnTransactionMaster.ResponseCode = HttpStatusCode.InternalServerError.ToString();
+                            mnTransactionMaster.ResponseStatus(HttpStatusCode.InternalServerError, "Could not be processed");
+                        }
+                    }
+                    break;
+                case "21":
+                    //ministatement for wallet
+                    {
+                        mnTransactionMaster.FeatureCode = transaction.FeatureCode;
+                        //services for ww
+                        /*SOURCE*/
+                        if (!LoadStationDetails("sw", ref mnTransactionMaster, transaction.SourceMobile))
+                        {
+                            mnTransactionMaster.Response = "Invalid Source User";
+                            mnTransactionMaster.ResponseCode = HttpStatusCode.BadRequest.ToString();
+                            mnTransactionMaster.ResponseStatus(HttpStatusCode.BadRequest, "Invalid Source User");
+                            break;
+                        }
+                        /*END:SOURCE*/
+
+                        //source bin and destination bin same for bq
+                        mnTransactionMaster.DestinationBIN = mnTransactionMaster.SourceBIN;
+                        /*FEATURE DETAILS*/
+                        if (!LoadFeatureDetails(ref mnTransactionMaster))
+                        {
+                            mnTransactionMaster.Response = "Invalid Product Request";
+                            mnTransactionMaster.ResponseCode = HttpStatusCode.BadRequest.ToString();
+                            mnTransactionMaster.ResponseStatus(HttpStatusCode.BadRequest, "Invalid Product Request");
+                            break;
+                        }
+                        /*END:FEATURE DETAILS*/
+
+
+
+                        /*TRANSACTION*/
+                        int TransactionId = mnTransactionMasterRepository.InsertintoTransactionMaster(mnTransactionMaster);
+                        /*END:TRANSACTION*/
+
+                        /*TRANSACTION LOG*/
+
+                        MNTransactionLog transactionlog = new MNTransactionLog();
+                        transactionlog.TransactionId = TransactionId;    /*To retrive the latest Inserted Data into TrasncationMaster*/
+                        transactionlog.UpdatedDate = DateTime.Now;
+                        transactionlog.StatusId = mnTransactionMaster.StatusId;
+                        transactionlog.Description = "Message Validated At Ecomm";
+
+                        MNTransactionLogController translog = new MNTransactionLogController();
+                        translog.InsertDataIntoTransactionLog(transactionlog);
+                        /*END:TRANSACTION LOG*/
+
+
+
+                        /*MNREQUEST*/
+                        string OriginID = mnTransactionMaster.SourceMobile;
+                        string OriginType = "6011";
+
+                        string ServiceCode = mnTransactionMaster.FeatureCode;
+
+                        //source details
+                        string SourceBankCode = mnTransactionMaster.SourceBIN;
+                        string SourceBranchCode = mnTransactionMaster.SourceBranchCode;
+                        string SourceAccountNo = mnTransactionMaster.SourceAccount;
+
+                        //destination details
+                        string DestBankCode = mnTransactionMaster.DestinationBIN;
+                        string DestBranchCode = mnTransactionMaster.DestinationBranchCode;
+                        string DestAccountNo = mnTransactionMaster.DestinationAccount;
+
+
+                        float Amount = mnTransactionMaster.Amount;
+                        string FeeId = mnTransactionMaster.FeeId;
+                        string TraceNo = mnTransactionMaster.TraceId.ToString();
+                        DateTime TranDate = DateTime.Now;
+                        string RetrievalRef = mnTransactionMaster.TraceId.ToString();
+                        string Desc1 = "MiniStatement for Wallet";
+                        string Desc2 = mnTransactionMaster.Description;
+                        //string Desc3;
+                        //string OTraceNo;
+                        //string OTranDateTime;
+                        string IsProcessed = "F";
+                        MNRequest mnRequest = new MNRequest(OriginID, OriginType, ServiceCode, SourceBankCode, SourceBranchCode, SourceAccountNo, DestBankCode, DestBranchCode, DestAccountNo, Amount, FeeId, TraceNo, TranDate, RetrievalRef, Desc1, Desc2, IsProcessed);
+                        //OriginID[varchar(16)], OriginType[varchar(4)], ServiceCode[varchar(2)],
+                        //SourceBankCode[varchar(4)], SourceBranchCode[varchar(5)], SourceAccountNo[varchar(20)],
+                        //DestBankCode[varchar(4)], DestBranchCode[varchar(5)], DestAccountNo[varchar(20)],
+                        //Amount[float], FeeId[int],TraceNo[string], RetrivalRef[string], Desc1[string],Desc2[string],
+                        //OTranDateTime(string), IsProcessed(string)
+                        /*
+                            /*END:MNREQUEST*/
+
+                        ThreadPool.QueueUserWorkItem(BackgroundTaskWithObject, mnRequest);
+
+                        if (InsertIntoPumoriIn(mnRequest))
+                        {
+                            mnTransactionMaster.StatusId = STATUS_WAITING_FOR_PUMORI_HTTPREPLY;
+
+                            /*INSERT TRANSACTION LOG*/
+                            //Send Into TransactionLog
+                            transactionlog.TransactionId = TransactionId;    /*To retrive the latest Inserted Data into TrasncationMaster*/
+                            transactionlog.UpdatedDate = DateTime.Now;
+                            transactionlog.StatusId = mnTransactionMaster.StatusId;
+                            transactionlog.Description = "Validated Message is Sent to Pumori Request";
+
+                            translog.InsertDataIntoTransactionLog(transactionlog);
+                            /*END:TRANSACTION LOG*/
+
+                            string waitForReply = "";
+                            //do
+                            //{
+                            for (int i = 0; i < 99999; i++)
+                            {
+                                waitForReply = LookINTOResponseTableForMiniStatement(mnRequest.RetrievalRef);
+                                if (waitForReply != "[]")
+                                {
+                                    mnTransactionMaster.StatusId = STATUS_PUMORI_HTTPREPLY_SUCCESS;
+                                    /*INSERT TRANSACTION LOG*/
+                                    //Send Into TransactionLog
+                                    transactionlog.TransactionId = TransactionId;    /*To retrive the latest Inserted Data into TrasncationMaster*/
+                                    transactionlog.UpdatedDate = DateTime.Now;
+                                    transactionlog.StatusId = mnTransactionMaster.StatusId;
+                                    transactionlog.Description = "Transaction Successful";
+
+                                    translog.InsertDataIntoTransactionLog(transactionlog);
+                                    /*END:TRANSACTION LOG*/
+
+                                    /*UPDATE TRANSACTION*/
+                                    mnTransactionMasterRepository.UpdateintoTransactionMaster(mnTransactionMaster);
+                                    /*END:TRANSACTION*/
+
+                                    mnTransactionMaster.Response = waitForReply;
+                                    mnTransactionMaster.ResponseCode = HttpStatusCode.OK.ToString();
+                                    mnTransactionMaster.ResponseStatus(HttpStatusCode.OK, "Success");
+                                    break;
+                                }
+                            }
+
+                            if (waitForReply == "")
+                            {
+                                mnTransactionMaster.StatusId = STATUS_PUMORI_HTTPREPLY_FAILED;
+
+                                /*INSERT TRANSACTION LOG*/
+                                //Send Into TransactionLog
+                                transactionlog.TransactionId = TransactionId;    /*To retrive the latest Inserted Data into TrasncationMaster*/
+                                transactionlog.UpdatedDate = DateTime.Now;
+                                transactionlog.StatusId = mnTransactionMaster.StatusId;
+                                transactionlog.Description = "Transaction Failed At Pumori";
+
+                                translog.InsertDataIntoTransactionLog(transactionlog);
+                                /*END:TRANSACTION LOG*/
+
+                                /*UPDATE TRANSACTION*/
+                                mnTransactionMasterRepository.UpdateintoTransactionMaster(mnTransactionMaster);
+                                /*END:TRANSACTION*/
+
+                                mnTransactionMaster.Response = "Request will be responded separately";
+                                mnTransactionMaster.ResponseCode = HttpStatusCode.NoContent.ToString();
+                                mnTransactionMaster.ResponseStatus(HttpStatusCode.NoContent, "accepted. will respond separately");
+                            }
+                            //} while (waitForReply == "");
+                        }
+                        else
+                        {
+                            mnTransactionMaster.Response = "Please try again"; //Request could not be processed
+                            mnTransactionMaster.ResponseCode = HttpStatusCode.InternalServerError.ToString();
+                            mnTransactionMaster.ResponseStatus(HttpStatusCode.InternalServerError, "Could not be processed");
+                        }
+                    }
+                    break;
+                case "23":
+                    //ministatement for bank
+                    {
+                        mnTransactionMaster.FeatureCode = transaction.FeatureCode;
+                        //services for ww
+                        /*SOURCE*/
+                        if (!LoadStationDetails("sb", ref mnTransactionMaster, transaction.SourceMobile))
+                        {
+                            mnTransactionMaster.Response = "Invalid Source User";
+                            mnTransactionMaster.ResponseCode = HttpStatusCode.BadRequest.ToString();
+                            mnTransactionMaster.ResponseStatus(HttpStatusCode.BadRequest, "Invalid Source User");
+                            break;
+                        }
+                        /*END:SOURCE*/
+
+                        //source bin and destination bin same for bq
+                        mnTransactionMaster.DestinationBIN = mnTransactionMaster.SourceBIN;
+                        /*FEATURE DETAILS*/
+                        if (!LoadFeatureDetails(ref mnTransactionMaster))
+                        {
+                            mnTransactionMaster.Response = "Invalid Product Request";
+                            mnTransactionMaster.ResponseCode = HttpStatusCode.BadRequest.ToString();
+                            mnTransactionMaster.ResponseStatus(HttpStatusCode.BadRequest, "Invalid Product Request");
+                            break;
+                        }
+                        /*END:FEATURE DETAILS*/
+
+
+
+                        /*TRANSACTION*/
+                        int TransactionId = mnTransactionMasterRepository.InsertintoTransactionMaster(mnTransactionMaster);
+                        /*END:TRANSACTION*/
+
+                        /*TRANSACTION LOG*/
+
+                        MNTransactionLog transactionlog = new MNTransactionLog();
+                        transactionlog.TransactionId = TransactionId;    /*To retrive the latest Inserted Data into TrasncationMaster*/
+                        transactionlog.UpdatedDate = DateTime.Now;
+                        transactionlog.StatusId = mnTransactionMaster.StatusId;
+                        transactionlog.Description = "Message Validated At Ecomm";
+
+                        MNTransactionLogController translog = new MNTransactionLogController();
+                        translog.InsertDataIntoTransactionLog(transactionlog);
+
+                        /*END:TRANSACTION LOG*/
+
+
+
+                        /*MNREQUEST*/
+                        string OriginID = mnTransactionMaster.SourceMobile;
+                        string OriginType = "6011";
+
+                        string ServiceCode = mnTransactionMaster.FeatureCode;
+
+                        //source details
+                        string SourceBankCode = mnTransactionMaster.SourceBIN;
+                        string SourceBranchCode = mnTransactionMaster.SourceBranchCode;
+                        string SourceAccountNo = mnTransactionMaster.SourceAccount;
+
+                        //destination details
+                        string DestBankCode = mnTransactionMaster.DestinationBIN;
+                        string DestBranchCode = mnTransactionMaster.DestinationBranchCode;
+                        string DestAccountNo = mnTransactionMaster.DestinationAccount;
+
+
+                        float Amount = mnTransactionMaster.Amount;
+                        string FeeId = mnTransactionMaster.FeeId;
+                        string TraceNo = mnTransactionMaster.TraceId.ToString();
+                        DateTime TranDate = DateTime.Now;
+                        string RetrievalRef = mnTransactionMaster.TraceId.ToString();
+                        string Desc1 = "MiniStatement for Bank";
+                        string Desc2 = mnTransactionMaster.Description;
+                        //string Desc3;
+                        //string OTraceNo;
+                        //string OTranDateTime;
+                        string IsProcessed = "F";
+                        MNRequest mnRequest = new MNRequest(OriginID, OriginType, ServiceCode, SourceBankCode, SourceBranchCode, SourceAccountNo, DestBankCode, DestBranchCode, DestAccountNo, Amount, FeeId, TraceNo, TranDate, RetrievalRef, Desc1, Desc2, IsProcessed);
+                        //OriginID[varchar(16)], OriginType[varchar(4)], ServiceCode[varchar(2)],
+                        //SourceBankCode[varchar(4)], SourceBranchCode[varchar(5)], SourceAccountNo[varchar(20)],
+                        //DestBankCode[varchar(4)], DestBranchCode[varchar(5)], DestAccountNo[varchar(20)],
+                        //Amount[float], FeeId[int],TraceNo[string], RetrivalRef[string], Desc1[string],Desc2[string],
+                        //OTranDateTime(string), IsProcessed(string)
+                        /*
+                            /*END:MNREQUEST*/
+
+                        ThreadPool.QueueUserWorkItem(BackgroundTaskWithObject, mnRequest);
+
+                        if (InsertIntoPumoriIn(mnRequest))
+                        {
+                            mnTransactionMaster.StatusId = STATUS_WAITING_FOR_PUMORI_HTTPREPLY;
+
+                            /*INSERT TRANSACTION LOG*/
+                            //Send Into TransactionLog
+                            transactionlog.TransactionId = TransactionId;    /*To retrive the latest Inserted Data into TrasncationMaster*/
+                            transactionlog.UpdatedDate = DateTime.Now;
+                            transactionlog.StatusId = mnTransactionMaster.StatusId;
+                            transactionlog.Description = "Validated Message is Sent to Pumori Request";
+
+                            translog.InsertDataIntoTransactionLog(transactionlog);
+                            /*END:TRANSACTION LOG*/
+
+                            string waitForReply = "";
+                            for (int i = 0; i < 99999; i++)
+                            {
+                                waitForReply = LookINTOResponseTableForMiniStatement(mnRequest.RetrievalRef);
+                                if (waitForReply != "[]")
+                                {
+                                    mnTransactionMaster.StatusId = STATUS_PUMORI_HTTPREPLY_SUCCESS;
+                                    /*INSERT TRANSACTION LOG*/
+                                    //Send Into TransactionLog
+                                    transactionlog.TransactionId = TransactionId;    /*To retrive the latest Inserted Data into TrasncationMaster*/
+                                    transactionlog.UpdatedDate = DateTime.Now;
+                                    transactionlog.StatusId = mnTransactionMaster.StatusId;
+                                    transactionlog.Description = "Transaction Successful";
+
+                                    translog.InsertDataIntoTransactionLog(transactionlog);
+                                    /*END:TRANSACTION LOG*/
+
+                                    /*UPDATE TRANSACTION*/
+                                    mnTransactionMasterRepository.UpdateintoTransactionMaster(mnTransactionMaster);
+                                    /*END:TRANSACTION*/
+
+                                    mnTransactionMaster.Response = waitForReply;
+                                    mnTransactionMaster.ResponseCode = HttpStatusCode.OK.ToString();
+                                    mnTransactionMaster.ResponseStatus(HttpStatusCode.OK, "Success");
+                                    break;
+                                }
+                            }
+
+                            if (waitForReply == "")
+                            {
+                                mnTransactionMaster.StatusId = STATUS_PUMORI_HTTPREPLY_FAILED;
+
+                                /*INSERT TRANSACTION LOG*/
+                                //Send Into TransactionLog
+                                transactionlog.TransactionId = TransactionId;    /*To retrive the latest Inserted Data into TrasncationMaster*/
+                                transactionlog.UpdatedDate = DateTime.Now;
+                                transactionlog.StatusId = mnTransactionMaster.StatusId;
+                                transactionlog.Description = "Transaction Failed At Pumori";
+
+                                translog.InsertDataIntoTransactionLog(transactionlog);
+                                /*END:TRANSACTION LOG*/
+
+                                /*UPDATE TRANSACTION*/
+                                mnTransactionMasterRepository.UpdateintoTransactionMaster(mnTransactionMaster);
+                                /*END:TRANSACTION*/
+
+                                mnTransactionMaster.Response = "Request will be responded separately";
+                                mnTransactionMaster.ResponseCode = HttpStatusCode.NoContent.ToString();
+                                mnTransactionMaster.ResponseStatus(HttpStatusCode.NoContent, "accepted. will respond separately");
+                            }
+                        }
+                        else
+                        {
+                            mnTransactionMaster.Response = "Please try again";//Request could not be processed
+                            mnTransactionMaster.ResponseCode = HttpStatusCode.InternalServerError.ToString();
+                            mnTransactionMaster.ResponseStatus(HttpStatusCode.InternalServerError, "Could not be processed");
+                        }
+                    }
+                    break;
+
+                case "40":
+                    //Remittance Token
+                    {
+                        //Remittance Token
+                        mnTransactionMaster.FeatureCode = transaction.FeatureCode;
+                        //services for ww
+                        /*SOURCE*/
+                        if (!LoadStationDetails("sw", ref mnTransactionMaster, transaction.SourceMobile))
+                        {
+                            mnTransactionMaster.Response = "Invalid Source User";
+                            mnTransactionMaster.ResponseCode = HttpStatusCode.BadRequest.ToString();
+                            mnTransactionMaster.ResponseStatus(HttpStatusCode.BadRequest, "Invalid Source User");
+                            break;
+                        }
+                        /*END:SOURCE*/
+
+                        /*DESTINATION*/
+                        string destinationMobile = transaction.DestinationMobile;
+                        if (destinationMobile.Length.ToString() == "10")
+                        {
+                            mnTransactionMaster.DestinationMobile = transaction.DestinationMobile;
+                            mnTransactionMaster.DestinationAccount = null;
+                            mnTransactionMaster.DestinationBIN = null;
+                            mnTransactionMaster.DestinationBranchCode = null;
+                        }
+                        else
+                        {
+                            mnTransactionMaster.Response = "Destination Mobile Length Insufficient";
+                            mnTransactionMaster.ResponseCode = HttpStatusCode.BadRequest.ToString();
+                            mnTransactionMaster.ResponseStatus(HttpStatusCode.BadRequest, "Destination Mobile Length Insufficient");
+                            break;
+                        }
+
+                        /*END:DESTINATION*/
+
+
+                        /*FEATURE DETAILS*/
+                        if (!LoadFeatureDetailsWithOutDestBIN(ref mnTransactionMaster))
+                        {
+                            mnTransactionMaster.Response = "Invalid Product Request";
+                            mnTransactionMaster.ResponseCode = HttpStatusCode.BadRequest.ToString();
+                            mnTransactionMaster.ResponseStatus(HttpStatusCode.BadRequest, "Invalid Product Request");
+                            break;
+                        }
+                        /*END:FEATURE DETAILS*/
+
+                        GenerateToken getToken = new GenerateToken();
+                        string token = getToken.GetUniqueKey();
+                        mnTransactionMaster.DestinationAccount = token;
+                        mnTransactionMaster.Description = transaction.Description;    //secret code
+
+                        /*TRANSACTION*/
+                        int TransactionId = mnTransactionMasterRepository.InsertintoTransactionMaster(mnTransactionMaster);
+                        /*END:TRANSACTION*/
+
+                        /*TRANSACTION LOG*/
+
+                        MNTransactionLog transactionlog = new MNTransactionLog();
+                        transactionlog.TransactionId = TransactionId;    /*To retrive the latest Inserted Data into TrasncationMaster*/
+                        transactionlog.UpdatedDate = DateTime.Now;
+                        transactionlog.StatusId = mnTransactionMaster.StatusId;
+                        transactionlog.Description = "Message Validated At Ecomm";
+
+                        MNTransactionLogController translog = new MNTransactionLogController();
+                        translog.InsertDataIntoTransactionLog(transactionlog);
+
+                        //Generate token and reply
+
+                        string msgConstruct = "Token requested by " + transaction.SourceMobile + " for transferring amount NPR " + transaction.Amount + " to " + transaction.DestinationMobile;
+                        var v = new { AmounttransferredBalance = Convert.ToDecimal(transaction.Amount).ToString("#,##0.00"), RequestedToken = token, message = msgConstruct };
+                        string json = JsonConvert.SerializeObject(v);
+
+                        mnTransactionMaster.Response = json;
+                        mnTransactionMaster.ResponseCode = HttpStatusCode.OK.ToString(); //200
+                        mnTransactionMaster.ResponseStatus(HttpStatusCode.OK, "Reply Token Number");
+
+                        /*END:TRANSACTION LOG*/
+
+                    }
+                    break;
+                case "41":
+                    //Remittance Redeem
+                    {
+                        mnTransactionMaster.FeatureCode = transaction.FeatureCode;
+
+                        //services for ww
+                        /*SOURCE*/
+                        if (!LoadStationDetails("sw", ref mnTransactionMaster, transaction.SourceMobile))
+                        {
+                            mnTransactionMaster.Response = "Invalid Source User";
+                            mnTransactionMaster.ResponseCode = HttpStatusCode.BadRequest.ToString();
+                            mnTransactionMaster.ResponseStatus(HttpStatusCode.BadRequest, "Invalid Source User");
+                            break;
+                        }
+                        /*END:SOURCE*/
+
+                        /*DESTINATION*/
+                        if (!LoadStationDetails("dw", ref mnTransactionMaster, transaction.DestinationMobile))
+                        {
+                            mnTransactionMaster.Response = "Invalid Destination User";
+                            mnTransactionMaster.ResponseCode = HttpStatusCode.BadRequest.ToString();
+                            mnTransactionMaster.ResponseStatus(HttpStatusCode.BadRequest, "Invalid Destination User");
+                            break;
+                        }
+                        /*END:DESTINATION*/
+
+
+                        /*FEATURE DETAILS*/
+                        if (!LoadFeatureDetails(ref mnTransactionMaster))
+                        {
+                            mnTransactionMaster.Response = "Invalid Product Request";
+                            mnTransactionMaster.ResponseCode = HttpStatusCode.BadRequest.ToString();
+                            mnTransactionMaster.ResponseStatus(HttpStatusCode.BadRequest, "Invalid Product Request");
+                            break;
+                        }
+                        /*END:FEATURE DETAILS*/
+
+
+
+                        /*TRANSACTION*/
+                        int TransactionId = mnTransactionMasterRepository.InsertintoTransactionMaster(mnTransactionMaster);
+                        /*END:TRANSACTION*/
+
+                        /*TRANSACTION LOG*/
+
+                        MNTransactionLog transactionlog = new MNTransactionLog();
+                        transactionlog.TransactionId = TransactionId;    /*To retrive the latest Inserted Data into TrasncationMaster*/
+                        transactionlog.UpdatedDate = DateTime.Now;
+                        transactionlog.StatusId = mnTransactionMaster.StatusId;
+                        transactionlog.Description = "Message Validated At Ecomm";
+
+                        MNTransactionLogController translog = new MNTransactionLogController();
+                        translog.InsertDataIntoTransactionLog(transactionlog);
+
+                        /*END:TRANSACTION LOG*/
+
+
+
+                        /*MNREQUEST*/
+                        string OriginID = mnTransactionMaster.SourceMobile;
+                        string OriginType = "6011";
+
+                        string ServiceCode = mnTransactionMaster.FeatureCode;
+
+                        //source details
+                        string SourceBankCode = mnTransactionMaster.SourceBIN;
+                        string SourceBranchCode = mnTransactionMaster.SourceBranchCode;
+                        string SourceAccountNo = mnTransactionMaster.SourceAccount;
+
+                        //destination details
+                        string DestBankCode = mnTransactionMaster.DestinationBIN;
+                        string DestBranchCode = mnTransactionMaster.DestinationBranchCode;
+                        string DestAccountNo = mnTransactionMaster.DestinationAccount;
+
+
+                        float Amount = mnTransactionMaster.Amount;
+                        string FeeId = mnTransactionMaster.FeeId;
+                        string TraceNo = mnTransactionMaster.TraceId.ToString();
+                        DateTime TranDate = DateTime.Now;
+                        string RetrievalRef = mnTransactionMaster.TraceId.ToString();
+                        string Desc1 = "";
+                        string[] splitData = mnTransactionMaster.Description.Split(',');
+
+                        if (mnTransactionMaster.FeatureCode == "41")
+                        {
+                            Desc1 = "Remittance Redeem of User:" + splitData[3];
+                        }
+
+                        string Desc2 = "SecretCode:" + splitData[0] + "," + "Token:" + splitData[1];
+                        string Desc3 = transaction.SourceMobile + " - " + transaction.DestinationMobile; //splitData[2];
+                        string Remark = ""; // "SecretCode:" + splitData[0] + "," + "Token:" + splitData[1]; 
+
+                        string IsProcessed = "F";
+                        string ReverseStatus = transaction.ReverseStatus;
+
+                        MNRequest mnRequest = new MNRequest(OriginID, OriginType, ServiceCode, SourceBankCode, SourceBranchCode, SourceAccountNo, DestBankCode, DestBranchCode, DestAccountNo,
+                            Amount, FeeId, TraceNo, TranDate, RetrievalRef, Desc1, Desc2, Desc3, IsProcessed, Remark, ReverseStatus);
+
+                        /*END:MNREQUEST*/
+
+                        ThreadPool.QueueUserWorkItem(BackgroundTaskWithObject, mnRequest);
+
+                        if (InsertIntoPumoriIn(mnRequest))
+                        {
+                            mnTransactionMaster.StatusId = STATUS_WAITING_FOR_PUMORI_HTTPREPLY;
+
+                            /*INSERT TRANSACTION LOG*/
+                            //Send Into TransactionLog
+                            transactionlog.TransactionId = TransactionId;    /*To retrive the latest Inserted Data into TrasncationMaster*/
+                            transactionlog.UpdatedDate = DateTime.Now;
+                            transactionlog.StatusId = mnTransactionMaster.StatusId;
+                            transactionlog.Description = "Validated Message is Sent to Pumori Request";
+
+                            translog.InsertDataIntoTransactionLog(transactionlog);
+                            /*END:TRANSACTION LOG*/
+
+                            string waitForReply = "";
+                            do
+                            {
+                                for (int i = 0; i < 99999; i++)
+                                {
+                                    waitForReply = LookINTOResponseTable(mnRequest.RetrievalRef);
+
+                                    if (waitForReply != "")
+                                    {
+                                        mnTransactionMaster.StatusId = STATUS_PUMORI_HTTPREPLY_SUCCESS;
+                                        /*INSERT TRANSACTION LOG*/
+                                        //Send Into TransactionLog
+                                        transactionlog.TransactionId = TransactionId;    /*To retrive the latest Inserted Data into TrasncationMaster*/
+                                        transactionlog.UpdatedDate = DateTime.Now;
+                                        transactionlog.StatusId = mnTransactionMaster.StatusId;
+                                        transactionlog.Description = "Transaction Successful";
+
+                                        translog.InsertDataIntoTransactionLog(transactionlog);
+                                        /*END:TRANSACTION LOG*/
+
+                                        /*UPDATE TRANSACTION*/
+                                        mnTransactionMasterRepository.UpdateintoTransactionMaster(mnTransactionMaster);
+                                        /*END:TRANSACTION*/
+
+                                        string msgConstruct = "Token Redeemed Successfully of amount NPR" + transaction.Amount;
+                                        var v = new { AmounttransferredBalance = Convert.ToDecimal(transaction.Amount).ToString("#,##0.00"), message = msgConstruct };
+                                        string json = JsonConvert.SerializeObject(v);
+
+                                        mnTransactionMaster.Response = json;
+                                        mnTransactionMaster.ResponseCode = HttpStatusCode.OK.ToString();
+                                        mnTransactionMaster.ResponseStatus(HttpStatusCode.OK, "Success");
+                                        break;
+                                    }
+                                }
+                                if (waitForReply == "")
+                                {
+                                    mnTransactionMaster.StatusId = STATUS_PUMORI_HTTPREPLY_FAILED;
+
+                                    /*INSERT TRANSACTION LOG*/
+                                    //Send Into TransactionLog
+                                    transactionlog.TransactionId = TransactionId;    /*To retrive the latest Inserted Data into TrasncationMaster*/
+                                    transactionlog.UpdatedDate = DateTime.Now;
+                                    transactionlog.StatusId = mnTransactionMaster.StatusId;
+                                    transactionlog.Description = "Transaction Failed At Pumori";
+
+                                    translog.InsertDataIntoTransactionLog(transactionlog);
+                                    /*END:TRANSACTION LOG*/
+
+                                    /*UPDATE TRANSACTION*/
+                                    mnTransactionMasterRepository.UpdateintoTransactionMaster(mnTransactionMaster);
+                                    /*END:TRANSACTION*/
+
+                                    mnTransactionMaster.Response = "Dear Sir/Mam, Request accepted. Will respond separately";
+                                    mnTransactionMaster.ResponseCode = HttpStatusCode.BadRequest.ToString();
+                                    mnTransactionMaster.ResponseStatus(HttpStatusCode.BadRequest, "Dear Sir/Mam, Request accepted. Will respond separately");
+                                }
+
+                            } while (waitForReply == "");
+                        }
+                        else
+                        {
+                            mnTransactionMaster.Response = "Please try again";//Request could not be processed
+                            mnTransactionMaster.ResponseCode = HttpStatusCode.InternalServerError.ToString();
+                            mnTransactionMaster.ResponseStatus(HttpStatusCode.InternalServerError, "Request could not be processed");
+                        }
+                    }
+                    break;
+
+                default:
+                    {
+                        mnTransactionMaster.Response = "";
+                        mnTransactionMaster.ResponseCode = HttpStatusCode.InternalServerError.ToString(); //500
+                        mnTransactionMaster.ResponseStatus(HttpStatusCode.InternalServerError, "Invalid Parameter");
+                    }
+                    break;
+
+            }
+
+            return mnTransactionMaster;
+        }
         #endregion
 
 

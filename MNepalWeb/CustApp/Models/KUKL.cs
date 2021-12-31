@@ -37,5 +37,21 @@ namespace CustApp.Models
             public string applicationId { get; set; }
         }
 
+
+        public class KUKLPaymentRequest
+        {
+            public string connectionNo { get; set; }
+            public string txnReferenceNo { get; set; }
+            public int txnAmount { get; set; }
+            public string branchcode { get; set; }
+            public string module { get; set; }
+            public string sc { get; set; }
+            public string mobile { get; set; }
+            public string pin { get; set; }
+            public string tokenId { get; set; }
+            public string remarks { get; set; }
+        }
+
+
     }
 }

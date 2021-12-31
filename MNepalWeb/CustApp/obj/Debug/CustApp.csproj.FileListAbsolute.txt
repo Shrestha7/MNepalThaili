@@ -346,6 +346,7 @@ D:\Thaili\MNepalWeb\CustApp\bin\System.Net.Http.Formatting.xml
 D:\Thaili\MNepalWeb\CustApp\bin\System.Web.Http.xml
 D:\Thaili\MNepalWeb\CustApp\bin\System.Web.Http.WebHost.xml
 D:\Thaili\MNepalWeb\CustApp\bin\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.xml
+D:\Thaili\MNepalWeb\CustApp\obj\Debug\CustApp.csproj.AssemblyReference.cache
 D:\Thaili\MNepalWeb\CustApp\obj\Debug\CustApp.csproj.CoreCompileInputs.cache
 D:\Thaili\MNepalWeb\CustApp\obj\Debug\CustApp.csproj.CopyComplete
 D:\Thaili\MNepalWeb\CustApp\obj\Debug\CustApp.dll

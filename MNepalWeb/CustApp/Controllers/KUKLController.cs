@@ -15,6 +15,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
+using System.Web.Script.Serialization;
 using static CustApp.Models.KUKL;
 
 namespace CustApp.Controllers
@@ -329,7 +330,7 @@ namespace CustApp.Controllers
 
                 ViewBag.address = address;
                 ViewBag.connection_no = connection_no;
-                if(ViewBag.connection_no == null)
+                if (ViewBag.connection_no == null)
                 {
                     ViewBag.connection_no = "0";
                 }
@@ -337,6 +338,7 @@ namespace CustApp.Controllers
                 ViewBag.net_amount = net_amount;
                 ViewBag.penalty = penalty;
                 ViewBag.applicationId = applicationId;
+                ViewBag.kuklBranchName = (string)Session["S_KUKLBranchName"];
                 if (ViewBag.applicationId == null)
                 {
                     ViewBag.applicationId = "0";
@@ -398,6 +400,169 @@ namespace CustApp.Controllers
             }
         }
 
+        #endregion
+
+        #region "POST: KUKL ExecutePayment"
+        [HttpPost]
+        public async Task<ActionResult> KUKLExecutePayment(KUKLPaymentRequest kuklPayment)
+        {
+            var sessionUserDetails = SessionUserDetails();
+            TempData["userType"] = sessionUserDetails.userType;
+
+            this.ViewData["userType"] = this.TempData["userType"];
+            ViewBag.UserType = this.TempData["userType"];
+            ViewBag.Name = sessionUserDetails.name;
+
+            string retoken = kuklPayment.tokenId;
+            string reqToken = "";
+            DataTable dtableVToken = ReqTokenUtils.GetReqToken(retoken);
+            if (dtableVToken != null && dtableVToken.Rows.Count > 0)
+            {
+                reqToken = dtableVToken.Rows[0]["ReqVerifyToken"].ToString();
+            }
+            else if (dtableVToken.Rows.Count == 0)
+            {
+                reqToken = "0";
+            }
+            string BlockMessage = LoginUtils.GetMessage("01");
+            if (reqToken == "0")
+            {
+                ReqTokenUtils.InsertReqToken(retoken);
+
+                MNBalance availBaln = new MNBalance();
+                DataTable dtableUser1 = AvailBalnUtils.GetAvailBaln(sessionUserDetails.clientCode);
+                if (dtableUser1 != null && dtableUser1.Rows.Count > 0)
+                {
+                    availBaln.amount = dtableUser1.Rows[0]["AvailBaln"].ToString();
+                    ViewBag.AvailBalnAmount = availBaln.amount;
+                }
+
+                //For Profile Picture
+                UserInfo userInfo = new UserInfo();
+                DataSet DSet = ProfileUtils.GetCusDetailProfileInfoDS(sessionUserDetails.clientCode);
+                DataTable dKYC = DSet.Tables["dtKycDetail"];
+                DataTable dDoc = DSet.Tables["dtKycDoc"];
+                if (dKYC != null && dKYC.Rows.Count > 0)
+                {
+                    userInfo.CustStatus = dKYC.Rows[0]["CustStatus"].ToString();
+                    ViewBag.CustStatus = userInfo.CustStatus;
+                }
+                if (dDoc != null && dDoc.Rows.Count > 0)
+                {
+                    userInfo.PassportImage = dDoc.Rows[0]["PassportImage"].ToString();
+                    ViewBag.PassportImage = userInfo.PassportImage;
+                }
+
+                var kuklObject = new KUKLPaymentRequest
+                {
+                    connectionNo = (string)Session["connection_no"],
+                    txnAmount = kuklPayment.txnAmount,
+                    branchcode = (string)Session["S_KUKLBranchCode"],
+                    module = (string)Session["S_KUKLBillPaymentMode"],
+                    sc = kuklPayment.sc,
+                    pin = kuklPayment.pin,
+                    tokenId = kuklPayment.tokenId,
+                    mobile = sessionUserDetails.userName
+
+                };
+
+                HttpResponseMessage _res = new HttpResponseMessage();
+                string mobile = sessionUserDetails.userName; //mobile is username
+                TraceIdGenerator _tig = new TraceIdGenerator();
+                var tid = _tig.GenerateTraceID();
+
+                //specify to use TLS 1.2 as default connection
+                ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12 | SecurityProtocolType.Tls11 | SecurityProtocolType.Tls;
+
+                // Serialize our concrete class into a JSON String
+                var stringPayload = await Task.Run(() => JsonConvert.SerializeObject(kuklObject));
+
+                // Wrap our JSON inside a StringContent which then can be used by the HttpClient class
+                var httpContent = new StringContent(stringPayload, Encoding.UTF8, "application/json");
+                using (HttpClient httpClient = new HttpClient())
+                {
+                    var UserName = ConfigurationManager.AppSettings["BasicAuthUserName"];
+                    var UserPassword = ConfigurationManager.AppSettings["BasicAuthPassword"];
+                    var APIBaseURL = ConfigurationManager.AppSettings["APIBaseURL"];
+
+                    var byteArray = Encoding.ASCII.GetBytes(UserName + ":" + UserPassword);
+                    httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Basic", Convert.ToBase64String(byteArray));
+                   
+                    _res = await httpClient.PostAsync(APIBaseURL + "KUKL/KUKLBillPayment", httpContent);
+                    string responseBody = _res.StatusCode.ToString() + " ," + await _res.Content.ReadAsStringAsync();
+                    string responseMessage = "";
+
+                    if (responseBody == "InternalServerError ," || responseBody == "InternalServerError")
+                    {
+                        responseBody = "Internal Server Error";
+                        return Json(new { responseCode = 500, responseText = responseBody },
+                            JsonRequestBehavior.AllowGet);
+                    }
+                    _res.ReasonPhrase = responseBody;
+                    string errorMessage = string.Empty;
+                    int responseCode = 0;
+                    string message = string.Empty;
+                    string responsetext = string.Empty;
+                    responseMessage = string.Empty;
+                    bool result = false;
+                    string ava = string.Empty;
+                    string avatra = string.Empty;
+                    string avamsg = string.Empty;
+                    try
+                    {
+                        if (_res.IsSuccessStatusCode)
+                        {
+                            result = true;
+                            responseCode = (int)_res.StatusCode;
+                            responsetext = await _res.Content.ReadAsStringAsync();
+                            message = _res.Content.ReadAsStringAsync().Result;
+                            string respmsg = "";
+                            string txnRespmsg = "";
+
+                            if (!string.IsNullOrEmpty(message))
+                            {
+                                JavaScriptSerializer ser = new JavaScriptSerializer();
+                                var json = ser.Deserialize<KUKLPaymentRequest>(responsetext);
+                               
+                              
+                            }
+                            return Json(new { responseCode = responseCode, responseText = responseMessage },
+                            JsonRequestBehavior.AllowGet);
+                        }
+                        else
+                        {
+                            result = false;
+                            responseCode = (int)_res.StatusCode;
+                            responsetext = await _res.Content.ReadAsStringAsync();
+                            var json = JsonConvert.DeserializeObject<KUKLPaymentRequest>(responsetext);
+                            
+                            if (message != null)
+                            {
+                                return Json(new { responseCode = responseCode, responseText = message },
+                            JsonRequestBehavior.AllowGet);
+                            }
+                            else
+                            {
+                                dynamic item = JValue.Parse(message);
+                                return Json(new { responseCode = responseCode, responseText = (string)item["StatusMessage"] },
+                                JsonRequestBehavior.AllowGet);
+                            }
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        return Json(new { responseCode = "400", responseText = ex.Message },
+                            JsonRequestBehavior.AllowGet);
+                    }
+
+                }
+            }
+            {
+                return Json(new { responseCode = "400", responseText = "Please refresh the page again." },
+                            JsonRequestBehavior.AllowGet);
+            }
+
+        }
         #endregion
 
         #region KUKLBranchList

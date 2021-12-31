@@ -187,7 +187,16 @@
                                     <label>Connection No:</label>
                                 </div>
                                 <div class="col-md-6">
-                                    <label id="branchName">@ViewBag.connection_no</label>
+                                    <label id="branchName" name="txtConnectionNo">@ViewBag.connection_no</label>
+                                </div>
+                            </div>
+
+                            <div class="row" id="KUKLBranchName">
+                                <div class="col-md-6">
+                                    <label>Branch Name:</label>
+                                </div>
+                                <div class="col-md-6">
+                                    <label id="kuklBranchName" name="txtKUKLBranchName">@ViewBag.kuklBranchName</label>
                                 </div>
                             </div>
 
@@ -213,7 +222,7 @@
                                     <label>Net Amount:</label>
                                 </div>
                                 <div class="col-md-6">
-                                    <label id="customerName">Rs. @ViewBag.net_amount</label>
+                                    <label id="amount">Rs. @ViewBag.net_amount</label>
                                 </div>
                             </div>
 
@@ -234,10 +243,10 @@
                                 <h3 class="title">Pay from</h3>
 
                                 <select class="form-control selectpicker transaction-select from col-md-9" id="TransactionMedium" name="TransactionMedium" onmousedown="this.value='';">
-                                    <option data-icon="thaili-icon-load-wallet" value="30">Wallet</option>
+                                    <option data-icon="thaili-icon-load-wallet" value="00">Wallet</option>
                                     @if (hasBankKYC.Equals("T"))
                                     {
-                                        <option data-icon="thaili-icon-bank" value="33">Bank</option>
+                                        <option data-icon="thaili-icon-bank" value="10">Bank</option>
                                     }
                                 </select>
                             </div>
@@ -246,7 +255,7 @@
 
                             <div class="form-group input-group">
                                 <div class="form-control col-2">NPR.</div>
-                                <input type="text" class="form-control select2" id="amount" name="txtAmount" onkeypress="return (event.charCode !=8 && event.charCode ==0 || ( event.charCode == 46 || (event.charCode >= 48 && event.charCode <= 57)))" placeholder="Amount" maxlength="9" oninput="checkAmount()" onpaste="return false" />
+                                <input type="text" class="form-control select2" id="amount" name="txtAmount" onkeypress="return (event.charCode !=8 && event.charCode ==0 || ( event.charCode == 46 || (event.charCode >= 48 && event.charCode <= 57)))" placeholder="Amount" maxlength="9" onpaste="return false" />
                             </div>
 
                             <div class="form-group" id="amountErr" style="color:red; margin-top:-11px;"></div>
@@ -258,7 +267,7 @@
                                             T-PIN (<span style="color:red">*</span>)
                                         </label>
 
-                                        @Html.PasswordFor(x => x.TPin, new { @class = "form-control pwd1", @title = "Please use T-Pin number", @placeholder = "T-PIN", @maxlength = "4", @onkeypress = "return isNumber(event)", @oninput = "checkValidation()", @autocomplete = "new-password", @onpaste = "return false" })
+                                        @Html.PasswordFor(x => x.TPin, new { @class = "form-control pwd1", @title = "Please use T-Pin number", @placeholder = "T-PIN", @maxlength = "4", @autocomplete = "new-password", @onpaste = "return false" })
                                         <span toggle="#password-field" class="fa fa-fw fa-eye field-icon toggle-password, btnShow1"></span>
                                     </div>
                                     <div class="form-group" id="PinErr" style="color:red; margin-top:-11px;"></div>
@@ -269,7 +278,7 @@
                                     <div class="form-group">
                                         <label for="@Html.NameFor(x=>x.Remarks)"> @Html.DisplayNameFor(x => x.Remarks) (<span style="color:red">*</span>)</label>
 
-                                        @Html.TextAreaFor(x => x.Remarks, new { @class = "form-control", @title = "Please insert Remarks", @placeholder = "Remarks", @maxlength = "30", @oninput = "checkValidation()" })
+                                        @Html.TextAreaFor(x => x.Remarks, new { @class = "form-control", @title = "Please insert Remarks", @placeholder = "Remarks", @maxlength = "30"})
 
                                     </div>
                                     <div class="form-group" id="RemarkErr" style="color:red; margin-top:-11px;"></div>
@@ -447,7 +456,7 @@
          window.location.href = url;
         };
         document.getElementById("expireModel").onclick = function () {
-         var url = '@Url.Action("Index", "NEA")';
+         var url = '@Url.Action("Index", "KUKL")';
          window.location.href = url;
         };
 
@@ -536,40 +545,29 @@
             e.preventDefault();
             $('#btnSubmit').attr("disabled", true);
             var Remarks = $("[name='Remarks']").val();
-            var TPin = $("[name='TPin']").val();
+            var pin = $("[name='TPin']").val();
+            var Amount = $("[name='txtAmount']").val();
             var servicecode = $("[name='TransactionMedium']").val();
-            var branchName = document.getElementById("branchName").innerText;
-            var customerId = document.getElementById("customerId").innerText;
-            var customerName = document.getElementById("customerName").innerText;
-            var amount = document.getElementById("amount").innerText;
-
-
             var token = $('input[name="__RequestVerificationToken"]').val();
 
-            if ((amount != "")&& (Remarks != "") && (TPin != "") && (TPin.length == 4)) {
+            if ((Remarks != "")) {
 
                 var dataToPost = {
-                    TransactionMedium: servicecode,
-                    amount: amount,
-                    Remarks: Remarks,
-                    TPin: TPin,
-                    TokenUnique: token,
-                    NEABranchName: branchName,
-                    CustomerID: customerId,
-                    SCNo: scNo,
-                    CustomerName: customerName
+                    txnAmount : Amount,
+                    pin: pin,
+                    remarks: Remarks,
+                    sc: servicecode
                 };
 
                 e.preventDefault(); //prevent the default action
                 $.ajax({
-
-                    url: '@Url.Action("NEAExecutePayment", "NEA")',
+                    url: '@Url.Action("KUKLExecutePayment", "KUKL")',
                     type: "POST",
                     //data: dataToPost,
                     data:
                     {
                         __RequestVerificationToken: token,
-                        nea: dataToPost
+                        kuklPayment: dataToPost
                     },
                     async: true,
                     success: function (data) {
