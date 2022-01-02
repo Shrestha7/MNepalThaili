@@ -24,6 +24,7 @@ namespace MNepalAPI.Models
         public string connection_no { get; set; }
         public float net_amount { get; set; }
         public string applicationId { get; set; }
+        public string result { get; set; }
     }
 
 

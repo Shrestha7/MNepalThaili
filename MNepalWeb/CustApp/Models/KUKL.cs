@@ -36,6 +36,7 @@ namespace CustApp.Models
             public string Remarks { get; set; }
             public string applicationId { get; set; }
             public string Message { get; set; }
+            public string result { get; set; }
         }
 
 

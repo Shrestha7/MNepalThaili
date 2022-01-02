@@ -227,6 +227,7 @@ namespace CustApp.Controllers
                     httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Basic", Convert.ToBase64String(byteArray));
                     var httpResponse = await httpClient.PostAsync(APIBaseURL + "KUKL/KUKLBillDetails", httpContent);
                     var responseContent = await httpResponse.Content.ReadAsStringAsync();
+                    var jsonRslt = JsonConvert.DeserializeObject<KUKLBillDetails>(responseContent);
 
                     KUKLBillDetails kuklBillDetails = new KUKLBillDetails();
 
@@ -242,7 +243,25 @@ namespace CustApp.Controllers
                     string avamsg = string.Empty;
                     try
                     {
-                        if (httpResponse.IsSuccessStatusCode)
+                        if (httpResponse.IsSuccessStatusCode && (jsonRslt.result!="" || jsonRslt.result!=null))
+                        {
+                            result = true;
+                            responseCode = (int)httpResponse.StatusCode;
+                            responsetext = await httpResponse.Content.ReadAsStringAsync();
+                            message = httpResponse.Content.ReadAsStringAsync().Result;
+                            var jsonResult = JsonConvert.DeserializeObject<KUKLBillDetails>(message);
+
+                            Session["address"] = jsonResult.address;
+                            Session["connection_no"] = jsonResult.connection_no;
+                            Session["name"] = jsonResult.name;
+                            Session["net_amount"] = jsonResult.net_amount;
+                            Session["penalty"] = jsonResult.penalty;
+                            Session["applicationId"] = jsonResult.applicationId;
+
+                            return Json(new { responseCode = responseCode, responseText = jsonResult.result },
+                            JsonRequestBehavior.AllowGet);
+                        }
+                        else if (httpResponse.IsSuccessStatusCode)
                         {
                             result = true;
                             responseCode = (int)httpResponse.StatusCode;

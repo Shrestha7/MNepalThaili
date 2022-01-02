@@ -255,7 +255,7 @@ namespace MNepalAPI.Controllers
 
                         sqlCmd.Parameters.AddWithValue("@address", objreqKUKL.address = (objreqKUKL.address == null ? "" : objreqKUKL.address));
                         sqlCmd.Parameters.AddWithValue("@penalty", objreqKUKL.penalty);
-                        sqlCmd.Parameters.AddWithValue("@name", objreqKUKL.name);
+                        sqlCmd.Parameters.AddWithValue("@name", objreqKUKL.name= (objreqKUKL.name == null ? "" : objreqKUKL.name));
                         sqlCmd.Parameters.AddWithValue("@connectionNo", objreqKUKL.connection_no);
                         sqlCmd.Parameters.AddWithValue("@netAmount", objreqKUKL.net_amount);
                         sqlCmd.Parameters.AddWithValue("@applicationId", objreqKUKL.applicationId);

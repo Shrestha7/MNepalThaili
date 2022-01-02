@@ -172,8 +172,8 @@ D:\Thaili\MNepalWeb\ThailiMerchantApp\bin\zxing.xml
 D:\Thaili\MNepalWeb\ThailiMerchantApp\bin\zxing.presentation.pdb
 D:\Thaili\MNepalWeb\ThailiMerchantApp\bin\zxing.presentation.xml
 D:\Thaili\MNepalWeb\ThailiMerchantApp\bin\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.xml
-D:\Thaili\MNepalWeb\ThailiMerchantApp\obj\Debug\ThailiMerchantApp.csprojAssemblyReference.cache
 D:\Thaili\MNepalWeb\ThailiMerchantApp\obj\Debug\ThailiMerchantApp.csproj.CoreCompileInputs.cache
 D:\Thaili\MNepalWeb\ThailiMerchantApp\obj\Debug\ThailiMerchantApp.csproj.CopyComplete
 D:\Thaili\MNepalWeb\ThailiMerchantApp\obj\Debug\ThailiMerchantApp.dll
 D:\Thaili\MNepalWeb\ThailiMerchantApp\obj\Debug\ThailiMerchantApp.pdb
+D:\Thaili\MNepalWeb\ThailiMerchantApp\obj\Debug\ThailiMerchantApp.csproj.AssemblyReference.cache

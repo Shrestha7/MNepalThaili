@@ -531,7 +531,7 @@
                     async: true,
                     success: function (data) {
                         debugger;
-                         if(data.responseCode == "200" && data.responseText == "An error occured") {
+                        if (data.responseCode == "200" && data.responseText == "connection no not exist in ledger") {
                     $("#ajaxResponse").html("");
                     $("#message").html("");
                     $("#message").append(data.responseText);
@@ -569,11 +569,9 @@
                         settings.data += "&dummyData=whatever";
                         //disable the button until we get the response
                              },
-                    complete: function (data) {
-                        if (data.responseJSON.responseCode != "200") {
-                            $('#btnSubmit').attr("disabled", false); //enable button if responsecode not equal to 200
-
-                        }
+                    complete: function (jqXHR, textStatus) {
+                        //enable the button
+                        $('#btnSubmit').attr("disabled", false);
                     }
                 });
 
