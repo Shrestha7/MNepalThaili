@@ -42,9 +42,6 @@ namespace WCF.MNepal
     public class kukl
     {
         int result = 0;
-        HttpResponseMessage httpResponse;
-        string responseContent;
-
         #region"execute KUKL"
         [OperationContract]
         [WebInvoke(Method = "POST",
@@ -1202,6 +1199,50 @@ namespace WCF.MNepal
                                                 }
 
                                             }
+
+                                            //for sending sms  if success  
+                                            if (responseContent != "{}" && responseContent != null)
+                                            {
+                                                //SMS
+                                                string messagereply = "";
+                                                try
+                                                {
+                                                    //FOR CUSTOMER
+                                                    try
+                                                    {
+                                                        //Alert Dynamic
+                                                        string AlertType = "KUKL";
+
+                                                        //FOR CUSTOMER SMS                                     
+                                                        #region FOR CUSTOMER SMS
+
+                                                        CustomerSMS customerSMS = new CustomerSMS();
+                                                        string cSMS = customerSMS.CustSMSEnable(AlertType, mobile, "", amount.ToString(), "", "", DateTime.Now.ToString("dd/MM/yyyy"));
+                                                        if (cSMS == "false")
+                                                        {
+
+                                                        }
+                                                        else
+                                                        {
+
+                                                        }
+
+                                                        #endregion
+
+                                                    }
+                                                    catch (Exception ex)
+                                                    {
+                                                        throw ex;
+                                                    }
+
+                                                }
+                                                catch (Exception ex)
+                                                {
+                                                    // throw ex
+                                                    statusCode = "400";
+                                                    message = ex.Message;
+                                                }
+                                            }
                                         }
                                         catch (Exception ex)
                                         {
@@ -1245,49 +1286,7 @@ namespace WCF.MNepal
                     }
                 }
 
-                //for sending sms  if success  
-                if (responseContent != "{}")
-                {
-                    //SMS
-                    string messagereply = "";
-                    try
-                    {
-                        //FOR CUSTOMER
-                        try
-                        {
-                            //Alert Dynamic
-                            string AlertType = "KUKL";
-
-                            //FOR CUSTOMER SMS                                     
-                            #region FOR CUSTOMER SMS
-
-                            CustomerSMS customerSMS = new CustomerSMS();
-                            string cSMS = customerSMS.CustSMSEnable(AlertType, mobile, "", amount.ToString(), "", "", DateTime.Now.ToString("dd/MM/yyyy"));
-                            if (cSMS == "false")
-                            {
-
-                            }
-                            else
-                            {
-
-                            }
-
-                            #endregion
-
-                        }
-                        catch (Exception ex)
-                        {
-                            throw ex;
-                        }
-
-                    }
-                    catch (Exception ex)
-                    {
-                        // throw ex
-                        statusCode = "400";
-                        message = ex.Message;
-                    }
-                }
+              //success sms
 
                 //REverse Transaction 
                 if ((statusCode != "111") && (statusCode != "114") && (statusCode != "115") && (statusCode != "116") && (statusCode != "119") &&

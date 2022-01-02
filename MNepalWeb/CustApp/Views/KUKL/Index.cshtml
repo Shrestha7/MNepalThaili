@@ -530,11 +530,19 @@
                     },
                     async: true,
                     success: function (data) {
+                        debugger;
+                         if(data.responseCode == "200" && data.responseText == "An error occured") {
+                    $("#ajaxResponse").html("");
+                    $("#message").html("");
+                    $("#message").append(data.responseText);
+                    $('#failureModal').modal("show");
+                }
 
-                        if (data.responseCode == "200" || data.responseCode=="0") {
+                        else if (data.responseCode == "200" || data.responseCode=="0") {
                             var url = '@Url.Action("Details", "KUKL")';
                             window.location.href = url;
                         }
+
 
                         else {
 

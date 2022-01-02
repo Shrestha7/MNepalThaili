@@ -264,21 +264,14 @@ namespace CustApp.Controllers
                         {
                             result = false;
                             responseCode = (int)_res.StatusCode;
-                            responsetext = await _res.Content.ReadAsStringAsync();
-                            dynamic json = JValue.Parse(responsetext);
-                            message = json.d;
-                            if (message == null)
-                            {
-                                return Json(new { responseCode = responseCode, responseText = responsetext },
+                            responsetext = await httpResponse.Content.ReadAsStringAsync();
+                            var jsonResult = JsonConvert.DeserializeObject<KUKLBillDetails>(responsetext);
+                            
+                          
+                                return Json(new { responseCode = responseCode, responseText = jsonResult.Message },
                             JsonRequestBehavior.AllowGet);
-                            }
-                            else
-                            {
-                                dynamic item = JValue.Parse(message);
-
-                                return Json(new { responseCode = responseCode, responseText = (string)item["StatusMessage"] },
-                                JsonRequestBehavior.AllowGet);
-                            }
+                            
+                           
                         }
                     }
                     catch (Exception ex)
@@ -455,7 +448,9 @@ namespace CustApp.Controllers
 
                 var kuklObject = new KUKLPaymentRequest
                 {
+
                     connectionNo = (string)Session["connection_no"],
+                    applicationId = (string)Session["applicationId"],
                     txnAmount = kuklPayment.txnAmount,
                     branchcode = (string)Session["S_KUKLBranchCode"],
                     module = (string)Session["S_KUKLBillPaymentMode"],
@@ -487,7 +482,7 @@ namespace CustApp.Controllers
 
                     var byteArray = Encoding.ASCII.GetBytes(UserName + ":" + UserPassword);
                     httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Basic", Convert.ToBase64String(byteArray));
-                   
+
                     _res = await httpClient.PostAsync(APIBaseURL + "KUKL/KUKLBillPayment", httpContent);
                     string responseBody = _res.StatusCode.ToString() + " ," + await _res.Content.ReadAsStringAsync();
                     string responseMessage = "";
@@ -523,11 +518,16 @@ namespace CustApp.Controllers
                             {
                                 JavaScriptSerializer ser = new JavaScriptSerializer();
                                 var json = ser.Deserialize<KUKLPaymentRequest>(responsetext);
-                               
-                              
+                                if(json.StatusMessage==null && json.StatusCode == null)
+                                {
+                                    return Json(new { responseCode = responseCode, responseText = responsetext},
+                               JsonRequestBehavior.AllowGet);
+                                }
+
+
+                                return Json(new { responseCode = json.StatusCode, responseText = json.StatusMessage },
+                                JsonRequestBehavior.AllowGet);
                             }
-                            return Json(new { responseCode = responseCode, responseText = responseMessage },
-                            JsonRequestBehavior.AllowGet);
                         }
                         else
                         {
@@ -535,7 +535,7 @@ namespace CustApp.Controllers
                             responseCode = (int)_res.StatusCode;
                             responsetext = await _res.Content.ReadAsStringAsync();
                             var json = JsonConvert.DeserializeObject<KUKLPaymentRequest>(responsetext);
-                            
+
                             if (message != null)
                             {
                                 return Json(new { responseCode = responseCode, responseText = message },

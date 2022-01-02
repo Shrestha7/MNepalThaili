@@ -89,6 +89,8 @@ namespace MNepalAPI.Models
         public string AmounttransferredBalance { get; set; }
         public string availableBalance { get; set; }
         public string message { get; set; }
+        public string StatusCode { get; set; }
+        public string StatusMessage { get; set; }
     }
 
     public class BillPaymentMode
