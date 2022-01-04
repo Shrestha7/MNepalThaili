@@ -257,6 +257,9 @@ namespace CustApp.Controllers
                             Session["net_amount"] = jsonResult.net_amount;
                             Session["penalty"] = jsonResult.penalty;
                             Session["applicationId"] = jsonResult.applicationId;
+                            Session["boardAmount"] = jsonResult.board_amount;
+                            Session["billMonth"] = jsonResult.billMonth;
+                            Session["areaNo"] = jsonResult.areaNo;
 
                             return Json(new { responseCode = responseCode, responseText = jsonResult.result },
                             JsonRequestBehavior.AllowGet);
@@ -331,6 +334,15 @@ namespace CustApp.Controllers
                 float net_amount = (float)Session["net_amount"];
                 string penalty = (string)Session["penalty"];
                 string applicationId = (string)Session["applicationId"];
+                string boardAmount = "";
+                if ((string)Session["boardAmount"] != "")
+                {
+                    boardAmount = Convert.ToString(Decimal.Parse((string)Session["boardAmount"], System.Globalization.NumberStyles.Float));
+                    boardAmount = Convert.ToString(Math.Round(Convert.ToDouble(boardAmount), 2));
+                }
+
+
+
 
                 if ((connection_no == null && name == null) || (applicationId == null && name == null))
                 {
@@ -341,14 +353,21 @@ namespace CustApp.Controllers
 
 
                 ViewBag.address = address;
+                ViewBag.billMonth = (string)Session["billMonth"];
                 ViewBag.connection_no = connection_no;
+                ViewBag.areaNo = (string)Session["areaNo"];
                 if (ViewBag.connection_no == null)
                 {
                     ViewBag.connection_no = "0";
                 }
+                
+                if(boardAmount!=null || boardAmount != "")
+                {
+                    ViewBag.BoardAmount = boardAmount;
+                }
                 ViewBag.name = name;
-                ViewBag.net_amount = net_amount;
-                ViewBag.penalty = penalty;
+                ViewBag.net_amount = Math.Round(Convert.ToDouble(net_amount),2);
+                ViewBag.penalty = Math.Round(Convert.ToDouble(penalty),2);
                 ViewBag.applicationId = applicationId;
                 ViewBag.kuklBranchName = (string)Session["S_KUKLBranchName"];
                 if (ViewBag.applicationId == null)
@@ -464,7 +483,15 @@ namespace CustApp.Controllers
                     userInfo.PassportImage = dDoc.Rows[0]["PassportImage"].ToString();
                     ViewBag.PassportImage = userInfo.PassportImage;
                 }
-
+                string module = "";
+                if (kuklPayment.module != null)
+                {
+                    module = kuklPayment.module;   
+                }
+                else
+                {
+                    module = (string)Session["S_KUKLBillPaymentMode"];
+                }
                 var kuklObject = new KUKLPaymentRequest
                 {
 
@@ -472,7 +499,7 @@ namespace CustApp.Controllers
                     applicationId = (string)Session["applicationId"],
                     txnAmount = kuklPayment.txnAmount,
                     branchcode = (string)Session["S_KUKLBranchCode"],
-                    module = (string)Session["S_KUKLBillPaymentMode"],
+                    module = module,
                     sc = kuklPayment.sc,
                     pin = kuklPayment.pin,
                     tokenId = kuklPayment.tokenId,

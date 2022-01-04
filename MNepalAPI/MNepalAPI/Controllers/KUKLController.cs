@@ -259,6 +259,9 @@ namespace MNepalAPI.Controllers
                         sqlCmd.Parameters.AddWithValue("@connectionNo", objreqKUKL.connection_no);
                         sqlCmd.Parameters.AddWithValue("@netAmount", objreqKUKL.net_amount);
                         sqlCmd.Parameters.AddWithValue("@applicationId", objreqKUKL.applicationId);
+                        sqlCmd.Parameters.AddWithValue("@billMonth", objreqKUKL.billMonth = (objreqKUKL.billMonth == null ? "" : objreqKUKL.billMonth));
+                        sqlCmd.Parameters.AddWithValue("@board_amount", objreqKUKL.board_amount = (objreqKUKL.board_amount == null ? "" : objreqKUKL.board_amount));
+                        sqlCmd.Parameters.AddWithValue("@areaNo", objreqKUKL.areaNo == (objreqKUKL.areaNo == null ? "" : objreqKUKL.areaNo));
 
 
                         sqlCmd.Parameters["@applicationId"].IsNullable = true;

@@ -13,7 +13,7 @@ namespace WCF.MNepal.Models
             public string connectionNo { get; set; }
             public string merchantId { get; set; }
             public string txnReferenceNo { get; set; }
-            public int txnAmount { get; set; }
+            public string txnAmount { get; set; }
             public string bankId { get; set; }
             public string txnDate { get; set; }
             public string branchcode { get; set; }

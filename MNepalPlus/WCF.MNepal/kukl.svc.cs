@@ -1097,15 +1097,14 @@ namespace WCF.MNepal
                             }
                             else
                             {
-
-
                                 var kuklObject = new KUKLBillRequest
                                 {
                                     username = mobile,
                                     connectionNo = customerId,
                                     merchantId = ConfigurationManager.AppSettings["KUKLMerchantId"],
-                                    txnReferenceNo = randomCodeGenerator.CreateRandomCodeWithString(12),
-                                    txnAmount = int.Parse(amount),
+                                    //txnReferenceNo = randomCodeGenerator.CreateRandomCodeWithString(12),
+                                    txnReferenceNo = tid,
+                                    txnAmount = amount,
                                     bankId = ConfigurationManager.AppSettings["KUKLBankId"],
                                     txnDate = DateTime.Now.ToString("yyyy-MM-dd"),
                                     branchcode = destBranchCode,
@@ -1295,7 +1294,7 @@ namespace WCF.MNepal
                     (statusCode != "188") && (statusCode != "189") && (statusCode != "190") && (statusCode != "800") && (statusCode != "902") &&
                     (statusCode != "904") && (statusCode != "906") && (statusCode != "907") && (statusCode != "909") && (statusCode != "911") &&
                     (statusCode != "913") && (statusCode != "90") && (statusCode != "91") && (statusCode != "94") && (statusCode != "95") &&
-                    (statusCode != "98") && (statusCode != "99") && (statusCodeBalance != "400") && (statusCodeBalance != "400") && (statusCode != "200")
+                    (statusCode != "98") && (statusCode != "99") && (statusCode =="400") && (statusCodeBalance != "400") && (statusCodeBalance != "400") && (statusCode != "200")
                     )
                 {
                     //TraceIdGenerator traceRevid = new TraceIdGenerator();

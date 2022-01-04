@@ -182,27 +182,24 @@
                                 <h2 class="title">Confirm Payment</h2>
                             </div>
 
-                            <div class="row" id="ConnectionNo">
-                                <div class="col-md-6">
-                                    <label>Connection No:</label>
+                            <div class="row">
+                                <div class="col-md-5">
+                                    <label>Area Number</label>
+                                </div>
+                                <div class="col-md-offset-4 col-md-1">
+                                    <label>:</label>
                                 </div>
                                 <div class="col-md-6">
-                                    <label id="branchName" name="txtConnectionNo">@ViewBag.connection_no</label>
-                                </div>
-                            </div>
-
-                            <div class="row" id="KUKLBranchName">
-                                <div class="col-md-6">
-                                    <label>Branch Name:</label>
-                                </div>
-                                <div class="col-md-6">
-                                    <label id="kuklBranchName" name="txtKUKLBranchName">@ViewBag.kuklBranchName</label>
+                                    <label id="customerId">@ViewBag.areaNo</label>
                                 </div>
                             </div>
 
                             <div class="row" id="ApplicaitonId">
-                                <div class="col-md-6">
-                                    <label>Application Id:</label>
+                                <div class="col-md-5">
+                                    <label>Application Id</label>
+                                </div>
+                                <div class="col-md-offset-4 col-md-1">
+                                    <label>:</label>
                                 </div>
                                 <div class="col-md-6">
                                     <label id="applicationId">@ViewBag.applicationId</label>
@@ -211,29 +208,103 @@
 
                             <div class="row">
                                 <div class="col-md-5">
-                                    <label>Customer Name:</label>
+                                    <label>Bill Month</label>
+                                </div>
+                                <div class="col-md-offset-4 col-md-1">
+                                    <label>:</label>
+                                </div>
+                                <div class="col-md-6">
+                                    <label id="billMonth">@ViewBag.billMonth</label>
+                                </div>
+                            </div>
+
+                            <div class="row" id="BoardAmount">
+                                <div class="col-md-5">
+                                    <label>Board Amount</label>
+                                </div>
+                                <div class="col-md-offset-4 col-md-1">
+                                    <label>:</label>
+                                </div>
+                                <div class="col-md-6">
+                                    <label id="boardamount">Rs. @ViewBag.BoardAmount</label>
+                                </div>
+                            </div>
+
+
+
+                            <div class="row" id="KUKLBranchName">
+                                <div class="col-md-5">
+                                    <label>Branch Name</label>
+                                </div>
+                                <div class="col-md-offset-4 col-md-1">
+                                    <label>:</label>
+                                </div>
+                                <div class="col-md-6">
+                                    <label id="kuklBranchName" name="txtKUKLBranchName">@ViewBag.kuklBranchName</label>
+                                </div>
+                            </div>
+
+                            <div class="row" id="ConnectionNo">
+                                <div class="col-md-5">
+                                    <label>Connection No</label>
+                                </div>
+                                <div class="col-md-offset-4 col-md-1">
+                                    <label>:</label>
+                                </div>
+                                <div class="col-md-6">
+                                    <label id="branchName" name="txtConnectionNo">@ViewBag.connection_no</label>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-md-5">
+                                    <label>Customer Address</label>
+                                </div>
+                                <div class="col-md-offset-4 col-md-1">
+                                    <label>:</label>
+                                </div>
+                                <div class="col-md-6">
+                                    <label id="customerAddress">@ViewBag.address</label>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-md-5">
+                                    <label>Customer Name</label>
+                                </div>
+                                <div class="col-md-offset-4 col-md-1">
+                                    <label>:</label>
                                 </div>
                                 <div class="col-md-6">
                                     <label id="customerId">@ViewBag.name</label>
                                 </div>
                             </div>
-                            <div class="row">
-                                <div class="col-md-6">
-                                    <label>Net Amount:</label>
+
+                            <div class="row" id="NetAmount">
+                                <div class="col-md-5">
+                                    <label>Net Amount</label>
+                                </div>
+                                <div class="col-md-offset-4 col-md-1">
+                                    <label>:</label>
                                 </div>
                                 <div class="col-md-6">
-                                    <label id="amount">Rs. @ViewBag.net_amount</label>
+                                    <label id="net_amount">Rs. @ViewBag.net_amount</label>
                                 </div>
                             </div>
 
+
                             <div class="row" id="KUKLPenalty">
-                                <div class="col-md-6">
-                                    <label>Penalty:</label>
+                                <div class="col-md-5">
+                                    <label>Penalty</label>
+                                </div>
+                                <div class="col-md-offset-4 col-md-1">
+                                    <label>:</label>
                                 </div>
                                 <div class="col-md-6">
                                     <label id="penalty">Rs. @ViewBag.penalty</label>
                                 </div>
                             </div>
+
 
 
                             <br />
@@ -242,7 +313,7 @@
                             <div class="transfer-order clearfix Input-Section">
                                 <h3 class="title">Pay from</h3>
 
-                                <select class="form-control selectpicker transaction-select from col-md-9" id="TransactionMedium" name="TransactionMedium" onmousedown="this.value='';">
+                                <select class="form-control selectpicker transaction-select from col-md-9 payDropdownSelectorCss" id="TransactionMedium" name="TransactionMedium" onmousedown="this.value='';">
                                     <option data-icon="thaili-icon-load-wallet" value="00">Wallet</option>
                                     @if (hasBankKYC.Equals("T"))
                                     {
@@ -425,6 +496,9 @@
 
             var applicationId = "@ViewBag.applicationId";
             var connectionNo = "@ViewBag.connection_no";
+            var boardAmount = "@ViewBag.BoardAmount";
+            var netAmount = "@ViewBag.net_amount";
+            var penalty = "@ViewBag.penalty";
 
             if (applicationId!= "0") {
                 $("#KUKLPenalty").hide();
@@ -437,6 +511,22 @@
             else if (connectionNo == "0") {
                 $("#ApplicaitonId").show();
                 $("#ConnectionNo").hide();
+            }
+            if (boardAmount == null || boardAmount=="") {
+                $("#BoardAmount").hide();
+                $("#NetAmount").show();
+            }
+            else {
+                $("#BoardAmount").show();
+                $("#NetAmount").hide();
+                document.getElementById('amount').value = boardAmount;
+                document.getElementById('amount').disabled = true;
+                window.value = 'Board Payment';
+
+            }
+
+            if (penalty == "0.0" || penalty == "0") {
+                $("#KUKLPenalty").hide();
             }
 
 
@@ -496,8 +586,17 @@
             debugger;
             var remarks = $("[name='Remarks']").val();
             var amount = $("[name='txtAmount']").val();
+            var penaltyAmount = "@ViewBag.penalty";
             var pin = $("[name='TPin']").val();
 
+            if (amount < penaltyAmount) {
+                $("#amountErr").html("");
+                $("#amountErr").append("<small>" + "Amount must be greater than Penalty Amount" + "</small>");
+                $("#amountErr").show();
+            }
+            else {
+                $("#amountErr").hide();
+            }
 
             if (amount.trim() == "" || amount=="0.0") {
                 $("#amountErr").html("");
@@ -507,6 +606,8 @@
             else {
                 $("#amountErr").hide();
             }
+
+          
 
 
             if (pin.trim() == "") {
@@ -548,6 +649,7 @@
             var pin = $("[name='TPin']").val();
             var Amount = $("[name='txtAmount']").val();
             var servicecode = $("[name='TransactionMedium']").val();
+            var paymentModule = window.value;
             var token = $('input[name="__RequestVerificationToken"]').val();
 
             if ((Remarks != "")) {
@@ -556,7 +658,8 @@
                     txnAmount : Amount,
                     pin: pin,
                     remarks: Remarks,
-                    sc: servicecode
+                    sc: servicecode,
+                    module: paymentModule
                 };
 
                 e.preventDefault(); //prevent the default action

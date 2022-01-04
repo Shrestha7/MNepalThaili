@@ -22,7 +22,7 @@
     }
 
     .bootstrap-select {
-        width: 465px !important;
+        width: 465px ;
         background-color: #fff;
         color: #fff;
         border: solid 1px #000;
@@ -330,10 +330,10 @@
          window.location.href = url;
         };
 
-        @*document.getElementById("failureModal").onclick = function () {
-         var url = '@Url.Action("Index", "UserDashboard")';
+        document.getElementById("failureModal").onclick = function () {
+         var url = '@Url.Action("Index", "KUKL")';
          window.location.href = url;
-        };*@
+        };
 
         document.getElementById("failureModalSessionExpired").onclick = function () {
          var url = '@Url.Action("Index", "LogOut")';

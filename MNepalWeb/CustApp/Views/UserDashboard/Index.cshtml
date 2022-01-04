@@ -56,31 +56,31 @@
                         <div class="transactions-grid clearfix">
 
                             @*@{
-                                    if (checkBankLink == "T")
-                                    {
-                                        <div class="item load-wallet">
-                                            <div class="item-inner" onclick="checkBankLink()">
-                                                <a href="~/FundTransfer/LoadWalletBW">
-                                                    <div class="content-inner">
-                                                        <i class="thaili-icon-load-wallet"></i>
-                                                        <span>Load Wallet</span>
-                                                    </div>
-                                                </a>
-                                            </div>
-                                        </div>
-                                    }
-                                    else
-                                    {
-                                        <div class="item load-wallet">
-                                            <div class="item-inner" onclick="checkBankLink()">
-                                                    <div class="content-inner">
-                                                        <i class="thaili-icon-load-wallet"></i>
-                                                        <span>Load Wallet</span>
-                                                    </div>
-                                            </div>
-                                        </div>
-                                    }
-                                }*@
+            if (checkBankLink == "T")
+            {
+                <div class="item load-wallet">
+                    <div class="item-inner" onclick="checkBankLink()">
+                        <a href="~/FundTransfer/LoadWalletBW">
+                            <div class="content-inner">
+                                <i class="thaili-icon-load-wallet"></i>
+                                <span>Load Wallet</span>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+            }
+            else
+            {
+                <div class="item load-wallet">
+                    <div class="item-inner" onclick="checkBankLink()">
+                            <div class="content-inner">
+                                <i class="thaili-icon-load-wallet"></i>
+                                <span>Load Wallet</span>
+                            </div>
+                    </div>
+                </div>
+            }
+        }*@
 
                             <div class="item load-wallet">
                                 <div class="item-inner">
@@ -198,6 +198,16 @@
                                     </div>
                                 }
                             }
+                            <div class="item transfer-fund">
+                                <a href="@Url.Action("Index", "KUKL" )">
+                                    <div class="item-inner">
+                                        <div class="content-inner">
+                                            <img src="~/Images/kukl_logo.jpg" height="65" width="65" />
+                                            <span>KUKL</span>
+                                        </div>
+                                    </div>
+                                </a>
+                            </div>
                             <!-- /item -->
                         </div>
                     </section>
@@ -312,16 +322,7 @@
                     </div>
                 </div>
 
-                <div class="item transfer-fund">
-                    <a href="@Url.Action("Index", "KUKL" )">
-                        <div class="item-inner">
-                            <div class="content-inner">
-                                <i class="thaili-icon-khanepani"></i>
-                                <span>KUKL</span>
-                            </div>
-                        </div>
-                    </a>
-                </div>
+               
 
             </div>
 

@@ -22126,3 +22126,18 @@ label.error {
     max-width: 150px;
   }
 }
+@media screen and (min-width: 250px) {
+    .payDropdownSelectorCss {
+        width:100%!important;
+    }
+}
+@media screen and (min-width: 250px) {
+    .bootstrap-select {
+        width: 300px !important;
+    }
+}
+@media screen and (min-width: 700px) {
+    .bootstrap-select {
+        width: 465px !important;
+    }
+}

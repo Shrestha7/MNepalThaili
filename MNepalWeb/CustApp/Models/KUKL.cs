@@ -37,6 +37,9 @@ namespace CustApp.Models
             public string applicationId { get; set; }
             public string Message { get; set; }
             public string result { get; set; }
+            public string billMonth { get; set; }
+            public string board_amount { get; set; }
+            public string areaNo { get; set; }
         }
 
 
@@ -45,7 +48,7 @@ namespace CustApp.Models
             public string connectionNo { get; set; }
             public string applicationId { get; set; }
             public string txnReferenceNo { get; set; }
-            public int txnAmount { get; set; }
+            public string txnAmount { get; set; }
             public string branchcode { get; set; }
             public string module { get; set; }
             public string sc { get; set; }

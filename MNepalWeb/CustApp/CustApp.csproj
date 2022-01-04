@@ -7446,6 +7446,7 @@
     <Content Include="Images\default_icon.png" />
     <Content Include="Images\default_image.png" />
     <Content Include="Images\DishHome.png" />
+    <Content Include="Images\kukl_logo.jpg" />
     <Content Include="Images\NCELL.png" />
     <Content Include="Images\ntc.png" />
     <Content Include="Images\ntc_cdma.png" />
